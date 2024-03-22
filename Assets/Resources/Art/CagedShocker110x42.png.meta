@@ -1,0 +1,1671 @@
+fileFormatVersion: 2
+guid: 879dafc33602cfd43a9db128039b5887
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CagedShocker110x42_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0599bd0b7a82464daaeb839c2dcd7e5
+      internalID: 1644098679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_1
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f14ec009a78b591459ed7f16a2d3c066
+      internalID: 1118957162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_2
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a606a9cc2f0e07c4db5ee62e18fbc6c8
+      internalID: -1152962040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_3
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c7409a81a3743240a551ff7a78ff4dc
+      internalID: -1916137173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_4
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ac5ad014f1b2e14193a55aadb53f4f2
+      internalID: -1121987087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_5
+      rect:
+        serializedVersion: 2
+        x: 550
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77f28666c7353be45ab8d1bc32e46b2d
+      internalID: 838273013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_6
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48762b272ed241842a420af2aeb689da
+      internalID: 1512326694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_7
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4bca73dcedb52b4fb911039a3e0b057
+      internalID: 1905784610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_8
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea3180a3de154b44fad59d2dfcb2ecd7
+      internalID: -2108566433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_9
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aeb430fc8143e454a86c336683f3da85
+      internalID: 1311836128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_10
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fdf2f7096de5c5d42a7a5ad7e2011b1c
+      internalID: 43194281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_11
+      rect:
+        serializedVersion: 2
+        x: 1210
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6488cfb05bce12489da06095b7a13fe
+      internalID: -1365329226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_12
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e700810723f29e049b92e4385eb829ce
+      internalID: 1872492732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_13
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e27de943da0b1d64382e041c42272987
+      internalID: -2053468504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_14
+      rect:
+        serializedVersion: 2
+        x: 1540
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4a1105bf839c4844a306d6a509b83e1
+      internalID: 353352071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_15
+      rect:
+        serializedVersion: 2
+        x: 1650
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52629978528fdb0418a793ff70a1afcc
+      internalID: -582347786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_16
+      rect:
+        serializedVersion: 2
+        x: 1760
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c5b8a760cb9b4b49887616471628a87
+      internalID: -802425122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_17
+      rect:
+        serializedVersion: 2
+        x: 1870
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9295a89699ead147857e165f95c0e23
+      internalID: -698578667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_18
+      rect:
+        serializedVersion: 2
+        x: 1980
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46dd4156260292540bc432d522fb1067
+      internalID: 528804308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_19
+      rect:
+        serializedVersion: 2
+        x: 2090
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 271be14e9eaaac5409c7e31b969eeeca
+      internalID: -1388298494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_20
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce3d2fa5f0edc0a428ee82ea597cdc66
+      internalID: -1415040956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_21
+      rect:
+        serializedVersion: 2
+        x: 2310
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cadba0ca3fa4e714f98a9d3677c43082
+      internalID: 266152475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_22
+      rect:
+        serializedVersion: 2
+        x: 2420
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75729fd850f8c7349be3e68f31862d81
+      internalID: -1060815760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_23End
+      rect:
+        serializedVersion: 2
+        x: 2530
+        y: 168
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c66108e986006f4e8396c641a85fa22
+      internalID: -214937882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3be7f100746d53545826f0681abcd545
+      internalID: 1712111152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_25
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9bf4dd4e9e6af24ea710e5ce622c053
+      internalID: -1835193734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_26
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be6fe3f299eba37458648f64e33b0a7f
+      internalID: 900682497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_27
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4f4d792cd9389643a3b2454a8a8779b
+      internalID: 620369131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_28
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1ab1591ace3cfc418342903af9b69cd
+      internalID: -475619996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_29
+      rect:
+        serializedVersion: 2
+        x: 550
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac114c31f821e7844be80edc8f18d8c3
+      internalID: 1294598849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_30
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f8211435a35d6645baf83cae170c85c
+      internalID: -1063315422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_31
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45140603db95eee4cbd23426bf2e5165
+      internalID: 1529705662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_32
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c69f7d4813e4bd94cb588af2cfb8a52a
+      internalID: -321108563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_33
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac1fdf1082e1bb045bc0b0d63309cdf4
+      internalID: -1687306920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_34
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e86b57a24cee1cd418d6b012f3c7880f
+      internalID: 188089584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_35End
+      rect:
+        serializedVersion: 2
+        x: 1210
+        y: 126
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b38f3ed5b2a943e41adba4bef16f0e74
+      internalID: -335760578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8291a61d1f6b6c46a444495ecccba5b
+      internalID: 961531775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_37
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2716f3a8f4e15c44288bcdf4e2f2cc91
+      internalID: -1282459575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_38
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64d11d9d55d23db4283984e8a42d53c8
+      internalID: -238049613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_39
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10e0edf58d27e2249bb254c5dae5ae32
+      internalID: 1813895909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_40
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bca88c0fd2535c342b86553366b08274
+      internalID: 763936334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_41
+      rect:
+        serializedVersion: 2
+        x: 550
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56c57f04c285eff4d8c6950b25a5c047
+      internalID: 1777542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_42
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 590372918f5f4bc4ea03a4c042dfc996
+      internalID: -1851948773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_43
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91433c256ca07c248b66e8a4720a0a04
+      internalID: 155634228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_44
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc7a9cede1d4eb846a3fe576423592fd
+      internalID: -694409496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_45
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 770e3c151e892b745aad1afa41681ade
+      internalID: -1127375729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_46
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c9accc5b3678cc4db2d9c2d7949c5cc
+      internalID: 564268948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_47
+      rect:
+        serializedVersion: 2
+        x: 1210
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1be6cba7b706f949b5f89efce0cd8ad
+      internalID: 674628177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_48
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d814c2c4c927eb418fe5b51ae9ffc2a
+      internalID: -268983754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_49
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d87d9e499713104e9762d259e0e4ae4
+      internalID: 1679064126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_50
+      rect:
+        serializedVersion: 2
+        x: 1540
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5291ffd2d06602845b3a5ed91f5ff0de
+      internalID: -1658587580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_51End
+      rect:
+        serializedVersion: 2
+        x: 1650
+        y: 84
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b4cb93e13727d5428485a26b08212fb
+      internalID: 330016123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 42
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0912f6acc31117e49b1a6a36fcb4a2d6
+      internalID: -1875774130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_53End
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 42
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a925010ac700df54b90e9d24af03db40
+      internalID: 1770219667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_54
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db1a5734189b25b498cc4dc0891395e9
+      internalID: 1185699941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_55
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aca0ccae4ed693a479db5759a6161245
+      internalID: 432020815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_56
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b3e08b7c4a157841b08e4f920ce1af5
+      internalID: 2080501962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_57
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9330146c915cccc42a8545982118989e
+      internalID: -137440764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_58
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2de65fd03836f749b606a33ede8e753
+      internalID: -1395357335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_59
+      rect:
+        serializedVersion: 2
+        x: 550
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37e685bb230df094e8a84b510d4d7da2
+      internalID: 1687378483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_60
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77a40e8154efce74fbd378072a8eab7a
+      internalID: -845069033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_61
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42037884d4ec6c74486a50b5e69d655d
+      internalID: 2099897891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_62
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71639114356c7ea4dabc620543c13617
+      internalID: 613146117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_63
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3945c7babfaa5a240841dfd771130195
+      internalID: 2051850107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_64
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06c8e6e64170f3f4da877edddf7e2cbe
+      internalID: -1537001656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_65
+      rect:
+        serializedVersion: 2
+        x: 1210
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf7e1cc19cc2221469a41d2984c64622
+      internalID: -1927613277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_66
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 567a7b397dd61f548b7211c030aaf384
+      internalID: 1817658765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_67
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9557bf253a841e40a498e203cc1c586
+      internalID: 2137010063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CagedShocker110x42_68End
+      rect:
+        serializedVersion: 2
+        x: 1540
+        y: 0
+        width: 110
+        height: 42
+      alignment: 9
+      pivot: {x: 0.3, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b522c951ffc4e194cac150fac95c8226
+      internalID: -1538195520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      CagedShocker110x42_0: 1644098679
+      CagedShocker110x42_1: 1118957162
+      CagedShocker110x42_10: 43194281
+      CagedShocker110x42_11: -1365329226
+      CagedShocker110x42_12: 1872492732
+      CagedShocker110x42_13: -2053468504
+      CagedShocker110x42_14: 353352071
+      CagedShocker110x42_15: -582347786
+      CagedShocker110x42_16: -802425122
+      CagedShocker110x42_17: -698578667
+      CagedShocker110x42_18: 528804308
+      CagedShocker110x42_19: -1388298494
+      CagedShocker110x42_2: -1152962040
+      CagedShocker110x42_20: -1415040956
+      CagedShocker110x42_21: 266152475
+      CagedShocker110x42_22: -1060815760
+      CagedShocker110x42_23End: -214937882
+      CagedShocker110x42_24: 1712111152
+      CagedShocker110x42_25: -1835193734
+      CagedShocker110x42_26: 900682497
+      CagedShocker110x42_27: 620369131
+      CagedShocker110x42_28: -475619996
+      CagedShocker110x42_29: 1294598849
+      CagedShocker110x42_3: -1916137173
+      CagedShocker110x42_30: -1063315422
+      CagedShocker110x42_31: 1529705662
+      CagedShocker110x42_32: -321108563
+      CagedShocker110x42_33: -1687306920
+      CagedShocker110x42_34: 188089584
+      CagedShocker110x42_35End: -335760578
+      CagedShocker110x42_36: 961531775
+      CagedShocker110x42_37: -1282459575
+      CagedShocker110x42_38: -238049613
+      CagedShocker110x42_39: 1813895909
+      CagedShocker110x42_4: -1121987087
+      CagedShocker110x42_40: 763936334
+      CagedShocker110x42_41: 1777542
+      CagedShocker110x42_42: -1851948773
+      CagedShocker110x42_43: 155634228
+      CagedShocker110x42_44: -694409496
+      CagedShocker110x42_45: -1127375729
+      CagedShocker110x42_46: 564268948
+      CagedShocker110x42_47: 674628177
+      CagedShocker110x42_48: -268983754
+      CagedShocker110x42_49: 1679064126
+      CagedShocker110x42_5: 838273013
+      CagedShocker110x42_50: -1658587580
+      CagedShocker110x42_51End: 330016123
+      CagedShocker110x42_52: -1875774130
+      CagedShocker110x42_53End: 1770219667
+      CagedShocker110x42_54: 1185699941
+      CagedShocker110x42_55: 432020815
+      CagedShocker110x42_56: 2080501962
+      CagedShocker110x42_57: -137440764
+      CagedShocker110x42_58: -1395357335
+      CagedShocker110x42_59: 1687378483
+      CagedShocker110x42_6: 1512326694
+      CagedShocker110x42_60: -845069033
+      CagedShocker110x42_61: 2099897891
+      CagedShocker110x42_62: 613146117
+      CagedShocker110x42_63: 2051850107
+      CagedShocker110x42_64: -1537001656
+      CagedShocker110x42_65: -1927613277
+      CagedShocker110x42_66: 1817658765
+      CagedShocker110x42_67: 2137010063
+      CagedShocker110x42_68End: -1538195520
+      CagedShocker110x42_7: 1905784610
+      CagedShocker110x42_8: -2108566433
+      CagedShocker110x42_9: 1311836128
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
