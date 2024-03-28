@@ -14,6 +14,8 @@ public enum EPlayerState
     NORMAL_ATTACK_1,
     NORMAL_ATTACK_2,
     NORMAL_ATTACK_3,
+    HITTED,
+    DIE,
     COUNT
 }
 
@@ -27,15 +29,17 @@ public enum EPlayerNoramlAttackType
 
 public class PlayerController : BaseCharacterController
 {
+    public static KeyCode KeyUp = KeyCode.UpArrow;
+    public static KeyCode KeyDown = KeyCode.DownArrow;
     public static KeyCode KeyRight = KeyCode.RightArrow;
     public static KeyCode KeyLeft = KeyCode.LeftArrow;
     public static KeyCode KeyAttack = KeyCode.Z;
     public static KeyCode KeyRoll = KeyCode.V;
 
     public PlayerStat Stat { get; private set; }
+    public EPlayerState meCurrentState { get; private set; }
     StateMachine<PlayerController> mStateMachine;
     State<PlayerController>[] mStates;
-    EPlayerState meCurrentState = EPlayerState.IDLE;
     public override void Init()
     {
         base.Init();
@@ -52,9 +56,17 @@ public class PlayerController : BaseCharacterController
         mStateMachine.Excute();
     }
 
-    public void OnNoramlAttack1ValidSlashed() { ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_1]).IsHitMonsters(EPlayerNoramlAttackType.ATTACK_1); }
-    public void OnNoramlAttack2ValidSlashed() { ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_1]).IsHitMonsters(EPlayerNoramlAttackType.ATTACK_2); }
-    public void OnNoramlAttack3ValidSlashed() { ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_1]).IsHitMonsters(EPlayerNoramlAttackType.ATTACK_3); }
+    public void OnNoramlAttack1ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
+    public void OnNoramlAttack2ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
+    public void OnNoramlAttack3ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
+
+
+    public void OnHittedAnimFullyPlayed() 
+    {
+        player_states.Hitted hittedState = (player_states.Hitted)mStates[(uint)EPlayerState.HITTED];
+        hittedState.OnHittedAnimFullyPlayed(this);
+    }
+    
     public void OnKeyboardArrowPressed()
     {
         if (meCurrentState == EPlayerState.ROLL ||
@@ -78,34 +90,23 @@ public class PlayerController : BaseCharacterController
             mSpriteRenderer.flipX = false;
         }
     }
+
+    public void OnHitted(int damage) 
+    {
+        int actualDamage = Mathf.Max(1, damage - Stat.Defence);
+        Stat.HP -= actualDamage;
+        Debug.Log($"Player HP : {Stat.HP}/{Stat.MaxHP}");
+        if (Stat.HP <= 0)
+            ChangeState(EPlayerState.DIE);
+        else
+            ChangeState(EPlayerState.HITTED); 
+    }
+
+
     public void ChangeState(EPlayerState eChangingState)
     {
         meCurrentState = eChangingState;
         mStateMachine.ChangeState(mStates[(uint)eChangingState]);
-        switch (eChangingState)
-        {
-            case EPlayerState.IDLE:
-                Animator.Play("Idle");
-                break;
-            case EPlayerState.RUN:
-                Animator.Play("Run");
-                break;
-            case EPlayerState.ROLL:
-                Animator.Play("Roll");
-                break;
-            case EPlayerState.NORMAL_ATTACK_1:
-                Animator.Play("NormalAttack1");
-                break;
-            case EPlayerState.NORMAL_ATTACK_2:
-                Animator.Play("NormalAttack2");
-                break;
-            case EPlayerState.NORMAL_ATTACK_3:
-                Animator.Play("NormalAttack3");
-                break;
-            default:
-                Debug.Assert(false, "You must Cheking Swich case");
-                break;
-        }
     }
 
     protected override void initStates()
@@ -118,6 +119,8 @@ public class PlayerController : BaseCharacterController
         mStates[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3();
+        mStates[(uint)EPlayerState.HITTED] = new player_states.Hitted();
+        mStates[(uint)EPlayerState.DIE] = new player_states.Die();
         mStateMachine.Init(this, mStates[(uint)EPlayerState.IDLE]);
     }
 }

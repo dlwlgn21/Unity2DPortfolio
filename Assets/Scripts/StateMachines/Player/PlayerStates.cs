@@ -13,6 +13,12 @@ namespace player_states
     public abstract class BasePlayerState : State<PlayerController>
     {
         public virtual void ProcessKeyboardInput(PlayerController entity) {}
+        protected bool IsAnimEnd(PlayerController entity)
+        {
+            if (entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                return true;
+            return false;
+        }
     }
 
     public class Idle : BasePlayerState
@@ -35,6 +41,7 @@ namespace player_states
 
         public override void Enter(PlayerController entity)
         {
+            entity.Animator.Play("Idle");
         }
         public override void Excute(PlayerController entity)
         {
@@ -64,11 +71,16 @@ namespace player_states
                 pos.x += entity.Stat.MoveSpeed * Time.deltaTime;
             if (Input.GetKey(PlayerController.KeyLeft))
                 pos.x += entity.Stat.MoveSpeed * -Time.deltaTime;
+            if (Input.GetKey(PlayerController.KeyUp))
+                pos.y += entity.Stat.MoveSpeed * Time.deltaTime;
+            if (Input.GetKey(PlayerController.KeyDown))
+                pos.y += entity.Stat.MoveSpeed * -Time.deltaTime;
             entity.transform.position = pos;
         }
 
         public override void Enter(PlayerController entity)
         {
+            entity.Animator.Play("Run");
         }
         public override void Excute(PlayerController entity)
         {
@@ -85,6 +97,7 @@ namespace player_states
         public override void Enter(PlayerController entity)
         {
             meLookDir = entity.ELookDir;
+            entity.Animator.Play("Roll");
         }
         public override void Excute(PlayerController entity)
         {
@@ -108,22 +121,17 @@ namespace player_states
         protected bool mIsGoToNextAttack;
         protected Transform mAttackPoint;
         protected int mLayerMask = 1 << ((int)define.EColliderLayer.MONSTERS);
-        public void IsHitMonsters(EPlayerNoramlAttackType eAttackType)
+        public void DamageHittedMonsters()
         {
-            switch (eAttackType)
+            Collider2D[] monsters = Physics2D.OverlapCircleAll(mAttackPoint.position, 1f, mLayerMask);
+            if (monsters == null)
+                return;
+
+            foreach (Collider2D mon in monsters)
             {
-                case EPlayerNoramlAttackType.ATTACK_1:
-                    Debug.Log("Attack 1 Called!");
-                    Physics2D.OverlapCircleAll(mAttackPoint.position, 1f, mLayerMask);
-                    break;
-                case EPlayerNoramlAttackType.ATTACK_2:
-                    Debug.Log("Attack 2 Called!");
-                    Physics2D.OverlapCircleAll(mAttackPoint.position, 1f, mLayerMask);
-                    break;
-                case EPlayerNoramlAttackType.ATTACK_3:
-                    Debug.Log("Attack 3 Called!");
-                    Physics2D.OverlapCircleAll(mAttackPoint.position, 1f, mLayerMask);
-                    break;
+                BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
+                Debug.Assert(controller != null);
+                controller.HittedByPlayer();
             }
         }
 
@@ -155,17 +163,16 @@ namespace player_states
             }
             ProcessKeyboardInput(entity);
         }
-        protected bool IsAnimEnd(PlayerController entity)
-        {
-            if (entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                return true;
-            return false;
-        }
 
     }
 
     public class NormalAttack1 : NormalAttackState
     {
+        public override void Enter(PlayerController entity)
+        {
+            base.Enter(entity);
+            entity.Animator.Play("NormalAttack1");
+        }
         public override void Excute(PlayerController entity)
         {
             CheckGoToNextAttack(entity, EPlayerState.NORMAL_ATTACK_2);
@@ -177,6 +184,11 @@ namespace player_states
 
     public class NormalAttack2 : NormalAttackState
     {
+        public override void Enter(PlayerController entity)
+        {
+            base.Enter(entity);
+            entity.Animator.Play("NormalAttack2");
+        }
         public override void Excute(PlayerController entity)
         {
             CheckGoToNextAttack(entity, EPlayerState.NORMAL_ATTACK_3);
@@ -188,11 +200,48 @@ namespace player_states
 
     public class NormalAttack3 : NormalAttackState
     {
-
+        public override void Enter(PlayerController entity)
+        {
+            base.Enter(entity);
+            entity.Animator.Play("NormalAttack3");
+        }
         public override void Excute(PlayerController entity)
         {
             if (IsAnimEnd(entity))
                 entity.ChangeState(EPlayerState.RUN);
+        }
+        public override void Exit(PlayerController entity)
+        {
+        }
+    }
+
+    public class Hitted : BasePlayerState
+    {
+        public void OnHittedAnimFullyPlayed(PlayerController entitiy) { entitiy.ChangeState(EPlayerState.RUN); }
+        public override void Enter(PlayerController entity)
+        {
+            Debug.Log("HittedEnter");
+            entity.Animator.Play("Hitted");
+        }
+        public override void Excute(PlayerController entity)
+        {
+
+        }
+        public override void Exit(PlayerController entity)
+        {
+        }
+    }
+
+    public class Die : BasePlayerState
+    {
+        public override void Enter(PlayerController entity)
+        {
+            entity.Animator.Play("Die");
+        }
+        public override void Excute(PlayerController entity)
+        {
+            if (IsAnimEnd(entity))
+                entity.gameObject.SetActive(false);
         }
         public override void Exit(PlayerController entity)
         {

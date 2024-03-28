@@ -25,7 +25,7 @@ namespace define
 
     public enum EMonsterNames
     {
-        Archer,
+        Archer = 1,
         Blaster,
         CagedShoker,
         Dagger,

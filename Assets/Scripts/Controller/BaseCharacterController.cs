@@ -26,9 +26,9 @@ public abstract class BaseCharacterController : MonoBehaviour
     }
     public virtual void Init()
     {
-        RigidBody = GetComponent<Rigidbody2D>();
-        Animator = GetComponent<Animator>();
-        mSpriteRenderer = GetComponent<SpriteRenderer>();
+        RigidBody = gameObject.GetOrAddComponent<Rigidbody2D>();
+        Animator = gameObject.GetOrAddComponent<Animator>();
+        mSpriteRenderer = gameObject.GetOrAddComponent<SpriteRenderer>();
         NormalAttackPoint = transform.Find("NormalAttackPoint").gameObject.transform;
         Debug.Assert(NormalAttackPoint != null);
         mCachedAttackPointLocalRightPos = NormalAttackPoint.localPosition;
