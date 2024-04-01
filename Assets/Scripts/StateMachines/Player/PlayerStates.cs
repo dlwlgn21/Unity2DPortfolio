@@ -65,16 +65,18 @@ namespace player_states
                 entity.ChangeState(EPlayerState.ROLL);
                 return;
             }
-
             Vector2 pos = entity.transform.position;
             if (Input.GetKey(PlayerController.KeyRight))
+            {
+                entity.SpriteRenderer.flipX = false;
+
                 pos.x += entity.Stat.MoveSpeed * Time.deltaTime;
+            }
             if (Input.GetKey(PlayerController.KeyLeft))
+            {
+                entity.SpriteRenderer.flipX = true;
                 pos.x += entity.Stat.MoveSpeed * -Time.deltaTime;
-            if (Input.GetKey(PlayerController.KeyUp))
-                pos.y += entity.Stat.MoveSpeed * Time.deltaTime;
-            if (Input.GetKey(PlayerController.KeyDown))
-                pos.y += entity.Stat.MoveSpeed * -Time.deltaTime;
+            }
             entity.transform.position = pos;
         }
 
@@ -94,16 +96,16 @@ namespace player_states
     {
         float mRollMovingDist = 5.0f;
         ECharacterLookDir meLookDir;
+        int mLayerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.CAVE_TILES);
+        public void OnRollAnimFullyPlayed(PlayerController entity) { entity.ChangeState(EPlayerState.RUN); }
         public override void Enter(PlayerController entity)
         {
             meLookDir = entity.ELookDir;
             entity.Animator.Play("Roll");
+            Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS, (int)EColliderLayer.PLAYER);
         }
         public override void Excute(PlayerController entity)
         {
-            if (entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                entity.ChangeState(EPlayerState.RUN);
-
             Vector2 pos = entity.transform.position;
             if (meLookDir == define.ECharacterLookDir.RIGHT)
                 pos.x += mRollMovingDist * Time.deltaTime;
@@ -113,6 +115,7 @@ namespace player_states
         }
         public override void Exit(PlayerController entity)
         {
+            Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, mLayerMask);
         }
     }
     public abstract class NormalAttackState : BasePlayerState
@@ -220,8 +223,10 @@ namespace player_states
         public void OnHittedAnimFullyPlayed(PlayerController entitiy) { entitiy.ChangeState(EPlayerState.RUN); }
         public override void Enter(PlayerController entity)
         {
-            Debug.Log("HittedEnter");
+            if (!entity.HitEffectAniamtor.gameObject.activeSelf)
+                entity.HitEffectAniamtor.gameObject.SetActive(true);
             entity.Animator.Play("Hitted");
+            entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
         }
         public override void Excute(PlayerController entity)
         {

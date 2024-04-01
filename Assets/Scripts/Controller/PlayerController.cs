@@ -1,4 +1,5 @@
 using define;
+using CameraShake;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -49,12 +50,30 @@ public class PlayerController : BaseCharacterController
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
     }
-
-
     void Update()
     {
         mStateMachine.Excute();
     }
+
+    public void ShakeCamera(EHitCameraShake eShakeType)
+    {
+        switch (eShakeType)
+        {
+            case EHitCameraShake.WEAK_SHAKE_2D:
+                CameraShaker.Presets.ShortShake2D();
+                break;
+            case EHitCameraShake.STRONG_SHAKE_2D:
+                CameraShaker.Presets.Explosion2D();
+                break;
+            case EHitCameraShake.WEAK_SHAKE_3D:
+                CameraShaker.Presets.ShortShake3D();
+                break;
+            case EHitCameraShake.STRONG_SHAKE_3D:
+                CameraShaker.Presets.Explosion3D();
+                break;
+        }
+    }
+
 
     public void OnNoramlAttack1ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
     public void OnNoramlAttack2ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
@@ -66,28 +85,29 @@ public class PlayerController : BaseCharacterController
         player_states.Hitted hittedState = (player_states.Hitted)mStates[(uint)EPlayerState.HITTED];
         hittedState.OnHittedAnimFullyPlayed(this);
     }
-    
+    public void OnRollAnimFullyPlayed()
+    {
+        player_states.Roll rollState = (player_states.Roll)mStates[(uint)EPlayerState.ROLL];
+        rollState.OnRollAnimFullyPlayed(this);
+    }
     public void OnKeyboardArrowPressed()
     {
-        if (meCurrentState == EPlayerState.ROLL ||
-            meCurrentState == EPlayerState.NORMAL_ATTACK_1 ||
+        if (meCurrentState == EPlayerState.NORMAL_ATTACK_1 ||
             meCurrentState == EPlayerState.NORMAL_ATTACK_2 ||
             meCurrentState == EPlayerState.NORMAL_ATTACK_3)
-        {
             return;
-        }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             NormalAttackPoint.localPosition = mCachedAttackPointLocalLeftPos;
             ELookDir = ECharacterLookDir.LEFT;
-            mSpriteRenderer.flipX = true;
+            SpriteRenderer.flipX = true;
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             NormalAttackPoint.localPosition = mCachedAttackPointLocalRightPos;
             ELookDir = ECharacterLookDir.RIGHT;
-            mSpriteRenderer.flipX = false;
+            SpriteRenderer.flipX = false;
         }
     }
 
@@ -95,11 +115,11 @@ public class PlayerController : BaseCharacterController
     {
         int actualDamage = Mathf.Max(1, damage - Stat.Defence);
         Stat.HP -= actualDamage;
-        Debug.Log($"Player HP : {Stat.HP}/{Stat.MaxHP}");
         if (Stat.HP <= 0)
             ChangeState(EPlayerState.DIE);
         else
-            ChangeState(EPlayerState.HITTED); 
+            ChangeState(EPlayerState.HITTED);
+        ShakeCamera(EHitCameraShake.WEAK_SHAKE_2D);
     }
 
 

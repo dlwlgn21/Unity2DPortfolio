@@ -14,6 +14,7 @@ namespace define
     {
         PLAYER = 6,
         MONSTERS = 7,
+        CAVE_TILES = 8,
     }
 
 
@@ -33,5 +34,13 @@ namespace define
         LightSlicer,
         Sweeper,
         Warden,
+    }
+
+    public enum EHitCameraShake
+    {
+        WEAK_SHAKE_2D,
+        STRONG_SHAKE_2D,
+        WEAK_SHAKE_3D,
+        STRONG_SHAKE_3D
     }
 }

@@ -22,6 +22,7 @@ public abstract class BaseMonsterController : BaseCharacterController
     protected EMonsterState meCurrentState;
     protected StateMachine<BaseMonsterController> mStateMachine;
     protected State<BaseMonsterController>[] mStates;
+
     public override void Init()
     {
         base.Init();
@@ -60,13 +61,13 @@ public abstract class BaseMonsterController : BaseCharacterController
         Vector2 dir = PlayerTransform.position - transform.position;
         if (dir.x > 0)
         {
-            mSpriteRenderer.flipX = false;
+            SpriteRenderer.flipX = false;
             ELookDir = define.ECharacterLookDir.RIGHT;
             NormalAttackPoint.localPosition = mCachedAttackPointLocalRightPos;
         }
         else
         {
-            mSpriteRenderer.flipX = true;
+            SpriteRenderer.flipX = true;
             ELookDir = define.ECharacterLookDir.LEFT;
             NormalAttackPoint.localPosition = mCachedAttackPointLocalLeftPos;
         }
