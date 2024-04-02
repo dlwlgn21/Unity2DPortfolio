@@ -1593,7 +1593,9 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 5bc5451bc775d24488954f5149c1d01d, type: 3}
+      name: _NormalMap
     nameFileIdTable:
       CagedShocker110x42_0: 1644098679
       CagedShocker110x42_1: 1118957162

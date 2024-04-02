@@ -57,6 +57,7 @@ public class PlayerController : BaseCharacterController
 
     public void ShakeCamera(EHitCameraShake eShakeType)
     {
+        // TODO : after cinemacine setting, It Must RollBack
         switch (eShakeType)
         {
             case EHitCameraShake.WEAK_SHAKE_2D:
@@ -119,7 +120,7 @@ public class PlayerController : BaseCharacterController
             ChangeState(EPlayerState.DIE);
         else
             ChangeState(EPlayerState.HITTED);
-        ShakeCamera(EHitCameraShake.WEAK_SHAKE_2D);
+        ShakeCamera(EHitCameraShake.STRONG_SHAKE_2D);
     }
 
 

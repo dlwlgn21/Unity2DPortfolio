@@ -3,7 +3,7 @@
         {
             "monsterType": "1",
             "maxHp": "20",
-            "attack": "5",
+            "attack": "1",
             "defence": "1",
             "moveSpeed": "2",
             "exp": "2"
@@ -11,7 +11,7 @@
         {
             "monsterType": "2",
             "maxHp": "30",
-            "attack": "7",
+            "attack": "1",
             "defence": "1",
             "moveSpeed": "2",
             "exp": "3"
@@ -19,7 +19,7 @@
         {
             "monsterType": "3",
             "maxHp": "80",
-            "attack": "15",
+            "attack": "1",
             "defence": "2",
             "moveSpeed": "2",
             "exp": "5"
@@ -27,7 +27,7 @@
         {
             "monsterType": "4",
             "maxHp": "30",
-            "attack": "15",
+            "attack": "1",
             "defence": "1",
             "moveSpeed": "4",
             "exp": "3"
@@ -35,7 +35,7 @@
         {
             "monsterType": "5",
             "maxHp": "100",
-            "attack": "30",
+            "attack": "1",
             "defence": "4",
             "moveSpeed": "1",
             "exp": "10"
@@ -43,7 +43,7 @@
         {
             "monsterType": "6",
             "maxHp": "50",
-            "attack": "10",
+            "attack": "1",
             "defence": "1",
             "moveSpeed": "3",
             "exp": "3"
@@ -51,7 +51,7 @@
         {
             "monsterType": "7",
             "maxHp": "50",
-            "attack": "20",
+            "attack": "1",
             "defence": "2",
             "moveSpeed": "2",
             "exp": "4"
@@ -59,7 +59,7 @@
         {
             "monsterType": "8",
             "maxHp": "10",
-            "attack": "10",
+            "attack": "1",
             "defence": "1",
             "moveSpeed": "2",
             "exp": "1"

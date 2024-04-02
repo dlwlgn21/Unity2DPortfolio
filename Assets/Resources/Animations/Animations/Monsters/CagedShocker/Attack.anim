@@ -23,7 +23,7 @@ AnimationClip:
     - time: 0
       value: {fileID: 961531775, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
     - time: 0.1
-      value: {fileID: -1282459575, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
+      value: {fileID: 961531775, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
     - time: 0.2
       value: {fileID: -238049613, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
     - time: 0.3
@@ -75,7 +75,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 961531775, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
-    - {fileID: -1282459575, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
+    - {fileID: 961531775, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
     - {fileID: -238049613, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
     - {fileID: 1813895909, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
     - {fileID: 763936334, guid: 879dafc33602cfd43a9db128039b5887, type: 3}
@@ -114,4 +114,18 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.6
+    functionName: OnNoramlAttack1ValidSlashed
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.1
+    functionName: OnNoramlAttack2ValidSlashed
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
