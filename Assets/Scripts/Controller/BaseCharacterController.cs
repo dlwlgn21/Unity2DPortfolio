@@ -15,8 +15,12 @@ public abstract class BaseCharacterController : MonoBehaviour
     public SpriteRenderer SpriteRenderer { get; set; }
     public float NormalAttackRange { get; protected set; }
 
+    protected TextMesh mTextMesh;
+    protected UIHealthBar mHealthBar;
+
     protected Vector3 mCachedAttackPointLocalRightPos;
     protected Vector3 mCachedAttackPointLocalLeftPos;
+    
 
     protected abstract void initStates();
 
@@ -51,6 +55,9 @@ public abstract class BaseCharacterController : MonoBehaviour
         }
         Debug.Assert(HitEffectAniamtor != null);
         HitEffectAniamtor.gameObject.SetActive(false);
+
+        mTextMesh = Utill.GetComponentInChildrenOrNull<TextMesh>(gameObject, "DamagePopup");
+        Debug.Assert(mTextMesh != null);
     }
 
     void OnDrawGizmosSelected()
@@ -58,5 +65,13 @@ public abstract class BaseCharacterController : MonoBehaviour
         if (NormalAttackPoint == null)
             return;
         Gizmos.DrawWireSphere(NormalAttackPoint.position, 1f);
+    }
+
+    public void ShowDamagePopup(int damage)
+    {
+        mTextMesh.text = damage.ToString();
+        mTextMesh.gameObject.GetComponent<Animator>().Play("DamagePopup", -1, 0f);
+        Debug.Assert(mHealthBar != null);
+        mTextMesh.color = mHealthBar.HealthBar.color;
     }
 }

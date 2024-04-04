@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public enum EPlayerState
 {
@@ -37,10 +38,14 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyAttack = KeyCode.Z;
     public static KeyCode KeyRoll = KeyCode.V;
 
+    public ParticleSystem FootDustParticle { get; set; }
+    
     public PlayerStat Stat { get; private set; }
     public EPlayerState meCurrentState { get; private set; }
+    
     StateMachine<PlayerController> mStateMachine;
     State<PlayerController>[] mStates;
+
     public override void Init()
     {
         base.Init();
@@ -49,6 +54,11 @@ public class PlayerController : BaseCharacterController
         Managers.Input.KeyboardHandler += OnKeyboardArrowPressed;
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
+
+        // DustParticle Part
+        FootDustParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "FootDustParticle");
+        Debug.Assert(FootDustParticle != null);
+        mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
     }
     void Update()
     {
@@ -57,7 +67,7 @@ public class PlayerController : BaseCharacterController
 
     public void ShakeCamera(EHitCameraShake eShakeType)
     {
-        // TODO : after cinemacine setting, It Must RollBack
+        // TODO : 시네마신 카메라 세티 완료 후, 반드시 롤백 되어야 함.
         switch (eShakeType)
         {
             case EHitCameraShake.WEAK_SHAKE_2D:
@@ -75,13 +85,13 @@ public class PlayerController : BaseCharacterController
         }
     }
 
-
+    #region ANIM_CALL_BACK
     public void OnNoramlAttack1ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
     public void OnNoramlAttack2ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
     public void OnNoramlAttack3ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
 
 
-    public void OnHittedAnimFullyPlayed() 
+    public void OnHittedAnimFullyPlayed()
     {
         player_states.Hitted hittedState = (player_states.Hitted)mStates[(uint)EPlayerState.HITTED];
         hittedState.OnHittedAnimFullyPlayed(this);
@@ -90,7 +100,21 @@ public class PlayerController : BaseCharacterController
     {
         player_states.Roll rollState = (player_states.Roll)mStates[(uint)EPlayerState.ROLL];
         rollState.OnRollAnimFullyPlayed(this);
+        FootDustParticle.Play();
     }
+
+    public void OnPlayerFootStep()
+    {
+        FootDustParticle.Play();
+    }
+
+    public void OnPlayerRoll()
+    {
+        FootDustParticle.Play();
+    }
+    #endregion
+
+
     public void OnKeyboardArrowPressed()
     {
         if (meCurrentState == EPlayerState.NORMAL_ATTACK_1 ||
@@ -121,6 +145,8 @@ public class PlayerController : BaseCharacterController
         else
             ChangeState(EPlayerState.HITTED);
         ShakeCamera(EHitCameraShake.STRONG_SHAKE_2D);
+        ShowDamagePopup(damage);
+        Managers.HitParticle.Play(transform.position);
     }
 
 
@@ -129,6 +155,7 @@ public class PlayerController : BaseCharacterController
         meCurrentState = eChangingState;
         mStateMachine.ChangeState(mStates[(uint)eChangingState]);
     }
+
 
     protected override void initStates()
     {
@@ -144,4 +171,6 @@ public class PlayerController : BaseCharacterController
         mStates[(uint)EPlayerState.DIE] = new player_states.Die();
         mStateMachine.Init(this, mStates[(uint)EPlayerState.IDLE]);
     }
+
+
 }

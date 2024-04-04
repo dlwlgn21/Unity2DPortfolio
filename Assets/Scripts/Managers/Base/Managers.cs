@@ -11,9 +11,17 @@ public class Managers : MonoBehaviour
     ResourceManager mResourceManager = new ResourceManager();
     InputManager mInputManager = new InputManager();
     DataManager mDataManager = new DataManager();
+
+
+
     public static InputManager Input { get { return Instance.mInputManager; } }
     public static DataManager Data { get { return Instance.mDataManager; } }
     public static ResourceManager Resources { get { return Instance.mResourceManager; } }
+
+
+    // Added part For BloodParticle
+    HitParticleManager mHitParticle = new HitParticleManager();
+    public static HitParticleManager HitParticle { get { return Instance.mHitParticle; } }
     private void Start()
     {
         Init();
@@ -37,6 +45,9 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
             sInstance = go.GetComponent<Managers>();
             sInstance.mDataManager.Init();
+
+            // Added part For BloodParticle
+            sInstance.mHitParticle.Init();
         }
     }
 

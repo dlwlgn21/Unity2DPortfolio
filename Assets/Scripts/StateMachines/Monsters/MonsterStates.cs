@@ -113,24 +113,28 @@ namespace monster_states
             entity.Animator.Play(HIT_ANIM_KEY);
             PlayerController pc = entity.PlayerTransform.gameObject.GetComponent<PlayerController>();
             Debug.Assert(pc != null);
+            Managers.HitParticle.Play(entity.transform.position);
             if (!entity.HitEffectAniamtor.gameObject.activeSelf)
                 entity.HitEffectAniamtor.gameObject.SetActive(true);
             switch (pc.meCurrentState)
             {
                 case EPlayerState.NORMAL_ATTACK_1:
                     entity.Stat.OnHitted(pc.Stat.Attack);
-                    entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_1_KEY, -1, 0f);
+                    //entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_1_KEY, -1, 0f);
                     pc.ShakeCamera(define.EHitCameraShake.WEAK_SHAKE_2D);
+                    entity.ShowDamagePopup(pc.Stat.Attack);
                     break;
                 case EPlayerState.NORMAL_ATTACK_2:
                     entity.Stat.OnHitted(pc.Stat.Attack * 2);
-                    entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_2_KEY, -1, 0f);
+                    //entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_2_KEY, -1, 0f);
                     pc.ShakeCamera(define.EHitCameraShake.WEAK_SHAKE_2D);
+                    entity.ShowDamagePopup(pc.Stat.Attack * 2);
                     break;
                 case EPlayerState.NORMAL_ATTACK_3:
                     entity.Stat.OnHitted(pc.Stat.Attack * 3);
-                    entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
+                    //entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
                     pc.ShakeCamera(define.EHitCameraShake.STRONG_SHAKE_2D);
+                    entity.ShowDamagePopup(pc.Stat.Attack * 3);
                     break;
                 default:
                     break;

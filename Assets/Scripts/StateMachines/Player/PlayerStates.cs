@@ -226,7 +226,8 @@ namespace player_states
             if (!entity.HitEffectAniamtor.gameObject.activeSelf)
                 entity.HitEffectAniamtor.gameObject.SetActive(true);
             entity.Animator.Play("Hitted");
-            entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
+            // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.
+            //entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
         }
         public override void Excute(PlayerController entity)
         {

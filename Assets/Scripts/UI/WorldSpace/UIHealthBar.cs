@@ -8,7 +8,9 @@ public abstract class UIHealthBar : MonoBehaviour
 {
     [SerializeField]
     protected Gradient _Gradient;
-    protected Image mHealthBar;
+
+
+    public Image HealthBar { get; private set; }
     protected Transform mParent;
     protected BaseStat mStat;
 
@@ -23,12 +25,12 @@ public abstract class UIHealthBar : MonoBehaviour
         {
             if (component != null && component.name == "Fill")
             {
-                mHealthBar = component;
+                HealthBar = component;
                 break;
             }
         }
         Init();
-        Debug.Assert(mHealthBar != null);
+        Debug.Assert(HealthBar != null);
         mFillSpeed = 0.5f;
         mYMargin = transform.parent.GetComponent<Collider2D>().bounds.size.y + 0.1f;
     }
@@ -41,7 +43,7 @@ public abstract class UIHealthBar : MonoBehaviour
     }
     public void SetHpRatio(float ratio)
     {
-        mHealthBar.DOFillAmount(ratio, mFillSpeed);
-        mHealthBar.DOColor(_Gradient.Evaluate(ratio), mFillSpeed);
+        HealthBar.DOFillAmount(ratio, mFillSpeed);
+        HealthBar.DOColor(_Gradient.Evaluate(ratio), mFillSpeed);
     }
 }
