@@ -37,6 +37,10 @@ namespace player_states
             {
                 entity.ChangeState(EPlayerState.NORMAL_ATTACK_1);
             }
+            else if (Input.GetKeyDown(PlayerController.KeyBlock))
+            {
+                entity.ChangeState(EPlayerState.BLOCKING);
+            }
         }
 
         public override void Enter(PlayerController entity)
@@ -55,6 +59,7 @@ namespace player_states
     {
         public override void ProcessKeyboardInput(PlayerController entity)
         {
+            // ChangeState
             if (!Input.anyKey)
             {
                 entity.ChangeState(EPlayerState.IDLE);
@@ -65,6 +70,14 @@ namespace player_states
                 entity.ChangeState(EPlayerState.ROLL);
                 return;
             }
+            else if (Input.GetKeyDown(PlayerController.KeyBlock))
+            {
+                entity.ChangeState(EPlayerState.BLOCKING);
+                return;
+            }
+
+
+            // Moving
             Vector2 pos = entity.transform.position;
             if (Input.GetKey(PlayerController.KeyRight))
             {
@@ -212,6 +225,39 @@ namespace player_states
         {
             if (IsAnimEnd(entity))
                 entity.ChangeState(EPlayerState.RUN);
+        }
+        public override void Exit(PlayerController entity)
+        {
+        }
+    }
+
+    public class Blocking : BasePlayerState
+    {
+        public override void Enter(PlayerController entity)
+        {
+            entity.Animator.Play("Blocking");
+        }
+        public override void Excute(PlayerController entity)
+        {
+            if (IsAnimEnd(entity))
+                entity.ChangeState(EPlayerState.IDLE);
+        }
+        public override void Exit(PlayerController entity)
+        {
+        }
+    }
+
+    public class BlockSuccess : BasePlayerState
+    {
+        public override void Enter(PlayerController entity)
+        {
+            entity.Animator.Play("BlockSuccess");
+            entity.ShowStatusPopup("Block!");
+        }
+        public override void Excute(PlayerController entity)
+        {
+            if (IsAnimEnd(entity))
+                entity.ChangeState(EPlayerState.IDLE);
         }
         public override void Exit(PlayerController entity)
         {

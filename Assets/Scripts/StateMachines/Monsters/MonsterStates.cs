@@ -58,6 +58,7 @@ namespace monster_states
         public override void Enter(BaseMonsterController entity)
         {
             entity.Animator.Play(RUN_ANIM_KEY);
+            entity.ShowStatusPopup("Trace!");
         }
         public override void Excute(BaseMonsterController entity)
         {
@@ -81,6 +82,7 @@ namespace monster_states
         {
             mEntity = entity;
             entity.Animator.Play(ATTACK_ANIM_KEY);
+            entity.ShowStatusPopup("Attack!");
         }
         public override void Excute(BaseMonsterController entity)
         {
@@ -119,22 +121,13 @@ namespace monster_states
             switch (pc.meCurrentState)
             {
                 case EPlayerState.NORMAL_ATTACK_1:
-                    entity.Stat.OnHitted(pc.Stat.Attack);
-                    //entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_1_KEY, -1, 0f);
-                    pc.ShakeCamera(define.EHitCameraShake.WEAK_SHAKE_2D);
-                    entity.ShowDamagePopup(pc.Stat.Attack);
+                    ProcessHitted(entity, pc, pc.Stat.Attack, BaseCharacterController.HIT_EFFECT_1_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);
                     break;
                 case EPlayerState.NORMAL_ATTACK_2:
-                    entity.Stat.OnHitted(pc.Stat.Attack * 2);
-                    //entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_2_KEY, -1, 0f);
-                    pc.ShakeCamera(define.EHitCameraShake.WEAK_SHAKE_2D);
-                    entity.ShowDamagePopup(pc.Stat.Attack * 2);
+                    ProcessHitted(entity, pc, pc.Stat.Attack * 2, BaseCharacterController.HIT_EFFECT_2_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);
                     break;
                 case EPlayerState.NORMAL_ATTACK_3:
-                    entity.Stat.OnHitted(pc.Stat.Attack * 3);
-                    //entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
-                    pc.ShakeCamera(define.EHitCameraShake.STRONG_SHAKE_2D);
-                    entity.ShowDamagePopup(pc.Stat.Attack * 3);
+                    ProcessHitted(entity, pc, pc.Stat.Attack * 3, BaseCharacterController.HIT_EFFECT_3_KEY, define.EHitCameraShake.STRONG_SHAKE_2D);
                     break;
                 default:
                     break;
@@ -154,6 +147,14 @@ namespace monster_states
                 return true;
             }
             return false;
+        }
+
+        void ProcessHitted(BaseMonsterController entity, PlayerController pc, int damage, string hitEffectKey, define.EHitCameraShake eCamShakeType)
+        {
+            entity.Stat.OnHitted(damage);
+            entity.HitEffectAniamtor.Play(hitEffectKey, -1, 0f);
+            pc.ShakeCamera(eCamShakeType);
+            entity.ShowDamagePopup(damage);
         }
     }
 

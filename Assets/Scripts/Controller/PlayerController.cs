@@ -17,6 +17,8 @@ public enum EPlayerState
     NORMAL_ATTACK_2,
     NORMAL_ATTACK_3,
     HITTED,
+    BLOCKING,
+    BLOCK_SUCESS,
     DIE,
     COUNT
 }
@@ -36,9 +38,9 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyRight = KeyCode.RightArrow;
     public static KeyCode KeyLeft = KeyCode.LeftArrow;
     public static KeyCode KeyAttack = KeyCode.Z;
+    public static KeyCode KeyBlock = KeyCode.X;
     public static KeyCode KeyRoll = KeyCode.V;
 
-    public ParticleSystem FootDustParticle { get; set; }
     
     public PlayerStat Stat { get; private set; }
     public EPlayerState meCurrentState { get; private set; }
@@ -54,10 +56,6 @@ public class PlayerController : BaseCharacterController
         Managers.Input.KeyboardHandler += OnKeyboardArrowPressed;
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
-
-        // DustParticle Part
-        FootDustParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "FootDustParticle");
-        Debug.Assert(FootDustParticle != null);
         mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
     }
     void Update()
@@ -67,7 +65,7 @@ public class PlayerController : BaseCharacterController
 
     public void ShakeCamera(EHitCameraShake eShakeType)
     {
-        // TODO : 시네마신 카메라 세티 완료 후, 반드시 롤백 되어야 함.
+        // TODO : 시네마신 카메라 세팅 완료 후, 반드시 롤백 되어야 함.
         switch (eShakeType)
         {
             case EHitCameraShake.WEAK_SHAKE_2D:
@@ -138,6 +136,18 @@ public class PlayerController : BaseCharacterController
 
     public void OnHitted(int damage) 
     {
+        // Blocking Section
+        if (meCurrentState == EPlayerState.BLOCKING)
+        {
+            HitEffectAniamtor.gameObject.SetActive(true);
+            HitEffectAniamtor.Play(HIT_EFFECT_3_KEY, -1, 0f);
+            ChangeState(EPlayerState.BLOCK_SUCESS);
+            return;
+        }
+        if (meCurrentState == EPlayerState.BLOCK_SUCESS)
+            return;
+
+        // Damage Section
         int actualDamage = Mathf.Max(1, damage - Stat.Defence);
         Stat.HP -= actualDamage;
         if (Stat.HP <= 0)
@@ -167,6 +177,8 @@ public class PlayerController : BaseCharacterController
         mStates[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3();
+        mStates[(uint)EPlayerState.BLOCKING] = new player_states.Blocking();
+        mStates[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess();
         mStates[(uint)EPlayerState.HITTED] = new player_states.Hitted();
         mStates[(uint)EPlayerState.DIE] = new player_states.Die();
         mStateMachine.Init(this, mStates[(uint)EPlayerState.IDLE]);

@@ -52,6 +52,11 @@ public abstract class BaseMonsterController : BaseCharacterController
         meCurrentState = eChangingState;
         mStateMachine.ChangeState(mStates[(uint)eChangingState]);
     }
+    public void OnMonsterFootStep()
+    {
+        FootDustParticle.Play();
+    }
+
     protected void SetLookDir()
     {
         if (meCurrentState == EMonsterState.ATTACK ||

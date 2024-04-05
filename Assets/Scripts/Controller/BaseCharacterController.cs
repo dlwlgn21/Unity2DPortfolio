@@ -11,11 +11,12 @@ public abstract class BaseCharacterController : MonoBehaviour
     public Rigidbody2D RigidBody { get; set; }
     public ECharacterLookDir ELookDir { get; protected set; }
     public Transform NormalAttackPoint { get; protected set; }
-
+    public ParticleSystem FootDustParticle { get; set; }
     public SpriteRenderer SpriteRenderer { get; set; }
     public float NormalAttackRange { get; protected set; }
 
-    protected TextMesh mTextMesh;
+    protected TextMesh mDamageText;
+    protected TextMesh mStatusText;
     protected UIHealthBar mHealthBar;
 
     protected Vector3 mCachedAttackPointLocalRightPos;
@@ -56,8 +57,16 @@ public abstract class BaseCharacterController : MonoBehaviour
         Debug.Assert(HitEffectAniamtor != null);
         HitEffectAniamtor.gameObject.SetActive(false);
 
-        mTextMesh = Utill.GetComponentInChildrenOrNull<TextMesh>(gameObject, "DamagePopup");
-        Debug.Assert(mTextMesh != null);
+        mDamageText = Utill.GetComponentInChildrenOrNull<TextMesh>(gameObject, "DamagePopup");
+        Debug.Assert(mDamageText != null);
+
+        mStatusText = Utill.GetComponentInChildrenOrNull<TextMesh>(gameObject, "StatusPopup");
+        Debug.Assert(mStatusText != null);
+
+        // DustParticle Part
+        FootDustParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "FootDustParticle");
+        Debug.Assert(FootDustParticle != null);
+
     }
 
     void OnDrawGizmosSelected()
@@ -69,9 +78,15 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     public void ShowDamagePopup(int damage)
     {
-        mTextMesh.text = damage.ToString();
-        mTextMesh.gameObject.GetComponent<Animator>().Play("DamagePopup", -1, 0f);
+        mDamageText.text = damage.ToString();
+        mDamageText.gameObject.GetComponent<Animator>().Play("DamagePopup", -1, 0f);
         Debug.Assert(mHealthBar != null);
-        mTextMesh.color = mHealthBar.HealthBar.color;
+        mDamageText.color = mHealthBar.HealthBar.color;
+    }
+
+    public void ShowStatusPopup(string status)
+    {
+        mStatusText.text = status;
+        mStatusText.gameObject.GetComponent<Animator>().Play("StatusPopup", -1, 0f);
     }
 }
