@@ -13,6 +13,9 @@ public enum EPlayerState
     IDLE,
     RUN,
     ROLL,
+    JUMP,
+    FALL,
+    LAND,
     NORMAL_ATTACK_1,
     NORMAL_ATTACK_2,
     NORMAL_ATTACK_3,
@@ -40,23 +43,25 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyAttack = KeyCode.Z;
     public static KeyCode KeyBlock = KeyCode.X;
     public static KeyCode KeyRoll = KeyCode.V;
+    public static KeyCode KeyJump = KeyCode.Space;
 
-    
+    public BoxCollider2D BoxCollider { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState meCurrentState { get; private set; }
     
     StateMachine<PlayerController> mStateMachine;
     State<PlayerController>[] mStates;
-
     public override void Init()
     {
         base.Init();
         Stat = gameObject.GetOrAddComponent<PlayerStat>();
+        BoxCollider = gameObject.GetComponent<BoxCollider2D>();
         Managers.Input.KeyboardHandler -= OnKeyboardArrowPressed;
         Managers.Input.KeyboardHandler += OnKeyboardArrowPressed;
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
         mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
+        
     }
     private void FixedUpdate()
     {
@@ -139,6 +144,8 @@ public class PlayerController : BaseCharacterController
         }
     }
 
+    
+
     public void OnHitted(int damage) 
     {
         // Blocking Section
@@ -179,6 +186,9 @@ public class PlayerController : BaseCharacterController
         mStates[(uint)EPlayerState.IDLE] = new player_states.Idle();
         mStates[(uint)EPlayerState.RUN] = new player_states.Run();
         mStates[(uint)EPlayerState.ROLL] = new player_states.Roll();
+        mStates[(uint)EPlayerState.JUMP] = new player_states.Jump();
+        mStates[(uint)EPlayerState.FALL] = new player_states.Fall();
+        mStates[(uint)EPlayerState.LAND] = new player_states.Land();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3();

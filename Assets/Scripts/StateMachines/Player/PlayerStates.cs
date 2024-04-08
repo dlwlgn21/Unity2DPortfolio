@@ -1,4 +1,6 @@
 using define;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 namespace player_states
@@ -6,6 +8,12 @@ namespace player_states
 
     public abstract class BasePlayerState : State<PlayerController>
     {
+        protected float mHorizontalMove;
+
+        public override void Excute(PlayerController entity)
+        {
+            mHorizontalMove = Input.GetAxisRaw("Horizontal");
+        }
         public virtual void ProcessKeyboardInput(PlayerController entity) {}
         protected bool IsAnimEnd(PlayerController entity)
         {
@@ -35,6 +43,10 @@ namespace player_states
             {
                 entity.ChangeState(EPlayerState.BLOCKING);
             }
+            else if (Input.GetKeyDown(PlayerController.KeyJump))
+            {
+                entity.ChangeState(EPlayerState.JUMP);
+            }
         }
 
         public override void Enter(PlayerController entity)
@@ -48,6 +60,7 @@ namespace player_states
         }
         public override void Excute(PlayerController entity)
         {
+            base.Excute(entity);
             ProcessKeyboardInput(entity);
         }
 
@@ -59,10 +72,8 @@ namespace player_states
     }
     public class Run : BasePlayerState
     {
-        float mHorizontalMove;
         public override void ProcessKeyboardInput(PlayerController entity)
         {
-            mHorizontalMove = Input.GetAxisRaw("Horizontal");
             // ChangeState
             if (!Input.anyKey)
             {
@@ -79,22 +90,11 @@ namespace player_states
                 entity.ChangeState(EPlayerState.BLOCKING);
                 return;
             }
-
-
-            //// Moving
-            //Vector2 pos = entity.transform.position;
-            //if (Input.GetKey(PlayerController.KeyRight))
-            //{
-            //    entity.SpriteRenderer.flipX = false;
-
-            //    pos.x += entity.Stat.MoveSpeed * Time.deltaTime;
-            //}
-            //if (Input.GetKey(PlayerController.KeyLeft))
-            //{
-            //    entity.SpriteRenderer.flipX = true;
-            //    pos.x += entity.Stat.MoveSpeed * -Time.deltaTime;
-            //}
-            //entity.transform.position = pos;
+            else if (Input.GetKeyDown(PlayerController.KeyJump))
+            {
+                entity.ChangeState(EPlayerState.JUMP);
+                return;
+            }
         }
 
         public override void Enter(PlayerController entity)
@@ -105,11 +105,12 @@ namespace player_states
         public override void FixedExcute(PlayerController entity)
         {
             Vector2 oriVelocity = entity.RigidBody.velocity;
-            entity.RigidBody.velocity = new Vector2(mHorizontalMove * entity.Stat.MoveSpeed * Time.deltaTime, oriVelocity.y);
+            entity.RigidBody.velocity = new Vector2(mHorizontalMove * entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
         }
 
         public override void Excute(PlayerController entity)
         {
+            base.Excute(entity);
             ProcessKeyboardInput(entity);
         }
 
@@ -118,6 +119,71 @@ namespace player_states
         {
         }
     }
+
+    public class Jump : BasePlayerState
+    {
+        bool isInAir = false;
+
+        public override void Enter(PlayerController entity)
+        {
+            entity.Animator.Play("Jump");
+            isInAir = false;
+        }
+        public override void FixedExcute(PlayerController entity)
+        {
+            if (!isInAir)
+            {
+                entity.RigidBody.AddForce(Vector2.up * 6, ForceMode2D.Impulse);
+                isInAir = true;
+            }
+            else
+            {
+                if (entity.RigidBody.velocity.y <= 0f)
+                    entity.ChangeState(EPlayerState.FALL);
+            }
+        }
+        public override void Excute(PlayerController entity)
+        {
+            base.Excute(entity);
+        }
+    }
+
+    public class Fall : BasePlayerState
+    {
+        float mExtraHeight = 0.1f;
+        int mLayerMask = 1 << (int)define.EColliderLayer.CAVE_TILES;
+        public override void Enter(PlayerController entity)
+        {
+            entity.Animator.Play("Fall");
+        }
+
+        public override void Excute(PlayerController entity)
+        {
+            Bounds bound = entity.BoxCollider.bounds;
+            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, mExtraHeight, mLayerMask);
+            Debug.DrawRay(bound.center + new Vector3(bound.extents.x, 0), Vector2.down * (bound.extents.y + mExtraHeight), Color.red);
+            Debug.DrawRay(bound.center - new Vector3(bound.extents.x, 0), Vector2.down * (bound.extents.y + mExtraHeight), Color.red);
+            
+            if (hit.collider != null)
+            {
+                entity.ChangeState(EPlayerState.LAND);
+            }
+        }
+    }
+
+    public class Land : BasePlayerState
+    {
+        public override void Enter(PlayerController entity)
+        {
+            entity.Animator.Play("Land");
+        }
+        public override void Excute(PlayerController entity)
+        {
+            if (IsAnimEnd(entity))
+                entity.ChangeState(EPlayerState.IDLE);
+        }
+    }
+
     public class Roll : BasePlayerState
     {
         ECharacterLookDir meLookDir;

@@ -63,7 +63,7 @@ namespace monster_states
         public override void FixedExcute(BaseMonsterController entity)
         {
             Vector2 oriVelo = entity.RigidBody.velocity;
-            entity.RigidBody.velocity = new Vector2(mDirToPlayer.normalized.x * entity.Stat.MoveSpeed * Time.deltaTime, oriVelo.y);
+            entity.RigidBody.velocity = new Vector2(mDirToPlayer.normalized.x * entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelo.y);
         }
 
         public override void Excute(BaseMonsterController entity)
