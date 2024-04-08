@@ -35,7 +35,10 @@ public abstract class BaseMonsterController : BaseCharacterController
         NormalAttackRange = 1f;
         mHealthBar = Utill.GetComponentInChildrenOrNull<UIMonsterHPBar>(gameObject, "MonsterHpBar");
     }
-
+    private void FixedUpdate()
+    {
+        mStateMachine.FixedExcute();
+    }
     void Update()
     {
         SetLookDir();

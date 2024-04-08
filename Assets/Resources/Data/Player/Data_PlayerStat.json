@@ -5,7 +5,7 @@
             "maxHp": "50",
             "attack": "1",
             "defence": "1",
-            "moveSpeed": "3",
+            "moveSpeed": "200",
             "totalExp": "0"
         },
         {
@@ -13,7 +13,7 @@
             "maxHp": "55",
             "attack": "10",
             "defence": "1",
-            "moveSpeed": "3",
+            "moveSpeed": "200",
             "totalExp": "5"
         },
         {
@@ -21,7 +21,7 @@
             "maxHp": "60",
             "attack": "15",
             "defence": "2",
-            "moveSpeed": "4",
+            "moveSpeed": "200",
             "totalExp": "15"
         },
         {
@@ -29,7 +29,7 @@
             "maxHp": "65",
             "attack": "20",
             "defence": "2",
-            "moveSpeed": "4",
+            "moveSpeed": "200",
             "totalExp": "25"
         }
     ]

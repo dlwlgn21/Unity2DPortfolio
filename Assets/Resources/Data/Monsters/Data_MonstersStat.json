@@ -5,7 +5,7 @@
             "maxHp": "20",
             "attack": "1",
             "defence": "1",
-            "moveSpeed": "2",
+            "moveSpeed": "100",
             "exp": "2"
         },
         {
@@ -13,7 +13,7 @@
             "maxHp": "30",
             "attack": "1",
             "defence": "1",
-            "moveSpeed": "2",
+            "moveSpeed": "100",
             "exp": "3"
         },
         {
@@ -21,7 +21,7 @@
             "maxHp": "80",
             "attack": "1",
             "defence": "2",
-            "moveSpeed": "2",
+            "moveSpeed": "100",
             "exp": "5"
         },
         {
@@ -29,7 +29,7 @@
             "maxHp": "30",
             "attack": "1",
             "defence": "1",
-            "moveSpeed": "4",
+            "moveSpeed": "100",
             "exp": "3"
         },
         {
@@ -37,7 +37,7 @@
             "maxHp": "100",
             "attack": "1",
             "defence": "4",
-            "moveSpeed": "1",
+            "moveSpeed": "100",
             "exp": "10"
         },
         {
@@ -45,7 +45,7 @@
             "maxHp": "50",
             "attack": "1",
             "defence": "1",
-            "moveSpeed": "3",
+            "moveSpeed": "100",
             "exp": "3"
         },
         {
@@ -53,7 +53,7 @@
             "maxHp": "50",
             "attack": "1",
             "defence": "2",
-            "moveSpeed": "2",
+            "moveSpeed": "100",
             "exp": "4"
         },
         {
@@ -61,7 +61,7 @@
             "maxHp": "10",
             "attack": "1",
             "defence": "1",
-            "moveSpeed": "2",
+            "moveSpeed": "100",
             "exp": "1"
         }
     ]

@@ -1,11 +1,5 @@
 using define;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace player_states
 {
@@ -47,18 +41,28 @@ namespace player_states
         {
             entity.Animator.Play("Idle");
         }
+
+        public override void FixedExcute(PlayerController entity)
+        {
+            entity.RigidBody.velocity = new Vector2(0f, entity.RigidBody.velocity.y);
+        }
         public override void Excute(PlayerController entity)
         {
             ProcessKeyboardInput(entity);
         }
+
+
+
         public override void Exit(PlayerController entity)
         {
         }
     }
     public class Run : BasePlayerState
     {
+        float mHorizontalMove;
         public override void ProcessKeyboardInput(PlayerController entity)
         {
+            mHorizontalMove = Input.GetAxisRaw("Horizontal");
             // ChangeState
             if (!Input.anyKey)
             {
@@ -77,37 +81,45 @@ namespace player_states
             }
 
 
-            // Moving
-            Vector2 pos = entity.transform.position;
-            if (Input.GetKey(PlayerController.KeyRight))
-            {
-                entity.SpriteRenderer.flipX = false;
+            //// Moving
+            //Vector2 pos = entity.transform.position;
+            //if (Input.GetKey(PlayerController.KeyRight))
+            //{
+            //    entity.SpriteRenderer.flipX = false;
 
-                pos.x += entity.Stat.MoveSpeed * Time.deltaTime;
-            }
-            if (Input.GetKey(PlayerController.KeyLeft))
-            {
-                entity.SpriteRenderer.flipX = true;
-                pos.x += entity.Stat.MoveSpeed * -Time.deltaTime;
-            }
-            entity.transform.position = pos;
+            //    pos.x += entity.Stat.MoveSpeed * Time.deltaTime;
+            //}
+            //if (Input.GetKey(PlayerController.KeyLeft))
+            //{
+            //    entity.SpriteRenderer.flipX = true;
+            //    pos.x += entity.Stat.MoveSpeed * -Time.deltaTime;
+            //}
+            //entity.transform.position = pos;
         }
 
         public override void Enter(PlayerController entity)
         {
             entity.Animator.Play("Run");
         }
+
+        public override void FixedExcute(PlayerController entity)
+        {
+            Vector2 oriVelocity = entity.RigidBody.velocity;
+            entity.RigidBody.velocity = new Vector2(mHorizontalMove * entity.Stat.MoveSpeed * Time.deltaTime, oriVelocity.y);
+        }
+
         public override void Excute(PlayerController entity)
         {
             ProcessKeyboardInput(entity);
         }
+
+
         public override void Exit(PlayerController entity)
         {
         }
     }
     public class Roll : BasePlayerState
     {
-        float mRollMovingDist = 5.0f;
         ECharacterLookDir meLookDir;
         int mLayerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.CAVE_TILES);
         public void OnRollAnimFullyPlayed(PlayerController entity) { entity.ChangeState(EPlayerState.RUN); }
@@ -117,14 +129,24 @@ namespace player_states
             entity.Animator.Play("Roll");
             Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS, (int)EColliderLayer.PLAYER);
         }
+        public override void FixedExcute(PlayerController entity)
+        {
+            Vector2 oriVelo = entity.RigidBody.velocity;
+            float speed = entity.Stat.MoveSpeed * 1.5f;
+            if (meLookDir == ECharacterLookDir.RIGHT)
+                entity.RigidBody.velocity = new Vector2(speed * Time.deltaTime, oriVelo.y);
+            else
+                entity.RigidBody.velocity = new Vector2(speed * -Time.deltaTime, oriVelo.y);
+        }
+
         public override void Excute(PlayerController entity)
         {
-            Vector2 pos = entity.transform.position;
-            if (meLookDir == define.ECharacterLookDir.RIGHT)
-                pos.x += mRollMovingDist * Time.deltaTime;
-            else
-                pos.x += mRollMovingDist * -Time.deltaTime;
-            entity.transform.position = pos;
+            //Vector2 pos = entity.transform.position;
+            //if (meLookDir == define.ECharacterLookDir.RIGHT)
+            //    pos.x += mRollMovingDist * Time.deltaTime;
+            //else
+            //    pos.x += mRollMovingDist * -Time.deltaTime;
+            //entity.transform.position = pos;
         }
         public override void Exit(PlayerController entity)
         {
@@ -237,6 +259,12 @@ namespace player_states
         {
             entity.Animator.Play("Blocking");
         }
+
+        public override void FixedExcute(PlayerController entity)
+        {
+            entity.RigidBody.velocity = new Vector2(0f, entity.RigidBody.velocity.y);
+        }
+
         public override void Excute(PlayerController entity)
         {
             if (IsAnimEnd(entity))

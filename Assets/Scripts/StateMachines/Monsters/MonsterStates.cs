@@ -60,6 +60,12 @@ namespace monster_states
             entity.Animator.Play(RUN_ANIM_KEY);
             entity.ShowStatusPopup("Trace!");
         }
+        public override void FixedExcute(BaseMonsterController entity)
+        {
+            Vector2 oriVelo = entity.RigidBody.velocity;
+            entity.RigidBody.velocity = new Vector2(mDirToPlayer.normalized.x * entity.Stat.MoveSpeed * Time.deltaTime, oriVelo.y);
+        }
+
         public override void Excute(BaseMonsterController entity)
         {
             CalculateDistanceFromPlayer(entity);
@@ -67,9 +73,7 @@ namespace monster_states
                 entity.ChangeState(EMonsterState.ATTACK);
             Debug.DrawRay(entity.transform.position + Vector3.up * 0.5f, mDirToPlayer.normalized * entity.AwarenessRangeToTrace, Color.blue);
             Debug.DrawRay(entity.transform.position, mDirToPlayer.normalized * entity.AwarenessRangeToAttack, Color.red);
-            Vector2 pos = entity.transform.position;
-            pos += mDirToPlayer.normalized * entity.Stat.MoveSpeed * Time.deltaTime;
-            entity.transform.position = pos;
+
         }
 
     }
@@ -83,6 +87,10 @@ namespace monster_states
             mEntity = entity;
             entity.Animator.Play(ATTACK_ANIM_KEY);
             entity.ShowStatusPopup("Attack!");
+        }
+        public override void FixedExcute(BaseMonsterController entity)
+        {
+            entity.RigidBody.velocity = new Vector2(0f, entity.RigidBody.velocity.y);
         }
         public override void Excute(BaseMonsterController entity)
         {

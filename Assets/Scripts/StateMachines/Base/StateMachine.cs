@@ -15,6 +15,13 @@ public class StateMachine<T> where T : class
         if (mCurrState != null)
             mCurrState.Excute(mOnwer);
     }
+
+    public void FixedExcute()
+    {
+        if (mCurrState != null)
+            mCurrState.FixedExcute(mOnwer);
+    }
+
     public void ChangeState(State<T> eNewState)
     {
         if (eNewState == null) 

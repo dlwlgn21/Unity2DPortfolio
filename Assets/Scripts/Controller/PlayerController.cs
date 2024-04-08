@@ -58,6 +58,11 @@ public class PlayerController : BaseCharacterController
         NormalAttackRange = 1f;
         mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
     }
+    private void FixedUpdate()
+    {
+        mStateMachine.FixedExcute();
+    }
+
     void Update()
     {
         mStateMachine.Excute();
