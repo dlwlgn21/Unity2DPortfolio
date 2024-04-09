@@ -1,7 +1,6 @@
 using define;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
+
 
 namespace player_states
 {
@@ -9,17 +8,97 @@ namespace player_states
     public abstract class BasePlayerState : State<PlayerController>
     {
         protected float mHorizontalMove;
+        protected float mGroundCheckDistance = 0.2f;
+        public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.GROUND) | (1 << (int)define.EColliderLayer.PLATFORM);
 
         public override void Excute(PlayerController entity)
         {
             mHorizontalMove = Input.GetAxisRaw("Horizontal");
         }
         public virtual void ProcessKeyboardInput(PlayerController entity) {}
+
+        public void FlipSpriteAccodingPlayerInput(PlayerController entity)
+        {
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                entity.NormalAttackPoint.localPosition = entity.CachedAttackPointLocalLeftPos;
+                entity.ELookDir = ECharacterLookDir.LEFT;
+                entity.SpriteRenderer.flipX = true;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                entity.NormalAttackPoint.localPosition = entity.CachedAttackPointLocalRightPos;
+                entity.ELookDir = ECharacterLookDir.RIGHT;
+                entity.SpriteRenderer.flipX = false;
+            }
+        }
         protected bool IsAnimEnd(PlayerController entity)
         {
             if (entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 return true;
             return false;
+        }
+
+        protected bool IsStandGround(PlayerController entity)
+        {
+            Bounds bound = entity.BoxCollider.bounds;
+            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, mGroundCheckDistance, sGroundLayerMask);
+            BoxCast2DDebugDraw(bound.center, bound.size, mGroundCheckDistance, hit);
+            if (hit.collider == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        static public void BoxCast2DDebugDraw(Vector2 origin, Vector2 size, float distasnce, RaycastHit2D hit)
+        {
+            Vector2 p1, p2, p3, p4, p5, p6, p7, p8;
+            float w = size.x * 0.5f;
+            float h = size.y * 0.5f;
+            p1 = new Vector2(-w, h);
+            p2 = new Vector2(w, h);
+            p3 = new Vector2(w, -h);
+            p4 = new Vector2(-w, -h);
+
+            Quaternion q = Quaternion.AngleAxis(0, new Vector3(0, 0, 1));
+            p1 = q * p1;
+            p2 = q * p2;
+            p3 = q * p3;
+            p4 = q * p4;
+
+            p1 += origin;
+            p2 += origin;
+            p3 += origin;
+            p4 += origin;
+
+            Vector2 realDistance = Vector2.down * distasnce;
+            p5 = p1 + realDistance;
+            p6 = p2 + realDistance;
+            p7 = p3 + realDistance;
+            p8 = p4 + realDistance;
+
+
+            //Drawing the cast
+            UnityEngine.Color castColor = hit ? UnityEngine.Color.red : UnityEngine.Color.white;
+            Debug.DrawLine(p1, p2, castColor);
+            Debug.DrawLine(p2, p3, castColor);
+            Debug.DrawLine(p3, p4, castColor);
+            Debug.DrawLine(p4, p1, castColor);
+
+            Debug.DrawLine(p5, p6, castColor);
+            Debug.DrawLine(p6, p7, castColor);
+            Debug.DrawLine(p7, p8, castColor);
+            Debug.DrawLine(p8, p5, castColor);
+
+            Debug.DrawLine(p1, p5, castColor);
+            Debug.DrawLine(p2, p6, castColor);
+            Debug.DrawLine(p3, p7, castColor);
+            Debug.DrawLine(p4, p8, castColor);
+            if (hit)
+            {
+                Debug.DrawLine(hit.point, hit.point + hit.normal.normalized * 0.2f, UnityEngine.Color.yellow);
+            }
         }
     }
 
@@ -61,6 +140,7 @@ namespace player_states
         public override void Excute(PlayerController entity)
         {
             base.Excute(entity);
+            FlipSpriteAccodingPlayerInput(entity);
             ProcessKeyboardInput(entity);
         }
 
@@ -111,30 +191,52 @@ namespace player_states
         public override void Excute(PlayerController entity)
         {
             base.Excute(entity);
+            if (!IsStandGround(entity))
+                entity.ChangeState(EPlayerState.FALL);
+            FlipSpriteAccodingPlayerInput(entity);
             ProcessKeyboardInput(entity);
         }
 
-
-        public override void Exit(PlayerController entity)
-        {
-        }
     }
 
     public class Jump : BasePlayerState
     {
-        bool isInAir = false;
 
+        bool mIsInAir;
+        bool mIsTwiceJump;
+        bool mIsJumpKeyDownTwice;
+        public override void ProcessKeyboardInput(PlayerController entity)
+        {
+            if (mIsJumpKeyDownTwice)
+                return;
+            if (Input.GetKeyDown(PlayerController.KeyJump))
+            {
+                mIsTwiceJump = true;
+                mIsJumpKeyDownTwice = true;
+            }
+        }
         public override void Enter(PlayerController entity)
         {
             entity.Animator.Play("Jump");
-            isInAir = false;
+            mIsInAir = false;
+            mIsTwiceJump = false;
+            mIsJumpKeyDownTwice = false;
+            entity.JumpParticle.Play();
+
         }
         public override void FixedExcute(PlayerController entity)
         {
-            if (!isInAir)
+            if (mIsTwiceJump)
+            {
+                entity.Animator.Play("Jump", -1, 0f);
+                entity.RigidBody.AddForce(Vector2.up * 3, ForceMode2D.Impulse);
+                mIsTwiceJump = false;
+            }
+
+            if (!mIsInAir)
             {
                 entity.RigidBody.AddForce(Vector2.up * 6, ForceMode2D.Impulse);
-                isInAir = true;
+                mIsInAir = true;
             }
             else
             {
@@ -145,29 +247,95 @@ namespace player_states
         public override void Excute(PlayerController entity)
         {
             base.Excute(entity);
+            ProcessKeyboardInput(entity);
         }
     }
 
+    public class Climb : BasePlayerState
+    {
+        ECharacterLookDir mCharacterLookDir;
+        float mXOffset = 0.7f;
+        float mYOffset = 1.4f;
+
+        public void OnClimbAnimFullyPlayed(PlayerController entity)
+        {
+            Vector3 pos = entity.transform.position;
+            if (mCharacterLookDir == ECharacterLookDir.RIGHT)
+                entity.transform.position = new Vector3(pos.x + mXOffset, pos.y + mYOffset, pos.z);
+            else
+                entity.transform.position = new Vector3(pos.x - mXOffset, pos.y + mYOffset, pos.z);
+            entity.ChangeState(EPlayerState.IDLE);
+        }
+
+        public override void Enter(PlayerController entity)
+        {
+            entity.SpriteRenderer.material = entity.PlayerClimbMaterial;
+            mCharacterLookDir = entity.ELookDir;
+            entity.Animator.Play("Climb");
+        }
+        public override void FixedExcute(PlayerController entity)
+        {
+            entity.RigidBody.gravityScale = 0f;
+            entity.RigidBody.velocity = Vector2.zero;
+        }
+        public override void Exit(PlayerController entity)
+        {
+            entity.RigidBody.gravityScale = 1f;
+            entity.SpriteRenderer.material = entity.PlayerMaterial;
+        }
+    }
+
+
     public class Fall : BasePlayerState
     {
-        float mExtraHeight = 0.1f;
-        int mLayerMask = 1 << (int)define.EColliderLayer.CAVE_TILES;
+        Transform mLedgeCheckPoint;
+        LayerMask mPlatformLayerMask = 1 << (int)define.EColliderLayer.PLATFORM;
+        ECharacterLookDir mCharacterLookDir;
+        float mExtraHeight = 0.2f;
+
         public override void Enter(PlayerController entity)
         {
             entity.Animator.Play("Fall");
+            if (mLedgeCheckPoint == null)
+                mLedgeCheckPoint = entity.LedgeCheckPoint;
+            mCharacterLookDir = entity.ELookDir;
         }
+
+
 
         public override void Excute(PlayerController entity)
         {
             Bounds bound = entity.BoxCollider.bounds;
-            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, mExtraHeight, mLayerMask);
-            Debug.DrawRay(bound.center + new Vector3(bound.extents.x, 0), Vector2.down * (bound.extents.y + mExtraHeight), Color.red);
-            Debug.DrawRay(bound.center - new Vector3(bound.extents.x, 0), Vector2.down * (bound.extents.y + mExtraHeight), Color.red);
-            
+            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, mExtraHeight, sGroundLayerMask);
+            BoxCast2DDebugDraw(bound.center, bound.size, mExtraHeight, hit);
+
             if (hit.collider != null)
             {
                 entity.ChangeState(EPlayerState.LAND);
+                return;
             }
+
+            if (IsGrabLedge())
+                entity.ChangeState(EPlayerState.CLIMB);
+        }
+
+        public bool IsGrabLedge()
+        {
+            float dist = 0.75f;
+            RaycastHit2D hit;
+            if (mCharacterLookDir == ECharacterLookDir.RIGHT)
+            {
+                hit = Physics2D.Raycast(mLedgeCheckPoint.position, Vector2.right, dist, mPlatformLayerMask);
+                Debug.DrawRay(mLedgeCheckPoint.position, Vector2.right * dist, UnityEngine.Color.red);
+            }
+            else
+            {
+                hit = Physics2D.Raycast(mLedgeCheckPoint.position, Vector2.left, dist, mPlatformLayerMask);
+                Debug.DrawRay(mLedgeCheckPoint.position, Vector2.left * dist, UnityEngine.Color.red);
+            }
+            if (hit.collider != null)
+                return true;
+            return false;
         }
     }
 
@@ -176,18 +344,24 @@ namespace player_states
         public override void Enter(PlayerController entity)
         {
             entity.Animator.Play("Land");
+            entity.FootDustParticle.Play();
         }
         public override void Excute(PlayerController entity)
         {
             if (IsAnimEnd(entity))
-                entity.ChangeState(EPlayerState.IDLE);
+            {
+                if (Input.anyKey)
+                    entity.ChangeState(EPlayerState.RUN);
+                else
+                    entity.ChangeState(EPlayerState.IDLE);
+            }
         }
     }
 
     public class Roll : BasePlayerState
     {
         ECharacterLookDir meLookDir;
-        int mLayerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.CAVE_TILES);
+        int mLayerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM);
         public void OnRollAnimFullyPlayed(PlayerController entity) { entity.ChangeState(EPlayerState.RUN); }
         public override void Enter(PlayerController entity)
         {
@@ -205,15 +379,6 @@ namespace player_states
                 entity.RigidBody.velocity = new Vector2(speed * -Time.deltaTime, oriVelo.y);
         }
 
-        public override void Excute(PlayerController entity)
-        {
-            //Vector2 pos = entity.transform.position;
-            //if (meLookDir == define.ECharacterLookDir.RIGHT)
-            //    pos.x += mRollMovingDist * Time.deltaTime;
-            //else
-            //    pos.x += mRollMovingDist * -Time.deltaTime;
-            //entity.transform.position = pos;
-        }
         public override void Exit(PlayerController entity)
         {
             Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, mLayerMask);

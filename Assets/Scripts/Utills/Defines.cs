@@ -14,7 +14,8 @@ namespace define
     {
         PLAYER = 6,
         MONSTERS = 7,
-        CAVE_TILES = 8,
+        GROUND = 8,
+        PLATFORM = 10,
     }
 
 

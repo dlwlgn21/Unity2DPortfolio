@@ -14,6 +14,7 @@ public enum EPlayerState
     RUN,
     ROLL,
     JUMP,
+    CLIMB,
     FALL,
     LAND,
     NORMAL_ATTACK_1,
@@ -45,23 +46,43 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyRoll = KeyCode.V;
     public static KeyCode KeyJump = KeyCode.Space;
 
+    [SerializeField]
+    public Material PlayerClimbMaterial;
+    [SerializeField]
+    public Material PlayerMaterial;
+
     public BoxCollider2D BoxCollider { get; set; }
+    public ParticleSystem JumpParticle { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState meCurrentState { get; private set; }
+    public Transform LedgeCheckPoint { get; private set; }
     
     StateMachine<PlayerController> mStateMachine;
     State<PlayerController>[] mStates;
+
     public override void Init()
     {
         base.Init();
         Stat = gameObject.GetOrAddComponent<PlayerStat>();
         BoxCollider = gameObject.GetComponent<BoxCollider2D>();
-        Managers.Input.KeyboardHandler -= OnKeyboardArrowPressed;
-        Managers.Input.KeyboardHandler += OnKeyboardArrowPressed;
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
         mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
-        
+        for (int i = 0; i < gameObject.transform.childCount; ++i)
+        {
+            Transform tr = gameObject.transform.GetChild(i);
+            if (tr != null)
+            {
+                if (tr.gameObject.name == "LedgeCheckPoint")
+                    LedgeCheckPoint = tr;
+            }
+            else
+                break;
+        }
+        Debug.Assert(LedgeCheckPoint != null);
+        // JumpParticle
+        JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
+        Debug.Assert(JumpParticle != null);
     }
     private void FixedUpdate()
     {
@@ -110,7 +131,11 @@ public class PlayerController : BaseCharacterController
         rollState.OnRollAnimFullyPlayed(this);
         FootDustParticle.Play();
     }
-
+    public void OnPlayerClimbAnimFullyPlayed()
+    {
+        player_states.Climb climbState = (player_states.Climb)mStates[(uint)EPlayerState.CLIMB];
+        climbState.OnClimbAnimFullyPlayed(this);
+    }
     public void OnPlayerFootStep()
     {
         FootDustParticle.Play();
@@ -120,31 +145,10 @@ public class PlayerController : BaseCharacterController
     {
         FootDustParticle.Play();
     }
+
+
     #endregion
 
-
-    public void OnKeyboardArrowPressed()
-    {
-        if (meCurrentState == EPlayerState.NORMAL_ATTACK_1 ||
-            meCurrentState == EPlayerState.NORMAL_ATTACK_2 ||
-            meCurrentState == EPlayerState.NORMAL_ATTACK_3)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            NormalAttackPoint.localPosition = mCachedAttackPointLocalLeftPos;
-            ELookDir = ECharacterLookDir.LEFT;
-            SpriteRenderer.flipX = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            NormalAttackPoint.localPosition = mCachedAttackPointLocalRightPos;
-            ELookDir = ECharacterLookDir.RIGHT;
-            SpriteRenderer.flipX = false;
-        }
-    }
-
-    
 
     public void OnHitted(int damage) 
     {
@@ -156,7 +160,7 @@ public class PlayerController : BaseCharacterController
             ChangeState(EPlayerState.BLOCK_SUCESS);
             return;
         }
-        if (meCurrentState == EPlayerState.BLOCK_SUCESS)
+        if (meCurrentState == EPlayerState.BLOCK_SUCESS || meCurrentState == EPlayerState.CLIMB)
             return;
 
         // Damage Section
@@ -187,6 +191,7 @@ public class PlayerController : BaseCharacterController
         mStates[(uint)EPlayerState.RUN] = new player_states.Run();
         mStates[(uint)EPlayerState.ROLL] = new player_states.Roll();
         mStates[(uint)EPlayerState.JUMP] = new player_states.Jump();
+        mStates[(uint)EPlayerState.CLIMB] = new player_states.Climb();
         mStates[(uint)EPlayerState.FALL] = new player_states.Fall();
         mStates[(uint)EPlayerState.LAND] = new player_states.Land();
         mStates[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1();

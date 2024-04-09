@@ -9,19 +9,19 @@ public abstract class BaseCharacterController : MonoBehaviour
     public Animator HitEffectAniamtor { get; set; }
 
     public Rigidbody2D RigidBody { get; set; }
-    public ECharacterLookDir ELookDir { get; protected set; }
+    public ECharacterLookDir ELookDir { get; set; }
     public Transform NormalAttackPoint { get; protected set; }
     public ParticleSystem FootDustParticle { get; set; }
     public SpriteRenderer SpriteRenderer { get; set; }
     public float NormalAttackRange { get; protected set; }
+    public Vector3 CachedAttackPointLocalRightPos { get; set; }
+    public Vector3 CachedAttackPointLocalLeftPos { get; set; }
 
     protected TextMesh mDamageText;
     protected TextMesh mStatusText;
     protected UIHealthBar mHealthBar;
 
-    protected Vector3 mCachedAttackPointLocalRightPos;
-    protected Vector3 mCachedAttackPointLocalLeftPos;
-    
+
 
     protected abstract void initStates();
 
@@ -41,10 +41,10 @@ public abstract class BaseCharacterController : MonoBehaviour
         SpriteRenderer = gameObject.GetOrAddComponent<SpriteRenderer>();
         NormalAttackPoint = transform.Find("NormalAttackPoint").gameObject.transform;
         Debug.Assert(NormalAttackPoint != null);
-        mCachedAttackPointLocalRightPos = NormalAttackPoint.localPosition;
+        CachedAttackPointLocalRightPos = NormalAttackPoint.localPosition;
         Vector3 leftPos = NormalAttackPoint.localPosition;
         leftPos.x = -leftPos.x;
-        mCachedAttackPointLocalLeftPos = leftPos;
+        CachedAttackPointLocalLeftPos = leftPos;
 
         foreach (Animator aniamtor in gameObject.GetComponentsInChildren<Animator>())
         {

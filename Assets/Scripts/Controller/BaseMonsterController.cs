@@ -72,13 +72,13 @@ public abstract class BaseMonsterController : BaseCharacterController
         {
             SpriteRenderer.flipX = false;
             ELookDir = define.ECharacterLookDir.RIGHT;
-            NormalAttackPoint.localPosition = mCachedAttackPointLocalRightPos;
+            NormalAttackPoint.localPosition = CachedAttackPointLocalRightPos;
         }
         else
         {
             SpriteRenderer.flipX = true;
             ELookDir = define.ECharacterLookDir.LEFT;
-            NormalAttackPoint.localPosition = mCachedAttackPointLocalLeftPos;
+            NormalAttackPoint.localPosition = CachedAttackPointLocalLeftPos;
         }
     }
     protected override void initStates()
