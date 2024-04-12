@@ -23,7 +23,7 @@ public abstract class BaseCharacterController : MonoBehaviour
 
 
 
-    protected abstract void initStates();
+    protected abstract void InitStates();
 
     public static string HIT_EFFECT_1_KEY = "Hit1";
     public static string HIT_EFFECT_2_KEY = "Hit2";
@@ -32,7 +32,7 @@ public abstract class BaseCharacterController : MonoBehaviour
     void Start()
     {
         Init();
-        initStates();
+        InitStates();
     }
     public virtual void Init()
     {

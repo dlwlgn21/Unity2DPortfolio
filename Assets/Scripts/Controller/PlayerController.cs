@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static UnityEngine.EventSystems.EventTrigger;
+using JetBrains.Annotations;
 
 public enum EPlayerState
 {
@@ -33,8 +34,6 @@ public enum EPlayerNoramlAttackType
     ATTACK_2,
     ATTACK_3
 }
-
-
 public class PlayerController : BaseCharacterController
 {
     public static KeyCode KeyUp = KeyCode.UpArrow;
@@ -69,10 +68,8 @@ public class PlayerController : BaseCharacterController
         NormalAttackRange = 1f;
         mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
         LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
-        Debug.Assert(LedgeCheckPoint != null);
-        // JumpParticle
         JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
-        Debug.Assert(JumpParticle != null);
+        Debug.Assert(mHealthBar != null && LedgeCheckPoint != null && JumpParticle != null);
     }
     private void FixedUpdate()
     {
@@ -140,14 +137,15 @@ public class PlayerController : BaseCharacterController
     #endregion
 
 
-    public void OnHitted(int damage) 
+    public void OnHitted(int damage, BaseMonsterController monContorller) 
     {
         // Blocking Section
-        if (meCurrentState == EPlayerState.BLOCKING)
+        if (meCurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
         {
             HitEffectAniamtor.gameObject.SetActive(true);
             HitEffectAniamtor.Play(HIT_EFFECT_3_KEY, -1, 0f);
             ChangeState(EPlayerState.BLOCK_SUCESS);
+            monContorller.OnPlayerBlockSuccess();
             return;
         }
         if (meCurrentState == EPlayerState.BLOCK_SUCESS || meCurrentState == EPlayerState.CLIMB)
@@ -173,7 +171,7 @@ public class PlayerController : BaseCharacterController
     }
 
 
-    protected override void initStates()
+    protected override void InitStates()
     {
         mStateMachine = new StateMachine<PlayerController>();
         mStates = new State<PlayerController>[(uint)EPlayerState.COUNT];

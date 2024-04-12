@@ -15,9 +15,9 @@ public class BlasterController : BaseMonsterController
     {
         Stat.Init(EMonsterNames.Blaster);
     }
-    protected override void initStates()
+    protected override void InitStates()
     {
-        base.initStates();
+        base.InitStates();
         AssignAttackState<BlasterAttack>();
     }
 

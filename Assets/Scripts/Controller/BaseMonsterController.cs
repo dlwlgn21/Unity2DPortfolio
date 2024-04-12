@@ -8,6 +8,7 @@ public enum EMonsterState
     SPAWN,
     TRACE,
     ATTACK,
+    HITTED_KNOCKBACK,
     HITTED,
     DIE,
     COUNT
@@ -60,6 +61,10 @@ public abstract class BaseMonsterController : BaseCharacterController
         FootDustParticle.Play();
     }
 
+    public void OnPlayerBlockSuccess()
+    {
+        ChangeState(EMonsterState.HITTED_KNOCKBACK);
+    }
     protected void SetLookDir()
     {
         if (meCurrentState == EMonsterState.ATTACK ||
@@ -81,17 +86,17 @@ public abstract class BaseMonsterController : BaseCharacterController
             NormalAttackPoint.localPosition = CachedAttackPointLocalLeftPos;
         }
     }
-    protected override void initStates()
+    protected override void InitStates()
     {
         mStateMachine = new StateMachine<BaseMonsterController>();
         mStates = new State<BaseMonsterController>[(uint)EMonsterState.COUNT];
         mStates[(uint)EMonsterState.SPAWN] = new monster_states.Spawn(this);
         mStates[(uint)EMonsterState.TRACE] = new monster_states.Trace(this);
         mStates[(uint)EMonsterState.HITTED] = new monster_states.Hitted(this);
+        mStates[(uint)EMonsterState.HITTED_KNOCKBACK] = new monster_states.HittedKnockback(this);
         mStates[(uint)EMonsterState.DIE] = new monster_states.Die(this);
         mStateMachine.Init(this, mStates[(uint)EMonsterState.SPAWN]);
     }
-
     protected abstract void AssignAttackState<T>() where T : monster_states.BaseAttack;
     protected abstract void InitStat();
 }

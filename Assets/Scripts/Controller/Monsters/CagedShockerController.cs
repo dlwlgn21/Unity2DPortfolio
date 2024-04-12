@@ -15,9 +15,9 @@ public class CagedShockerController : BaseMonsterController
     {
         Stat.Init(EMonsterNames.CagedShoker);
     }
-    protected override void initStates()
+    protected override void InitStates()
     {
-        base.initStates();
+        base.InitStates();
         AssignAttackState<CagedShockerAttack>();
     }
 

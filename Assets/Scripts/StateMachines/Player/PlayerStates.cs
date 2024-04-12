@@ -11,10 +11,7 @@ namespace player_states
         protected float mGroundCheckDistance = 0.2f;
         public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.GROUND) | (1 << (int)define.EColliderLayer.PLATFORM);
         public BasePlayerState(PlayerController controller) : base(controller) {  }
-        public override void Excute()
-        {
-            mHorizontalMove = Input.GetAxisRaw("Horizontal");
-        }
+        public override void Excute() { mHorizontalMove = Input.GetAxisRaw("Horizontal"); }
         public virtual void ProcessKeyboardInput() {}
 
         public void FlipSpriteAccodingPlayerInput()
@@ -177,15 +174,9 @@ namespace player_states
             }
         }
 
-        public override void Enter()
-        {
-            PlayAnimation(EPlayerState.IDLE);
-        }
+        public override void Enter()       { PlayAnimation(EPlayerState.IDLE); }
 
-        public override void FixedExcute()
-        {
-            mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y);
-        }
+        public override void FixedExcute() { mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y); }
         public override void Excute()
         {
             base.Excute();
@@ -222,10 +213,7 @@ namespace player_states
             }
         }
 
-        public override void Enter()
-        {
-            PlayAnimation(EPlayerState.RUN);
-        }
+        public override void Enter() { PlayAnimation(EPlayerState.RUN); }
 
         public override void FixedExcute()
         {
@@ -314,7 +302,6 @@ namespace player_states
                 mEntity.transform.position = new Vector3(pos.x - mXOffset, pos.y + mYOffset, pos.z);
             mEntity.ChangeState(EPlayerState.IDLE);
         }
-
         public override void Enter()
         {
             mEntity.SpriteRenderer.material = mEntity.PlayerClimbMaterial;
@@ -350,9 +337,6 @@ namespace player_states
                 mLedgeCheckPoint = mEntity.LedgeCheckPoint;
             mCharacterLookDir = mEntity.ELookDir;
         }
-
-
-
         public override void Excute()
         {
             Bounds bound = mEntity.BoxCollider.bounds;
@@ -392,7 +376,6 @@ namespace player_states
     public class Land : BasePlayerState
     {
         public Land(PlayerController controller) : base(controller) { }
-
         public override void Enter()
         {
             PlayAnimation(EPlayerState.LAND);
@@ -409,7 +392,6 @@ namespace player_states
             }
         }
     }
-
     public class Roll : BasePlayerState
     {
         public Roll(PlayerController controller) : base(controller) { }
@@ -419,7 +401,6 @@ namespace player_states
         public void OnRollAnimFullyPlayed(PlayerController mEntity) { mEntity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {
-
             meLookDir = mEntity.ELookDir;
             PlayAnimation(EPlayerState.ROLL);
             Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS, (int)EColliderLayer.PLAYER);
@@ -434,10 +415,7 @@ namespace player_states
                 mEntity.RigidBody.velocity = new Vector2(speed * -Time.deltaTime, oriVelo.y);
         }
 
-        public override void Exit()
-        {
-            Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, mLayerMask);
-        }
+        public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, mLayerMask); }
     }
     public abstract class NormalAttackState : BasePlayerState
     {
@@ -459,7 +437,6 @@ namespace player_states
                 controller.HittedByPlayer();
             }
         }
-
         public override void Enter()
         {
             mAttackPoint = mEntity.NormalAttackPoint;
@@ -500,10 +477,7 @@ namespace player_states
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_1);
         }
-        public override void Excute()
-        {
-            CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_2);
-        }
+        public override void Excute() { CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_2); }
     }
 
     public class NormalAttack2 : NormalAttackState
@@ -514,10 +488,7 @@ namespace player_states
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_2);
         }
-        public override void Excute()
-        {
-            CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_3);
-        }
+        public override void Excute() { CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_3); }
     }
 
     public class NormalAttack3 : NormalAttackState
@@ -540,15 +511,9 @@ namespace player_states
     {
         public Blocking(PlayerController controller) : base(controller) { }
 
-        public override void Enter()
-        {
-            PlayAnimation(EPlayerState.BLOCKING);
-        }
+        public override void Enter()        { PlayAnimation(EPlayerState.BLOCKING); }
 
-        public override void FixedExcute()
-        {
-            mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y);
-        }
+        public override void FixedExcute()  { mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y); }
 
         public override void Excute()
         {
@@ -559,13 +524,29 @@ namespace player_states
 
     public class BlockSuccess : BasePlayerState
     {
+        bool mIsKnockbackFlag;
+        float mKnockbackForce = 3f;
         public BlockSuccess(PlayerController controller) : base(controller) { }
 
         public override void Enter()
         {
             PlayAnimation(EPlayerState.BLOCK_SUCESS);
             mEntity.ShowStatusPopup("Block!");
+            mIsKnockbackFlag = false;
         }
+
+        public override void FixedExcute()
+        {
+            if (!mIsKnockbackFlag)
+            {
+                if (mEntity.ELookDir == define.ECharacterLookDir.LEFT)
+                    mEntity.RigidBody.AddForce(Vector2.right * mKnockbackForce, ForceMode2D.Impulse);
+                else
+                    mEntity.RigidBody.AddForce(Vector2.left * mKnockbackForce, ForceMode2D.Impulse);
+                mIsKnockbackFlag = true;
+            }
+        }
+
         public override void Excute()
         {
             if (IsAnimEnd())
@@ -590,9 +571,6 @@ namespace player_states
         {
 
         }
-        public override void Exit()
-        {
-        }
     }
 
     public class Die : BasePlayerState
@@ -607,9 +585,6 @@ namespace player_states
         {
             if (IsAnimEnd())
                 mEntity.gameObject.SetActive(false);
-        }
-        public override void Exit()
-        {
         }
     }
 }

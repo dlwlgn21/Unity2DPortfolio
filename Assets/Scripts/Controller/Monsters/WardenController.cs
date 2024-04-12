@@ -15,9 +15,9 @@ public class WardenController : BaseMonsterController
     {
         Stat.Init(EMonsterNames.Warden);
     }
-    protected override void initStates()
+    protected override void InitStates()
     {
-        base.initStates();
+        base.InitStates();
         AssignAttackState<WardenAttack>();
     }
 

@@ -15,9 +15,9 @@ public class HSlicerController : BaseMonsterController
     {
         Stat.Init(EMonsterNames.HeabySlicer);
     }
-    protected override void initStates()
+    protected override void InitStates()
     {
-        base.initStates();
+        base.InitStates();
         AssignAttackState<HSlicerAttack>();
     }
 
