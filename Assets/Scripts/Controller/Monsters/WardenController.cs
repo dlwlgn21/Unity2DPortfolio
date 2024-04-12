@@ -23,7 +23,7 @@ public class WardenController : BaseMonsterController
 
     protected override void AssignAttackState<WardenAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.WardenAttack();
+        mStates[(uint)EMonsterState.ATTACK] = new monster_states.WardenAttack(this);
     }
 
     public void OnWardenValidAttack()

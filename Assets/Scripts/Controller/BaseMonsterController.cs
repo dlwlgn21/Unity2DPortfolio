@@ -85,10 +85,10 @@ public abstract class BaseMonsterController : BaseCharacterController
     {
         mStateMachine = new StateMachine<BaseMonsterController>();
         mStates = new State<BaseMonsterController>[(uint)EMonsterState.COUNT];
-        mStates[(uint)EMonsterState.SPAWN] = new monster_states.Spawn();
-        mStates[(uint)EMonsterState.TRACE] = new monster_states.Trace();
-        mStates[(uint)EMonsterState.HITTED] = new monster_states.Hitted();
-        mStates[(uint)EMonsterState.DIE] = new monster_states.Die();
+        mStates[(uint)EMonsterState.SPAWN] = new monster_states.Spawn(this);
+        mStates[(uint)EMonsterState.TRACE] = new monster_states.Trace(this);
+        mStates[(uint)EMonsterState.HITTED] = new monster_states.Hitted(this);
+        mStates[(uint)EMonsterState.DIE] = new monster_states.Die(this);
         mStateMachine.Init(this, mStates[(uint)EMonsterState.SPAWN]);
     }
 

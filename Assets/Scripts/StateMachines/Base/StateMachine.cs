@@ -13,13 +13,13 @@ public class StateMachine<T> where T : class
     public void Excute()
     {
         if (mCurrState != null)
-            mCurrState.Excute(mOnwer);
+            mCurrState.Excute();
     }
 
     public void FixedExcute()
     {
         if (mCurrState != null)
-            mCurrState.FixedExcute(mOnwer);
+            mCurrState.FixedExcute();
     }
 
     public void ChangeState(State<T> eNewState)
@@ -27,8 +27,8 @@ public class StateMachine<T> where T : class
         if (eNewState == null) 
             return;
         if (mCurrState != null)
-            mCurrState.Exit(mOnwer);
+            mCurrState.Exit();
         mCurrState = eNewState;
-        mCurrState.Enter(mOnwer);
+        mCurrState.Enter();
     }
 }

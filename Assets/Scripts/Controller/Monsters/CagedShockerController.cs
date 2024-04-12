@@ -23,7 +23,7 @@ public class CagedShockerController : BaseMonsterController
 
     protected override void AssignAttackState<CagedShockerAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.CagedShockerAttack();
+        mStates[(uint)EMonsterState.ATTACK] = new monster_states.CagedShockerAttack(this);
     }
 
     public void OnNoramlAttack1ValidSlashed()

@@ -23,7 +23,7 @@ public class BlasterController : BaseMonsterController
 
     protected override void AssignAttackState<BlasterAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.BlasterAttack();
+        mStates[(uint)EMonsterState.ATTACK] = new monster_states.BlasterAttack(this);
     }
 
     public void OnBlasterValidAttack()

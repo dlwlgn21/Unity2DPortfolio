@@ -23,7 +23,7 @@ public class HSlicerController : BaseMonsterController
 
     protected override void AssignAttackState<HSlicerAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.HSlicerAttack();
+        mStates[(uint)EMonsterState.ATTACK] = new monster_states.HSlicerAttack(this);
     }
 
     public void OnHSlicerValidAttack1()

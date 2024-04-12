@@ -68,17 +68,7 @@ public class PlayerController : BaseCharacterController
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
         mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
-        for (int i = 0; i < gameObject.transform.childCount; ++i)
-        {
-            Transform tr = gameObject.transform.GetChild(i);
-            if (tr != null)
-            {
-                if (tr.gameObject.name == "LedgeCheckPoint")
-                    LedgeCheckPoint = tr;
-            }
-            else
-                break;
-        }
+        LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
         Debug.Assert(LedgeCheckPoint != null);
         // JumpParticle
         JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
@@ -123,7 +113,7 @@ public class PlayerController : BaseCharacterController
     public void OnHittedAnimFullyPlayed()
     {
         player_states.Hitted hittedState = (player_states.Hitted)mStates[(uint)EPlayerState.HITTED];
-        hittedState.OnHittedAnimFullyPlayed(this);
+        hittedState.OnHittedAnimFullyPlayed();
     }
     public void OnRollAnimFullyPlayed()
     {
@@ -134,7 +124,7 @@ public class PlayerController : BaseCharacterController
     public void OnPlayerClimbAnimFullyPlayed()
     {
         player_states.Climb climbState = (player_states.Climb)mStates[(uint)EPlayerState.CLIMB];
-        climbState.OnClimbAnimFullyPlayed(this);
+        climbState.OnClimbAnimFullyPlayed();
     }
     public void OnPlayerFootStep()
     {
@@ -187,20 +177,20 @@ public class PlayerController : BaseCharacterController
     {
         mStateMachine = new StateMachine<PlayerController>();
         mStates = new State<PlayerController>[(uint)EPlayerState.COUNT];
-        mStates[(uint)EPlayerState.IDLE] = new player_states.Idle();
-        mStates[(uint)EPlayerState.RUN] = new player_states.Run();
-        mStates[(uint)EPlayerState.ROLL] = new player_states.Roll();
-        mStates[(uint)EPlayerState.JUMP] = new player_states.Jump();
-        mStates[(uint)EPlayerState.CLIMB] = new player_states.Climb();
-        mStates[(uint)EPlayerState.FALL] = new player_states.Fall();
-        mStates[(uint)EPlayerState.LAND] = new player_states.Land();
-        mStates[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1();
-        mStates[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2();
-        mStates[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3();
-        mStates[(uint)EPlayerState.BLOCKING] = new player_states.Blocking();
-        mStates[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess();
-        mStates[(uint)EPlayerState.HITTED] = new player_states.Hitted();
-        mStates[(uint)EPlayerState.DIE] = new player_states.Die();
+        mStates[(uint)EPlayerState.IDLE] = new player_states.Idle(this);
+        mStates[(uint)EPlayerState.RUN] = new player_states.Run(this);
+        mStates[(uint)EPlayerState.ROLL] = new player_states.Roll(this);
+        mStates[(uint)EPlayerState.JUMP] = new player_states.Jump(this);
+        mStates[(uint)EPlayerState.CLIMB] = new player_states.Climb(this);
+        mStates[(uint)EPlayerState.FALL] = new player_states.Fall(this);
+        mStates[(uint)EPlayerState.LAND] = new player_states.Land(this);
+        mStates[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1(this);
+        mStates[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2(this);
+        mStates[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3(this);
+        mStates[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
+        mStates[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
+        mStates[(uint)EPlayerState.HITTED] = new player_states.Hitted(this);
+        mStates[(uint)EPlayerState.DIE] = new player_states.Die(this);
         mStateMachine.Init(this, mStates[(uint)EPlayerState.IDLE]);
     }
 
