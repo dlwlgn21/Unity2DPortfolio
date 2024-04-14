@@ -1,0 +1,1297 @@
+fileFormatVersion: 2
+guid: 36aa84676e5effd47a15ea745c35ac3d
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HeabySlicer192x70_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a45a3d2a4eca744593ac28b7bf1b1c9
+      internalID: -714706049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01243d51c870da2489a53edae091e27e
+      internalID: -1021302614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_2
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 704f2ebf8e693334692871d42c536004
+      internalID: 222256335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_3
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8b1ef3342696f447a843e74ec7df817
+      internalID: -1853134810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_4
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 420b853594694034b9392e6bf535b538
+      internalID: -1266928091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_5
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a30068bb1b2cff4c9e9df1179c9f81f
+      internalID: 1443156368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_6
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d6f71c03c9b34d4eb2fc42395036fc2
+      internalID: 1187045789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_7
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 347cb043b667b6e469256f47f8f42d43
+      internalID: -1674430835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_8
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8468a5d462159964683fbcd63789803e
+      internalID: 1632544643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_9
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e17046fd268459489cff0ec51adfbdd
+      internalID: 1595136168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_10
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0d209c818724714ebcd199372fb3b4a
+      internalID: 2069583574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_11
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 249ad4a028ad9004db0a0f5b47facfdd
+      internalID: 2121868661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_12end
+      rect:
+        serializedVersion: 2
+        x: 2305
+        y: 280
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a58f5af790b399546a463c1a195af5e0
+      internalID: -960824396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccda560e61f961d45b871e2d1f3c2a6b
+      internalID: -600602758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_14
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddfdfb19cc0cf9d438837db5d5f8f78d
+      internalID: -832532969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_15
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a13b44681d99a444a28825635aac7bf
+      internalID: -129020597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_16
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7e8c0835b555cc4aad1843be418e6f4
+      internalID: -1518096653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_17
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 541c5408962546d439855d756e28d4c2
+      internalID: 1160736889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_18
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b040628224c1aa2498282f0213fad036
+      internalID: 1707667025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_19
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e7024106f636f94782228cb1b8c804f
+      internalID: 452084775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_20end
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 210
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ba2f698a46560a4f959c9692c134711
+      internalID: -865359572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 678114d4c56c9044b9539ebfc5adbaf3
+      internalID: 1221881329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_22
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c0261025b3912040afa03412cf754d9
+      internalID: -1210377796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_23
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e06635c6bf50df4195bbd9de48c7a25
+      internalID: 1239855254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_24
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5de9104ebafdf74d87ddb54fd7dbb43
+      internalID: -1743255602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_25
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3369ad8bb6b7c2c4485c273259a7be60
+      internalID: -1739984963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_26
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 729bd92d31063544b9914851b28640ad
+      internalID: 1403894300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_27
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d03d471378977a349b2a159a1c066ef7
+      internalID: 1899478498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_28
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 882711597426d1b4f828d3a20c26436b
+      internalID: 1005689404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_29
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86be7ce7d8f62e14c8fd57da9691c14d
+      internalID: 421677632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_30
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ec74afde999a6645992a06292e23264
+      internalID: -956489523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_31
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5162e715a8744b841b2d8ac1561a1fe8
+      internalID: -1215666189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_32
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: defaae3b2dec5e4468a8d0ae6eebe9e7
+      internalID: 231537315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_33
+      rect:
+        serializedVersion: 2
+        x: 2304
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edf0296d86e3d5647a45b5c9494262b3
+      internalID: -862984919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_34end
+      rect:
+        serializedVersion: 2
+        x: 2496
+        y: 140
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be592a3c69430d648a2a25de2287bf2d
+      internalID: 1892422539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 70
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d036b9a8f3b590499ea7760ac8baf5b
+      internalID: 508437597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_36end
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 70
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 079d2c457eb34634784ae51a3e4f376a
+      internalID: -2043769185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_37
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc4441f4f9a7872449a60f9d7f91c4ea
+      internalID: 202693103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_38
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c62291d1daf2167449660b8bd382164f
+      internalID: -955930552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_39
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82b57842f76277242a42316978a89a84
+      internalID: -236684270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_40
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c481b9e5633d364c9173d8feda76746
+      internalID: 1401719571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_41
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82f15c1f8c9118e4f8fda60bf7cfa455
+      internalID: -1118647044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_42
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80ed90dba2c2d8e459df6f80ad2f3e8e
+      internalID: 761122009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_43
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09f28aa15c79af449aef8dd6516d6c09
+      internalID: 1008368973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_44
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9adfd02ed6b3a3e44a9194a1b753775c
+      internalID: -370689033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_45
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ee6ccce4889e73408c05094388b2d68
+      internalID: -106318984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_46
+      rect:
+        serializedVersion: 2
+        x: 1728
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8492ef58e38374448bd9d673d3596d42
+      internalID: -1119315245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_47
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a2cffb614aeb4646afadc7eddec810a
+      internalID: -1948638957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_48
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 149ca49cc1cefdd4c9a57f85bf794c5c
+      internalID: -1568310026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_49
+      rect:
+        serializedVersion: 2
+        x: 2304
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13323810a6374f24f8aec1fb5e64b641
+      internalID: 1285476785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_50
+      rect:
+        serializedVersion: 2
+        x: 2496
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8b49db158b176a4fa6d65d1d864f212
+      internalID: 1992575829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeabySlicer192x70_51
+      rect:
+        serializedVersion: 2
+        x: 2688
+        y: 0
+        width: 192
+        height: 70
+      alignment: 9
+      pivot: {x: 0.31, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9818b5230258f00438183d45199ae8ac
+      internalID: 647771323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      HeabySlicer192x70_0: -714706049
+      HeabySlicer192x70_1: -1021302614
+      HeabySlicer192x70_10: 2069583574
+      HeabySlicer192x70_11: 2121868661
+      HeabySlicer192x70_12end: -960824396
+      HeabySlicer192x70_13: -600602758
+      HeabySlicer192x70_14: -832532969
+      HeabySlicer192x70_15: -129020597
+      HeabySlicer192x70_16: -1518096653
+      HeabySlicer192x70_17: 1160736889
+      HeabySlicer192x70_18: 1707667025
+      HeabySlicer192x70_19: 452084775
+      HeabySlicer192x70_2: 222256335
+      HeabySlicer192x70_20end: -865359572
+      HeabySlicer192x70_21: 1221881329
+      HeabySlicer192x70_22: -1210377796
+      HeabySlicer192x70_23: 1239855254
+      HeabySlicer192x70_24: -1743255602
+      HeabySlicer192x70_25: -1739984963
+      HeabySlicer192x70_26: 1403894300
+      HeabySlicer192x70_27: 1899478498
+      HeabySlicer192x70_28: 1005689404
+      HeabySlicer192x70_29: 421677632
+      HeabySlicer192x70_3: -1853134810
+      HeabySlicer192x70_30: -956489523
+      HeabySlicer192x70_31: -1215666189
+      HeabySlicer192x70_32: 231537315
+      HeabySlicer192x70_33: -862984919
+      HeabySlicer192x70_34end: 1892422539
+      HeabySlicer192x70_35: 508437597
+      HeabySlicer192x70_36end: -2043769185
+      HeabySlicer192x70_37: 202693103
+      HeabySlicer192x70_38: -955930552
+      HeabySlicer192x70_39: -236684270
+      HeabySlicer192x70_4: -1266928091
+      HeabySlicer192x70_40: 1401719571
+      HeabySlicer192x70_41: -1118647044
+      HeabySlicer192x70_42: 761122009
+      HeabySlicer192x70_43: 1008368973
+      HeabySlicer192x70_44: -370689033
+      HeabySlicer192x70_45: -106318984
+      HeabySlicer192x70_46: -1119315245
+      HeabySlicer192x70_47: -1948638957
+      HeabySlicer192x70_48: -1568310026
+      HeabySlicer192x70_49: 1285476785
+      HeabySlicer192x70_5: 1443156368
+      HeabySlicer192x70_50: 1992575829
+      HeabySlicer192x70_51: 647771323
+      HeabySlicer192x70_6: 1187045789
+      HeabySlicer192x70_7: -1674430835
+      HeabySlicer192x70_8: 1632544643
+      HeabySlicer192x70_9: 1595136168
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
+using UnityEngine.Windows;
 
 public class Managers : MonoBehaviour
 {
@@ -11,12 +12,13 @@ public class Managers : MonoBehaviour
     ResourceManager mResourceManager = new ResourceManager();
     InputManager mInputManager = new InputManager();
     DataManager mDataManager = new DataManager();
-
+    PauseManager mPauseManager = new PauseManager();
 
 
     public static InputManager Input { get { return Instance.mInputManager; } }
     public static DataManager Data { get { return Instance.mDataManager; } }
     public static ResourceManager Resources { get { return Instance.mResourceManager; } }
+    public static PauseManager Pause { get { return Instance.mPauseManager; } }
 
 
     // Added part For BloodParticle
@@ -29,7 +31,19 @@ public class Managers : MonoBehaviour
 
     private void Update()
     {
+        // Pause Check
+        if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!sInstance.mPauseManager.IsPaused)
+                sInstance.mPauseManager.Pause();
+            else
+                sInstance.mPauseManager.Unpause();
+        }
+
+        if (sInstance.mPauseManager.IsPaused)
+            return;
         Input.OnUpdate();
+
     }
 
     static void Init()

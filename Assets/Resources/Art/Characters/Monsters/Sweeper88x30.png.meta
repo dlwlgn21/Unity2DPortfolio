@@ -1,0 +1,1341 @@
+fileFormatVersion: 2
+guid: d20cb09d5e30e3f418493c82e8f6f9ce
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Sweeper88x30_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 264
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 439b8c2f62c67c84bb1208815f3deda8
+      internalID: 1638532568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_1
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 264
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5b0afac0176617449f8ba1328c7c2c3
+      internalID: 910179136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_2
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 264
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f9837ca375b3274e8c9d72dba9cba62
+      internalID: -538268546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_3
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 264
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b89b31847a2d11a46bceec1cc1d6cf8c
+      internalID: -690318406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_4
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 264
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ceeb8edb11320945ad0a3149613f1bf
+      internalID: -1028405442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_5
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 264
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6532fbcbea8fff4cb235f5f10f4505e
+      internalID: 1296666639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b92c825090a86f438593376894261de
+      internalID: -892213682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_7
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 782e88344f012f74ebcd5427183a10b6
+      internalID: -2102721736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_8
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67a82a6e25499774abae499d3b79d0bc
+      internalID: 88953597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_9
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a027d832733b8541a1b61869f9290ef
+      internalID: -227435349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_10
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de68e3b2dba420049ac4a6dd190cea4e
+      internalID: 234880952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_11
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: accd13635537faf46ba5698aa27a9de3
+      internalID: -627331885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_12
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f26c492247a9e5443ab1802cd79f9af9
+      internalID: 1691021973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_13
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 231
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1fdf131aa42169478ec5057c0a59c57
+      internalID: 850671993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 198
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccb1c9b568abec94faf082bdbf965f14
+      internalID: 865418466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_15
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 198
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6e049b07cbd3b54ab8c5705c90ee33d
+      internalID: 1899103901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_16
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 198
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a41a8a625338a014caa71b2aa1656e1c
+      internalID: 1453001185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 165
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9169a19b480861439661744a3ee6068
+      internalID: -432970223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_18
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 165
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58f7d7ad1601b944da6cc1c27d75b2bf
+      internalID: 1673309182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_19
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 165
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad290e5d5955c64408ff26bc95929f81
+      internalID: -1764888122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fa1b24dfe86b304e900479ff629847b
+      internalID: 1664357020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_21
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc6a3e6db32607048921ad0f2f6238e1
+      internalID: -1255667022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_22
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e6d54aa5b3b2a7479fc70e7731768e7
+      internalID: 2017430932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_23
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb17bf7ec779fd848976b364e8f270b6
+      internalID: -1057877242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_24
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67cbdb7e4f41bc74681f50f24b3b698b
+      internalID: 1235829120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_25
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfece931112f13149a81c9783c0d9a7e
+      internalID: -1113675698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_26
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34a10216e225b27478d1e337a7758683
+      internalID: -1131668496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_27
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 308d60d8555f3e54ba9814dc48f4eef5
+      internalID: -1062915479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_28
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 428794d313564ae4ab8396161be3f77c
+      internalID: 834746350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_29
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 132
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec04c788f8fbfa94eab4791111b0c41e
+      internalID: -1469069410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e15064d1b9a00214c80bebb16a82bb30
+      internalID: -107993385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_31
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c67a2c17ec8cacf44bce17a3b9414d9a
+      internalID: -825693123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_32
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95df6ea41e765464b95f90561eb6a122
+      internalID: -1551033182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_33
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe6c808f5be65824ca0378bb550946ba
+      internalID: -1578177441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_34
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94b762928cd99664fa8bf2b96220c0e0
+      internalID: -2047455144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_35
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f75a22a85c6e7b34db527de84d8b06bd
+      internalID: -1310806157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_36
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3da6f1fb1a2a8ec4bb4d08ae693e693d
+      internalID: 2037736439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_37
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 99
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 025f78d3d38b8a8439482ecf53920502
+      internalID: 271982295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_38
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d73dab3388385c846917b5e8a8856a32
+      internalID: -870243707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_39
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1dfde976266e9f24da511b00046a2355
+      internalID: -1102335098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_40
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70df623c4d615704aacb2ca0c3b2698a
+      internalID: -338811287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_41
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a6b32d1c97a8d64682bd2a7951b2a05
+      internalID: 2109078670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_42
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7786195aca37fad4fbb59ba5049e36ba
+      internalID: -1726628172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_43
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3beccf7637ab4bd469ba05c2c050755a
+      internalID: 1429991702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_44
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 347392ceafe957447916f8f6291ce508
+      internalID: -690463228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_45
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd09e1b8256613c43adaa555b7695587
+      internalID: -1318223943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_46
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 66
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c50781a1239cab84683aa16b5ec6a83a
+      internalID: -432938651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_47
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 33
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39cc9457c94095b40bcb4dcdaa2317c2
+      internalID: 701397497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_48
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 33
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 929004b7de89c884e885a389cb959cdb
+      internalID: -1194170590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_49
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d11056e8495e7354b88e63a6d4a7d228
+      internalID: -2081515305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_50
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 0
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9280f605a3be92c478a4bac515a02c96
+      internalID: 668730565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_51
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 0
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb067e25d2db5c9448c7486058721756
+      internalID: -1296932592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_52
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 0
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcf9656ed7715f64881023a7cd2f07a2
+      internalID: 1618654790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sweeper88x30_53
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 88
+        height: 33
+      alignment: 9
+      pivot: {x: 0.31, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a91d68e1a6742b14fbc3a643771c1c4f
+      internalID: 1520838220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Sweeper88x30_0: 1638532568
+      Sweeper88x30_1: 910179136
+      Sweeper88x30_10: 234880952
+      Sweeper88x30_11: -627331885
+      Sweeper88x30_12: 1691021973
+      Sweeper88x30_13: 850671993
+      Sweeper88x30_14: 865418466
+      Sweeper88x30_15: 1899103901
+      Sweeper88x30_16: 1453001185
+      Sweeper88x30_17: -432970223
+      Sweeper88x30_18: 1673309182
+      Sweeper88x30_19: -1764888122
+      Sweeper88x30_2: -538268546
+      Sweeper88x30_20: 1664357020
+      Sweeper88x30_21: -1255667022
+      Sweeper88x30_22: 2017430932
+      Sweeper88x30_23: -1057877242
+      Sweeper88x30_24: 1235829120
+      Sweeper88x30_25: -1113675698
+      Sweeper88x30_26: -1131668496
+      Sweeper88x30_27: -1062915479
+      Sweeper88x30_28: 834746350
+      Sweeper88x30_29: -1469069410
+      Sweeper88x30_3: -690318406
+      Sweeper88x30_30: -107993385
+      Sweeper88x30_31: -825693123
+      Sweeper88x30_32: -1551033182
+      Sweeper88x30_33: -1578177441
+      Sweeper88x30_34: -2047455144
+      Sweeper88x30_35: -1310806157
+      Sweeper88x30_36: 2037736439
+      Sweeper88x30_37: 271982295
+      Sweeper88x30_38: -870243707
+      Sweeper88x30_39: -1102335098
+      Sweeper88x30_4: -1028405442
+      Sweeper88x30_40: -338811287
+      Sweeper88x30_41: 2109078670
+      Sweeper88x30_42: -1726628172
+      Sweeper88x30_43: 1429991702
+      Sweeper88x30_44: -690463228
+      Sweeper88x30_45: -1318223943
+      Sweeper88x30_46: -432938651
+      Sweeper88x30_47: 701397497
+      Sweeper88x30_48: -1194170590
+      Sweeper88x30_49: -2081515305
+      Sweeper88x30_5: 1296666639
+      Sweeper88x30_50: 668730565
+      Sweeper88x30_51: -1296932592
+      Sweeper88x30_52: 1618654790
+      Sweeper88x30_53: 1520838220
+      Sweeper88x30_6: -892213682
+      Sweeper88x30_7: -2102721736
+      Sweeper88x30_8: 88953597
+      Sweeper88x30_9: -227435349
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -78,6 +78,8 @@ public class PlayerController : BaseCharacterController
 
     void Update()
     {
+        if (Managers.Pause.IsPaused)
+            return;
         mStateMachine.Excute();
     }
 

@@ -129,7 +129,6 @@ namespace monster_states
         
         public override void Enter()
         {
-
             mIsKnockbackFlag = false;
         }
         public override void FixedExcute()
@@ -143,13 +142,13 @@ namespace monster_states
                 mIsKnockbackFlag = true;
             }
         }
-        public override void Excute() { ChangeStateIfAnimEnd(EMonsterState.TRACE); }
+        public override void Excute() { ChangeStateIfAnimEnd(EMonsterState.SPAWN); }
     }
 
 
     public class Hitted : BaseHittedState
     {
-        public Hitted(BaseMonsterController controller) : base(controller, knockbackForce:3f) { }
+        public Hitted(BaseMonsterController controller) : base(controller, knockbackForce:4f) { }
 
         public void OnHittedAnimFullyPlayed()
         {
