@@ -14,7 +14,7 @@ public abstract class UIHealthBar : MonoBehaviour
     protected Transform mParent;
     protected BaseStat mStat;
 
-    float mFillSpeed;
+    float mFillSpeed = 0.5f;
     float mYMargin;
     protected abstract void Init();
 
@@ -31,15 +31,14 @@ public abstract class UIHealthBar : MonoBehaviour
         }
         Init();
         Debug.Assert(HealthBar != null);
-        mFillSpeed = 0.5f;
-        mYMargin = transform.parent.GetComponent<Collider2D>().bounds.size.y + 0.1f;
+        
+        mYMargin = transform.parent.GetComponent<Collider2D>().bounds.size.y + 0.15f;
+        SetHpRatio(1);
     }
 
     private void Update()
     {
         transform.position = mParent.position + Vector3.up * mYMargin;
-        SetHpRatio((float)mStat.HP / mStat.MaxHP);
-
     }
     public void SetHpRatio(float ratio)
     {

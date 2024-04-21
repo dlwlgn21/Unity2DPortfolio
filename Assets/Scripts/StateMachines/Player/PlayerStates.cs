@@ -531,7 +531,7 @@ namespace player_states
         public override void Enter()
         {
             PlayAnimation(EPlayerState.BLOCK_SUCESS);
-            mEntity.ShowStatusPopup("Block!");
+            mEntity.StatusText.ShowPopup("Block!");
             mIsKnockbackFlag = false;
         }
 
@@ -563,6 +563,7 @@ namespace player_states
         {
             if (!mEntity.HitEffectAniamtor.gameObject.activeSelf)
                 mEntity.HitEffectAniamtor.gameObject.SetActive(true);
+
             PlayAnimation(EPlayerState.HITTED);
             // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.
             //mEntity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);

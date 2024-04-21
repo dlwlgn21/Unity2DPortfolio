@@ -9,12 +9,13 @@ public class HitParticleManager
     public ParticleSystem Particle { get; set; }
     public void Init()
     {
-        var ori = Managers.Resources.Load<GameObject>("Prefabs/HitParticleManager");
+        GameObject ori = Managers.Resources.Load<GameObject>("Prefabs/HitParticleManager");
         Debug.Assert(ori != null);
         ori.transform.position = Vector3.zero;
-        var go = GameObject.Instantiate(ori);
+        GameObject go = Object.Instantiate(ori);
         go.name = "HitParticleManager";
         Particle = go.GetComponent<ParticleSystem>();
+        Object.DontDestroyOnLoad(go);
         Debug.Assert(Particle != null);
     }
 

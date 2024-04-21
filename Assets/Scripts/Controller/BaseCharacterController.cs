@@ -2,6 +2,9 @@ using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using TMPro;
+using UnityEngine.Rendering;
 
 public abstract class BaseCharacterController : MonoBehaviour
 {
@@ -16,11 +19,10 @@ public abstract class BaseCharacterController : MonoBehaviour
     public float NormalAttackRange { get; protected set; }
     public Vector3 CachedAttackPointLocalRightPos { get; set; }
     public Vector3 CachedAttackPointLocalLeftPos { get; set; }
+    public UIHealthBar HealthBar { get; set; }
 
-    protected TextMesh mDamageText;
-    protected TextMesh mStatusText;
-    protected UIHealthBar mHealthBar;
-
+    public UITextPopup DamageText { get; set; }
+    public UITextPopup StatusText { get; set; }
 
 
     protected abstract void InitStates();
@@ -28,6 +30,7 @@ public abstract class BaseCharacterController : MonoBehaviour
     public static string HIT_EFFECT_1_KEY = "Hit1";
     public static string HIT_EFFECT_2_KEY = "Hit2";
     public static string HIT_EFFECT_3_KEY = "Hit3";
+
 
     void Start()
     {
@@ -57,16 +60,13 @@ public abstract class BaseCharacterController : MonoBehaviour
         Debug.Assert(HitEffectAniamtor != null);
         HitEffectAniamtor.gameObject.SetActive(false);
 
-        mDamageText = Utill.GetComponentInChildrenOrNull<TextMesh>(gameObject, "DamagePopup");
-        Debug.Assert(mDamageText != null);
-
-        mStatusText = Utill.GetComponentInChildrenOrNull<TextMesh>(gameObject, "StatusPopup");
-        Debug.Assert(mStatusText != null);
-
-        // DustParticle Part
+        DamageText = Utill.GetComponentInChildrenOrNull<UITextPopup>(gameObject, "DamagePopup");
+        Debug.Assert(DamageText != null);
+        StatusText = Utill.GetComponentInChildrenOrNull<UITextPopup>(gameObject, "StatusPopup");
+        Debug.Assert(StatusText != null);
+        
         FootDustParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "FootDustParticle");
         Debug.Assert(FootDustParticle != null);
-
     }
 
     void OnDrawGizmosSelected()
@@ -74,19 +74,5 @@ public abstract class BaseCharacterController : MonoBehaviour
         if (NormalAttackPoint == null)
             return;
         Gizmos.DrawWireSphere(NormalAttackPoint.position, 1f);
-    }
-
-    public void ShowDamagePopup(int damage)
-    {
-        mDamageText.text = damage.ToString();
-        mDamageText.gameObject.GetComponent<Animator>().Play("DamagePopup", -1, 0f);
-        Debug.Assert(mHealthBar != null);
-        mDamageText.color = mHealthBar.HealthBar.color;
-    }
-
-    public void ShowStatusPopup(string status)
-    {
-        mStatusText.text = status;
-        mStatusText.gameObject.GetComponent<Animator>().Play("StatusPopup", -1, 0f);
     }
 }

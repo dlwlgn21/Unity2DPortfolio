@@ -105,7 +105,7 @@ namespace monster_states
         public override void Enter()
         {
             PlayAnimation(EMonsterState.ATTACK);
-            mEntity.ShowStatusPopup("Attack!");
+            mEntity.StatusText.ShowPopup("Attack!");
         }
         public override void FixedExcute()  { mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y);  }
         public override void Excute()       { ChangeStateIfAnimEnd(EMonsterState.TRACE);  }
@@ -194,9 +194,10 @@ namespace monster_states
         void ProcessHitted(PlayerController pc, int damage, string hitEffectKey, define.EHitCameraShake eCamShakeType)
         {
             mEntity.Stat.OnHitted(damage);
+            mEntity.HealthBar.SetHpRatio((float)mEntity.Stat.HP / mEntity.Stat.MaxHP);
             mEntity.HitEffectAniamtor.Play(hitEffectKey, -1, 0f);
             pc.ShakeCamera(eCamShakeType);
-            mEntity.ShowDamagePopup(damage);
+            mEntity.DamageText.ShowPopup(damage);
         }
     }
 
@@ -207,7 +208,7 @@ namespace monster_states
         public override void Enter()
         {
             base.Enter();
-            mEntity.ShowStatusPopup("Knockback");
+            mEntity.StatusText.ShowPopup("Knockback");
         }
     }
     public class Die : BaseMonsterState

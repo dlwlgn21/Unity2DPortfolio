@@ -3,7 +3,7 @@
         {
             "level": "1",
             "maxHp": "50",
-            "attack": "1",
+            "attack": "4",
             "defence": "1",
             "moveSpeed": "200",
             "totalExp": "0"

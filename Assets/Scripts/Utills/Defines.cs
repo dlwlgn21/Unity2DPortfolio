@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace define
 {
+    public enum ESceneType
+    {
+        MAIN_MENU,
+        GAME_SCENE,
+    }
+
     public enum ECharacterLookDir
     { 
         LEFT,

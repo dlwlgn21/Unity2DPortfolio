@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using static UnityEngine.EventSystems.EventTrigger;
 using JetBrains.Annotations;
+using System.Xml;
+using DG.Tweening;
 
 public enum EPlayerState
 {
@@ -66,10 +68,10 @@ public class PlayerController : BaseCharacterController
         BoxCollider = gameObject.GetComponent<BoxCollider2D>();
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
-        mHealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
+        HealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
         LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
         JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
-        Debug.Assert(mHealthBar != null && LedgeCheckPoint != null && JumpParticle != null);
+        Debug.Assert(HealthBar != null && LedgeCheckPoint != null && JumpParticle != null);
     }
     private void FixedUpdate()
     {
@@ -156,12 +158,13 @@ public class PlayerController : BaseCharacterController
         // Damage Section
         int actualDamage = Mathf.Max(1, damage - Stat.Defence);
         Stat.HP -= actualDamage;
+        
         if (Stat.HP <= 0)
             ChangeState(EPlayerState.DIE);
         else
             ChangeState(EPlayerState.HITTED);
-        ShakeCamera(EHitCameraShake.STRONG_SHAKE_2D);
-        ShowDamagePopup(damage);
+        HealthBar.SetHpRatio((float)Stat.HP / Stat.MaxHP);
+        DamageText.ShowPopup(damage);
         Managers.HitParticle.Play(transform.position);
     }
 

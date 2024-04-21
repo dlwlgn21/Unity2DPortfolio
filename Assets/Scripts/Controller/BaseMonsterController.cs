@@ -34,7 +34,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         AwarenessRangeToTrace = 10f;
         AwarenessRangeToAttack = 2f;
         NormalAttackRange = 1f;
-        mHealthBar = Utill.GetComponentInChildrenOrNull<UIMonsterHPBar>(gameObject, "MonsterHpBar");
+        HealthBar = Utill.GetComponentInChildrenOrNull<UIMonsterHPBar>(gameObject, "MonsterHpBar");
     }
     private void FixedUpdate()
     {
