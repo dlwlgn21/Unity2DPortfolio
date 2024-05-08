@@ -13,8 +13,8 @@ namespace monster_states
     public abstract class BaseMonsterState : State<BaseMonsterController>
     {
         public BaseMonsterState(BaseMonsterController controller) : base(controller) {}
-        protected float mDistanceFromPlayer;
-        protected Vector2 mDirToPlayer;
+        protected float _distanceFromPlayer;
+        protected Vector2 _dirToPlayer;
         protected static string IDLE_ANIM_KEY = "Idle";
         protected static string RUN_ANIM_KEY = "Run";
         protected static string ATTACK_ANIM_KEY = "Attack";
@@ -22,7 +22,7 @@ namespace monster_states
         protected static string DIE_ANIM_KEY = "Die";
         protected bool IsAnimEnd()
         {
-            if (mEntity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            if (_entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 return true;
             return false;
         }
@@ -32,19 +32,19 @@ namespace monster_states
             switch (eState)
             {
                 case EMonsterState.SPAWN:
-                    mEntity.Animator.Play(IDLE_ANIM_KEY);
+                    _entity.Animator.Play(IDLE_ANIM_KEY);
                     return;
                 case EMonsterState.TRACE:
-                    mEntity.Animator.Play(RUN_ANIM_KEY);
+                    _entity.Animator.Play(RUN_ANIM_KEY);
                     return;
                 case EMonsterState.ATTACK:
-                    mEntity.Animator.Play(ATTACK_ANIM_KEY);
+                    _entity.Animator.Play(ATTACK_ANIM_KEY);
                     return;
                 case EMonsterState.HITTED:
-                    mEntity.Animator.Play(HIT_ANIM_KEY);
+                    _entity.Animator.Play(HIT_ANIM_KEY);
                     return;
                 case EMonsterState.DIE:
-                    mEntity.Animator.Play(DIE_ANIM_KEY);
+                    _entity.Animator.Play(DIE_ANIM_KEY);
                     return;
             }
 
@@ -52,12 +52,12 @@ namespace monster_states
         protected void ChangeStateIfAnimEnd(EMonsterState eState)
         {
             if (IsAnimEnd())
-                mEntity.ChangeState(eState);
+                _entity.ChangeState(eState);
         }
         protected void CalculateDistanceFromPlayer()
         {
-            mDirToPlayer = mEntity.PlayerTransform.position - mEntity.transform.position;
-            mDistanceFromPlayer = mDirToPlayer.magnitude;
+            _dirToPlayer = _entity.PlayerTransform.position - _entity.transform.position;
+            _distanceFromPlayer = _dirToPlayer.magnitude;
         }
     }
 
@@ -69,9 +69,9 @@ namespace monster_states
         public override void Excute()
         {
             CalculateDistanceFromPlayer();
-            Debug.DrawRay(mEntity.transform.position + Vector3.up * 0.5f, mDirToPlayer.normalized * mEntity.AwarenessRangeToTrace, Color.blue);
-            if (mDistanceFromPlayer <= mEntity.AwarenessRangeToTrace)
-                mEntity.ChangeState(EMonsterState.TRACE);
+            Debug.DrawRay(_entity.transform.position + Vector3.up * 0.5f, _dirToPlayer.normalized * _entity.AwarenessRangeToTrace, Color.blue);
+            if (_distanceFromPlayer <= _entity.AwarenessRangeToTrace)
+                _entity.ChangeState(EMonsterState.TRACE);
         }
     }
 
@@ -82,17 +82,17 @@ namespace monster_states
         public override void Enter() { PlayAnimation(EMonsterState.TRACE); }
         public override void FixedExcute()
         {
-            Vector2 oriVelo = mEntity.RigidBody.velocity;
-            mEntity.RigidBody.velocity = new Vector2(mDirToPlayer.normalized.x * mEntity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelo.y);
+            Vector2 oriVelo = _entity.RigidBody.velocity;
+            _entity.RigidBody.velocity = new Vector2(_dirToPlayer.normalized.x * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelo.y);
         }
 
         public override void Excute()
         {
             CalculateDistanceFromPlayer();
-            if (mDistanceFromPlayer <= mEntity.AwarenessRangeToAttack)
-                mEntity.ChangeState(EMonsterState.ATTACK);
-            Debug.DrawRay(mEntity.transform.position + Vector3.up * 0.5f, mDirToPlayer.normalized * mEntity.AwarenessRangeToTrace, Color.blue);
-            Debug.DrawRay(mEntity.transform.position, mDirToPlayer.normalized * mEntity.AwarenessRangeToAttack, Color.red);
+            if (_distanceFromPlayer <= _entity.AwarenessRangeToAttack)
+                _entity.ChangeState(EMonsterState.ATTACK);
+            Debug.DrawRay(_entity.transform.position + Vector3.up * 0.5f, _dirToPlayer.normalized * _entity.AwarenessRangeToTrace, Color.blue);
+            Debug.DrawRay(_entity.transform.position, _dirToPlayer.normalized * _entity.AwarenessRangeToAttack, Color.red);
 
         }
     }
@@ -105,41 +105,42 @@ namespace monster_states
         public override void Enter()
         {
             PlayAnimation(EMonsterState.ATTACK);
-            mEntity.StatusText.ShowPopup("Attack!");
+            _entity.StatusText.ShowPopup("Attack!");
         }
-        public override void FixedExcute()  { mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y);  }
+        public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
         public override void Excute()       { ChangeStateIfAnimEnd(EMonsterState.TRACE);  }
         protected void CheckOverlapCircle()
         {
-            Collider2D collider = Physics2D.OverlapCircle(mEntity.NormalAttackPoint.position, mEntity.NormalAttackRange, mLayerMask);
+            Collider2D collider = Physics2D.OverlapCircle(_entity.NormalAttackPoint.position, _entity.NormalAttackRange, mLayerMask);
             if (collider != null)
             {
                 PlayerController pc = collider.GetComponent<PlayerController>();
                 if (pc != null)
-                    pc.OnHitted(mEntity.Stat.Attack, mEntity);
+                    pc.OnHitted(_entity.Stat.Attack, _entity);
             }
         }
     }
 
     public abstract class BaseHittedState : BaseMonsterState
     {
-        protected bool mIsKnockbackFlag;
-        protected float mKnockbackForce;
-        public BaseHittedState(BaseMonsterController controller, float knockbackForce) : base(controller) { mKnockbackForce = knockbackForce; }
+        protected bool _isKnockbackFlag;
+        protected float _knockbackForce;
+        public BaseHittedState(BaseMonsterController controller, float knockbackForce) : base(controller) { _knockbackForce = knockbackForce; }
         
         public override void Enter()
         {
-            mIsKnockbackFlag = false;
+            _isKnockbackFlag = false;
         }
         public override void FixedExcute()
         {
-            if (!mIsKnockbackFlag)
+            CalculateDistanceFromPlayer();
+            if (!_isKnockbackFlag)
             {
-                if (mEntity.ELookDir == define.ECharacterLookDir.LEFT)
-                    mEntity.RigidBody.AddForce(Vector2.right * mKnockbackForce, ForceMode2D.Impulse);
+                if (_dirToPlayer.x < 0f)
+                    _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
                 else
-                    mEntity.RigidBody.AddForce(Vector2.left * mKnockbackForce, ForceMode2D.Impulse);
-                mIsKnockbackFlag = true;
+                    _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
+                _isKnockbackFlag = true;
             }
         }
         public override void Excute() { ChangeStateIfAnimEnd(EMonsterState.SPAWN); }
@@ -153,27 +154,27 @@ namespace monster_states
         public void OnHittedAnimFullyPlayed()
         {
             if (isChangeStateIfDie()) {}
-            else { mEntity.ChangeState(EMonsterState.TRACE);  }
+            else { _entity.ChangeState(EMonsterState.TRACE);  }
         }
         public override void Enter()
         {
             base.Enter();
             PlayAnimation(EMonsterState.HITTED);
-            PlayerController pc = mEntity.PlayerTransform.gameObject.GetComponent<PlayerController>();
+            PlayerController pc = _entity.PlayerTransform.gameObject.GetComponent<PlayerController>();
             Debug.Assert(pc != null);
-            Managers.HitParticle.Play(mEntity.transform.position);
-            if (!mEntity.HitEffectAniamtor.gameObject.activeSelf)
-                mEntity.HitEffectAniamtor.gameObject.SetActive(true);
+            Managers.HitParticle.Play(_entity.transform.position);
+            if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
+                _entity.HitEffectAniamtor.gameObject.SetActive(true);
             switch (pc.meCurrentState)
             {
                 case EPlayerState.NORMAL_ATTACK_1:
                     ProcessHitted(pc, pc.Stat.Attack, BaseCharacterController.HIT_EFFECT_1_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);
                     break;
                 case EPlayerState.NORMAL_ATTACK_2:
-                    ProcessHitted(pc, pc.Stat.Attack * 2, BaseCharacterController.HIT_EFFECT_2_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);
+                    ProcessHitted(pc, (int)(pc.Stat.Attack * 1.5f), BaseCharacterController.HIT_EFFECT_2_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);
                     break;
                 case EPlayerState.NORMAL_ATTACK_3:
-                    ProcessHitted(pc, pc.Stat.Attack * 3, BaseCharacterController.HIT_EFFECT_3_KEY, define.EHitCameraShake.STRONG_SHAKE_2D);
+                    ProcessHitted(pc, pc.Stat.Attack * 2, BaseCharacterController.HIT_EFFECT_3_KEY, define.EHitCameraShake.STRONG_SHAKE_2D);
                     break;
                 default:
                     break;
@@ -183,9 +184,9 @@ namespace monster_states
 
         bool isChangeStateIfDie()
         {
-            if (mEntity.Stat.HP <= 0)
+            if (_entity.Stat.HP <= 0)
             {
-                mEntity.ChangeState(EMonsterState.DIE);
+                _entity.ChangeState(EMonsterState.DIE);
                 return true;
             }
             return false;
@@ -193,22 +194,32 @@ namespace monster_states
 
         void ProcessHitted(PlayerController pc, int damage, string hitEffectKey, define.EHitCameraShake eCamShakeType)
         {
-            mEntity.Stat.OnHitted(damage);
-            mEntity.HealthBar.SetHpRatio((float)mEntity.Stat.HP / mEntity.Stat.MaxHP);
-            mEntity.HitEffectAniamtor.Play(hitEffectKey, -1, 0f);
+            if (pc.ELookDir == _entity.ELookDir)
+            {
+                int backAttackDamage = damage * 3;
+                _entity.Stat.OnHitted(backAttackDamage);
+                _entity.DamageText.ShowPopup(backAttackDamage);
+                pc.StatusText.ShowPopup("Back Attack!");
+            }
+            else
+            {
+                _entity.Stat.OnHitted(damage);
+                _entity.DamageText.ShowPopup(damage);
+            }
+            _entity.HealthBar.SetHpRatio((float)_entity.Stat.HP / _entity.Stat.MaxHP);
+            _entity.HitEffectAniamtor.Play(hitEffectKey, -1, 0f);
             pc.ShakeCamera(eCamShakeType);
-            mEntity.DamageText.ShowPopup(damage);
         }
     }
 
     public class HittedKnockback : BaseHittedState
     {
         public HittedKnockback(BaseMonsterController controller) : base(controller, knockbackForce: 5f) { }
-        public void OnHittedAnimFullyPlayed() { mEntity.ChangeState(EMonsterState.TRACE);  }
+        public void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.TRACE);  }
         public override void Enter()
         {
             base.Enter();
-            mEntity.StatusText.ShowPopup("Knockback");
+            _entity.StatusText.ShowPopup("Knockback");
         }
     }
     public class Die : BaseMonsterState
@@ -223,7 +234,7 @@ namespace monster_states
         public override void Excute()
         {
             if (IsAnimEnd())
-                mEntity.gameObject.SetActive(false);
+                Managers.MonsterPool.Return(_entity.MonsterType, _entity.gameObject);
         }
     }
 

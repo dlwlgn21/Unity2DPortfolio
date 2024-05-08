@@ -7,40 +7,40 @@ namespace player_states
 
     public abstract class BasePlayerState : State<PlayerController>
     {
-        protected float mHorizontalMove;
-        protected float mGroundCheckDistance = 0.2f;
+        protected float _horizontalMove;
+        protected float _groundCheckDistance = 0.2f;
         public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.GROUND) | (1 << (int)define.EColliderLayer.PLATFORM);
         public BasePlayerState(PlayerController controller) : base(controller) {  }
-        public override void Excute() { mHorizontalMove = Input.GetAxisRaw("Horizontal"); }
+        public override void Excute() { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
         public virtual void ProcessKeyboardInput() {}
 
         public void FlipSpriteAccodingPlayerInput()
         {
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                mEntity.NormalAttackPoint.localPosition = mEntity.CachedAttackPointLocalLeftPos;
-                mEntity.ELookDir = ECharacterLookDir.LEFT;
-                mEntity.SpriteRenderer.flipX = true;
+                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalLeftPos;
+                _entity.ELookDir = ECharacterLookDir.LEFT;
+                _entity.SpriteRenderer.flipX = true;
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                mEntity.NormalAttackPoint.localPosition = mEntity.CachedAttackPointLocalRightPos;
-                mEntity.ELookDir = ECharacterLookDir.RIGHT;
-                mEntity.SpriteRenderer.flipX = false;
+                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalRightPos;
+                _entity.ELookDir = ECharacterLookDir.RIGHT;
+                _entity.SpriteRenderer.flipX = false;
             }
         }
         protected bool IsAnimEnd()
         {
-            if (mEntity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            if (_entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 return true;
             return false;
         }
 
         protected bool IsStandGround()
         {
-            Bounds bound = mEntity.BoxCollider.bounds;
-            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, mGroundCheckDistance, sGroundLayerMask);
-            BoxCast2DDebugDraw(bound.center, bound.size, mGroundCheckDistance, hit);
+            Bounds bound = _entity.BoxCollider.bounds;
+            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, _groundCheckDistance, sGroundLayerMask);
+            BoxCast2DDebugDraw(bound.center, bound.size, _groundCheckDistance, hit);
             if (hit.collider == null)
             {
                 return false;
@@ -52,46 +52,46 @@ namespace player_states
             switch (eState) 
             {
                 case EPlayerState.IDLE:
-                    mEntity.Animator.Play("Idle");
+                    _entity.Animator.Play("Idle");
                     return;
                 case EPlayerState.RUN:
-                    mEntity.Animator.Play("Run");
+                    _entity.Animator.Play("Run");
                     return;
                 case EPlayerState.ROLL:
-                    mEntity.Animator.Play("Roll");
+                    _entity.Animator.Play("Roll");
                     return;
                 case EPlayerState.JUMP:
-                    mEntity.Animator.Play("Jump");
+                    _entity.Animator.Play("Jump");
                     return;
                 case EPlayerState.CLIMB:
-                    mEntity.Animator.Play("Climb");
+                    _entity.Animator.Play("Climb");
                     return;
                 case EPlayerState.FALL:
-                    mEntity.Animator.Play("Fall");
+                    _entity.Animator.Play("Fall");
                     return;
                 case EPlayerState.LAND:
-                    mEntity.Animator.Play("Land");
+                    _entity.Animator.Play("Land");
                     return;
                 case EPlayerState.NORMAL_ATTACK_1:
-                    mEntity.Animator.Play("NormalAttack1");
+                    _entity.Animator.Play("NormalAttack1");
                     return;
                 case EPlayerState.NORMAL_ATTACK_2:
-                    mEntity.Animator.Play("NormalAttack2");
+                    _entity.Animator.Play("NormalAttack2");
                     return;
                 case EPlayerState.NORMAL_ATTACK_3:
-                    mEntity.Animator.Play("NormalAttack3");
+                    _entity.Animator.Play("NormalAttack3");
                     return;
                 case EPlayerState.HITTED:
-                    mEntity.Animator.Play("Hitted");
+                    _entity.Animator.Play("Hitted");
                     return;
                 case EPlayerState.BLOCKING:
-                    mEntity.Animator.Play("Blocking");
+                    _entity.Animator.Play("Blocking");
                     return;
                 case EPlayerState.BLOCK_SUCESS:
-                    mEntity.Animator.Play("BlockSuccess");
+                    _entity.Animator.Play("BlockSuccess");
                     return;
                 case EPlayerState.DIE:
-                    mEntity.Animator.Play("Die");
+                    _entity.Animator.Play("Die");
                     return;
             }
             Debug.Assert(false);
@@ -152,31 +152,31 @@ namespace player_states
         public Idle(PlayerController controller) : base(controller) { }
         public override void ProcessKeyboardInput()
         {
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
             {
-                mEntity.ChangeState(EPlayerState.RUN);
+                _entity.ChangeState(EPlayerState.RUN);
             }
             else if (Input.GetKeyDown(PlayerController.KeyRoll))
             {
-                mEntity.ChangeState(EPlayerState.ROLL);
+                _entity.ChangeState(EPlayerState.ROLL);
             }
             else if (Input.GetKeyDown(PlayerController.KeyAttack))
             {
-                mEntity.ChangeState(EPlayerState.NORMAL_ATTACK_1);
+                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_1);
             }
             else if (Input.GetKeyDown(PlayerController.KeyBlock))
             {
-                mEntity.ChangeState(EPlayerState.BLOCKING);
+                _entity.ChangeState(EPlayerState.BLOCKING);
             }
             else if (Input.GetKeyDown(PlayerController.KeyJump))
             {
-                mEntity.ChangeState(EPlayerState.JUMP);
+                _entity.ChangeState(EPlayerState.JUMP);
             }
         }
 
         public override void Enter()       { PlayAnimation(EPlayerState.IDLE); }
 
-        public override void FixedExcute() { mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y); }
+        public override void FixedExcute() { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
         public override void Excute()
         {
             base.Excute();
@@ -193,22 +193,22 @@ namespace player_states
             // ChangeState
             if (!Input.anyKey)
             {
-                mEntity.ChangeState(EPlayerState.IDLE);
+                _entity.ChangeState(EPlayerState.IDLE);
                 return;
             }
             if (Input.GetKeyDown(PlayerController.KeyRoll))
             {
-                mEntity.ChangeState(EPlayerState.ROLL);
+                _entity.ChangeState(EPlayerState.ROLL);
                 return;
             }
             else if (Input.GetKeyDown(PlayerController.KeyBlock))
             {
-                mEntity.ChangeState(EPlayerState.BLOCKING);
+                _entity.ChangeState(EPlayerState.BLOCKING);
                 return;
             }
             else if (Input.GetKeyDown(PlayerController.KeyJump))
             {
-                mEntity.ChangeState(EPlayerState.JUMP);
+                _entity.ChangeState(EPlayerState.JUMP);
                 return;
             }
         }
@@ -217,15 +217,15 @@ namespace player_states
 
         public override void FixedExcute()
         {
-            Vector2 oriVelocity = mEntity.RigidBody.velocity;
-            mEntity.RigidBody.velocity = new Vector2(mHorizontalMove * mEntity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
+            Vector2 oriVelocity = _entity.RigidBody.velocity;
+            _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
         }
 
         public override void Excute()
         {
             base.Excute();
             if (!IsStandGround())
-                mEntity.ChangeState(EPlayerState.FALL);
+                _entity.ChangeState(EPlayerState.FALL);
             FlipSpriteAccodingPlayerInput();
             ProcessKeyboardInput();
         }
@@ -255,33 +255,38 @@ namespace player_states
             mIsInAir = false;
             mIsTwiceJump = false;
             mIsJumpKeyDownTwice = false;
-            mEntity.JumpParticle.Play();
+            _entity.JumpParticle.Play();
 
         }
         public override void FixedExcute()
         {
             if (mIsTwiceJump)
             {
-                mEntity.Animator.Play("Jump", -1, 0f);
-                mEntity.RigidBody.AddForce(Vector2.up * 3, ForceMode2D.Impulse);
+                _entity.Animator.Play("Jump", -1, 0f);
+                Vector2 oriVelocity = _entity.RigidBody.velocity;
+                _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
+                _entity.RigidBody.AddForce(Vector2.up * 3, ForceMode2D.Impulse);
                 mIsTwiceJump = false;
             }
 
             if (!mIsInAir)
             {
-                mEntity.RigidBody.AddForce(Vector2.up * 6, ForceMode2D.Impulse);
+                Vector2 oriVelocity = _entity.RigidBody.velocity;
+                _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
+                _entity.RigidBody.AddForce(Vector2.up * 6, ForceMode2D.Impulse);
                 mIsInAir = true;
             }
             else
             {
-                if (mEntity.RigidBody.velocity.y <= 0f)
-                    mEntity.ChangeState(EPlayerState.FALL);
+                if (_entity.RigidBody.velocity.y <= 0f)
+                    _entity.ChangeState(EPlayerState.FALL);
             }
         }
         public override void Excute()
         {
             base.Excute();
             ProcessKeyboardInput();
+            FlipSpriteAccodingPlayerInput();
         }
     }
 
@@ -289,34 +294,34 @@ namespace player_states
     {
         public Climb(PlayerController controller) : base(controller) { }
 
-        ECharacterLookDir mCharacterLookDir;
-        float mXOffset = 0.7f;
-        float mYOffset = 1.4f;
+        ECharacterLookDir _eCharacterLookDir;
+        float _xOffset = 0.7f;
+        float _yOffset = 1.4f;
 
         public void OnClimbAnimFullyPlayed()
         {
-            Vector3 pos = mEntity.transform.position;
-            if (mCharacterLookDir == ECharacterLookDir.RIGHT)
-                mEntity.transform.position = new Vector3(pos.x + mXOffset, pos.y + mYOffset, pos.z);
+            Vector3 pos = _entity.transform.position;
+            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
+                _entity.transform.position = new Vector3(pos.x + _xOffset, pos.y + _yOffset, pos.z);
             else
-                mEntity.transform.position = new Vector3(pos.x - mXOffset, pos.y + mYOffset, pos.z);
-            mEntity.ChangeState(EPlayerState.IDLE);
+                _entity.transform.position = new Vector3(pos.x - _xOffset, pos.y + _yOffset, pos.z);
+            _entity.ChangeState(EPlayerState.IDLE);
         }
         public override void Enter()
         {
-            mEntity.SpriteRenderer.material = mEntity.PlayerClimbMaterial;
-            mCharacterLookDir = mEntity.ELookDir;
+            _entity.SpriteRenderer.material = _entity.PlayerClimbMaterial;
+            _eCharacterLookDir = _entity.ELookDir;
             PlayAnimation(EPlayerState.CLIMB);
         }
         public override void FixedExcute()
         {
-            mEntity.RigidBody.gravityScale = 0f;
-            mEntity.RigidBody.velocity = Vector2.zero;
+            _entity.RigidBody.gravityScale = 0f;
+            _entity.RigidBody.velocity = Vector2.zero;
         }
         public override void Exit()
         {
-            mEntity.RigidBody.gravityScale = 1f;
-            mEntity.SpriteRenderer.material = mEntity.PlayerMaterial;
+            _entity.RigidBody.gravityScale = 1f;
+            _entity.SpriteRenderer.material = _entity.PlayerMaterial;
         }
     }
 
@@ -325,47 +330,53 @@ namespace player_states
     {
         public Fall(PlayerController controller) : base(controller) { }
 
-        Transform mLedgeCheckPoint;
-        LayerMask mPlatformLayerMask = 1 << (int)define.EColliderLayer.PLATFORM;
-        ECharacterLookDir mCharacterLookDir;
-        float mExtraHeight = 0.2f;
+        Transform _ledgeCheckPoint;
+        LayerMask _platformLayerMask = 1 << (int)define.EColliderLayer.PLATFORM;
+        ECharacterLookDir _eCharacterLookDir;
+        float _extraHeight = 0.2f;
 
         public override void Enter()
         {
             PlayAnimation(EPlayerState.FALL);
-            if (mLedgeCheckPoint == null)
-                mLedgeCheckPoint = mEntity.LedgeCheckPoint;
-            mCharacterLookDir = mEntity.ELookDir;
+            if (_ledgeCheckPoint == null)
+                _ledgeCheckPoint = _entity.LedgeCheckPoint;
+            _eCharacterLookDir = _entity.ELookDir;
+        }
+        public override void FixedExcute()
+        {
+            Vector2 oriVelocity = _entity.RigidBody.velocity;
+            _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
         }
         public override void Excute()
         {
-            Bounds bound = mEntity.BoxCollider.bounds;
-            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, mExtraHeight, sGroundLayerMask);
-            BoxCast2DDebugDraw(bound.center, bound.size, mExtraHeight, hit);
-
+            base.Excute();
+            Bounds bound = _entity.BoxCollider.bounds;
+            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, _extraHeight, sGroundLayerMask);
+            BoxCast2DDebugDraw(bound.center, bound.size, _extraHeight, hit);
+            FlipSpriteAccodingPlayerInput();
             if (hit.collider != null)
             {
-                mEntity.ChangeState(EPlayerState.LAND);
+                _entity.ChangeState(EPlayerState.LAND);
                 return;
             }
 
             if (IsGrabLedge())
-                mEntity.ChangeState(EPlayerState.CLIMB);
+                _entity.ChangeState(EPlayerState.CLIMB);
         }
 
         public bool IsGrabLedge()
         {
             float dist = 0.75f;
             RaycastHit2D hit;
-            if (mCharacterLookDir == ECharacterLookDir.RIGHT)
+            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
             {
-                hit = Physics2D.Raycast(mLedgeCheckPoint.position, Vector2.right, dist, mPlatformLayerMask);
-                Debug.DrawRay(mLedgeCheckPoint.position, Vector2.right * dist, UnityEngine.Color.red);
+                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.right, dist, _platformLayerMask);
+                Debug.DrawRay(_ledgeCheckPoint.position, Vector2.right * dist, UnityEngine.Color.red);
             }
             else
             {
-                hit = Physics2D.Raycast(mLedgeCheckPoint.position, Vector2.left, dist, mPlatformLayerMask);
-                Debug.DrawRay(mLedgeCheckPoint.position, Vector2.left * dist, UnityEngine.Color.red);
+                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.left, dist, _platformLayerMask);
+                Debug.DrawRay(_ledgeCheckPoint.position, Vector2.left * dist, UnityEngine.Color.red);
             }
             if (hit.collider != null)
                 return true;
@@ -379,16 +390,16 @@ namespace player_states
         public override void Enter()
         {
             PlayAnimation(EPlayerState.LAND);
-            mEntity.FootDustParticle.Play();
+            _entity.FootDustParticle.Play();
         }
         public override void Excute()
         {
             if (IsAnimEnd())
             {
                 if (Input.anyKey)
-                    mEntity.ChangeState(EPlayerState.RUN);
+                    _entity.ChangeState(EPlayerState.RUN);
                 else
-                    mEntity.ChangeState(EPlayerState.IDLE);
+                    _entity.ChangeState(EPlayerState.IDLE);
             }
         }
     }
@@ -396,37 +407,37 @@ namespace player_states
     {
         public Roll(PlayerController controller) : base(controller) { }
 
-        ECharacterLookDir meLookDir;
-        int mLayerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM);
-        public void OnRollAnimFullyPlayed(PlayerController mEntity) { mEntity.ChangeState(EPlayerState.RUN); }
+        ECharacterLookDir _eLookDir;
+        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV);
+        public void OnRollAnimFullyPlayed(PlayerController _entity) { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {
-            meLookDir = mEntity.ELookDir;
+            _eLookDir = _entity.ELookDir;
             PlayAnimation(EPlayerState.ROLL);
             Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS, (int)EColliderLayer.PLAYER);
         }
         public override void FixedExcute()
         {
-            Vector2 oriVelo = mEntity.RigidBody.velocity;
-            float speed = mEntity.Stat.MoveSpeed * 1.5f;
-            if (meLookDir == ECharacterLookDir.RIGHT)
-                mEntity.RigidBody.velocity = new Vector2(speed * Time.deltaTime, oriVelo.y);
+            Vector2 oriVelo = _entity.RigidBody.velocity;
+            float speed = _entity.Stat.MoveSpeed * 1.5f;
+            if (_eLookDir == ECharacterLookDir.RIGHT)
+                _entity.RigidBody.velocity = new Vector2(speed * Time.fixedDeltaTime, oriVelo.y);
             else
-                mEntity.RigidBody.velocity = new Vector2(speed * -Time.deltaTime, oriVelo.y);
+                _entity.RigidBody.velocity = new Vector2(speed * -Time.fixedDeltaTime, oriVelo.y);
         }
 
-        public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, mLayerMask); }
+        public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, _layerMask); }
     }
     public abstract class NormalAttackState : BasePlayerState
     {
         public NormalAttackState(PlayerController controller) : base(controller) { }
-        protected ECharacterLookDir meLookDir;
-        protected bool mIsGoToNextAttack;
-        protected Transform mAttackPoint;
-        protected int mLayerMask = 1 << ((int)define.EColliderLayer.MONSTERS);
+        protected ECharacterLookDir _eLookDir;
+        protected bool _isGoToNextAttack;
+        protected Transform _attackPoint;
+        protected int _layerMask = 1 << ((int)define.EColliderLayer.MONSTERS);
         public void DamageHittedMonsters()
         {
-            Collider2D[] monsters = Physics2D.OverlapCircleAll(mAttackPoint.position, 1f, mLayerMask);
+            Collider2D[] monsters = Physics2D.OverlapCircleAll(_attackPoint.position, 1f, _layerMask);
             if (monsters == null)
                 return;
 
@@ -439,28 +450,28 @@ namespace player_states
         }
         public override void Enter()
         {
-            mAttackPoint = mEntity.NormalAttackPoint;
-            meLookDir = mEntity.ELookDir;
-            mIsGoToNextAttack = false;
+            _attackPoint = _entity.NormalAttackPoint;
+            _eLookDir = _entity.ELookDir;
+            _isGoToNextAttack = false;
         }
 
         public override void ProcessKeyboardInput()
         {
-            float currAnimTime = mEntity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            float currAnimTime = _entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             if (currAnimTime >= 0.3f && currAnimTime <= 0.9f)
             {
                 if (Input.GetKey(PlayerController.KeyAttack))
-                    mIsGoToNextAttack = true;
+                    _isGoToNextAttack = true;
             }
         }
         protected void CheckGoToNextAttack(EPlayerState eNextAttack)
         {
-            if (mEntity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            if (_entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
             {
-                if (mIsGoToNextAttack)
-                    mEntity.ChangeState(eNextAttack);
+                if (_isGoToNextAttack)
+                    _entity.ChangeState(eNextAttack);
                 else
-                    mEntity.ChangeState(EPlayerState.RUN);
+                    _entity.ChangeState(EPlayerState.RUN);
                 return;
             }
             ProcessKeyboardInput();
@@ -503,7 +514,7 @@ namespace player_states
         public override void Excute()
         {
             if (IsAnimEnd())
-                mEntity.ChangeState(EPlayerState.RUN);
+                _entity.ChangeState(EPlayerState.RUN);
         }
     }
 
@@ -513,44 +524,44 @@ namespace player_states
 
         public override void Enter()        { PlayAnimation(EPlayerState.BLOCKING); }
 
-        public override void FixedExcute()  { mEntity.RigidBody.velocity = new Vector2(0f, mEntity.RigidBody.velocity.y); }
+        public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
 
         public override void Excute()
         {
             if (IsAnimEnd())
-                mEntity.ChangeState(EPlayerState.IDLE);
+                _entity.ChangeState(EPlayerState.IDLE);
         }
     }
 
     public class BlockSuccess : BasePlayerState
     {
-        bool mIsKnockbackFlag;
-        float mKnockbackForce = 3f;
+        bool _isKnockbackFlag;
+        float _knockbackForce = 3f;
         public BlockSuccess(PlayerController controller) : base(controller) { }
 
         public override void Enter()
         {
             PlayAnimation(EPlayerState.BLOCK_SUCESS);
-            mEntity.StatusText.ShowPopup("Block!");
-            mIsKnockbackFlag = false;
+            _entity.StatusText.ShowPopup("Block!");
+            _isKnockbackFlag = false;
         }
 
         public override void FixedExcute()
         {
-            if (!mIsKnockbackFlag)
+            if (!_isKnockbackFlag)
             {
-                if (mEntity.ELookDir == define.ECharacterLookDir.LEFT)
-                    mEntity.RigidBody.AddForce(Vector2.right * mKnockbackForce, ForceMode2D.Impulse);
+                if (_entity.ELookDir == define.ECharacterLookDir.LEFT)
+                    _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
                 else
-                    mEntity.RigidBody.AddForce(Vector2.left * mKnockbackForce, ForceMode2D.Impulse);
-                mIsKnockbackFlag = true;
+                    _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
+                _isKnockbackFlag = true;
             }
         }
 
         public override void Excute()
         {
             if (IsAnimEnd())
-                mEntity.ChangeState(EPlayerState.IDLE);
+                _entity.ChangeState(EPlayerState.IDLE);
         }
     }
 
@@ -558,15 +569,15 @@ namespace player_states
     {
         public Hitted(PlayerController controller) : base(controller) { }
 
-        public void OnHittedAnimFullyPlayed() { mEntity.ChangeState(EPlayerState.RUN); }
+        public void OnHittedAnimFullyPlayed() { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {
-            if (!mEntity.HitEffectAniamtor.gameObject.activeSelf)
-                mEntity.HitEffectAniamtor.gameObject.SetActive(true);
+            if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
+                _entity.HitEffectAniamtor.gameObject.SetActive(true);
 
             PlayAnimation(EPlayerState.HITTED);
             // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.
-            //mEntity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
+            //_entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
         }
         public override void Excute()
         {
@@ -585,7 +596,7 @@ namespace player_states
         public override void Excute()
         {
             if (IsAnimEnd())
-                mEntity.gameObject.SetActive(false);
+                _entity.gameObject.SetActive(false);
         }
     }
 }

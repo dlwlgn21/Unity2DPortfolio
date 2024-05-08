@@ -10,6 +10,7 @@ public class BlasterController : BaseMonsterController
     {
         base.Init();
         InitStat();
+        MonsterType = EMonsterNames.Blaster;
     }
     protected override void InitStat()
     {
@@ -23,7 +24,7 @@ public class BlasterController : BaseMonsterController
 
     protected override void AssignAttackState<BlasterAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.BlasterAttack(this);
+        _states[(uint)EMonsterState.ATTACK] = new monster_states.BlasterAttack(this);
     }
 
     public void OnBlasterValidAttack()
@@ -33,7 +34,7 @@ public class BlasterController : BaseMonsterController
 
     BlasterAttack getAttack()
     {
-        BlasterAttack state = (BlasterAttack)mStates[(uint)EMonsterState.ATTACK];
+        BlasterAttack state = (BlasterAttack)_states[(uint)EMonsterState.ATTACK];
         return state;
     }
 }

@@ -44,7 +44,7 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyLeft = KeyCode.LeftArrow;
     public static KeyCode KeyAttack = KeyCode.Z;
     public static KeyCode KeyBlock = KeyCode.X;
-    public static KeyCode KeyRoll = KeyCode.V;
+    public static KeyCode KeyRoll = KeyCode.C;
     public static KeyCode KeyJump = KeyCode.Space;
 
     [SerializeField]
@@ -58,8 +58,8 @@ public class PlayerController : BaseCharacterController
     public EPlayerState meCurrentState { get; private set; }
     public Transform LedgeCheckPoint { get; private set; }
     
-    StateMachine<PlayerController> mStateMachine;
-    State<PlayerController>[] mStates;
+    StateMachine<PlayerController> _stateMachine;
+    State<PlayerController>[] _states;
 
     public override void Init()
     {
@@ -73,16 +73,25 @@ public class PlayerController : BaseCharacterController
         JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
         Debug.Assert(HealthBar != null && LedgeCheckPoint != null && JumpParticle != null);
     }
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        mStateMachine.FixedExcute();
+        if (IsSkipThisFrame())
+        {
+            RigidBody.velocity = Vector2.zero;
+            ChangeState(EPlayerState.IDLE);
+            return;
+        }
+        _stateMachine.FixedExcute();
     }
 
     void Update()
     {
-        if (Managers.Pause.IsPaused)
+        if (IsSkipThisFrame())
+        {
+            ChangeState(EPlayerState.IDLE);
             return;
-        mStateMachine.Excute();
+        }
+        _stateMachine.Excute();
     }
 
     public void ShakeCamera(EHitCameraShake eShakeType)
@@ -106,25 +115,25 @@ public class PlayerController : BaseCharacterController
     }
 
     #region ANIM_CALL_BACK
-    public void OnNoramlAttack1ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
-    public void OnNoramlAttack2ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
-    public void OnNoramlAttack3ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)mStates[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
+    public void OnNoramlAttack1ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
+    public void OnNoramlAttack2ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
+    public void OnNoramlAttack3ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
 
 
     public void OnHittedAnimFullyPlayed()
     {
-        player_states.Hitted hittedState = (player_states.Hitted)mStates[(uint)EPlayerState.HITTED];
+        player_states.Hitted hittedState = (player_states.Hitted)_states[(uint)EPlayerState.HITTED];
         hittedState.OnHittedAnimFullyPlayed();
     }
     public void OnRollAnimFullyPlayed()
     {
-        player_states.Roll rollState = (player_states.Roll)mStates[(uint)EPlayerState.ROLL];
+        player_states.Roll rollState = (player_states.Roll)_states[(uint)EPlayerState.ROLL];
         rollState.OnRollAnimFullyPlayed(this);
         FootDustParticle.Play();
     }
     public void OnPlayerClimbAnimFullyPlayed()
     {
-        player_states.Climb climbState = (player_states.Climb)mStates[(uint)EPlayerState.CLIMB];
+        player_states.Climb climbState = (player_states.Climb)_states[(uint)EPlayerState.CLIMB];
         climbState.OnClimbAnimFullyPlayed();
     }
     public void OnPlayerFootStep()
@@ -140,7 +149,6 @@ public class PlayerController : BaseCharacterController
 
     #endregion
 
-
     public void OnHitted(int damage, BaseMonsterController monContorller) 
     {
         // Blocking Section
@@ -152,7 +160,9 @@ public class PlayerController : BaseCharacterController
             monContorller.OnPlayerBlockSuccess();
             return;
         }
-        if (meCurrentState == EPlayerState.BLOCK_SUCESS || meCurrentState == EPlayerState.CLIMB)
+        if (meCurrentState == EPlayerState.BLOCK_SUCESS || 
+            meCurrentState == EPlayerState.CLIMB || 
+            meCurrentState == EPlayerState.ROLL)
             return;
 
         // Damage Section
@@ -167,35 +177,38 @@ public class PlayerController : BaseCharacterController
         DamageText.ShowPopup(damage);
         Managers.HitParticle.Play(transform.position);
     }
-
-
     public void ChangeState(EPlayerState eChangingState)
     {
         meCurrentState = eChangingState;
-        mStateMachine.ChangeState(mStates[(uint)eChangingState]);
+        _stateMachine.ChangeState(_states[(uint)eChangingState]);
     }
 
 
     protected override void InitStates()
     {
-        mStateMachine = new StateMachine<PlayerController>();
-        mStates = new State<PlayerController>[(uint)EPlayerState.COUNT];
-        mStates[(uint)EPlayerState.IDLE] = new player_states.Idle(this);
-        mStates[(uint)EPlayerState.RUN] = new player_states.Run(this);
-        mStates[(uint)EPlayerState.ROLL] = new player_states.Roll(this);
-        mStates[(uint)EPlayerState.JUMP] = new player_states.Jump(this);
-        mStates[(uint)EPlayerState.CLIMB] = new player_states.Climb(this);
-        mStates[(uint)EPlayerState.FALL] = new player_states.Fall(this);
-        mStates[(uint)EPlayerState.LAND] = new player_states.Land(this);
-        mStates[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1(this);
-        mStates[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2(this);
-        mStates[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3(this);
-        mStates[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
-        mStates[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
-        mStates[(uint)EPlayerState.HITTED] = new player_states.Hitted(this);
-        mStates[(uint)EPlayerState.DIE] = new player_states.Die(this);
-        mStateMachine.Init(this, mStates[(uint)EPlayerState.IDLE]);
+        _stateMachine = new StateMachine<PlayerController>();
+        _states = new State<PlayerController>[(uint)EPlayerState.COUNT];
+        _states[(uint)EPlayerState.IDLE] = new player_states.Idle(this);
+        _states[(uint)EPlayerState.RUN] = new player_states.Run(this);
+        _states[(uint)EPlayerState.ROLL] = new player_states.Roll(this);
+        _states[(uint)EPlayerState.JUMP] = new player_states.Jump(this);
+        _states[(uint)EPlayerState.CLIMB] = new player_states.Climb(this);
+        _states[(uint)EPlayerState.FALL] = new player_states.Fall(this);
+        _states[(uint)EPlayerState.LAND] = new player_states.Land(this);
+        _states[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1(this);
+        _states[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2(this);
+        _states[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3(this);
+        _states[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
+        _states[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
+        _states[(uint)EPlayerState.HITTED] = new player_states.Hitted(this);
+        _states[(uint)EPlayerState.DIE] = new player_states.Die(this);
+        _stateMachine.Init(this, _states[(uint)EPlayerState.IDLE]);
     }
 
-
+    private bool IsSkipThisFrame()
+    {
+        if (Managers.Pause.IsPaused || Managers.Dialog.IsTalking)
+            return true;
+        return false;
+    }
 }

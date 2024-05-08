@@ -31,12 +31,12 @@ public abstract class BaseCharacterController : MonoBehaviour
     public static string HIT_EFFECT_2_KEY = "Hit2";
     public static string HIT_EFFECT_3_KEY = "Hit3";
 
-
-    void Start()
+    private void Awake()
     {
         Init();
         InitStates();
     }
+
     public virtual void Init()
     {
         RigidBody = gameObject.GetOrAddComponent<Rigidbody2D>();

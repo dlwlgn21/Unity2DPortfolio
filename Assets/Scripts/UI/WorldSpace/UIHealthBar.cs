@@ -11,16 +11,16 @@ public abstract class UIHealthBar : MonoBehaviour
 
 
     public Image HealthBar { get; private set; }
-    protected Transform mParent;
-    protected BaseStat mStat;
+    protected Transform _parent;
+    protected BaseStat _stat;
 
-    float mFillSpeed = 0.5f;
-    float mYMargin;
+    float _fillSpeed = 0.5f;
+    float _yMargin;
     protected abstract void Init();
 
     private void Start()
     {
-        mParent = transform.parent;
+        _parent = transform.parent;
         foreach (Image component in gameObject.GetComponentsInChildren<Image>())
         {
             if (component != null && component.name == "Fill")
@@ -32,17 +32,17 @@ public abstract class UIHealthBar : MonoBehaviour
         Init();
         Debug.Assert(HealthBar != null);
         
-        mYMargin = transform.parent.GetComponent<Collider2D>().bounds.size.y + 0.15f;
+        _yMargin = transform.parent.GetComponent<Collider2D>().bounds.size.y + 0.15f;
         SetHpRatio(1);
     }
 
     private void Update()
     {
-        transform.position = mParent.position + Vector3.up * mYMargin;
+        transform.position = _parent.position + Vector3.up * _yMargin;
     }
     public void SetHpRatio(float ratio)
     {
-        HealthBar.DOFillAmount(ratio, mFillSpeed);
-        HealthBar.DOColor(_Gradient.Evaluate(ratio), mFillSpeed);
+        HealthBar.DOFillAmount(ratio, _fillSpeed);
+        HealthBar.DOColor(_Gradient.Evaluate(ratio), _fillSpeed);
     }
 }

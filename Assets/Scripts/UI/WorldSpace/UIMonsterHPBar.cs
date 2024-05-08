@@ -6,7 +6,7 @@ public class UIMonsterHPBar : UIHealthBar
 {
     protected override void Init()
     {
-        mStat = transform.parent.GetComponent<MonsterStat>();
-        Debug.Assert(mStat != null);
+        _stat = transform.parent.GetComponent<MonsterStat>();
+        Debug.Assert(_stat != null);
     }
 }

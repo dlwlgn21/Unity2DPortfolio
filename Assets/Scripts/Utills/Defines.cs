@@ -22,6 +22,8 @@ namespace define
         MONSTERS = 7,
         GROUND = 8,
         PLATFORM = 10,
+        ENV = 11,
+        EVENT_BOX = 12,
     }
 
 

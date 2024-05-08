@@ -10,6 +10,7 @@ public class HSlicerController : BaseMonsterController
     {
         base.Init();
         InitStat();
+        MonsterType = EMonsterNames.HeabySlicer;
     }
     protected override void InitStat()
     {
@@ -23,7 +24,7 @@ public class HSlicerController : BaseMonsterController
 
     protected override void AssignAttackState<HSlicerAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.HSlicerAttack(this);
+        _states[(uint)EMonsterState.ATTACK] = new monster_states.HSlicerAttack(this);
     }
 
     public void OnHSlicerValidAttack1()
@@ -36,7 +37,7 @@ public class HSlicerController : BaseMonsterController
     }
     HSlicerAttack getAttack()
     {
-        HSlicerAttack state = (HSlicerAttack)mStates[(uint)EMonsterState.ATTACK];
+        HSlicerAttack state = (HSlicerAttack)_states[(uint)EMonsterState.ATTACK];
         return state;
     }
 

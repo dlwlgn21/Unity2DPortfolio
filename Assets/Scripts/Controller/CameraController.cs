@@ -7,25 +7,25 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     float _margin;
     
-    Transform mPlayer;
-    float mKeepDepth;
+    Transform _player;
+    float _keepDepth;
 
     void Start()
     {
         GameObject go = GameObject.FindGameObjectWithTag("Player");
         Debug.Assert(go != null, "There is No Player");
-        mPlayer = go.transform;
+        _player = go.transform;
         //_margin = 0f;
-        mKeepDepth = -10;
+        _keepDepth = -10;
     }
 
 
     private void LateUpdate()
     {
-        Vector3 pos = mPlayer.position;
+        Vector3 pos = _player.position;
         //pos.x -= _margin;
         //pos.y += _margin;
-        pos.z = mKeepDepth;
+        pos.z = _keepDepth;
 
         //Vector3 pos = Camera.main.transform.position;
         //pos.z = mKeepDepth;

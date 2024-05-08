@@ -9,62 +9,62 @@ using UnityEngine.EventSystems;
 
 public class MainMenuManager
 {
-    bool mIsNewGameBtnClicked = false;
+    bool _isNewGameBtnClicked = false;
 
-    GameObject mMainMenu;
-    Button mNewGameBtn;
-    Button mSettingBtn;
-    Button mExitBtn;
+    GameObject _mainMenu;
+    Button _newGameBtn;
+    Button _settingBtn;
+    Button _exitBtn;
 
-    GameObject mFadeout;
-    Image mFadeImg;
+    GameObject _fadeout;
+    Image _fadeImg;
     public void Init()
     {
         GameObject mainMenu = Managers.Resources.Load<GameObject>("Prefabs/UI/UIMainMenu");
         Debug.Assert(mainMenu != null);
-        mMainMenu = Object.Instantiate(mainMenu);
-        Object.DontDestroyOnLoad(mMainMenu);
-        mNewGameBtn = Utill.GetComponentInChildrenOrNull<Button>(mMainMenu, "UINewGameBtn");
-        mSettingBtn = Utill.GetComponentInChildrenOrNull<Button>(mMainMenu, "UISettingBtn");
-        mExitBtn = Utill.GetComponentInChildrenOrNull<Button>(mMainMenu, "UIExitBtn");
-        mNewGameBtn.onClick.AddListener(OnNewGameBtnClicked);
-        mSettingBtn.onClick.AddListener(OnSettingBtnClicked);
-        mExitBtn.onClick.AddListener(OnExitBtnClicked);
+        _mainMenu = Object.Instantiate(mainMenu);
+        Object.DontDestroyOnLoad(_mainMenu);
+        _newGameBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UINewGameBtn");
+        _settingBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UISettingBtn");
+        _exitBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UIExitBtn");
+        _newGameBtn.onClick.AddListener(OnNewGameBtnClicked);
+        _settingBtn.onClick.AddListener(OnSettingBtnClicked);
+        _exitBtn.onClick.AddListener(OnExitBtnClicked);
 
         GameObject fadeOut = Managers.Resources.Load<GameObject>("Prefabs/UI/UIFadeOut");
         Debug.Assert(fadeOut != null);
-        mFadeout = Object.Instantiate(fadeOut);
-        Object.DontDestroyOnLoad(mFadeout);
-        mFadeImg = mFadeout.GetComponentInChildren<Image>();
-        mFadeout.SetActive(false);
-        mMainMenu.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(mNewGameBtn.gameObject);
+        _fadeout = Object.Instantiate(fadeOut);
+        Object.DontDestroyOnLoad(_fadeout);
+        _fadeImg = _fadeout.GetComponentInChildren<Image>();
+        _fadeout.SetActive(false);
+        _mainMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(_newGameBtn.gameObject);
     }
     public void OnNewGameBtnClicked()
     {
-        mIsNewGameBtnClicked = true;
-        mFadeout.SetActive(true);
-        mFadeImg.DOFade(0, 2.0f).SetEase(Ease.InOutExpo).OnComplete(OnFadeOutCompleted);
-        mMainMenu.SetActive(false);
-        mIsNewGameBtnClicked = false;
+        _isNewGameBtnClicked = true;
+        _fadeout.SetActive(true);
+        _fadeImg.DOFade(0, 2.0f).SetEase(Ease.InOutExpo).OnComplete(OnFadeOutCompleted);
+        _mainMenu.SetActive(false);
+        _isNewGameBtnClicked = false;
         EventSystem.current.SetSelectedGameObject(null);
         SceneManager.LoadScene((int)define.ESceneType.GAME_SCENE);
     }
     public void OnSettingBtnClicked()
     {
-        if (mIsNewGameBtnClicked)
+        if (_isNewGameBtnClicked)
             return;
     }
     public void OnExitBtnClicked()
     {
-        if (mIsNewGameBtnClicked)
+        if (_isNewGameBtnClicked)
             return;
         Application.Quit();
     }
 
     public void OnFadeOutCompleted()
     {
-       mFadeImg.color = Color.black; 
-       mFadeout.SetActive(false);
+       _fadeImg.color = Color.black; 
+       _fadeout.SetActive(false);
     }
 }

@@ -17,12 +17,13 @@ public enum EMonsterState
 public abstract class BaseMonsterController : BaseCharacterController
 {
     public Transform PlayerTransform { get; private set; }
+    public EMonsterNames MonsterType { get; protected set; }
     public MonsterStat Stat { get; protected set; }
     public float AwarenessRangeToTrace { get; private set; }
     public float AwarenessRangeToAttack { get; private set; }
-    protected EMonsterState meCurrentState;
-    protected StateMachine<BaseMonsterController> mStateMachine;
-    protected State<BaseMonsterController>[] mStates;
+    protected EMonsterState _eCurrentState;
+    protected StateMachine<BaseMonsterController> _stateMachine;
+    protected State<BaseMonsterController>[] _states;
 
     public override void Init()
     {
@@ -30,20 +31,25 @@ public abstract class BaseMonsterController : BaseCharacterController
         PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         Debug.Assert(PlayerTransform != null);
         Stat = gameObject.GetOrAddComponent<MonsterStat>();
-        meCurrentState = EMonsterState.SPAWN;
+        _eCurrentState = EMonsterState.SPAWN;
         AwarenessRangeToTrace = 10f;
         AwarenessRangeToAttack = 2f;
         NormalAttackRange = 1f;
         HealthBar = Utill.GetComponentInChildrenOrNull<UIMonsterHPBar>(gameObject, "MonsterHpBar");
     }
+    public void InitStatForRespawn()
+    {
+        InitStat();
+    }
+
     private void FixedUpdate()
     {
-        mStateMachine.FixedExcute();
+        _stateMachine.FixedExcute();
     }
     void Update()
     {
         SetLookDir();
-        mStateMachine.Excute();
+        _stateMachine.Excute();
     }
     public void HittedByPlayer()
     {
@@ -53,8 +59,8 @@ public abstract class BaseMonsterController : BaseCharacterController
 
     public void ChangeState(EMonsterState eChangingState)
     {
-        meCurrentState = eChangingState;
-        mStateMachine.ChangeState(mStates[(uint)eChangingState]);
+        _eCurrentState = eChangingState;
+        _stateMachine.ChangeState(_states[(uint)eChangingState]);
     }
     public void OnMonsterFootStep()
     {
@@ -67,9 +73,9 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
     protected void SetLookDir()
     {
-        if (meCurrentState == EMonsterState.ATTACK ||
-            meCurrentState == EMonsterState.HITTED ||
-            meCurrentState == EMonsterState.DIE)
+        if (_eCurrentState == EMonsterState.ATTACK ||
+            _eCurrentState == EMonsterState.HITTED ||
+            _eCurrentState == EMonsterState.DIE)
             return;
 
         Vector2 dir = PlayerTransform.position - transform.position;
@@ -88,14 +94,14 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
     protected override void InitStates()
     {
-        mStateMachine = new StateMachine<BaseMonsterController>();
-        mStates = new State<BaseMonsterController>[(uint)EMonsterState.COUNT];
-        mStates[(uint)EMonsterState.SPAWN] = new monster_states.Spawn(this);
-        mStates[(uint)EMonsterState.TRACE] = new monster_states.Trace(this);
-        mStates[(uint)EMonsterState.HITTED] = new monster_states.Hitted(this);
-        mStates[(uint)EMonsterState.HITTED_KNOCKBACK] = new monster_states.HittedKnockback(this);
-        mStates[(uint)EMonsterState.DIE] = new monster_states.Die(this);
-        mStateMachine.Init(this, mStates[(uint)EMonsterState.SPAWN]);
+        _stateMachine = new StateMachine<BaseMonsterController>();
+        _states = new State<BaseMonsterController>[(uint)EMonsterState.COUNT];
+        _states[(uint)EMonsterState.SPAWN] = new monster_states.Spawn(this);
+        _states[(uint)EMonsterState.TRACE] = new monster_states.Trace(this);
+        _states[(uint)EMonsterState.HITTED] = new monster_states.Hitted(this);
+        _states[(uint)EMonsterState.HITTED_KNOCKBACK] = new monster_states.HittedKnockback(this);
+        _states[(uint)EMonsterState.DIE] = new monster_states.Die(this);
+        _stateMachine.Init(this, _states[(uint)EMonsterState.SPAWN]);
     }
     protected abstract void AssignAttackState<T>() where T : monster_states.BaseAttack;
     protected abstract void InitStat();

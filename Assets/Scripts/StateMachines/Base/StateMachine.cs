@@ -1,34 +1,34 @@
 
 public class StateMachine<T> where T : class
 {
-    private T mOnwer;
-    private State<T> mCurrState = null;
+    private T _onwer;
+    private State<T> _currState = null;
 
     public void Init(T onwer, State<T> entryState)
     {
-        mOnwer = onwer;
+        _onwer = onwer;
         ChangeState(entryState);
     }
 
     public void Excute()
     {
-        if (mCurrState != null)
-            mCurrState.Excute();
+        if (_currState != null)
+            _currState.Excute();
     }
 
     public void FixedExcute()
     {
-        if (mCurrState != null)
-            mCurrState.FixedExcute();
+        if (_currState != null)
+            _currState.FixedExcute();
     }
 
     public void ChangeState(State<T> eNewState)
     {
         if (eNewState == null) 
             return;
-        if (mCurrState != null)
-            mCurrState.Exit();
-        mCurrState = eNewState;
-        mCurrState.Enter();
+        if (_currState != null)
+            _currState.Exit();
+        _currState = eNewState;
+        _currState.Enter();
     }
 }

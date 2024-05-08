@@ -10,6 +10,7 @@ public class CagedShockerController : BaseMonsterController
     {
         base.Init();
         InitStat();
+        MonsterType = EMonsterNames.CagedShoker;
     }
     protected override void InitStat()
     {
@@ -23,7 +24,7 @@ public class CagedShockerController : BaseMonsterController
 
     protected override void AssignAttackState<CagedShockerAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.CagedShockerAttack(this);
+        _states[(uint)EMonsterState.ATTACK] = new monster_states.CagedShockerAttack(this);
     }
 
     public void OnNoramlAttack1ValidSlashed()
@@ -37,7 +38,7 @@ public class CagedShockerController : BaseMonsterController
 
     CagedShockerAttack getAttack()
     {
-        CagedShockerAttack state = (CagedShockerAttack)mStates[(uint)EMonsterState.ATTACK];
+        CagedShockerAttack state = (CagedShockerAttack)_states[(uint)EMonsterState.ATTACK];
         return state;
     }
 

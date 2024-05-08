@@ -6,7 +6,7 @@ public class UIPlayerHPBar : UIHealthBar
 {
     protected override void Init()
     {
-        mStat = transform.parent.GetComponent<PlayerStat>();
-        Debug.Assert(mStat != null);
+        _stat = transform.parent.GetComponent<PlayerStat>();
+        Debug.Assert(_stat != null);
     }
 }

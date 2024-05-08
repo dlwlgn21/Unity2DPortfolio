@@ -10,6 +10,7 @@ public class WardenController : BaseMonsterController
     {
         base.Init();
         InitStat();
+        MonsterType = EMonsterNames.Warden;
     }
     protected override void InitStat()
     {
@@ -23,7 +24,7 @@ public class WardenController : BaseMonsterController
 
     protected override void AssignAttackState<WardenAttack>()
     {
-        mStates[(uint)EMonsterState.ATTACK] = new monster_states.WardenAttack(this);
+        _states[(uint)EMonsterState.ATTACK] = new monster_states.WardenAttack(this);
     }
 
     public void OnWardenValidAttack()
@@ -33,7 +34,7 @@ public class WardenController : BaseMonsterController
 
     WardenAttack getAttack()
     {
-        WardenAttack state = (WardenAttack)mStates[(uint)EMonsterState.ATTACK];
+        WardenAttack state = (WardenAttack)_states[(uint)EMonsterState.ATTACK];
         return state;
     }
 }

@@ -6,23 +6,23 @@ using UnityEngine.EventSystems;
 
 public class UIBaseButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
-    Transform mTransform;
-    Vector3 mOriginalScale;
-    float mScaleDuration = 0.5f;
+    Transform _transform;
+    Vector3 _originalScale;
+    float _scaleDuration = 0.5f;
     private void Awake()
     {
-        mTransform = GetComponent<Transform>();
-        mOriginalScale = mTransform.localScale;
+        _transform = GetComponent<Transform>();
+        _originalScale = _transform.localScale;
     }
-    public void OnPointerEnter(PointerEventData eventData)  { DoScaleTween(mOriginalScale.x + 0.05f, Ease.OutElastic); }
-    public void OnPointerExit(PointerEventData eventData)   { DoScaleTween(mOriginalScale.x, Ease.OutElastic); }
-    public void OnSelect(BaseEventData eventData)           { DoScaleTween(mOriginalScale.x + 0.05f, Ease.OutElastic); }
-    public void OnDeselect(BaseEventData eventData)         { DoScaleTween(mOriginalScale.x, Ease.OutElastic); }
+    public void OnPointerEnter(PointerEventData eventData)  { DoScaleTween(_originalScale.x + 0.05f, Ease.OutElastic); }
+    public void OnPointerExit(PointerEventData eventData)   { DoScaleTween(_originalScale.x, Ease.OutElastic); }
+    public void OnSelect(BaseEventData eventData)           { DoScaleTween(_originalScale.x + 0.05f, Ease.OutElastic); }
+    public void OnDeselect(BaseEventData eventData)         { DoScaleTween(_originalScale.x, Ease.OutElastic); }
 
     protected void DoScaleTween(float endScale, Ease ease)
     {
-        mTransform
-            .DOScale(endScale, mScaleDuration)
+        _transform
+            .DOScale(endScale, _scaleDuration)
             .SetEase(ease);
     }
 

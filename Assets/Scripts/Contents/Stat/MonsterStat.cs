@@ -39,4 +39,11 @@ public class MonsterStat : BaseStat
         MoveSpeed = dict[(int)eMonster].moveSpeed;
         Exp = dict[(int)eMonster].exp;
     }
+
+    public void SetHPForTutorial(int hp)
+    {
+        HP = hp;
+        MaxHP = hp;
+        Attack = 0;
+    }
 }

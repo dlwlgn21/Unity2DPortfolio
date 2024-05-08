@@ -6,40 +6,52 @@ using UnityEngine;
 
 public class UITextPopup : MonoBehaviour
 {
-    TextMeshPro mText;
-    RectTransform mRectTransform;
-    Vector3 mOriginalScale;
+    TextMeshPro _text;
+    RectTransform _rectTransform;
+    Vector3 _originalScale;
 
     private void Start()
     {
-        mText = GetComponent<TextMeshPro>();
-        Debug.Assert(mText != null);
-        mRectTransform = GetComponent<RectTransform>();
-        Debug.Assert(mRectTransform != null);
-        mOriginalScale = mRectTransform.localScale;
+        _text = GetComponent<TextMeshPro>();
+        Debug.Assert(_text != null);
+        _rectTransform = GetComponent<RectTransform>();
+        Debug.Assert(_rectTransform != null);
+        _originalScale = _rectTransform.localScale;
     }
 
     public void ShowPopup(int damage)
     {
-        mRectTransform.localScale = mOriginalScale;
-        mText.text = damage.ToString();
-        mRectTransform
-            .DOScale(mOriginalScale.x + 0.2f, 0.5f)
+        _rectTransform.localScale = _originalScale;
+        _text.text = damage.ToString();
+        _text.color = Color.white;
+        _rectTransform
+            .DOScale(_originalScale.x + 0.2f, 0.5f)
+            .SetEase(Ease.OutElastic)
+            .OnComplete(OnScaleTweenEnd);
+    }
+    public void ShowBackAttackPopup(int damage)
+    {
+        _rectTransform.localScale = _originalScale;
+        _text.color = Color.red;
+        _text.text = damage.ToString();
+        _rectTransform
+            .DOScale(_originalScale.x + 0.4f, 0.5f)
             .SetEase(Ease.OutElastic)
             .OnComplete(OnScaleTweenEnd);
     }
     public void ShowPopup(string status)
     {
-        mRectTransform.localScale = mOriginalScale;
-        mText.text = status;
-        mRectTransform
-            .DOScale(mOriginalScale.x + 0.2f, 0.5f)
+        _rectTransform.localScale = _originalScale;
+        _text.color = Color.white;
+        _text.text = status;
+        _rectTransform
+            .DOScale(_originalScale.x + 0.2f, 0.5f)
             .SetEase(Ease.OutElastic)
             .OnComplete(OnScaleTweenEnd);
     }
     public void OnScaleTweenEnd()
     {
-        mRectTransform.localScale = Vector3.zero;
+        _rectTransform.localScale = Vector3.zero;
     }
 
 }

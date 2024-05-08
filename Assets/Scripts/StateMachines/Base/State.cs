@@ -1,9 +1,9 @@
 
 public abstract class State<T> where T : class
 {
-    protected T mEntity;
+    protected T _entity;
 
-    public State(T entity) { mEntity = entity;}
+    public State(T entity) { _entity = entity;}
     public virtual void Enter() { }
     public abstract void Excute();
     public virtual void FixedExcute() { }
