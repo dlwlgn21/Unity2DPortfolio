@@ -21,7 +21,7 @@ public abstract class BaseMonsterController : BaseCharacterController
     public MonsterStat Stat { get; protected set; }
     public float AwarenessRangeToTrace { get; private set; }
     public float AwarenessRangeToAttack { get; private set; }
-    protected EMonsterState _eCurrentState;
+    public EMonsterState ECurrentState { get; private set; }
     protected StateMachine<BaseMonsterController> _stateMachine;
     protected State<BaseMonsterController>[] _states;
 
@@ -31,7 +31,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         Debug.Assert(PlayerTransform != null);
         Stat = gameObject.GetOrAddComponent<MonsterStat>();
-        _eCurrentState = EMonsterState.SPAWN;
+        ECurrentState = EMonsterState.SPAWN;
         AwarenessRangeToTrace = 10f;
         AwarenessRangeToAttack = 2f;
         NormalAttackRange = 1f;
@@ -59,7 +59,7 @@ public abstract class BaseMonsterController : BaseCharacterController
 
     public void ChangeState(EMonsterState eChangingState)
     {
-        _eCurrentState = eChangingState;
+        ECurrentState = eChangingState;
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
     }
     public void OnMonsterFootStep()
@@ -73,9 +73,9 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
     protected void SetLookDir()
     {
-        if (_eCurrentState == EMonsterState.ATTACK ||
-            _eCurrentState == EMonsterState.HITTED ||
-            _eCurrentState == EMonsterState.DIE)
+        if (ECurrentState == EMonsterState.ATTACK ||
+            ECurrentState == EMonsterState.HITTED ||
+            ECurrentState == EMonsterState.DIE)
             return;
 
         Vector2 dir = PlayerTransform.position - transform.position;

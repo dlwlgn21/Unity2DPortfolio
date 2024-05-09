@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class MonsterStat : BaseStat
 {
+    public const int TUTIRIAL_HP = 50;
+
     [SerializeField]
     protected int _monsterType;
 
@@ -40,10 +43,10 @@ public class MonsterStat : BaseStat
         Exp = dict[(int)eMonster].exp;
     }
 
-    public void SetHPForTutorial(int hp)
+    public void SetHPForTutorialAndAttackToZero()
     {
-        HP = hp;
-        MaxHP = hp;
+        HP = TUTIRIAL_HP;
+        MaxHP = TUTIRIAL_HP;
         Attack = 0;
     }
 }

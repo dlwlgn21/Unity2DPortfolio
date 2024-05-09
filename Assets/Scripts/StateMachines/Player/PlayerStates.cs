@@ -408,7 +408,7 @@ namespace player_states
         public Roll(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eLookDir;
-        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV);
+        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX);
         public void OnRollAnimFullyPlayed(PlayerController _entity) { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {

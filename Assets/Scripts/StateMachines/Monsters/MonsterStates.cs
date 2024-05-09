@@ -165,7 +165,7 @@ namespace monster_states
             Managers.HitParticle.Play(_entity.transform.position);
             if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
                 _entity.HitEffectAniamtor.gameObject.SetActive(true);
-            switch (pc.meCurrentState)
+            switch (pc.ECurrentState)
             {
                 case EPlayerState.NORMAL_ATTACK_1:
                     ProcessHitted(pc, pc.Stat.Attack, BaseCharacterController.HIT_EFFECT_1_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);

@@ -55,7 +55,7 @@ public class PlayerController : BaseCharacterController
     public BoxCollider2D BoxCollider { get; set; }
     public ParticleSystem JumpParticle { get; set; }
     public PlayerStat Stat { get; private set; }
-    public EPlayerState meCurrentState { get; private set; }
+    public EPlayerState ECurrentState { get; private set; }
     public Transform LedgeCheckPoint { get; private set; }
     
     StateMachine<PlayerController> _stateMachine;
@@ -115,9 +115,9 @@ public class PlayerController : BaseCharacterController
     }
 
     #region ANIM_CALL_BACK
-    public void OnNoramlAttack1ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
-    public void OnNoramlAttack2ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
-    public void OnNoramlAttack3ValidSlashed() { Debug.Assert(meCurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
+    public void OnNoramlAttack1ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
+    public void OnNoramlAttack2ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
+    public void OnNoramlAttack3ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
 
 
     public void OnHittedAnimFullyPlayed()
@@ -152,7 +152,7 @@ public class PlayerController : BaseCharacterController
     public void OnHitted(int damage, BaseMonsterController monContorller) 
     {
         // Blocking Section
-        if (meCurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
+        if (ECurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
         {
             HitEffectAniamtor.gameObject.SetActive(true);
             HitEffectAniamtor.Play(HIT_EFFECT_3_KEY, -1, 0f);
@@ -160,9 +160,9 @@ public class PlayerController : BaseCharacterController
             monContorller.OnPlayerBlockSuccess();
             return;
         }
-        if (meCurrentState == EPlayerState.BLOCK_SUCESS || 
-            meCurrentState == EPlayerState.CLIMB || 
-            meCurrentState == EPlayerState.ROLL)
+        if (ECurrentState == EPlayerState.BLOCK_SUCESS || 
+            ECurrentState == EPlayerState.CLIMB || 
+            ECurrentState == EPlayerState.ROLL)
             return;
 
         // Damage Section
@@ -179,7 +179,7 @@ public class PlayerController : BaseCharacterController
     }
     public void ChangeState(EPlayerState eChangingState)
     {
-        meCurrentState = eChangingState;
+        ECurrentState = eChangingState;
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
     }
 
