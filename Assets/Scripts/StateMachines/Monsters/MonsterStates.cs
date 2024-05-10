@@ -105,7 +105,7 @@ namespace monster_states
         public override void Enter()
         {
             PlayAnimation(EMonsterState.ATTACK);
-            _entity.StatusText.ShowPopup("Attack!");
+            _entity.StatusText.ShowPopup("공격!");
         }
         public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
         public override void Excute()       { ChangeStateIfAnimEnd(EMonsterState.TRACE);  }
@@ -123,33 +123,21 @@ namespace monster_states
 
     public abstract class BaseHittedState : BaseMonsterState
     {
-        protected bool _isKnockbackFlag;
-        protected float _knockbackForce;
-        public BaseHittedState(BaseMonsterController controller, float knockbackForce) : base(controller) { _knockbackForce = knockbackForce; }
+        public BaseHittedState(BaseMonsterController controller) : base(controller) { }
         
         public override void Enter()
         {
-            _isKnockbackFlag = false;
+            Vector2 velo = _entity.RigidBody.velocity;
+            _entity.RigidBody.velocity = new Vector2(0f, velo.y);
         }
-        public override void FixedExcute()
-        {
-            CalculateDistanceFromPlayer();
-            if (!_isKnockbackFlag)
-            {
-                if (_dirToPlayer.x < 0f)
-                    _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
-                else
-                    _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
-                _isKnockbackFlag = true;
-            }
-        }
+
         public override void Excute() { ChangeStateIfAnimEnd(EMonsterState.SPAWN); }
     }
 
 
     public class Hitted : BaseHittedState
     {
-        public Hitted(BaseMonsterController controller) : base(controller, knockbackForce:4f) { }
+        public Hitted(BaseMonsterController controller) : base(controller) { }
 
         public void OnHittedAnimFullyPlayed()
         {
@@ -159,6 +147,7 @@ namespace monster_states
         public override void Enter()
         {
             base.Enter();
+            _entity.StatusText.ShowPopup("경직!");
             PlayAnimation(EMonsterState.HITTED);
             PlayerController pc = _entity.PlayerTransform.gameObject.GetComponent<PlayerController>();
             Debug.Assert(pc != null);
@@ -168,13 +157,17 @@ namespace monster_states
             switch (pc.ECurrentState)
             {
                 case EPlayerState.NORMAL_ATTACK_1:
-                    ProcessHitted(pc, pc.Stat.Attack, BaseCharacterController.HIT_EFFECT_1_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);
+                    ProcessHitted(pc, pc.Stat.Attack, define.EHitCameraShake.WEAK_SHAKE_2D);
+                    _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_1_KEY, -1, 0f);
+
                     break;
                 case EPlayerState.NORMAL_ATTACK_2:
-                    ProcessHitted(pc, (int)(pc.Stat.Attack * 1.5f), BaseCharacterController.HIT_EFFECT_2_KEY, define.EHitCameraShake.WEAK_SHAKE_2D);
+                    ProcessHitted(pc, (int)(pc.Stat.Attack * 1.5f), define.EHitCameraShake.WEAK_SHAKE_2D);
+                    _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_2_KEY, -1, 0f);
                     break;
                 case EPlayerState.NORMAL_ATTACK_3:
-                    ProcessHitted(pc, pc.Stat.Attack * 2, BaseCharacterController.HIT_EFFECT_3_KEY, define.EHitCameraShake.STRONG_SHAKE_2D);
+                    ProcessHitted(pc, pc.Stat.Attack * 2, define.EHitCameraShake.STRONG_SHAKE_2D);
+                    _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
                     break;
                 default:
                     break;
@@ -192,14 +185,14 @@ namespace monster_states
             return false;
         }
 
-        void ProcessHitted(PlayerController pc, int damage, string hitEffectKey, define.EHitCameraShake eCamShakeType)
+        void ProcessHitted(PlayerController pc, int damage, define.EHitCameraShake eCamShakeType)
         {
             if (pc.ELookDir == _entity.ELookDir)
             {
                 int backAttackDamage = damage * 3;
                 _entity.Stat.OnHitted(backAttackDamage);
                 _entity.DamageText.ShowPopup(backAttackDamage);
-                pc.StatusText.ShowPopup("Back Attack!");
+                pc.StatusText.ShowPopup("백어택!");
             }
             else
             {
@@ -207,19 +200,35 @@ namespace monster_states
                 _entity.DamageText.ShowPopup(damage);
             }
             _entity.HealthBar.SetHpRatio((float)_entity.Stat.HP / _entity.Stat.MaxHP);
-            _entity.HitEffectAniamtor.Play(hitEffectKey, -1, 0f);
             pc.ShakeCamera(eCamShakeType);
         }
     }
 
     public class HittedKnockback : BaseHittedState
     {
-        public HittedKnockback(BaseMonsterController controller) : base(controller, knockbackForce: 5f) { }
+        private float _knockbackForce = 5f;
+        private bool _isAddForceThisFrame = false;
+
+        public HittedKnockback(BaseMonsterController controller) : base(controller) { }
         public void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.TRACE);  }
         public override void Enter()
         {
             base.Enter();
-            _entity.StatusText.ShowPopup("Knockback");
+            _isAddForceThisFrame = false;
+            _entity.StatusText.ShowPopup("넉백!");
+        }
+
+        public override void FixedExcute()
+        {
+            CalculateDistanceFromPlayer();
+            if (!_isAddForceThisFrame)
+            {
+                if (_dirToPlayer.x < 0f)
+                    _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
+                else
+                    _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
+                _isAddForceThisFrame = true;
+            }
         }
     }
     public class Die : BaseMonsterState

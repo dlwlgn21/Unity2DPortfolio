@@ -81,8 +81,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1144181699
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -67054503, guid: c06006107c148a14a9aa6c8a2d80810b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -141,7 +141,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &870922574278011357
 BoxCollider2D:
@@ -261,6 +261,14 @@ PrefabInstance:
     - target: {fileID: 1394374868646390137, guid: 1052b5026134a304eba0e10e4d642552, type: 3}
       propertyPath: m_Name
       value: MonsterHitEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121619727221335712, guid: 1052b5026134a304eba0e10e4d642552, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121619727221335712, guid: 1052b5026134a304eba0e10e4d642552, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1144181699
       objectReference: {fileID: 0}
     - target: {fileID: 7927944764403384702, guid: 1052b5026134a304eba0e10e4d642552, type: 3}
       propertyPath: m_LocalPosition.x

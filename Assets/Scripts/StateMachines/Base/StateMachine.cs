@@ -24,8 +24,6 @@ public class StateMachine<T> where T : class
 
     public void ChangeState(State<T> eNewState)
     {
-        if (eNewState == null) 
-            return;
         if (_currState != null)
             _currState.Exit();
         _currState = eNewState;

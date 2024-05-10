@@ -2,6 +2,7 @@ using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public enum EMonsterState
 { 
@@ -53,7 +54,8 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
     public void HittedByPlayer()
     {
-        if (Stat.HP > 0)
+        //  ECurrentState != EMonsterState.DIE DieState에서 플레이어 공격시에 다시 HitState로 변환되는 경우가 간혹 있었음. 그걸 막기위한 조치
+        if (Stat.HP > 0 && ECurrentState != EMonsterState.DIE) 
             ChangeState(EMonsterState.HITTED);
     }
 
@@ -75,6 +77,7 @@ public abstract class BaseMonsterController : BaseCharacterController
     {
         if (ECurrentState == EMonsterState.ATTACK ||
             ECurrentState == EMonsterState.HITTED ||
+            ECurrentState == EMonsterState.HITTED_KNOCKBACK ||
             ECurrentState == EMonsterState.DIE)
             return;
 
