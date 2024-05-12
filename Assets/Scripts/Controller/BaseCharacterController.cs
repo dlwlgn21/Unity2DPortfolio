@@ -16,11 +16,10 @@ public abstract class BaseCharacterController : MonoBehaviour
     public ParticleSystem FootDustParticle { get; set; }
     public SpriteRenderer SpriteRenderer { get; set; }
     public float NormalAttackRange { get; protected set; }
-    public Vector3 CachedAttackPointLocalRightPos { get; set; }
-    public Vector3 CachedAttackPointLocalLeftPos { get; set; }
     public UIHealthBar HealthBar { get; set; }
     public UITextPopup DamageText { get; set; }
     public UITextPopup StatusText { get; set; }
+    public GameObject AttackLight { get; set; }
 
     protected abstract void InitStates();
 
@@ -41,11 +40,6 @@ public abstract class BaseCharacterController : MonoBehaviour
         SpriteRenderer = gameObject.GetOrAddComponent<SpriteRenderer>();
         NormalAttackPoint = transform.Find("NormalAttackPoint").gameObject.transform;
         Debug.Assert(NormalAttackPoint != null);
-        CachedAttackPointLocalRightPos = NormalAttackPoint.localPosition;
-        Vector3 leftPos = NormalAttackPoint.localPosition;
-        leftPos.x = -leftPos.x;
-        CachedAttackPointLocalLeftPos = leftPos;
-
         foreach (Animator aniamtor in gameObject.GetComponentsInChildren<Animator>())
         {
             if (aniamtor != null && aniamtor.gameObject.name != gameObject.name)
@@ -64,6 +58,9 @@ public abstract class BaseCharacterController : MonoBehaviour
         
         FootDustParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "FootDustParticle");
         Debug.Assert(FootDustParticle != null);
+        AttackLight = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "AttackLight").gameObject;
+        Debug.Assert(AttackLight != null);
+        AttackLight.SetActive(false);
     }
 
     void OnDrawGizmosSelected()

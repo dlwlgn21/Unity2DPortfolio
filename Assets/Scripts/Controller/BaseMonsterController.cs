@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public enum EMonsterState
 { 
@@ -84,15 +85,13 @@ public abstract class BaseMonsterController : BaseCharacterController
         Vector2 dir = PlayerTransform.position - transform.position;
         if (dir.x > 0)
         {
-            SpriteRenderer.flipX = false;
             ELookDir = define.ECharacterLookDir.RIGHT;
-            NormalAttackPoint.localPosition = CachedAttackPointLocalRightPos;
+            Rotate(0);
         }
         else
         {
-            SpriteRenderer.flipX = true;
             ELookDir = define.ECharacterLookDir.LEFT;
-            NormalAttackPoint.localPosition = CachedAttackPointLocalLeftPos;
+            Rotate(180);
         }
     }
     protected override void InitStates()
@@ -108,4 +107,10 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
     protected abstract void AssignAttackState<T>() where T : monster_states.BaseAttack;
     protected abstract void InitStat();
+
+    protected void Rotate(float yAngle)
+    {
+        Vector3 rotator = new Vector3(transform.rotation.x, yAngle, transform.rotation.z);
+        transform.rotation = Quaternion.Euler(rotator);
+    }
 }

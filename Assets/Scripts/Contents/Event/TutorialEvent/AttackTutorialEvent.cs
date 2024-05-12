@@ -7,7 +7,7 @@ public class AttckTutorialEvent : TutorialEvent
     public override void OnDialogEnd()
     {
         base.Init();
-        Managers.UIKeyTutorial.ActiveAttackKeyTutorial();
+        _tutorialManager.ActiveAttackKeyTutorial();
         _isTutorialStart = true;
     }
     private void Update()
@@ -16,8 +16,8 @@ public class AttckTutorialEvent : TutorialEvent
             return;
         if (_mc.Stat.HP <= 0)
         {
-            Managers.UIKeyTutorial.UnactiveAttackKeyTutorial();
-            Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.ATTACK_TRAINING);
+            _tutorialManager.UnactiveAttackKeyTutorial();
+            _tutorialManager.ActiveSuccessText(ETutorialTraning.ATTACK_TRAINING);
             SwitchCamToMain();
             gameObject.SetActive(false);
         }

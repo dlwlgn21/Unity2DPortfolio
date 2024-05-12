@@ -56,7 +56,6 @@ public class PlayerController : BaseCharacterController
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
     public Transform LedgeCheckPoint { get; private set; }
-    
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
 

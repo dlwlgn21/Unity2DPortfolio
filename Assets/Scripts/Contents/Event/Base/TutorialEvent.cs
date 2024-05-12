@@ -9,6 +9,7 @@ public abstract class TutorialEvent : MonoBehaviour
     protected PlayerController _pc;
     protected int _playerOriginalAttackDamage;
     protected TutorialCameraManager _camManager;
+    protected TutorialManager _tutorialManager;
     protected void Init()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -17,6 +18,7 @@ public abstract class TutorialEvent : MonoBehaviour
         _mc = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<BaseMonsterController>();
         _mc.gameObject.GetComponent<MonsterStat>().SetHPForTutorialAndAttackToZero();
         _camManager = GameObject.FindGameObjectWithTag("CamManager").GetComponent<TutorialCameraManager>();
+        _tutorialManager = GameObject.FindGameObjectWithTag("TutorialManager").GetComponent<TutorialManager>();
     }
     public abstract void OnDialogEnd();
 

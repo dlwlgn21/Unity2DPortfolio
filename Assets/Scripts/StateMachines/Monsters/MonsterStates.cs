@@ -106,6 +106,7 @@ namespace monster_states
         {
             PlayAnimation(EMonsterState.ATTACK);
             _entity.StatusText.ShowPopup("АјАн!");
+            _entity.AttackLight.SetActive(true);
         }
         public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
         public override void Excute()       { ChangeStateIfAnimEnd(EMonsterState.TRACE);  }
@@ -118,6 +119,11 @@ namespace monster_states
                 if (pc != null)
                     pc.OnHitted(_entity.Stat.Attack, _entity);
             }
+        }
+
+        public override void Exit()
+        {
+            _entity.AttackLight.SetActive(false);
         }
     }
 

@@ -56,6 +56,7 @@ public class TutorialPillar : MonoBehaviour
         _animator.StopPlayback();
         _animator.Rebind();
         _animator.enabled = false;
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
         _spriteRenderer.sprite = _shutDownSprite;
     }
 

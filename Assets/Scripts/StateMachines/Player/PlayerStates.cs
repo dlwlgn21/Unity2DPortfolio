@@ -460,6 +460,12 @@ namespace player_states
             _attackPoint = _entity.NormalAttackPoint;
             _eLookDir = _entity.ELookDir;
             _isGoToNextAttack = false;
+            _entity.AttackLight.SetActive(true);
+        }
+
+        public override void Exit()
+        {
+            _entity.AttackLight.SetActive(false);
         }
 
         public override void ProcessKeyboardInput()

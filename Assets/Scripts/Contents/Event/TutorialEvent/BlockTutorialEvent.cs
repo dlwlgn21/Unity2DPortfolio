@@ -10,7 +10,7 @@ public class BlockTutorialEvent : TutorialEvent
     public override void OnDialogEnd()
     {
         base.Init();
-        Managers.UIKeyTutorial.ActiveBlockKeyTutorial();
+        _tutorialManager.ActiveBlockKeyTutorial();
         SetPlayerAttackToZero();
         _isTutorialStart = true;
     }
@@ -21,7 +21,7 @@ public class BlockTutorialEvent : TutorialEvent
             if (_pc.ECurrentState == EPlayerState.BLOCK_SUCESS && _isPlayerChangeStateToBlockSuccess == false)
             {
                 ++_playerBlockCount;
-                Managers.UIKeyTutorial.IncreaseCountText(ETutorialCountText.BLOCK, _playerBlockCount);
+                _tutorialManager.IncreaseCountText(ETutorialCountText.BLOCK, _playerBlockCount);
                 _isPlayerChangeStateToBlockSuccess = true;
             }
             if (_pc.ECurrentState != EPlayerState.BLOCK_SUCESS)
@@ -33,8 +33,8 @@ public class BlockTutorialEvent : TutorialEvent
             {
                 RollBackPlayerAttack();
                 _mc.ChangeState(EMonsterState.DIE);
-                Managers.UIKeyTutorial.UnactiveBlockKeyTutorial();
-                Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.BLOCK_TRAINING);
+                _tutorialManager.UnactiveBlockKeyTutorial();
+                _tutorialManager.ActiveSuccessText(ETutorialTraning.BLOCK_TRAINING);
                 SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;

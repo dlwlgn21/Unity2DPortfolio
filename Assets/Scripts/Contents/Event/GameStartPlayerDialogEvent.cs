@@ -6,10 +6,12 @@ using UnityEngine;
 public class GameStartPlayerDialogEvent : DialogEventBoxCollider, ITalkable
 {
     [SerializeField] private DialogText _dialogText;
+    private TutorialManager _tutorialManager;
     private bool _isDialogStart = false;
     void Start()
     {
         Init();
+        _tutorialManager = GameObject.FindGameObjectWithTag("TutorialManager").GetComponent<TutorialManager>();
     }
     
     private void Update()
@@ -36,7 +38,7 @@ public class GameStartPlayerDialogEvent : DialogEventBoxCollider, ITalkable
         // TODO : Destroy 할 지, 그냥 SetActive(false) 할 지 정하자
         _isDialogStart = false;
         _boxCollider.enabled = false;
-        Managers.UIKeyTutorial.ActiveMoveKeys();
+        _tutorialManager.ActiveMoveKeys();
         UnregisterOnDialogEnd();
         StartCoroutine(SetActiveFalseAfter10Seconds());
     }
@@ -44,7 +46,7 @@ public class GameStartPlayerDialogEvent : DialogEventBoxCollider, ITalkable
     IEnumerator SetActiveFalseAfter10Seconds()
     {
         yield return new WaitForSeconds(10f);
-        Managers.UIKeyTutorial.UnactiveMoveKeys();
+        _tutorialManager.UnactiveMoveKeys();
         gameObject.SetActive(false);
     }
 }

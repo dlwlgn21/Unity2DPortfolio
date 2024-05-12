@@ -21,7 +21,6 @@ public class Managers : MonoBehaviour
     MainMenuManager _mainMenuManager = new MainMenuManager();
     MonsterPoolManager _monsterPoolManager = new MonsterPoolManager();
     UIDialogManager _dialogManager = new UIDialogManager();
-    UIKeyTutorialManager _UIKeyTutorialManager = new UIKeyTutorialManager();
     public static InputManager Input { get { return Instance._inputManager; } }
     public static DataManager Data { get { return Instance._dataManager; } }
     public static ResourceManager Resources { get { return Instance._resourceManager; } }
@@ -30,7 +29,6 @@ public class Managers : MonoBehaviour
     public static MainMenuManager MainMenu { get { return Instance._mainMenuManager; } }
     public static MonsterPoolManager MonsterPool { get { return Instance._monsterPoolManager; } }
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
-    public static UIKeyTutorialManager UIKeyTutorial { get { return Instance._UIKeyTutorialManager; } }
     public static GameEventManager GameEvent { get { return Instance._gameEventManager; } }
 
     // Added part For BloodParticle
@@ -87,7 +85,6 @@ public class Managers : MonoBehaviour
             sInstance._monsterPoolManager.Init();
             sInstance._pauseManager.Init();
             sInstance._dialogManager.Init();
-            sInstance._UIKeyTutorialManager.Init();
         }
     }
 

@@ -8,7 +8,7 @@ public class RollTutorialEvent : TutorialEvent
     public override void OnDialogEnd()
     {
         base.Init();
-        Managers.UIKeyTutorial.ActiveRollKeyTutorial();
+        _tutorialManager.ActiveRollKeyTutorial();
         SetPlayerAttackToZero();
         _isTutorialStart = true;
     }
@@ -19,7 +19,7 @@ public class RollTutorialEvent : TutorialEvent
             if (_pc.ECurrentState == EPlayerState.ROLL && _isPlayerChangeStateToRoll == false)
             {
                 ++_playerRollCount;
-                Managers.UIKeyTutorial.IncreaseCountText(ETutorialCountText.ROLL, _playerRollCount);
+                _tutorialManager.IncreaseCountText(ETutorialCountText.ROLL, _playerRollCount);
                 _isPlayerChangeStateToRoll = true;
             }
             if (_pc.ECurrentState != EPlayerState.ROLL)
@@ -31,8 +31,8 @@ public class RollTutorialEvent : TutorialEvent
             {
                 RollBackPlayerAttack();
                 _mc.ChangeState(EMonsterState.DIE);
-                Managers.UIKeyTutorial.UnactiveRollKeyTutorial();
-                Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.ROLL_TRAINING);
+                _tutorialManager.UnactiveRollKeyTutorial();
+                _tutorialManager.ActiveSuccessText(ETutorialTraning.ROLL_TRAINING);
                 SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;

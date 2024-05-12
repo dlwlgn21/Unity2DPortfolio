@@ -10,7 +10,7 @@ public class BackAttackTutorialEvent : TutorialEvent
     public override void OnDialogEnd()
     {
         base.Init();
-        Managers.UIKeyTutorial.ActiveBackAttackTutorial();
+        _tutorialManager.ActiveBackAttackTutorial();
         SetPlayerAttackToZero();
         _isTutorialStart = true;
     }
@@ -21,7 +21,7 @@ public class BackAttackTutorialEvent : TutorialEvent
             if (!_isMonsterChangeStateToHitted && _mc.ECurrentState == EMonsterState.HITTED && _pc.ELookDir == _mc.ELookDir)
             {
                 ++_playerBackAttackCount;
-                Managers.UIKeyTutorial.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
+                _tutorialManager.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
                 _isMonsterChangeStateToHitted = true;
             }
             if (_mc.ECurrentState != EMonsterState.HITTED)
@@ -33,8 +33,8 @@ public class BackAttackTutorialEvent : TutorialEvent
             {
                 RollBackPlayerAttack();
                 _mc.ChangeState(EMonsterState.DIE);
-                Managers.UIKeyTutorial.UnactiveBackAttackTutorial();
-                Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.BACK_ATTACK_TRAINING);
+                _tutorialManager.UnactiveBackAttackTutorial();
+                _tutorialManager.ActiveSuccessText(ETutorialTraning.BACK_ATTACK_TRAINING);
                 SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;
