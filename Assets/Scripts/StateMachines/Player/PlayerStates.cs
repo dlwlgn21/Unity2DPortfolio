@@ -14,19 +14,19 @@ namespace player_states
         public override void Excute() { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
         public virtual void ProcessKeyboardInput() {}
 
+
+        // HollowKnight와 비슷한 카메라 무브먼트를 위해 flip 할 때에 y축 회전시킴.
         public void FlipSpriteAccodingPlayerInput()
         {
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalLeftPos;
                 _entity.ELookDir = ECharacterLookDir.LEFT;
-                _entity.SpriteRenderer.flipX = true;
+                Rotate(180f);
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalRightPos;
                 _entity.ELookDir = ECharacterLookDir.RIGHT;
-                _entity.SpriteRenderer.flipX = false;
+                Rotate(0f);
             }
         }
         protected bool IsAnimEnd()
@@ -96,6 +96,13 @@ namespace player_states
             }
             Debug.Assert(false);
             return;
+        }
+
+        private void Rotate(float yAngle)
+        {
+            Vector3 rotator = new Vector3(_entity.transform.rotation.x, yAngle, _entity.transform.rotation.z);
+            _entity.transform.rotation = Quaternion.Euler(rotator);
+            _entity.CamFollowObject.CallTurn();
         }
         static public void BoxCast2DDebugDraw(Vector2 origin, Vector2 size, float distasnce, RaycastHit2D hit)
         {

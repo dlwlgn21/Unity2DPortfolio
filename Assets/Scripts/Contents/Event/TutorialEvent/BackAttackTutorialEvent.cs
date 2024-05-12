@@ -35,6 +35,7 @@ public class BackAttackTutorialEvent : TutorialEvent
                 _mc.ChangeState(EMonsterState.DIE);
                 Managers.UIKeyTutorial.UnactiveBackAttackTutorial();
                 Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.BACK_ATTACK_TRAINING);
+                SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;
             }

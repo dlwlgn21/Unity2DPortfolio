@@ -5,7 +5,6 @@ public class RollTutorialEvent : TutorialEvent
     private int _playerRollCount = 0;
     private const int ROLL_TRANING_PASS_COUNT = 10;
     private bool _isPlayerChangeStateToRoll = false;
-
     public override void OnDialogEnd()
     {
         base.Init();
@@ -34,6 +33,7 @@ public class RollTutorialEvent : TutorialEvent
                 _mc.ChangeState(EMonsterState.DIE);
                 Managers.UIKeyTutorial.UnactiveRollKeyTutorial();
                 Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.ROLL_TRAINING);
+                SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;
             }

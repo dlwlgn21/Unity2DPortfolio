@@ -38,10 +38,15 @@ public class UIKeyTutorialManager
     private TextMeshProUGUI _backAttackCountText;
     private TextMeshProUGUI _successText;
 
+    private OpenInteractBox _rollOpenInteractBox;
+    private OpenInteractBox _backAttackOpenInteractBox;
+    private OpenInteractBox _blockOpenInteractBox;
+    
     private const float ACTIVE_OBJECTS_TW_SCALE_END_VALUE = 1f; 
     private const float ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE = 0.5f;
     private const float COUNT_TEXT_TW_SCALE_END_VALUE = 2f;
     private const float COUNT_TEXT_TW_SCALE_DURATION_VALUE = 0.5f;
+
     public void Init()
     {
         GameObject ori = Managers.Resources.Load<GameObject>("Prefabs/UI/UIKeys");

@@ -10,7 +10,6 @@ public abstract class BaseCharacterController : MonoBehaviour
 {
     public Animator Animator { get; set; }
     public Animator HitEffectAniamtor { get; set; }
-
     public Rigidbody2D RigidBody { get; set; }
     public ECharacterLookDir ELookDir { get; set; }
     public Transform NormalAttackPoint { get; protected set; }
@@ -20,10 +19,8 @@ public abstract class BaseCharacterController : MonoBehaviour
     public Vector3 CachedAttackPointLocalRightPos { get; set; }
     public Vector3 CachedAttackPointLocalLeftPos { get; set; }
     public UIHealthBar HealthBar { get; set; }
-
     public UITextPopup DamageText { get; set; }
     public UITextPopup StatusText { get; set; }
-
 
     protected abstract void InitStates();
 

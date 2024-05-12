@@ -47,10 +47,9 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyRoll = KeyCode.C;
     public static KeyCode KeyJump = KeyCode.Space;
 
-    [SerializeField]
-    public Material PlayerClimbMaterial;
-    [SerializeField]
-    public Material PlayerMaterial;
+    [SerializeField] public Material PlayerClimbMaterial;
+    [SerializeField] public Material PlayerMaterial;
+    [SerializeField] public CamFollowObject CamFollowObject;
 
     public BoxCollider2D BoxCollider { get; set; }
     public ParticleSystem JumpParticle { get; set; }
@@ -58,8 +57,8 @@ public class PlayerController : BaseCharacterController
     public EPlayerState ECurrentState { get; private set; }
     public Transform LedgeCheckPoint { get; private set; }
     
-    StateMachine<PlayerController> _stateMachine;
-    State<PlayerController>[] _states;
+    private StateMachine<PlayerController> _stateMachine;
+    private State<PlayerController>[] _states;
 
     public override void Init()
     {

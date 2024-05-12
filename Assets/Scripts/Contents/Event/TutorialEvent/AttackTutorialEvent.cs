@@ -18,6 +18,7 @@ public class AttckTutorialEvent : TutorialEvent
         {
             Managers.UIKeyTutorial.UnactiveAttackKeyTutorial();
             Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.ATTACK_TRAINING);
+            SwitchCamToMain();
             gameObject.SetActive(false);
         }
     }

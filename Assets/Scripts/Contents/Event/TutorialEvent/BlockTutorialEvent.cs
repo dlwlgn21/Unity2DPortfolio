@@ -35,6 +35,7 @@ public class BlockTutorialEvent : TutorialEvent
                 _mc.ChangeState(EMonsterState.DIE);
                 Managers.UIKeyTutorial.UnactiveBlockKeyTutorial();
                 Managers.UIKeyTutorial.ActiveSuccessText(ETutorialTraning.BLOCK_TRAINING);
+                SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;
             }

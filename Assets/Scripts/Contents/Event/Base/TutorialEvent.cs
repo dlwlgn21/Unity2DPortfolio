@@ -8,7 +8,7 @@ public abstract class TutorialEvent : MonoBehaviour
     protected BaseMonsterController _mc;
     protected PlayerController _pc;
     protected int _playerOriginalAttackDamage;
-
+    protected TutorialCameraManager _camManager;
     protected void Init()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -16,6 +16,7 @@ public abstract class TutorialEvent : MonoBehaviour
         _pc = player.GetComponent<PlayerController>();
         _mc = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<BaseMonsterController>();
         _mc.gameObject.GetComponent<MonsterStat>().SetHPForTutorialAndAttackToZero();
+        _camManager = GameObject.FindGameObjectWithTag("CamManager").GetComponent<TutorialCameraManager>();
     }
     public abstract void OnDialogEnd();
 
@@ -27,5 +28,10 @@ public abstract class TutorialEvent : MonoBehaviour
     protected void RollBackPlayerAttack()
     {
         _pc.Stat.Attack = _playerOriginalAttackDamage;
+    }
+
+    protected void SwitchCamToMain()
+    {
+        _camManager.SwitchCameraToMain();
     }
 }
