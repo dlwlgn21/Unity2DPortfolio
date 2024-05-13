@@ -47,9 +47,7 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyRoll = KeyCode.C;
     public static KeyCode KeyJump = KeyCode.Space;
 
-    [SerializeField] public Material PlayerClimbMaterial;
-    [SerializeField] public Material PlayerMaterial;
-    [SerializeField] public CamFollowObject CamFollowObject;
+    public CamFollowObject CamFollowObject;
 
     public BoxCollider2D BoxCollider { get; set; }
     public ParticleSystem JumpParticle { get; set; }

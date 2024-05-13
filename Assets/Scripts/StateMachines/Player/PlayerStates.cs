@@ -1,5 +1,7 @@
 using define;
+using DG.Tweening;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 
 namespace player_states
@@ -10,25 +12,28 @@ namespace player_states
         protected float _horizontalMove;
         protected float _groundCheckDistance = 0.2f;
         public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.GROUND) | (1 << (int)define.EColliderLayer.PLATFORM);
-        public BasePlayerState(PlayerController controller) : base(controller) {  }
-        public override void Excute() { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
-        public virtual void ProcessKeyboardInput() {}
+        public BasePlayerState(PlayerController controller) : base(controller) { }
+        public override void Excute() { ProcessHorizontalInput(); }
+        public virtual void ProcessKeyboardInput() { }
 
 
         // HollowKnight와 비슷한 카메라 무브먼트를 위해 flip 할 때에 y축 회전시킴.
         public void FlipSpriteAccodingPlayerInput()
         {
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.RIGHT)
             {
                 _entity.ELookDir = ECharacterLookDir.LEFT;
                 Rotate(180f);
             }
-            else if (Input.GetKey(KeyCode.RightArrow))
+            else if (Input.GetKey(KeyCode.RightArrow) && _entity.ELookDir == ECharacterLookDir.LEFT)
             {
                 _entity.ELookDir = ECharacterLookDir.RIGHT;
                 Rotate(0f);
             }
         }
+
+        protected void ProcessHorizontalInput()  { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
+
         protected bool IsAnimEnd()
         {
             if (_entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
@@ -232,7 +237,11 @@ namespace player_states
         {
             base.Excute();
             if (!IsStandGround())
+            {
+                // 5.13에 return 추가함.
                 _entity.ChangeState(EPlayerState.FALL);
+                return;
+            }
             FlipSpriteAccodingPlayerInput();
             ProcessKeyboardInput();
         }
@@ -243,48 +252,49 @@ namespace player_states
     {
         public Jump(PlayerController controller) : base(controller) { }
 
-        bool mIsInAir;
-        bool mIsTwiceJump;
-        bool mIsJumpKeyDownTwice;
+        private bool _isInAir;
+        private bool _isTwiceJump;
+        private bool _isJumpKeyDownTwice;
+
+        private const float FIRST_JUMP_FORCE = 9f;
+        private const float SECOND_JUMP_FORCE = 5f;
+        
         public override void ProcessKeyboardInput()
         {
-            if (mIsJumpKeyDownTwice)
+            if (_isJumpKeyDownTwice)
                 return;
             if (Input.GetKeyDown(PlayerController.KeyJump))
             {
-                mIsTwiceJump = true;
-                mIsJumpKeyDownTwice = true;
+                _isTwiceJump = true;
+                _isJumpKeyDownTwice = true;
             }
         }
         public override void Enter()
         {
             PlayAnimation(EPlayerState.JUMP);
-            mIsInAir = false;
-            mIsTwiceJump = false;
-            mIsJumpKeyDownTwice = false;
+            _isInAir = false;
+            _isTwiceJump = false;
+            _isJumpKeyDownTwice = false;
             _entity.JumpParticle.Play();
 
         }
         public override void FixedExcute()
         {
-            if (mIsTwiceJump)
+            ProcessHorizontalInputAndFlip();
+            if (_isTwiceJump)
             {
                 _entity.Animator.Play("Jump", -1, 0f);
-                Vector2 oriVelocity = _entity.RigidBody.velocity;
-                _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
-                _entity.RigidBody.AddForce(Vector2.up * 3, ForceMode2D.Impulse);
-                mIsTwiceJump = false;
+                DoJump(SECOND_JUMP_FORCE);
+                _isTwiceJump = false;
             }
-
-            if (!mIsInAir)
+            if (!_isInAir)
             {
-                Vector2 oriVelocity = _entity.RigidBody.velocity;
-                _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
-                _entity.RigidBody.AddForce(Vector2.up * 6, ForceMode2D.Impulse);
-                mIsInAir = true;
+                DoJump(FIRST_JUMP_FORCE);
+                _isInAir = true;
             }
             else
             {
+                ChangeVelocity();
                 if (_entity.RigidBody.velocity.y <= 0f)
                     _entity.ChangeState(EPlayerState.FALL);
             }
@@ -292,9 +302,27 @@ namespace player_states
         public override void Excute()
         {
             base.Excute();
+            ProcessHorizontalInputAndFlip();
+        }
+
+        private void ProcessHorizontalInputAndFlip()
+        {
             ProcessKeyboardInput();
             FlipSpriteAccodingPlayerInput();
         }
+        private void ChangeVelocity()
+        {
+            Vector2 oriVelocity = _entity.RigidBody.velocity;
+            _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
+        }
+        private void DoJump(float upForce)
+        {
+
+            ChangeVelocity();
+            _entity.RigidBody.AddForce(Vector2.up * upForce, ForceMode2D.Impulse);
+        }
+
+
     }
 
     public class Climb : BasePlayerState
@@ -302,23 +330,17 @@ namespace player_states
         public Climb(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eCharacterLookDir;
-        float _xOffset = 0.7f;
-        float _yOffset = 1.4f;
+        private const float X_OFFSET = 0.7f;
+        private const float Y_OFFSET = 1.4f;
+        private const float ANIM_DURATION_HALF_TIME = 0.3f;
 
-        public void OnClimbAnimFullyPlayed()
-        {
-            Vector3 pos = _entity.transform.position;
-            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
-                _entity.transform.position = new Vector3(pos.x + _xOffset, pos.y + _yOffset, pos.z);
-            else
-                _entity.transform.position = new Vector3(pos.x - _xOffset, pos.y + _yOffset, pos.z);
-            _entity.ChangeState(EPlayerState.IDLE);
-        }
+        public void OnClimbAnimFullyPlayed() { _entity.ChangeState(EPlayerState.IDLE); }
         public override void Enter()
         {
-            _entity.SpriteRenderer.material = _entity.PlayerClimbMaterial;
             _eCharacterLookDir = _entity.ELookDir;
             PlayAnimation(EPlayerState.CLIMB);
+            Vector3 pos = _entity.transform.position;
+            _entity.transform.DOLocalMove(new Vector3(pos.x, pos.y + Y_OFFSET, pos.z), ANIM_DURATION_HALF_TIME).OnComplete(OnYMoveTWEnd);
         }
         public override void FixedExcute()
         {
@@ -328,11 +350,17 @@ namespace player_states
         public override void Exit()
         {
             _entity.RigidBody.gravityScale = 1f;
-            _entity.SpriteRenderer.material = _entity.PlayerMaterial;
+        }
+
+        public void OnYMoveTWEnd()
+        {
+            Vector3 pos = _entity.transform.position;
+            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
+                _entity.transform.DOLocalMove(new Vector3(pos.x + X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME);
+            else
+                _entity.transform.DOLocalMove(new Vector3(pos.x - X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME);
         }
     }
-
-
     public class Fall : BasePlayerState
     {
         public Fall(PlayerController controller) : base(controller) { }
