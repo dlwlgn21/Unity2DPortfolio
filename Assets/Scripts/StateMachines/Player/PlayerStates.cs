@@ -366,7 +366,7 @@ namespace player_states
         public Fall(PlayerController controller) : base(controller) { }
 
         Transform _ledgeCheckPoint;
-        LayerMask _platformLayerMask = 1 << (int)define.EColliderLayer.PLATFORM;
+        LayerMask _ledgeLayerMask = 1 << (int)define.EColliderLayer.LEDGE_CLIMB;
         ECharacterLookDir _eCharacterLookDir;
         float _extraHeight = 0.2f;
 
@@ -405,12 +405,12 @@ namespace player_states
             RaycastHit2D hit;
             if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
             {
-                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.right, dist, _platformLayerMask);
+                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.right, dist, _ledgeLayerMask);
                 Debug.DrawRay(_ledgeCheckPoint.position, Vector2.right * dist, UnityEngine.Color.red);
             }
             else
             {
-                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.left, dist, _platformLayerMask);
+                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.left, dist, _ledgeLayerMask);
                 Debug.DrawRay(_ledgeCheckPoint.position, Vector2.left * dist, UnityEngine.Color.red);
             }
             if (hit.collider != null)
@@ -443,7 +443,7 @@ namespace player_states
         public Roll(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eLookDir;
-        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX);
+        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB);
         public void OnRollAnimFullyPlayed(PlayerController _entity) { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {

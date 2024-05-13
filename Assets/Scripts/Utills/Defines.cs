@@ -24,6 +24,8 @@ namespace define
         PLATFORM = 10,
         ENV = 11,
         EVENT_BOX = 12,
+        CAM_CONFINER = 13,
+        LEDGE_CLIMB = 14,
     }
 
 
