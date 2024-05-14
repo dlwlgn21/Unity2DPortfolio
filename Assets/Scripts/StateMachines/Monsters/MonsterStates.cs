@@ -1,4 +1,5 @@
 using CameraShake;
+using define;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -107,6 +108,7 @@ namespace monster_states
             PlayAnimation(EMonsterState.ATTACK);
             _entity.StatusText.ShowPopup("АјАн!");
             _entity.AttackLight.SetActive(true);
+            _entity.RotateAttackLightAccodingCharacterLookDir();
         }
         public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
         public override void Excute()       { ChangeStateIfAnimEnd(EMonsterState.TRACE);  }

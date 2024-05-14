@@ -1,7 +1,6 @@
 using define;
 using DG.Tweening;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 
 namespace player_states
@@ -17,7 +16,6 @@ namespace player_states
         public virtual void ProcessKeyboardInput() { }
 
 
-        // HollowKnight와 비슷한 카메라 무브먼트를 위해 flip 할 때에 y축 회전시킴.
         public void FlipSpriteAccodingPlayerInput()
         {
             if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.RIGHT)
@@ -488,6 +486,7 @@ namespace player_states
             _eLookDir = _entity.ELookDir;
             _isGoToNextAttack = false;
             _entity.AttackLight.SetActive(true);
+            _entity.RotateAttackLightAccodingCharacterLookDir();
         }
 
         public override void Exit()

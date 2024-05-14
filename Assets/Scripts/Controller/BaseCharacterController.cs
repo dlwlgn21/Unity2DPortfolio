@@ -5,6 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.Rendering;
+using static UnityEditor.PlayerSettings;
 
 public abstract class BaseCharacterController : MonoBehaviour
 {
@@ -19,10 +20,13 @@ public abstract class BaseCharacterController : MonoBehaviour
     public UIHealthBar HealthBar { get; set; }
     public UITextPopup DamageText { get; set; }
     public UITextPopup StatusText { get; set; }
+
+    public GameObject HeadLight { get; set; }
     public GameObject AttackLight { get; set; }
 
     public Vector3 CachedAttackPointLocalRightPos { get; set; }
     public Vector3 CachedAttackPointLocalLeftPos { get; set; }
+    public Vector2 OriginalAttackLightLocalPos { get; private set; }
     protected abstract void InitStates();
 
     public static string HIT_EFFECT_1_KEY = "Hit1";
@@ -71,7 +75,25 @@ public abstract class BaseCharacterController : MonoBehaviour
         Debug.Assert(FootDustParticle != null);
         AttackLight = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "AttackLight").gameObject;
         Debug.Assert(AttackLight != null);
+        OriginalAttackLightLocalPos = AttackLight.transform.localPosition;
         AttackLight.SetActive(false);
+
+        HeadLight = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "HeadLight").gameObject;
+        Debug.Assert(HeadLight != null);
+    }
+
+    public void RotateAttackLightAccodingCharacterLookDir()
+    {
+        if (ELookDir == ECharacterLookDir.RIGHT)
+        {
+            AttackLight.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            AttackLight.transform.localPosition = OriginalAttackLightLocalPos;
+        }
+        else
+        {
+            AttackLight.transform.localRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
+            AttackLight.transform.localPosition = new Vector2(-OriginalAttackLightLocalPos.x, OriginalAttackLightLocalPos.y);
+        }
     }
 
     void OnDrawGizmosSelected()
