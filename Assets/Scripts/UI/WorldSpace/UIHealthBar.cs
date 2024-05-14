@@ -9,7 +9,6 @@ public abstract class UIHealthBar : MonoBehaviour
     [SerializeField]
     protected Gradient _Gradient;
 
-
     public Image HealthBar { get; private set; }
     protected Transform _parent;
     protected BaseStat _stat;

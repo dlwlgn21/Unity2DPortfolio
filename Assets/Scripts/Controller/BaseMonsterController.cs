@@ -85,13 +85,15 @@ public abstract class BaseMonsterController : BaseCharacterController
         Vector2 dir = PlayerTransform.position - transform.position;
         if (dir.x > 0)
         {
+            SpriteRenderer.flipX = false;
             ELookDir = define.ECharacterLookDir.RIGHT;
-            Rotate(0);
+            NormalAttackPoint.localPosition = CachedAttackPointLocalRightPos;
         }
         else
         {
+            SpriteRenderer.flipX = true;
             ELookDir = define.ECharacterLookDir.LEFT;
-            Rotate(180);
+            NormalAttackPoint.localPosition = CachedAttackPointLocalLeftPos;
         }
     }
     protected override void InitStates()
@@ -107,10 +109,4 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
     protected abstract void AssignAttackState<T>() where T : monster_states.BaseAttack;
     protected abstract void InitStat();
-
-    protected void Rotate(float yAngle)
-    {
-        Vector3 rotator = new Vector3(transform.rotation.x, yAngle, transform.rotation.z);
-        transform.rotation = Quaternion.Euler(rotator);
-    }
 }

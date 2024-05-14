@@ -21,6 +21,8 @@ public abstract class BaseCharacterController : MonoBehaviour
     public UITextPopup StatusText { get; set; }
     public GameObject AttackLight { get; set; }
 
+    public Vector3 CachedAttackPointLocalRightPos { get; set; }
+    public Vector3 CachedAttackPointLocalLeftPos { get; set; }
     protected abstract void InitStates();
 
     public static string HIT_EFFECT_1_KEY = "Hit1";
@@ -40,6 +42,15 @@ public abstract class BaseCharacterController : MonoBehaviour
         SpriteRenderer = gameObject.GetOrAddComponent<SpriteRenderer>();
         NormalAttackPoint = transform.Find("NormalAttackPoint").gameObject.transform;
         Debug.Assert(NormalAttackPoint != null);
+
+        // WorldSpaceUI 와 연동위해 다시 추가. 
+        CachedAttackPointLocalRightPos = NormalAttackPoint.localPosition;
+        Vector3 leftPos = NormalAttackPoint.localPosition;
+        leftPos.x = -leftPos.x;
+        CachedAttackPointLocalLeftPos = leftPos;
+
+
+
         foreach (Animator aniamtor in gameObject.GetComponentsInChildren<Animator>())
         {
             if (aniamtor != null && aniamtor.gameObject.name != gameObject.name)

@@ -6,10 +6,9 @@ using UnityEngine;
 
 public class UITextPopup : MonoBehaviour
 {
-    TextMeshPro _text;
-    RectTransform _rectTransform;
-    Vector3 _originalScale;
-
+    private TextMeshPro _text;
+    private RectTransform _rectTransform;
+    private Vector3 _originalScale;
     private void Start()
     {
         _text = GetComponent<TextMeshPro>();
@@ -31,6 +30,7 @@ public class UITextPopup : MonoBehaviour
     }
     public void ShowBackAttackPopup(int damage)
     {
+        Debug.Log("UITextPopup.ShowBackAttackPopup()!!");
         _rectTransform.localScale = _originalScale;
         _text.color = Color.red;
         _text.text = damage.ToString();
@@ -53,5 +53,4 @@ public class UITextPopup : MonoBehaviour
     {
         _rectTransform.localScale = Vector3.zero;
     }
-
 }

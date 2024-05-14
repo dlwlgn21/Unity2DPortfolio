@@ -22,13 +22,18 @@ namespace player_states
         {
             if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.RIGHT)
             {
+                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalLeftPos;
                 _entity.ELookDir = ECharacterLookDir.LEFT;
-                Rotate(180f);
+                _entity.SpriteRenderer.flipX = true;
+                _entity.CamFollowObject.CallTurn();
+
             }
             else if (Input.GetKey(KeyCode.RightArrow) && _entity.ELookDir == ECharacterLookDir.LEFT)
             {
+                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalRightPos;
                 _entity.ELookDir = ECharacterLookDir.RIGHT;
-                Rotate(0f);
+                _entity.SpriteRenderer.flipX = false;
+                _entity.CamFollowObject.CallTurn();
             }
         }
 
@@ -103,12 +108,6 @@ namespace player_states
             return;
         }
 
-        private void Rotate(float yAngle)
-        {
-            Vector3 rotator = new Vector3(_entity.transform.rotation.x, yAngle, _entity.transform.rotation.z);
-            _entity.transform.rotation = Quaternion.Euler(rotator);
-            _entity.CamFollowObject.CallTurn();
-        }
         static public void BoxCast2DDebugDraw(Vector2 origin, Vector2 size, float distasnce, RaycastHit2D hit)
         {
             Vector2 p1, p2, p3, p4, p5, p6, p7, p8;
