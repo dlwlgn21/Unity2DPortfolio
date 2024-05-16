@@ -207,7 +207,7 @@ namespace monster_states
                 _entity.Stat.OnHitted(damage);
                 _entity.DamageText.ShowPopup(damage);
             }
-            _entity.HealthBar.SetHpRatio((float)_entity.Stat.HP / _entity.Stat.MaxHP);
+            _entity.HealthBar.DecraseHP((float)_entity.Stat.HP / _entity.Stat.MaxHP);
             pc.ShakeCamera(eCamShakeType);
         }
     }

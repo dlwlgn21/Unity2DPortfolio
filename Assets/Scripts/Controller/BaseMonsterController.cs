@@ -18,7 +18,7 @@ public enum EMonsterState
 
 public abstract class BaseMonsterController : BaseCharacterController
 {
-    public UIHealthBar HealthBar { get; set; }
+    public UIWSMonsterHpBar HealthBar { get; set; }
     public Transform PlayerTransform { get; private set; }
     public EMonsterNames MonsterType { get; protected set; }
     public MonsterStat Stat { get; protected set; }
@@ -38,7 +38,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         AwarenessRangeToTrace = 10f;
         AwarenessRangeToAttack = 2f;
         NormalAttackRange = 1f;
-        HealthBar = Utill.GetComponentInChildrenOrNull<UIMonsterHPBar>(gameObject, "MonsterHpBar");
+        HealthBar = Utill.GetComponentInChildrenOrNull<UIWSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
     }
     public void InitStatForRespawn()
     {
