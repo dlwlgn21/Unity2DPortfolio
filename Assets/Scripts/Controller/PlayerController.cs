@@ -47,6 +47,8 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyRoll = KeyCode.C;
     public static KeyCode KeyJump = KeyCode.Space;
 
+    [SerializeField] private UIPlayerHpBar _hpBar;
+
     public CamFollowObject CamFollowObject;
 
     public BoxCollider2D BoxCollider { get; set; }
@@ -64,10 +66,10 @@ public class PlayerController : BaseCharacterController
         BoxCollider = gameObject.GetComponent<BoxCollider2D>();
         ELookDir = ECharacterLookDir.RIGHT;
         NormalAttackRange = 1f;
-        HealthBar = Utill.GetComponentInChildrenOrNull<UIPlayerHPBar>(gameObject, "PlayerHpBar");
         LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
         JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
-        Debug.Assert(HealthBar != null && LedgeCheckPoint != null && JumpParticle != null);
+        Debug.Assert(LedgeCheckPoint != null && JumpParticle != null);
+        Debug.Assert(_hpBar != null);
     }
     void FixedUpdate()
     {
@@ -169,7 +171,7 @@ public class PlayerController : BaseCharacterController
             ChangeState(EPlayerState.DIE);
         else
             ChangeState(EPlayerState.HITTED);
-        HealthBar.SetHpRatio((float)Stat.HP / Stat.MaxHP);
+        _hpBar.DecraseHP((float)Stat.HP / Stat.MaxHP);
         DamageText.ShowPopup(damage);
         Managers.HitParticle.Play(transform.position);
     }

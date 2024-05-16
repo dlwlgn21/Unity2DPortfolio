@@ -18,6 +18,7 @@ public enum EMonsterState
 
 public abstract class BaseMonsterController : BaseCharacterController
 {
+    public UIHealthBar HealthBar { get; set; }
     public Transform PlayerTransform { get; private set; }
     public EMonsterNames MonsterType { get; protected set; }
     public MonsterStat Stat { get; protected set; }

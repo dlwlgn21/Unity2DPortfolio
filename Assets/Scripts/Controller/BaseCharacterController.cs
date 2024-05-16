@@ -17,7 +17,6 @@ public abstract class BaseCharacterController : MonoBehaviour
     public ParticleSystem FootDustParticle { get; set; }
     public SpriteRenderer SpriteRenderer { get; set; }
     public float NormalAttackRange { get; protected set; }
-    public UIHealthBar HealthBar { get; set; }
     public UITextPopup DamageText { get; set; }
     public UITextPopup StatusText { get; set; }
 
@@ -52,8 +51,6 @@ public abstract class BaseCharacterController : MonoBehaviour
         Vector3 leftPos = NormalAttackPoint.localPosition;
         leftPos.x = -leftPos.x;
         CachedAttackPointLocalLeftPos = leftPos;
-
-
 
         foreach (Animator aniamtor in gameObject.GetComponentsInChildren<Animator>())
         {
