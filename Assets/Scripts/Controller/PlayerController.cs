@@ -164,14 +164,14 @@ public class PlayerController : BaseCharacterController
             return;
 
         // Damage Section
-        int actualDamage = Mathf.Max(1, damage - Stat.Defence);
+        int actualDamage = Mathf.Max(0, damage - Stat.Defence);
+        _hpBar.DecraseHP(Stat.HP, Stat.HP - actualDamage);
         Stat.HP -= actualDamage;
         
         if (Stat.HP <= 0)
             ChangeState(EPlayerState.DIE);
         else
             ChangeState(EPlayerState.HITTED);
-        _hpBar.DecraseHP((float)Stat.HP / Stat.MaxHP);
         DamageText.ShowPopup(damage);
         Managers.HitParticle.Play(transform.position);
     }

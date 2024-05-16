@@ -18,13 +18,19 @@ public class MonsterStat : BaseStat
 
     public int Exp { get { return _exp; } set { _exp = value; } }
 
-    public void OnHitted(int damage)
+    public void OnHitted(int damage, out int beforeDamageHp, out int afterDamageHp)
     {
         if (HP <= 0)
+        {
+            beforeDamageHp = 0;
+            afterDamageHp = 0;
             return;
+        }
 
         int actualDamage = Mathf.Max(1, Mathf.Abs(damage - Defence));
+        beforeDamageHp = HP;
         HP -= actualDamage;
+        afterDamageHp = HP;
         if (HP <= 0)
         {
             HP = 0;

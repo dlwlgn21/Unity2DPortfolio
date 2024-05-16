@@ -14,7 +14,7 @@ public class PlayerStat : BaseStat
     public int Exp { get { return _exp; } set { _exp = value; } }
     public int Gold { get { return _gold; } set { _gold = value; } }
 
-    void Start()
+    void Awake()
     {
         var dict = Managers.Data.PlayerStatDict;
         Level = dict[1].level;

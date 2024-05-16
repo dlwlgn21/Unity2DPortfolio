@@ -195,19 +195,21 @@ namespace monster_states
 
         void ProcessHitted(PlayerController pc, int damage, define.EHitCameraShake eCamShakeType)
         {
+            int beforeDamgeHp = 0;
+            int afterDamageHp = 0;
             if (pc.ELookDir == _entity.ELookDir)
             {
                 int backAttackDamage = damage * 3;
-                _entity.Stat.OnHitted(backAttackDamage);
+                _entity.Stat.OnHitted(backAttackDamage, out beforeDamgeHp, out afterDamageHp);
                 _entity.DamageText.ShowPopup(backAttackDamage);
                 pc.StatusText.ShowPopup("╧И╬Нец!");
             }
             else
             {
-                _entity.Stat.OnHitted(damage);
+                _entity.Stat.OnHitted(damage, out beforeDamgeHp, out afterDamageHp);
                 _entity.DamageText.ShowPopup(damage);
             }
-            _entity.HealthBar.DecraseHP((float)_entity.Stat.HP / _entity.Stat.MaxHP);
+            _entity.HealthBar.DecraseHP(beforeDamgeHp, afterDamageHp);
             pc.ShakeCamera(eCamShakeType);
         }
     }
