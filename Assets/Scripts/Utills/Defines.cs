@@ -26,6 +26,7 @@ namespace define
         EVENT_BOX = 12,
         CAM_CONFINER = 13,
         LEDGE_CLIMB = 14,
+        PROJECTILE = 15,
     }
 
 
