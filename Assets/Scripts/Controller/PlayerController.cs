@@ -48,16 +48,24 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyJump = KeyCode.Space;
 
     [SerializeField] private UIPlayerHpBar _hpBar;
+    public UIPlayerRollCollTimer RollCoolTimerImg;
 
     public CamFollowObject CamFollowObject;
-
     public BoxCollider2D BoxCollider { get; set; }
     public ParticleSystem JumpParticle { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
     public Transform LedgeCheckPoint { get; private set; }
+
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
+
+
+    // RollCoolTime
+    public const float ROLL_INIT_COOL_TIME = 3f;
+    public float RollCollTime { get; private set; } = ROLL_INIT_COOL_TIME;
+    public float RollCollTimer { get; set; } = ROLL_INIT_COOL_TIME;
+    public bool IsPossibleRoll { get; set; } = true;
 
     public override void Init()
     {
@@ -84,6 +92,19 @@ public class PlayerController : BaseCharacterController
 
     void Update()
     {
+        // 24-05-21 RollCoolTime을 위해 추가.
+        #region ROLL_COOL_TIME
+        if (!IsPossibleRoll)
+        {
+            RollCollTimer -= Time.deltaTime;
+            if (RollCollTimer <= 0f)
+            {
+                RollCollTimer = RollCollTime;
+                IsPossibleRoll = true;
+            }
+        }
+        #endregion
+
         if (IsSkipThisFrame())
         {
             ChangeState(EPlayerState.IDLE);
@@ -209,4 +230,5 @@ public class PlayerController : BaseCharacterController
             return true;
         return false;
     }
+    
 }

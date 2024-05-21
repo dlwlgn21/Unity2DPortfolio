@@ -156,7 +156,34 @@ namespace player_states
         }
     }
 
-    public class Idle : BasePlayerState
+    public abstract class BaseCanRollState : BasePlayerState
+    {
+        public BaseCanRollState(PlayerController controller) : base(controller) {}
+
+        public override void Excute() 
+        { 
+            base.Excute();
+
+        }
+
+        protected bool IsChangeStateToRoll()
+        {
+            if (Input.GetKeyDown(PlayerController.KeyRoll))
+            {
+                if (_entity.IsPossibleRoll)
+                {
+                    _entity.ChangeState(EPlayerState.ROLL);
+                    _entity.RollCoolTimerImg.StartCoolTime();
+                    _entity.IsPossibleRoll = false;
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+
+    public class Idle : BaseCanRollState
     {
         public Idle(PlayerController controller) : base(controller) { }
         public override void ProcessKeyboardInput()
@@ -164,10 +191,6 @@ namespace player_states
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
             {
                 _entity.ChangeState(EPlayerState.RUN);
-            }
-            else if (Input.GetKeyDown(PlayerController.KeyRoll))
-            {
-                _entity.ChangeState(EPlayerState.ROLL);
             }
             else if (Input.GetKeyDown(PlayerController.KeyAttack))
             {
@@ -190,10 +213,14 @@ namespace player_states
         {
             base.Excute();
             FlipSpriteAccodingPlayerInput();
+            if (IsChangeStateToRoll())
+            {
+                return;
+            }
             ProcessKeyboardInput();
         }
     }
-    public class Run : BasePlayerState
+    public class Run : BaseCanRollState
     {
         public Run(PlayerController controller) : base(controller) { }
 
@@ -205,12 +232,8 @@ namespace player_states
                 _entity.ChangeState(EPlayerState.IDLE);
                 return;
             }
-            if (Input.GetKeyDown(PlayerController.KeyRoll))
-            {
-                _entity.ChangeState(EPlayerState.ROLL);
-                return;
-            }
-            else if (Input.GetKeyDown(PlayerController.KeyBlock))
+
+            if (Input.GetKeyDown(PlayerController.KeyBlock))
             {
                 _entity.ChangeState(EPlayerState.BLOCKING);
                 return;
@@ -240,6 +263,10 @@ namespace player_states
                 return;
             }
             FlipSpriteAccodingPlayerInput();
+            if (IsChangeStateToRoll())
+            {
+                return;
+            }
             ProcessKeyboardInput();
         }
 
