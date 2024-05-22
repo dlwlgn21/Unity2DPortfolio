@@ -21,6 +21,7 @@ namespace player_states
             if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.RIGHT)
             {
                 _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalLeftPos;
+                _entity.LaunchPoint.localPosition = _entity.CachedLaunchPointLocalLeftPos;
                 _entity.ELookDir = ECharacterLookDir.LEFT;
                 _entity.SpriteRenderer.flipX = true;
                 _entity.CamFollowObject.CallTurn();
@@ -29,6 +30,7 @@ namespace player_states
             else if (Input.GetKey(KeyCode.RightArrow) && _entity.ELookDir == ECharacterLookDir.LEFT)
             {
                 _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalRightPos;
+                _entity.LaunchPoint.localPosition = _entity.CachedLaunchPointLocalRightPos;
                 _entity.ELookDir = ECharacterLookDir.RIGHT;
                 _entity.SpriteRenderer.flipX = false;
                 _entity.CamFollowObject.CallTurn();
@@ -88,6 +90,9 @@ namespace player_states
                     return;
                 case EPlayerState.NORMAL_ATTACK_3:
                     _entity.Animator.Play("NormalAttack3");
+                    return;
+                case EPlayerState.LAUNCH:
+                    _entity.Animator.Play("Launch");
                     return;
                 case EPlayerState.HITTED:
                     _entity.Animator.Play("Hitted");
@@ -156,14 +161,13 @@ namespace player_states
         }
     }
 
-    public abstract class BaseCanRollState : BasePlayerState
+    public abstract class BaseCanSkillState : BasePlayerState
     {
-        public BaseCanRollState(PlayerController controller) : base(controller) {}
+        public BaseCanSkillState(PlayerController controller) : base(controller) {}
 
         public override void Excute() 
         { 
             base.Excute();
-
         }
 
         protected bool IsChangeStateToRoll()
@@ -173,8 +177,23 @@ namespace player_states
                 if (_entity.IsPossibleRoll)
                 {
                     _entity.ChangeState(EPlayerState.ROLL);
-                    _entity.RollCoolTimerImg.StartCoolTime();
+                    _entity.RollCoolTimerImg.StartCoolTime(_entity.RollCollTime);
                     _entity.IsPossibleRoll = false;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        protected bool IsChangeStateToLaunchBomb()
+        {
+            if (Input.GetKeyDown(PlayerController.KeyLaunchBomb))
+            {
+                if (_entity.IsPossibleLaunchBomb)
+                {
+                    _entity.ChangeState(EPlayerState.LAUNCH);
+                    _entity.BombCoolTimerImg.StartCoolTime(_entity.BombCollTime);
+                    _entity.IsPossibleLaunchBomb = false;
                     return true;
                 }
             }
@@ -183,7 +202,7 @@ namespace player_states
     }
 
 
-    public class Idle : BaseCanRollState
+    public class Idle : BaseCanSkillState
     {
         public Idle(PlayerController controller) : base(controller) { }
         public override void ProcessKeyboardInput()
@@ -191,18 +210,22 @@ namespace player_states
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
             {
                 _entity.ChangeState(EPlayerState.RUN);
+                return;
             }
-            else if (Input.GetKeyDown(PlayerController.KeyAttack))
+            if (Input.GetKeyDown(PlayerController.KeyAttack))
             {
                 _entity.ChangeState(EPlayerState.NORMAL_ATTACK_1);
+                return;
             }
-            else if (Input.GetKeyDown(PlayerController.KeyBlock))
+            if (Input.GetKeyDown(PlayerController.KeyBlock))
             {
                 _entity.ChangeState(EPlayerState.BLOCKING);
+                return;
             }
-            else if (Input.GetKeyDown(PlayerController.KeyJump))
+            if (Input.GetKeyDown(PlayerController.KeyJump))
             {
                 _entity.ChangeState(EPlayerState.JUMP);
+                return;
             }
         }
 
@@ -217,10 +240,14 @@ namespace player_states
             {
                 return;
             }
+            if (IsChangeStateToLaunchBomb())
+            {
+                return;
+            }
             ProcessKeyboardInput();
         }
     }
-    public class Run : BaseCanRollState
+    public class Run : BaseCanSkillState
     {
         public Run(PlayerController controller) : base(controller) { }
 
@@ -232,13 +259,12 @@ namespace player_states
                 _entity.ChangeState(EPlayerState.IDLE);
                 return;
             }
-
             if (Input.GetKeyDown(PlayerController.KeyBlock))
             {
                 _entity.ChangeState(EPlayerState.BLOCKING);
                 return;
             }
-            else if (Input.GetKeyDown(PlayerController.KeyJump))
+            if (Input.GetKeyDown(PlayerController.KeyJump))
             {
                 _entity.ChangeState(EPlayerState.JUMP);
                 return;
@@ -264,6 +290,10 @@ namespace player_states
             }
             FlipSpriteAccodingPlayerInput();
             if (IsChangeStateToRoll())
+            {
+                return;
+            }
+            if (IsChangeStateToLaunchBomb())
             {
                 return;
             }
@@ -583,6 +613,18 @@ namespace player_states
                 _entity.ChangeState(EPlayerState.RUN);
         }
     }
+
+    public class Launch : BasePlayerState
+    { 
+        public Launch(PlayerController controller) : base(controller) { }
+
+        public void OnLaunchAnimFullyPlayed()
+        {
+            _entity.ChangeState(EPlayerState.IDLE);
+        }
+        public override void Enter() { PlayAnimation(EPlayerState.LAUNCH); }
+    }
+
 
     public class Blocking : BasePlayerState
     {

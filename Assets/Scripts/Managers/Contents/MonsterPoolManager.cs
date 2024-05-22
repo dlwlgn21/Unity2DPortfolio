@@ -49,7 +49,7 @@ public class MonsterPoolManager
             case EMonsterNames.CagedShoker:
                 if (_cagedShokers.Count > 0)
                 {
-                    retGo = _blasters.Dequeue();
+                    retGo = _cagedShokers.Dequeue();
                     retGo.GetComponent<BaseMonsterController>().InitStatForRespawn();
                 }
                 else
@@ -75,7 +75,7 @@ public class MonsterPoolManager
             case EMonsterNames.Sweeper:
                 break;
             case EMonsterNames.Warden:
-                if (_hSlicers.Count > 0)
+                if (_wardens.Count > 0)
                 {
                     retGo = _wardens.Dequeue();
                     retGo.GetComponent<BaseMonsterController>().InitStatForRespawn();
@@ -131,8 +131,6 @@ public class MonsterPoolManager
                 break;
         }
     }
-
-    
 
     private GameObject MakeMonsters(GameObject original, Vector2 spawnPos)
     {

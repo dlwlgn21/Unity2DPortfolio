@@ -23,6 +23,7 @@ public enum EPlayerState
     NORMAL_ATTACK_1,
     NORMAL_ATTACK_2,
     NORMAL_ATTACK_3,
+    LAUNCH,
     HITTED,
     BLOCKING,
     BLOCK_SUCESS,
@@ -46,9 +47,11 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyBlock = KeyCode.X;
     public static KeyCode KeyRoll = KeyCode.C;
     public static KeyCode KeyJump = KeyCode.Space;
+    public static KeyCode KeyLaunchBomb = KeyCode.A;
 
     [SerializeField] private UIPlayerHpBar _hpBar;
-    public UIPlayerRollCollTimer RollCoolTimerImg;
+    public UIPlayerCoolTimer RollCoolTimerImg;
+    public UIPlayerCoolTimer BombCoolTimerImg;
 
     public CamFollowObject CamFollowObject;
     public BoxCollider2D BoxCollider { get; set; }
@@ -56,16 +59,28 @@ public class PlayerController : BaseCharacterController
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
     public Transform LedgeCheckPoint { get; private set; }
+    public Transform LaunchPoint { get; set; }
+    public Vector3 CachedLaunchPointLocalRightPos { get; set; }
+    public Vector3 CachedLaunchPointLocalLeftPos { get; set; }
 
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
 
+
+    private TestThrow _testThrow;
 
     // RollCoolTime
     public const float ROLL_INIT_COOL_TIME = 3f;
     public float RollCollTime { get; private set; } = ROLL_INIT_COOL_TIME;
     public float RollCollTimer { get; set; } = ROLL_INIT_COOL_TIME;
     public bool IsPossibleRoll { get; set; } = true;
+
+
+    // BombCoolTime
+    public const float BOMB_INIT_COOL_TIME = 2f;
+    public float BombCollTime { get; private set; } = BOMB_INIT_COOL_TIME;
+    public float BombCollTimer { get; set; } = BOMB_INIT_COOL_TIME;
+    public bool IsPossibleLaunchBomb { get; set; } = true;
 
     public override void Init()
     {
@@ -78,6 +93,16 @@ public class PlayerController : BaseCharacterController
         JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
         Debug.Assert(LedgeCheckPoint != null && JumpParticle != null);
         Debug.Assert(_hpBar != null);
+        
+        // LaunchPoint
+        LaunchPoint = transform.Find("LaunchPoint").gameObject.transform;
+        CachedLaunchPointLocalRightPos = LaunchPoint.localPosition;
+        Vector3 leftPos = LaunchPoint.localPosition;
+        leftPos.x = -leftPos.x;
+        CachedLaunchPointLocalLeftPos = leftPos;
+
+        // Throw
+        _testThrow = GetComponent<TestThrow>();
     }
     void FixedUpdate()
     {
@@ -101,6 +126,18 @@ public class PlayerController : BaseCharacterController
             {
                 RollCollTimer = RollCollTime;
                 IsPossibleRoll = true;
+            }
+        }
+        #endregion
+        // 24-05-21 BombCoolTime을 위해 추가.
+        #region BOMB_COOL_TIME
+        if (!IsPossibleLaunchBomb)
+        {
+            BombCollTimer -= Time.deltaTime;
+            if (BombCollTimer <= 0f)
+            {
+                BombCollTimer = BombCollTime;
+                IsPossibleLaunchBomb = true;
             }
         }
         #endregion
@@ -138,6 +175,11 @@ public class PlayerController : BaseCharacterController
     public void OnNoramlAttack2ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
     public void OnNoramlAttack3ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
 
+    public void OnValidLaunched() 
+    { 
+        Debug.Assert(ECurrentState == EPlayerState.LAUNCH);
+        _testThrow.LauchBomb(ELookDir, LaunchPoint.position);
+    }
 
     public void OnHittedAnimFullyPlayed()
     {
@@ -155,6 +197,13 @@ public class PlayerController : BaseCharacterController
         player_states.Climb climbState = (player_states.Climb)_states[(uint)EPlayerState.CLIMB];
         climbState.OnClimbAnimFullyPlayed();
     }
+
+    public void OnPlayerLaunchAnimFullyPlayed()
+    {
+        player_states.Launch launchState = (player_states.Launch)_states[(uint)EPlayerState.LAUNCH];
+        launchState.OnLaunchAnimFullyPlayed();
+    }
+
     public void OnPlayerFootStep()
     {
         FootDustParticle.Play();
@@ -217,6 +266,7 @@ public class PlayerController : BaseCharacterController
         _states[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1(this);
         _states[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2(this);
         _states[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3(this);
+        _states[(uint)EPlayerState.LAUNCH] = new player_states.Launch(this);
         _states[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
         _states[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
         _states[(uint)EPlayerState.HITTED] = new player_states.Hitted(this);

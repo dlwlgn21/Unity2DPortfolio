@@ -6,60 +6,85 @@ using UnityEngine;
 
 public class TestProjectile : MonoBehaviour
 {
+    public const float LIFE_TIME = 5f;
     [SerializeField] float _speed;
-    private float _lifeTimer = 5f;
+
     private Rigidbody2D _rb;
     private Animator _animator;
-    private bool _isCollideWithMonster = false;
-    private void Start()
+    private SpriteRenderer _spriteRenderer;
+
+    private float _lifeTimer = LIFE_TIME;
+    private bool _isValidCollided = false;
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody2D>();
-        _rb.velocity = Vector2.right * _speed;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void Launch(define.ECharacterLookDir eLookDir)
+    {
+        if (eLookDir == define.ECharacterLookDir.LEFT)
+        {
+            _rb.velocity = Vector2.left * _speed;
+            _spriteRenderer.flipX = true;
+        }
+        else
+        {
+            _rb.velocity = Vector2.right * _speed;
+        }
     }
 
     public void Init(Vector2 pos)
     {
         transform.position = pos;
-        _rb.velocity = Vector2.right * _speed;
-        _lifeTimer = 3f;
+        _lifeTimer = LIFE_TIME;
+        _isValidCollided = false;
+        _spriteRenderer.flipX = false;
         _rb.gravityScale = 0f;
-        _isCollideWithMonster = false;
     }
     private void Update()
     {
-        if (_isCollideWithMonster)
+        if (_isValidCollided)
+        {
             return;
+        }
 
         _lifeTimer -= Time.deltaTime;
         if (_lifeTimer < 0f)
         {
-            Destroy(gameObject);
+            ReturnToPool();
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == (int)define.EColliderLayer.MONSTERS)
         {
-            Debug.Log("Hit with Monster");
-            _isCollideWithMonster = true;
-            _animator.Play("Bomb");
-            _rb.velocity = Vector2.zero;
-            _rb.gravityScale = 1f;
+            ProcessValidCollision();
         }
         else if (collision.gameObject.layer == (int)define.EColliderLayer.PLATFORM)
         {
-            Debug.Log("Hit with Platform");
-            _isCollideWithMonster = true;
-            _rb.velocity = Vector2.zero;
-            _animator.Play("Bomb");
-            _rb.gravityScale = 1f;
+            ProcessValidCollision();
         }
     }
 
     public void OnBombAnimEnded()
     {
-        Debug.Log("CalledOnBombAnimEnded");
-        Destroy(gameObject);
+        ReturnToPool();
+    }
+
+    private void ReturnToPool()
+    {
+        Managers.SkillPool.Return(gameObject);
+    }
+    private void ProcessValidCollision()
+    {
+        if (!_isValidCollided)
+        {
+            _isValidCollided = true;
+            _animator.Play("Bomb");
+            _rb.velocity = Vector2.zero;
+            _rb.gravityScale = 1f;
+        }
     }
 }

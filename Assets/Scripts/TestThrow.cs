@@ -1,27 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class TestThrow : MonoBehaviour
 {
     [SerializeField] private GameObject _projectile;
-
-
-    private void Update()
+    public void LauchBomb(define.ECharacterLookDir eLookDir, Vector3 pos)
     {
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            Shoot();
-        }
+        GameObject go;
+        go = Managers.SkillPool.Get(pos);
+        go.GetComponent<TestProjectile>().Launch(eLookDir);
     }
-
-
-    private void Shoot()
-    {
-        Debug.Log("Shoot!!!");
-        Instantiate(_projectile, transform.position + Vector3.right * 3f, Quaternion.identity);
-    }
-
-
 }

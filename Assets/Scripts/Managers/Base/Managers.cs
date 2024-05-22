@@ -20,6 +20,7 @@ public class Managers : MonoBehaviour
     GameEventManager _gameEventManager = new GameEventManager();
     MainMenuManager _mainMenuManager = new MainMenuManager();
     MonsterPoolManager _monsterPoolManager = new MonsterPoolManager();
+    PlayerSkillPoolManager _playerSkillPoolManager = new PlayerSkillPoolManager();
     UIDialogManager _dialogManager = new UIDialogManager();
     public static InputManager Input { get { return Instance._inputManager; } }
     public static DataManager Data { get { return Instance._dataManager; } }
@@ -28,6 +29,7 @@ public class Managers : MonoBehaviour
     public static TweenManager Tween { get { return Instance._tweenManager; } }
     public static MainMenuManager MainMenu { get { return Instance._mainMenuManager; } }
     public static MonsterPoolManager MonsterPool { get { return Instance._monsterPoolManager; } }
+    public static PlayerSkillPoolManager SkillPool { get { return Instance._playerSkillPoolManager; } }
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
     public static GameEventManager GameEvent { get { return Instance._gameEventManager; } }
 
@@ -83,11 +85,10 @@ public class Managers : MonoBehaviour
             sInstance._dataManager.Init();
             sInstance._hitParticle.Init();
             sInstance._monsterPoolManager.Init();
+            sInstance._playerSkillPoolManager.Init();
             sInstance._pauseManager.Init();
             sInstance._dialogManager.Init();
         }
     }
-
     public static void Clear()          { Input.Clear(); }
-
 }
