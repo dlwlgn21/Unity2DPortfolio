@@ -534,7 +534,7 @@ namespace player_states
             {
                 BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
                 Debug.Assert(controller != null);
-                controller.HittedByPlayer();
+                controller.HittedByPlayerNormalAttack();
             }
         }
         public override void Enter()

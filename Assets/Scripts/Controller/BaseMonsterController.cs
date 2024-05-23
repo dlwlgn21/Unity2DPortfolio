@@ -54,12 +54,19 @@ public abstract class BaseMonsterController : BaseCharacterController
         SetLookDir();
         _stateMachine.Excute();
     }
-    public void HittedByPlayer()
+    public void HittedByPlayerNormalAttack()
     {
         //  ECurrentState != EMonsterState.DIE DieState에서 플레이어 공격시에 다시 HitState로 변환되는 경우가 간혹 있었음. 그걸 막기위한 조치
-        if (Stat.HP > 0 && ECurrentState != EMonsterState.DIE) 
+        if (Stat.HP > 0 && ECurrentState != EMonsterState.DIE)
             ChangeState(EMonsterState.HITTED);
     }
+
+
+    public void HittedByPlayerKnockbackBomb()
+    {
+        ChangeState(EMonsterState.HITTED_KNOCKBACK);
+    }
+
 
     public void ChangeState(EMonsterState eChangingState)
     {

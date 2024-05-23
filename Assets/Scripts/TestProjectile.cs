@@ -8,13 +8,14 @@ public class TestProjectile : MonoBehaviour
 {
     public const float LIFE_TIME = 5f;
     [SerializeField] float _speed;
-
+    [SerializeField] float _bombRange;
     private Rigidbody2D _rb;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
 
     private float _lifeTimer = LIFE_TIME;
     private bool _isValidCollided = false;
+    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MONSTERS);
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -65,6 +66,20 @@ public class TestProjectile : MonoBehaviour
         else if (collision.gameObject.layer == (int)define.EColliderLayer.PLATFORM)
         {
             ProcessValidCollision();
+        }
+    }
+
+    public void OnValidAnimBombTiming()
+    {
+        Collider2D[] monsters = Physics2D.OverlapCircleAll(transform.position, _bombRange, MONSTER_LAYER_MASK);
+        if (monsters == null)
+            return;
+
+        foreach (Collider2D mon in monsters)
+        {
+            BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
+            Debug.Assert(controller != null);
+            controller.HittedByPlayerKnockbackBomb();
         }
     }
 

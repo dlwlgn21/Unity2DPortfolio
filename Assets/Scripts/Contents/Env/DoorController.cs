@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
-using static UnityEditor.Experimental.GraphView.GraphView;
-
 
 enum EDoorState
 { 

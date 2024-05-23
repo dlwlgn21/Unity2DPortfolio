@@ -24,7 +24,9 @@ namespace monster_states
         protected bool IsAnimEnd()
         {
             if (_entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            {
                 return true;
+            }
             return false;
         }
 
@@ -33,19 +35,19 @@ namespace monster_states
             switch (eState)
             {
                 case EMonsterState.SPAWN:
-                    _entity.Animator.Play(IDLE_ANIM_KEY);
+                    _entity.Animator.Play(IDLE_ANIM_KEY, -1, 0f);
                     return;
                 case EMonsterState.TRACE:
-                    _entity.Animator.Play(RUN_ANIM_KEY);
+                    _entity.Animator.Play(RUN_ANIM_KEY, -1, 0f);
                     return;
                 case EMonsterState.ATTACK:
-                    _entity.Animator.Play(ATTACK_ANIM_KEY);
+                    _entity.Animator.Play(ATTACK_ANIM_KEY, -1, 0f);
                     return;
                 case EMonsterState.HITTED:
-                    _entity.Animator.Play(HIT_ANIM_KEY);
+                    _entity.Animator.Play(HIT_ANIM_KEY, -1, 0f);
                     return;
                 case EMonsterState.DIE:
-                    _entity.Animator.Play(DIE_ANIM_KEY);
+                    _entity.Animator.Play(DIE_ANIM_KEY, -1, 0f);
                     return;
             }
 
@@ -53,7 +55,9 @@ namespace monster_states
         protected void ChangeStateIfAnimEnd(EMonsterState eState)
         {
             if (IsAnimEnd())
+            {
                 _entity.ChangeState(eState);
+            }
         }
         protected void CalculateDistanceFromPlayer()
         {
@@ -72,7 +76,9 @@ namespace monster_states
             CalculateDistanceFromPlayer();
             Debug.DrawRay(_entity.transform.position + Vector3.up * 0.5f, _dirToPlayer.normalized * _entity.AwarenessRangeToTrace, Color.blue);
             if (_distanceFromPlayer <= _entity.AwarenessRangeToTrace)
+            {
                 _entity.ChangeState(EMonsterState.TRACE);
+            }
         }
     }
 
@@ -80,7 +86,7 @@ namespace monster_states
     {
         public Trace(BaseMonsterController controller) : base(controller) { }
 
-        public override void Enter() { PlayAnimation(EMonsterState.TRACE); }
+        public override void Enter()  { PlayAnimation(EMonsterState.TRACE);  }
         public override void FixedExcute()
         {
             Vector2 oriVelo = _entity.RigidBody.velocity;
@@ -91,10 +97,12 @@ namespace monster_states
         {
             CalculateDistanceFromPlayer();
             if (_distanceFromPlayer <= _entity.AwarenessRangeToAttack)
+            {
                 _entity.ChangeState(EMonsterState.ATTACK);
+                return;
+            }
             Debug.DrawRay(_entity.transform.position + Vector3.up * 0.5f, _dirToPlayer.normalized * _entity.AwarenessRangeToTrace, Color.blue);
             Debug.DrawRay(_entity.transform.position, _dirToPlayer.normalized * _entity.AwarenessRangeToAttack, Color.red);
-
         }
     }
 
@@ -102,24 +110,27 @@ namespace monster_states
     {
         public BaseAttack(BaseMonsterController controller) : base(controller) { }
 
-        protected int mLayerMask = 1 << (int)define.EColliderLayer.PLAYER;
+        protected int _playerLayerMask = 1 << (int)define.EColliderLayer.PLAYER;
         public override void Enter()
         {
             PlayAnimation(EMonsterState.ATTACK);
             _entity.StatusText.ShowPopup("공격!");
             _entity.AttackLight.SetActive(true);
             _entity.RotateAttackLightAccodingCharacterLookDir();
+            _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);
         }
-        public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
+        //public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
         public override void Excute()       { ChangeStateIfAnimEnd(EMonsterState.TRACE);  }
         protected void CheckOverlapCircle()
         {
-            Collider2D collider = Physics2D.OverlapCircle(_entity.NormalAttackPoint.position, _entity.NormalAttackRange, mLayerMask);
+            Collider2D collider = Physics2D.OverlapCircle(_entity.NormalAttackPoint.position, _entity.NormalAttackRange, _playerLayerMask);
             if (collider != null)
             {
                 PlayerController pc = collider.GetComponent<PlayerController>();
                 if (pc != null)
+                {
                     pc.OnHitted(_entity.Stat.Attack, _entity);
+                }
             }
         }
 
@@ -135,46 +146,56 @@ namespace monster_states
         
         public override void Enter()
         {
+            Debug.Log("Enter HittedState");
+            PlayAnimation(EMonsterState.HITTED);
             Vector2 velo = _entity.RigidBody.velocity;
             _entity.RigidBody.velocity = new Vector2(0f, velo.y);
         }
 
-        public override void Excute() { ChangeStateIfAnimEnd(EMonsterState.SPAWN); }
+        public override void Excute() 
+        { 
+            //ChangeStateIfAnimEnd(EMonsterState.SPAWN); 
+        }
+        public abstract void OnHittedAnimFullyPlayed();
+
     }
 
 
     public class Hitted : BaseHittedState
     {
+        private PlayerController _pc = null;
         public Hitted(BaseMonsterController controller) : base(controller) { }
 
-        public void OnHittedAnimFullyPlayed()
+        public override void OnHittedAnimFullyPlayed()
         {
             if (isChangeStateIfDie()) {}
-            else { _entity.ChangeState(EMonsterState.TRACE);  }
+            else { _entity.ChangeState(EMonsterState.SPAWN);  }
         }
         public override void Enter()
         {
             base.Enter();
             _entity.StatusText.ShowPopup("경직!");
-            PlayAnimation(EMonsterState.HITTED);
-            PlayerController pc = _entity.PlayerTransform.gameObject.GetComponent<PlayerController>();
-            Debug.Assert(pc != null);
+            if (_pc == null)
+            {
+                _pc = _entity.PlayerTransform.gameObject.GetComponent<PlayerController>();
+            }
+            Debug.Assert(_pc != null);
             Managers.HitParticle.Play(_entity.transform.position);
             if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
                 _entity.HitEffectAniamtor.gameObject.SetActive(true);
-            switch (pc.ECurrentState)
+            switch (_pc.ECurrentState)
             {
                 case EPlayerState.NORMAL_ATTACK_1:
-                    ProcessHitted(pc, pc.Stat.Attack, define.EHitCameraShake.WEAK_SHAKE_2D);
+                    ProcessHitted(_pc, _pc.Stat.Attack, define.EHitCameraShake.WEAK_SHAKE_2D);
                     _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_1_KEY, -1, 0f);
 
                     break;
                 case EPlayerState.NORMAL_ATTACK_2:
-                    ProcessHitted(pc, (int)(pc.Stat.Attack * 1.5f), define.EHitCameraShake.WEAK_SHAKE_2D);
+                    ProcessHitted(_pc, (int)(_pc.Stat.Attack * 1.5f), define.EHitCameraShake.WEAK_SHAKE_2D);
                     _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_2_KEY, -1, 0f);
                     break;
                 case EPlayerState.NORMAL_ATTACK_3:
-                    ProcessHitted(pc, pc.Stat.Attack * 2, define.EHitCameraShake.STRONG_SHAKE_2D);
+                    ProcessHitted(_pc, _pc.Stat.Attack * 2, define.EHitCameraShake.STRONG_SHAKE_2D);
                     _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
                     break;
                 default:
@@ -183,7 +204,7 @@ namespace monster_states
             isChangeStateIfDie();
         }
 
-        bool isChangeStateIfDie()
+        private bool isChangeStateIfDie()
         {
             if (_entity.Stat.HP <= 0)
             {
@@ -193,7 +214,7 @@ namespace monster_states
             return false;
         }
 
-        void ProcessHitted(PlayerController pc, int damage, define.EHitCameraShake eCamShakeType)
+        private void ProcessHitted(PlayerController pc, int damage, define.EHitCameraShake eCamShakeType)
         {
             int beforeDamgeHp = 0;
             int afterDamageHp = 0;
@@ -220,7 +241,7 @@ namespace monster_states
         private bool _isAddForceThisFrame = false;
 
         public HittedKnockback(BaseMonsterController controller) : base(controller) { }
-        public void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.TRACE);  }
+        public override void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.SPAWN);  }
         public override void Enter()
         {
             base.Enter();
@@ -234,9 +255,13 @@ namespace monster_states
             if (!_isAddForceThisFrame)
             {
                 if (_dirToPlayer.x < 0f)
+                {
                     _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
+                }
                 else
+                {
                     _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
+                }
                 _isAddForceThisFrame = true;
             }
         }

@@ -117,7 +117,6 @@ public class PlayerController : BaseCharacterController
 
     void Update()
     {
-        // 24-05-21 RollCoolTime을 위해 추가.
         #region ROLL_COOL_TIME
         if (!IsPossibleRoll)
         {
@@ -129,7 +128,6 @@ public class PlayerController : BaseCharacterController
             }
         }
         #endregion
-        // 24-05-21 BombCoolTime을 위해 추가.
         #region BOMB_COOL_TIME
         if (!IsPossibleLaunchBomb)
         {
