@@ -23,7 +23,8 @@ public enum EPlayerState
     NORMAL_ATTACK_1,
     NORMAL_ATTACK_2,
     NORMAL_ATTACK_3,
-    LAUNCH,
+    CAST_LAUNCH,
+    CAST_SPAWN,
     HITTED,
     BLOCKING,
     BLOCK_SUCESS,
@@ -48,10 +49,12 @@ public class PlayerController : BaseCharacterController
     public static KeyCode KeyRoll = KeyCode.C;
     public static KeyCode KeyJump = KeyCode.Space;
     public static KeyCode KeyLaunchBomb = KeyCode.A;
+    public static KeyCode KeySpawnReaper = KeyCode.S;
 
     [SerializeField] private UIPlayerHpBar _hpBar;
     public UIPlayerCoolTimer RollCoolTimerImg;
     public UIPlayerCoolTimer BombCoolTimerImg;
+    public UIPlayerCoolTimer SpawnReaperCoolTimerImg;
 
     public CamFollowObject CamFollowObject;
     public BoxCollider2D BoxCollider { get; set; }
@@ -66,8 +69,9 @@ public class PlayerController : BaseCharacterController
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
 
-
+    // SKill
     private TestThrow _testThrow;
+    private TestSkillSpawnReaper _spawnReaper;
 
     // RollCoolTime
     public const float ROLL_INIT_COOL_TIME = 3f;
@@ -81,6 +85,13 @@ public class PlayerController : BaseCharacterController
     public float BombCollTime { get; private set; } = BOMB_INIT_COOL_TIME;
     public float BombCollTimer { get; set; } = BOMB_INIT_COOL_TIME;
     public bool IsPossibleLaunchBomb { get; set; } = true;
+
+
+    // SpawnReaperCoolTime
+    public const float SPAWN_REAPER_INIT_COOL_TIME = 5f;
+    public float SpawnReaperCollTime { get; private set; } = SPAWN_REAPER_INIT_COOL_TIME;
+    public float SpawnReaperCollTimer { get; set; } = SPAWN_REAPER_INIT_COOL_TIME;
+    public bool IsPossibleSpawnReaper { get; set; } = true;
 
     public override void Init()
     {
@@ -101,8 +112,9 @@ public class PlayerController : BaseCharacterController
         leftPos.x = -leftPos.x;
         CachedLaunchPointLocalLeftPos = leftPos;
 
-        // Throw
+        // Skill
         _testThrow = GetComponent<TestThrow>();
+        _spawnReaper = transform.Find("SkillSpawnReaper").gameObject.GetComponent<TestSkillSpawnReaper>();
     }
     void FixedUpdate()
     {
@@ -136,6 +148,17 @@ public class PlayerController : BaseCharacterController
             {
                 BombCollTimer = BombCollTime;
                 IsPossibleLaunchBomb = true;
+            }
+        }
+        #endregion
+        #region SPAWN_REAPER_COOL_TIME
+        if (!IsPossibleSpawnReaper)
+        {
+            SpawnReaperCollTimer -= Time.deltaTime;
+            if (SpawnReaperCollTimer <= 0f)
+            {
+                SpawnReaperCollTimer = SpawnReaperCollTime;
+                IsPossibleSpawnReaper = true;
             }
         }
         #endregion
@@ -173,10 +196,17 @@ public class PlayerController : BaseCharacterController
     public void OnNoramlAttack2ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
     public void OnNoramlAttack3ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
 
-    public void OnValidLaunched() 
+    public void OnValidLaunchTiming() 
     { 
-        Debug.Assert(ECurrentState == EPlayerState.LAUNCH);
+        Debug.Assert(ECurrentState == EPlayerState.CAST_LAUNCH);
         _testThrow.LauchBomb(ELookDir, LaunchPoint.position);
+    }
+    public void OnValidSpawnReaperTiming()
+    {
+        if (ECurrentState == EPlayerState.CAST_SPAWN)
+        {
+            _spawnReaper.SpawnReaper(ELookDir);
+        }
     }
 
     public void OnHittedAnimFullyPlayed()
@@ -198,8 +228,14 @@ public class PlayerController : BaseCharacterController
 
     public void OnPlayerLaunchAnimFullyPlayed()
     {
-        player_states.Launch launchState = (player_states.Launch)_states[(uint)EPlayerState.LAUNCH];
+        player_states.CastLaunch launchState = (player_states.CastLaunch)_states[(uint)EPlayerState.CAST_LAUNCH];
         launchState.OnLaunchAnimFullyPlayed();
+    }
+
+    public void OnPlayerSpawnReaperAnimFullyPlayed()
+    {
+        player_states.CastSpawn spawnState = (player_states.CastSpawn)_states[(uint)EPlayerState.CAST_SPAWN];
+        spawnState.OnSpawnAnimFullyPlayed();
     }
 
     public void OnPlayerFootStep()
@@ -217,7 +253,7 @@ public class PlayerController : BaseCharacterController
 
     public void OnHitted(int damage, BaseMonsterController monContorller) 
     {
-        // Blocking Section
+        #region BLOCKING
         if (ECurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
         {
             HitEffectAniamtor.gameObject.SetActive(true);
@@ -226,12 +262,19 @@ public class PlayerController : BaseCharacterController
             monContorller.OnPlayerBlockSuccess();
             return;
         }
+        #endregion
+
+        #region IGNORE
         if (ECurrentState == EPlayerState.BLOCK_SUCESS || 
             ECurrentState == EPlayerState.CLIMB || 
-            ECurrentState == EPlayerState.ROLL)
+            ECurrentState == EPlayerState.ROLL ||
+            ECurrentState == EPlayerState.CAST_SPAWN)
+        {
             return;
+        }
+        #endregion
 
-        // Damage Section
+        #region DAMAGE
         int actualDamage = Mathf.Max(0, damage - Stat.Defence);
         _hpBar.DecraseHP(Stat.HP, Stat.HP - actualDamage);
         Stat.HP -= actualDamage;
@@ -242,6 +285,7 @@ public class PlayerController : BaseCharacterController
             ChangeState(EPlayerState.HITTED);
         DamageText.ShowPopup(damage);
         Managers.HitParticle.Play(transform.position);
+        #endregion
     }
     public void ChangeState(EPlayerState eChangingState)
     {
@@ -264,7 +308,8 @@ public class PlayerController : BaseCharacterController
         _states[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1(this);
         _states[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2(this);
         _states[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3(this);
-        _states[(uint)EPlayerState.LAUNCH] = new player_states.Launch(this);
+        _states[(uint)EPlayerState.CAST_LAUNCH] = new player_states.CastLaunch(this);
+        _states[(uint)EPlayerState.CAST_SPAWN] = new player_states.CastSpawn(this);
         _states[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
         _states[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
         _states[(uint)EPlayerState.HITTED] = new player_states.Hitted(this);

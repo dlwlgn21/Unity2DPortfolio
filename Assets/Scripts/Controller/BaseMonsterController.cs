@@ -11,6 +11,7 @@ public enum EMonsterState
     TRACE,
     ATTACK,
     HITTED_KNOCKBACK,
+    HITTED_PARALYSIS,
     HITTED,
     DIE,
     COUNT
@@ -51,7 +52,6 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
     void Update()
     {
-        SetLookDir();
         _stateMachine.Excute();
     }
     public void HittedByPlayerNormalAttack()
@@ -67,7 +67,10 @@ public abstract class BaseMonsterController : BaseCharacterController
         ChangeState(EMonsterState.HITTED_KNOCKBACK);
     }
 
-
+    public void HittedByPlayerSpawnReaper()
+    {
+        ChangeState(EMonsterState.HITTED_PARALYSIS);
+    }
     public void ChangeState(EMonsterState eChangingState)
     {
         ECurrentState = eChangingState;
@@ -82,11 +85,29 @@ public abstract class BaseMonsterController : BaseCharacterController
     {
         ChangeState(EMonsterState.HITTED_KNOCKBACK);
     }
-    protected void SetLookDir()
+
+    public void OnValidHittedAnimEnd()
+    {
+        switch (ECurrentState)
+        {
+            case EMonsterState.HITTED:
+                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED]).OnHittedAnimFullyPlayed();
+                return;
+            case EMonsterState.HITTED_KNOCKBACK:
+                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_KNOCKBACK]).OnHittedAnimFullyPlayed();
+                return;
+            case EMonsterState.HITTED_PARALYSIS:
+                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_PARALYSIS]).OnHittedAnimFullyPlayed();
+                return;
+        }
+        Debug.Assert(false);
+    }
+    public void SetLookDir()
     {
         if (ECurrentState == EMonsterState.ATTACK ||
             ECurrentState == EMonsterState.HITTED ||
             ECurrentState == EMonsterState.HITTED_KNOCKBACK ||
+            ECurrentState == EMonsterState.HITTED_PARALYSIS ||
             ECurrentState == EMonsterState.DIE)
             return;
 
@@ -112,6 +133,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         _states[(uint)EMonsterState.TRACE] = new monster_states.Trace(this);
         _states[(uint)EMonsterState.HITTED] = new monster_states.Hitted(this);
         _states[(uint)EMonsterState.HITTED_KNOCKBACK] = new monster_states.HittedKnockback(this);
+        _states[(uint)EMonsterState.HITTED_PARALYSIS] = new monster_states.HittedParalysis(this);
         _states[(uint)EMonsterState.DIE] = new monster_states.Die(this);
         _stateMachine.Init(this, _states[(uint)EMonsterState.SPAWN]);
     }

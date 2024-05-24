@@ -32,22 +32,20 @@ public class WardenController : BaseMonsterController
         getAttack().OnWardenValidAttack();
     }
 
-    public void OnValidHittedAnimEnd()
-    {
-        Debug.Log("HittedAnim End!!!");
-        if (ECurrentState == EMonsterState.HITTED)
-        {
-            ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED]).OnHittedAnimFullyPlayed();
-            return;
-        }
-        if (ECurrentState == EMonsterState.HITTED_KNOCKBACK)
-        {
-            ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_KNOCKBACK]).OnHittedAnimFullyPlayed();
-            return;
-        }
-
-        Debug.Assert(false, "ECurrentState is strange...");
-    }
+    //public void OnValidHittedAnimEnd()
+    //{
+    //    if (ECurrentState == EMonsterState.HITTED)
+    //    {
+    //        ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED]).OnHittedAnimFullyPlayed();
+    //        return;
+    //    }
+    //    if (ECurrentState == EMonsterState.HITTED_KNOCKBACK)
+    //    {
+    //        ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_KNOCKBACK]).OnHittedAnimFullyPlayed();
+    //        return;
+    //    }
+    //    Debug.Assert(false, "ECurrentState is strange...");
+    //}
 
     WardenAttack getAttack()
     {

@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.Licensing;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace monster_states
         protected static string RUN_ANIM_KEY = "Run";
         protected static string ATTACK_ANIM_KEY = "Attack";
         protected static string HIT_ANIM_KEY = "Hitted";
+        protected static string HIT_PARALYSIS_KEY = "HittedParalysis";
         protected static string DIE_ANIM_KEY = "Die";
         protected bool IsAnimEnd()
         {
@@ -28,6 +30,11 @@ namespace monster_states
                 return true;
             }
             return false;
+        }
+
+        public override void Excute()
+        {
+            _entity.SetLookDir();
         }
 
         protected void PlayAnimation(EMonsterState eState)
@@ -45,6 +52,9 @@ namespace monster_states
                     return;
                 case EMonsterState.HITTED:
                     _entity.Animator.Play(HIT_ANIM_KEY, -1, 0f);
+                    return;
+                case EMonsterState.HITTED_PARALYSIS:
+                    _entity.Animator.Play(HIT_PARALYSIS_KEY, -1, 0f);
                     return;
                 case EMonsterState.DIE:
                     _entity.Animator.Play(DIE_ANIM_KEY, -1, 0f);
@@ -73,6 +83,7 @@ namespace monster_states
         public override void Enter() { PlayAnimation(EMonsterState.SPAWN); }
         public override void Excute()
         {
+            base.Excute();
             CalculateDistanceFromPlayer();
             Debug.DrawRay(_entity.transform.position + Vector3.up * 0.5f, _dirToPlayer.normalized * _entity.AwarenessRangeToTrace, Color.blue);
             if (_distanceFromPlayer <= _entity.AwarenessRangeToTrace)
@@ -95,6 +106,7 @@ namespace monster_states
 
         public override void Excute()
         {
+            base.Excute();
             CalculateDistanceFromPlayer();
             if (_distanceFromPlayer <= _entity.AwarenessRangeToAttack)
             {
@@ -120,7 +132,11 @@ namespace monster_states
             _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);
         }
         //public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
-        public override void Excute()       { ChangeStateIfAnimEnd(EMonsterState.TRACE);  }
+        public override void Excute() 
+        {
+            base.Excute();
+            ChangeStateIfAnimEnd(EMonsterState.SPAWN);  
+        }
         protected void CheckOverlapCircle()
         {
             Collider2D collider = Physics2D.OverlapCircle(_entity.NormalAttackPoint.position, _entity.NormalAttackRange, _playerLayerMask);
@@ -152,10 +168,7 @@ namespace monster_states
             _entity.RigidBody.velocity = new Vector2(0f, velo.y);
         }
 
-        public override void Excute() 
-        { 
-            //ChangeStateIfAnimEnd(EMonsterState.SPAWN); 
-        }
+        public override void Excute()  { base.Excute(); }
         public abstract void OnHittedAnimFullyPlayed();
 
     }
@@ -245,8 +258,8 @@ namespace monster_states
         public override void Enter()
         {
             base.Enter();
-            _isAddForceThisFrame = false;
             _entity.StatusText.ShowPopup("넉백!");
+            _isAddForceThisFrame = false;
         }
 
         public override void FixedExcute()
@@ -266,19 +279,32 @@ namespace monster_states
             }
         }
     }
+
+    public class HittedParalysis : BaseHittedState
+    {
+        public HittedParalysis(BaseMonsterController controller) : base(controller) { }
+        public override void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.SPAWN); }
+        public override void Enter()
+        {
+            PlayAnimation(EMonsterState.HITTED_PARALYSIS);
+            Vector2 velo = _entity.RigidBody.velocity;
+            _entity.RigidBody.velocity = new Vector2(0f, velo.y);
+            _entity.StatusText.ShowPopup("마비!");
+        }
+    }
     public class Die : BaseMonsterState
     {
         // TODO : 몬스터 Die 구현해야함.
         public Die(BaseMonsterController controller) : base(controller) { }
 
-        public override void Enter()
-        {
-            PlayAnimation(EMonsterState.DIE);
-        }
+        public override void Enter() { PlayAnimation(EMonsterState.DIE); }
         public override void Excute()
         {
+            base.Excute();
             if (IsAnimEnd())
+            {
                 Managers.MonsterPool.Return(_entity.MonsterType, _entity.gameObject);
+            }
         }
     }
 

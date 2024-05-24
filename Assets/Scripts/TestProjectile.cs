@@ -102,4 +102,6 @@ public class TestProjectile : MonoBehaviour
             _rb.gravityScale = 1f;
         }
     }
+
+    void OnDrawGizmosSelected() { Gizmos.DrawWireSphere(transform.position, _bombRange); }
 }

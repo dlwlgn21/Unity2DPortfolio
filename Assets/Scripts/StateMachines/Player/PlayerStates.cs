@@ -62,49 +62,52 @@ namespace player_states
             switch (eState) 
             {
                 case EPlayerState.IDLE:
-                    _entity.Animator.Play("Idle");
+                    _entity.Animator.Play("Idle", -1, 0f);
                     return;
                 case EPlayerState.RUN:
-                    _entity.Animator.Play("Run");
+                    _entity.Animator.Play("Run", -1, 0f);
                     return;
                 case EPlayerState.ROLL:
-                    _entity.Animator.Play("Roll");
+                    _entity.Animator.Play("Roll", -1, 0f);
                     return;
                 case EPlayerState.JUMP:
-                    _entity.Animator.Play("Jump");
+                    _entity.Animator.Play("Jump", -1, 0f);
                     return;
                 case EPlayerState.CLIMB:
-                    _entity.Animator.Play("Climb");
+                    _entity.Animator.Play("Climb", -1, 0f);
                     return;
                 case EPlayerState.FALL:
-                    _entity.Animator.Play("Fall");
+                    _entity.Animator.Play("Fall", -1, 0f);
                     return;
                 case EPlayerState.LAND:
-                    _entity.Animator.Play("Land");
+                    _entity.Animator.Play("Land", -1, 0f);
                     return;
                 case EPlayerState.NORMAL_ATTACK_1:
-                    _entity.Animator.Play("NormalAttack1");
+                    _entity.Animator.Play("NormalAttack1", -1, 0f);
                     return;
                 case EPlayerState.NORMAL_ATTACK_2:
-                    _entity.Animator.Play("NormalAttack2");
+                    _entity.Animator.Play("NormalAttack2", -1, 0f);
                     return;
                 case EPlayerState.NORMAL_ATTACK_3:
-                    _entity.Animator.Play("NormalAttack3");
+                    _entity.Animator.Play("NormalAttack3", -1, 0f);
                     return;
-                case EPlayerState.LAUNCH:
-                    _entity.Animator.Play("Launch");
+                case EPlayerState.CAST_LAUNCH:
+                    _entity.Animator.Play("CastLaunch", -1, 0f);
+                    return;
+                case EPlayerState.CAST_SPAWN:
+                    _entity.Animator.Play("SpawnReaper", -1, 0f);
                     return;
                 case EPlayerState.HITTED:
-                    _entity.Animator.Play("Hitted");
+                    _entity.Animator.Play("Hitted", -1, 0f);
                     return;
                 case EPlayerState.BLOCKING:
-                    _entity.Animator.Play("Blocking");
+                    _entity.Animator.Play("Blocking", -1, 0f);
                     return;
                 case EPlayerState.BLOCK_SUCESS:
-                    _entity.Animator.Play("BlockSuccess");
+                    _entity.Animator.Play("BlockSuccess", -1, 0f);
                     return;
                 case EPlayerState.DIE:
-                    _entity.Animator.Play("Die");
+                    _entity.Animator.Play("Die", -1, 0f);
                     return;
             }
             Debug.Assert(false);
@@ -191,9 +194,23 @@ namespace player_states
             {
                 if (_entity.IsPossibleLaunchBomb)
                 {
-                    _entity.ChangeState(EPlayerState.LAUNCH);
+                    _entity.ChangeState(EPlayerState.CAST_LAUNCH);
                     _entity.BombCoolTimerImg.StartCoolTime(_entity.BombCollTime);
                     _entity.IsPossibleLaunchBomb = false;
+                    return true;
+                }
+            }
+            return false;
+        }
+        protected bool IsChangeStateToSpawnReaper()
+        {
+            if (Input.GetKeyDown(PlayerController.KeySpawnReaper))
+            {
+                if (_entity.IsPossibleSpawnReaper)
+                {
+                    _entity.ChangeState(EPlayerState.CAST_SPAWN);
+                    _entity.SpawnReaperCoolTimerImg.StartCoolTime(_entity.SpawnReaperCollTime);
+                    _entity.IsPossibleSpawnReaper = false;
                     return true;
                 }
             }
@@ -241,6 +258,10 @@ namespace player_states
                 return;
             }
             if (IsChangeStateToLaunchBomb())
+            {
+                return;
+            }
+            if (IsChangeStateToSpawnReaper())
             {
                 return;
             }
@@ -294,6 +315,10 @@ namespace player_states
                 return;
             }
             if (IsChangeStateToLaunchBomb())
+            {
+                return;
+            }
+            if (IsChangeStateToSpawnReaper())
             {
                 return;
             }
@@ -614,17 +639,27 @@ namespace player_states
         }
     }
 
-    public class Launch : BasePlayerState
+    public class CastLaunch : BasePlayerState
     { 
-        public Launch(PlayerController controller) : base(controller) { }
+        public CastLaunch(PlayerController controller) : base(controller) { }
 
-        public void OnLaunchAnimFullyPlayed()
+        public void OnLaunchAnimFullyPlayed() 
         {
-            _entity.ChangeState(EPlayerState.IDLE);
+            // Because of Poped 1 frame.
+            PlayAnimation(EPlayerState.IDLE);
+     
+            _entity.ChangeState(EPlayerState.IDLE); 
         }
-        public override void Enter() { PlayAnimation(EPlayerState.LAUNCH); }
+        public override void Enter()  { PlayAnimation(EPlayerState.CAST_LAUNCH);}
     }
 
+    public class CastSpawn : BasePlayerState
+    {
+        public CastSpawn(PlayerController controller) : base(controller) { }
+
+        public void OnSpawnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.IDLE); }
+        public override void Enter() { PlayAnimation(EPlayerState.CAST_SPAWN); }
+    }
 
     public class Blocking : BasePlayerState
     {
