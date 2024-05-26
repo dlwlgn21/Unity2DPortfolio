@@ -6,7 +6,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 public class HitParticleManager
 {
     // TODO : 플레이어, 몬스터 HitEffectParticle 구현 해야 함.
-    public ParticleSystem Particle { get; set; }
+    private ParticleSystem _particle;
     public void Init()
     {
         GameObject ori = Managers.Resources.Load<GameObject>("Prefabs/HitParticleManager");
@@ -14,14 +14,14 @@ public class HitParticleManager
         ori.transform.position = Vector3.zero;
         GameObject go = Object.Instantiate(ori);
         go.name = "HitParticleManager";
-        Particle = go.GetComponent<ParticleSystem>();
+        _particle = go.GetComponent<ParticleSystem>();
         Object.DontDestroyOnLoad(go);
-        Debug.Assert(Particle != null);
+        Debug.Assert(_particle != null);
     }
 
     public void Play(Vector3 pos)
     {
-        Particle.transform.position = pos;
-        Particle.Play();
+        _particle.transform.position = pos;
+        _particle.Play();
     }
 }

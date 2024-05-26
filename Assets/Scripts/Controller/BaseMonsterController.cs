@@ -12,6 +12,7 @@ public enum EMonsterState
     ATTACK,
     HITTED_KNOCKBACK,
     HITTED_PARALYSIS,
+    HITTED_KNOCKBACK_BOMB,
     HITTED,
     DIE,
     COUNT
@@ -64,7 +65,7 @@ public abstract class BaseMonsterController : BaseCharacterController
 
     public void HittedByPlayerKnockbackBomb()
     {
-        ChangeState(EMonsterState.HITTED_KNOCKBACK);
+        ChangeState(EMonsterState.HITTED_KNOCKBACK_BOMB);
     }
 
     public void HittedByPlayerSpawnReaper()
@@ -98,6 +99,9 @@ public abstract class BaseMonsterController : BaseCharacterController
                 return;
             case EMonsterState.HITTED_PARALYSIS:
                 ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_PARALYSIS]).OnHittedAnimFullyPlayed();
+                return;
+            case EMonsterState.HITTED_KNOCKBACK_BOMB:
+                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_KNOCKBACK_BOMB]).OnHittedAnimFullyPlayed();
                 return;
         }
         Debug.Assert(false);
@@ -134,6 +138,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         _states[(uint)EMonsterState.HITTED] = new monster_states.Hitted(this);
         _states[(uint)EMonsterState.HITTED_KNOCKBACK] = new monster_states.HittedKnockback(this);
         _states[(uint)EMonsterState.HITTED_PARALYSIS] = new monster_states.HittedParalysis(this);
+        _states[(uint)EMonsterState.HITTED_KNOCKBACK_BOMB] = new monster_states.HittedKnockbackBomb(this);
         _states[(uint)EMonsterState.DIE] = new monster_states.Die(this);
         _stateMachine.Init(this, _states[(uint)EMonsterState.SPAWN]);
     }

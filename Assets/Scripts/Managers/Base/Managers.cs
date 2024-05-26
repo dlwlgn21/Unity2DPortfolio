@@ -21,6 +21,7 @@ public class Managers : MonoBehaviour
     MainMenuManager _mainMenuManager = new MainMenuManager();
     MonsterPoolManager _monsterPoolManager = new MonsterPoolManager();
     PlayerSkillPoolManager _playerSkillPoolManager = new PlayerSkillPoolManager();
+    CamShakeManager _camShakeManager = new CamShakeManager();
     UIDialogManager _dialogManager = new UIDialogManager();
     public static InputManager Input { get { return Instance._inputManager; } }
     public static DataManager Data { get { return Instance._dataManager; } }
@@ -31,6 +32,7 @@ public class Managers : MonoBehaviour
     public static MonsterPoolManager MonsterPool { get { return Instance._monsterPoolManager; } }
     public static PlayerSkillPoolManager SkillPool { get { return Instance._playerSkillPoolManager; } }
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
+    public static CamShakeManager CamShake { get { return Instance._camShakeManager; } }
     public static GameEventManager GameEvent { get { return Instance._gameEventManager; } }
 
     // Added part For BloodParticle
@@ -88,6 +90,7 @@ public class Managers : MonoBehaviour
             sInstance._playerSkillPoolManager.Init();
             sInstance._pauseManager.Init();
             sInstance._dialogManager.Init();
+            sInstance._camShakeManager.Init();
         }
     }
     public static void Clear()          { Input.Clear(); }

@@ -1,5 +1,4 @@
 using define;
-using CameraShake;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -171,25 +170,6 @@ public class PlayerController : BaseCharacterController
         _stateMachine.Excute();
     }
 
-    public void ShakeCamera(EHitCameraShake eShakeType)
-    {
-        // TODO : 시네마신 카메라 세팅 완료 후, 반드시 롤백 되어야 함.
-        switch (eShakeType)
-        {
-            case EHitCameraShake.WEAK_SHAKE_2D:
-                CameraShaker.Presets.ShortShake2D();
-                break;
-            case EHitCameraShake.STRONG_SHAKE_2D:
-                CameraShaker.Presets.Explosion2D();
-                break;
-            case EHitCameraShake.WEAK_SHAKE_3D:
-                CameraShaker.Presets.ShortShake3D();
-                break;
-            case EHitCameraShake.STRONG_SHAKE_3D:
-                CameraShaker.Presets.Explosion3D();
-                break;
-        }
-    }
 
     #region ANIM_CALL_BACK
     public void OnNoramlAttack1ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }

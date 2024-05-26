@@ -162,7 +162,6 @@ namespace monster_states
         
         public override void Enter()
         {
-            Debug.Log("Enter HittedState");
             PlayAnimation(EMonsterState.HITTED);
             Vector2 velo = _entity.RigidBody.velocity;
             _entity.RigidBody.velocity = new Vector2(0f, velo.y);
@@ -196,19 +195,22 @@ namespace monster_states
             Managers.HitParticle.Play(_entity.transform.position);
             if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
                 _entity.HitEffectAniamtor.gameObject.SetActive(true);
+
+            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_PLAYER_NORMAL_ATTACK);
+
             switch (_pc.ECurrentState)
             {
                 case EPlayerState.NORMAL_ATTACK_1:
-                    ProcessHitted(_pc, _pc.Stat.Attack, define.EHitCameraShake.WEAK_SHAKE_2D);
+                    ProcessHitted(_pc, _pc.Stat.Attack);
                     _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_1_KEY, -1, 0f);
 
                     break;
                 case EPlayerState.NORMAL_ATTACK_2:
-                    ProcessHitted(_pc, (int)(_pc.Stat.Attack * 1.5f), define.EHitCameraShake.WEAK_SHAKE_2D);
+                    ProcessHitted(_pc, (int)(_pc.Stat.Attack * 1.5f));
                     _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_2_KEY, -1, 0f);
                     break;
                 case EPlayerState.NORMAL_ATTACK_3:
-                    ProcessHitted(_pc, _pc.Stat.Attack * 2, define.EHitCameraShake.STRONG_SHAKE_2D);
+                    ProcessHitted(_pc, _pc.Stat.Attack * 2);
                     _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
                     break;
                 default:
@@ -227,7 +229,7 @@ namespace monster_states
             return false;
         }
 
-        private void ProcessHitted(PlayerController pc, int damage, define.EHitCameraShake eCamShakeType)
+        private void ProcessHitted(PlayerController pc, int damage)
         {
             int beforeDamgeHp = 0;
             int afterDamageHp = 0;
@@ -244,13 +246,12 @@ namespace monster_states
                 _entity.DamageText.ShowPopup(damage);
             }
             _entity.HealthBar.DecraseHP(beforeDamgeHp, afterDamageHp);
-            pc.ShakeCamera(eCamShakeType);
         }
     }
 
     public class HittedKnockback : BaseHittedState
     {
-        private float _knockbackForce = 5f;
+        protected float _knockbackForce = 5f;
         private bool _isAddForceThisFrame = false;
 
         public HittedKnockback(BaseMonsterController controller) : base(controller) { }
@@ -280,6 +281,19 @@ namespace monster_states
         }
     }
 
+    public class HittedKnockbackBomb : HittedKnockback
+    {
+        public HittedKnockbackBomb(BaseMonsterController controller) : base(controller) 
+        {
+            _knockbackForce = 12f;
+        }
+        public override void Enter()
+        {
+            base.Enter();
+            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_KNOCKBACK_BOMB);
+        }
+        public override void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.SPAWN); }
+    }
     public class HittedParalysis : BaseHittedState
     {
         public HittedParalysis(BaseMonsterController controller) : base(controller) { }
@@ -290,6 +304,7 @@ namespace monster_states
             Vector2 velo = _entity.RigidBody.velocity;
             _entity.RigidBody.velocity = new Vector2(0f, velo.y);
             _entity.StatusText.ShowPopup("¸¶ºñ!");
+            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_REAPER_ATTACK);
         }
     }
     public class Die : BaseMonsterState

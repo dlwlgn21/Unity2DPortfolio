@@ -92,7 +92,7 @@ namespace player_states
                     _entity.Animator.Play("NormalAttack3", -1, 0f);
                     return;
                 case EPlayerState.CAST_LAUNCH:
-                    _entity.Animator.Play("CastLaunch", -1, 0f);
+                    _entity.Animator.Play("Launch", -1, 0f);
                     return;
                 case EPlayerState.CAST_SPAWN:
                     _entity.Animator.Play("SpawnReaper", -1, 0f);
@@ -686,6 +686,7 @@ namespace player_states
         {
             PlayAnimation(EPlayerState.BLOCK_SUCESS);
             _entity.StatusText.ShowPopup("Block!");
+            Managers.CamShake.CamShake(ECamShakeType.PLAYER_BLOCK_SUCCES);
             _isKnockbackFlag = false;
         }
 
@@ -719,6 +720,7 @@ namespace player_states
                 _entity.HitEffectAniamtor.gameObject.SetActive(true);
 
             PlayAnimation(EPlayerState.HITTED);
+            Managers.CamShake.CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
             // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.
             //_entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
         }

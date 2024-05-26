@@ -1,17 +1,24 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class TestProjectile : MonoBehaviour
 {
     public const float LIFE_TIME = 5f;
     [SerializeField] float _speed;
     [SerializeField] float _bombRange;
+    [SerializeField] Material _bombMaterial;
+
+
     private Rigidbody2D _rb;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
+    private Light2D _light;
+    private Material _missileMaterial;
 
     private float _lifeTimer = LIFE_TIME;
     private bool _isValidCollided = false;
@@ -21,6 +28,9 @@ public class TestProjectile : MonoBehaviour
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _missileMaterial = _spriteRenderer.material;
+        _light = Utill.GetComponentInChildrenOrNull<Light2D>(gameObject, "Light");
+        _light.gameObject.SetActive(false);
     }
 
     public void Launch(define.ECharacterLookDir eLookDir)
@@ -50,7 +60,6 @@ public class TestProjectile : MonoBehaviour
         {
             return;
         }
-
         _lifeTimer -= Time.deltaTime;
         if (_lifeTimer < 0f)
         {
@@ -83,8 +92,10 @@ public class TestProjectile : MonoBehaviour
         }
     }
 
-    public void OnBombAnimEnded()
+    public void OnBombAnimFullyPlayed()
     {
+        _spriteRenderer.material = _missileMaterial;
+        _light.gameObject.SetActive(false);
         ReturnToPool();
     }
 
@@ -96,7 +107,9 @@ public class TestProjectile : MonoBehaviour
     {
         if (!_isValidCollided)
         {
+            _light.gameObject.SetActive(true);
             _isValidCollided = true;
+            _spriteRenderer.material = _bombMaterial;
             _animator.Play("Bomb");
             _rb.velocity = Vector2.zero;
             _rb.gravityScale = 1f;
