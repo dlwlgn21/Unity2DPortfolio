@@ -48,11 +48,11 @@ namespace define
         Warden,
     }
 
-    public enum EHitCameraShake
+
+    public enum ESoundType
     {
-        WEAK_SHAKE_2D,
-        STRONG_SHAKE_2D,
-        WEAK_SHAKE_3D,
-        STRONG_SHAKE_3D
+        SFX,
+        BGM,
+        COUNT
     }
 }

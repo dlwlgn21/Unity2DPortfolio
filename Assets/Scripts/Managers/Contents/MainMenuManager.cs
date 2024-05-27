@@ -47,6 +47,7 @@ public class MainMenuManager
         _fadeImg.DOFade(0, 2.0f).SetEase(Ease.InOutExpo).OnComplete(OnFadeOutCompleted);
         _mainMenu.SetActive(false);
         _isNewGameBtnClicked = false;
+        Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
         EventSystem.current.SetSelectedGameObject(null);
         SceneManager.LoadScene((int)define.ESceneType.GAME_SCENE);
     }

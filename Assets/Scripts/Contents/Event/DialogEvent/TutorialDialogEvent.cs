@@ -5,7 +5,7 @@ using UnityEngine;
 public class TutorialDialogEvent : DialogEventBoxCollider, ITalkable
 {
     [SerializeField] private DialogText _dialogText;
-    [SerializeField] private TutorialEvent _nextEvent;
+    [SerializeField] private TutorialEvent _currTutorialEvent;
     [SerializeField] private TutorialPillar _pillar;
 
     private bool _isDialogStart = false;
@@ -36,11 +36,9 @@ public class TutorialDialogEvent : DialogEventBoxCollider, ITalkable
     protected override void OnDialogEnd()
     {
         UnregisterOnDialogEnd();
-        Debug.Assert(_nextEvent != null);
-        _nextEvent.OnDialogEnd();
+        Debug.Assert(_currTutorialEvent != null);
+        _currTutorialEvent.OnDialogEnd();
         _boxCollider.enabled = false;
         _pillar.PlayAnimation(EPillarState.UNACTIVATING);
-        //gameObject.SetActive(false);
-
     }
 }

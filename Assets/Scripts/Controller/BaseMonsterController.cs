@@ -37,9 +37,12 @@ public abstract class BaseMonsterController : BaseCharacterController
         Debug.Assert(PlayerTransform != null);
         Stat = gameObject.GetOrAddComponent<MonsterStat>();
         ECurrentState = EMonsterState.SPAWN;
+
+        // TODO : 여기 하드코딩 되어 있는 수치들 나중에 다 MonsterData로 빼서 읽어와야 함.
         AwarenessRangeToTrace = 10f;
         AwarenessRangeToAttack = 2f;
         NormalAttackRange = 1f;
+
         HealthBar = Utill.GetComponentInChildrenOrNull<UIWSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
     }
     public void InitStatForRespawn()
@@ -59,33 +62,25 @@ public abstract class BaseMonsterController : BaseCharacterController
     {
         //  ECurrentState != EMonsterState.DIE DieState에서 플레이어 공격시에 다시 HitState로 변환되는 경우가 간혹 있었음. 그걸 막기위한 조치
         if (Stat.HP > 0 && ECurrentState != EMonsterState.DIE)
+        {
             ChangeState(EMonsterState.HITTED);
+        }
     }
 
+    #region CHANGE_TO_HITTED_CALLED_BY_PLAYER
+    public void OnPlayerBlockSuccess()          { ChangeState(EMonsterState.HITTED_KNOCKBACK); }
+    public void HittedByPlayerKnockbackBomb()   { ChangeState(EMonsterState.HITTED_KNOCKBACK_BOMB); }
+    public void HittedByPlayerSpawnReaper()     { ChangeState(EMonsterState.HITTED_PARALYSIS); }
+    #endregion
 
-    public void HittedByPlayerKnockbackBomb()
-    {
-        ChangeState(EMonsterState.HITTED_KNOCKBACK_BOMB);
-    }
+    public void OnMonsterFootStep()             { FootDustParticle.Play(); }
 
-    public void HittedByPlayerSpawnReaper()
-    {
-        ChangeState(EMonsterState.HITTED_PARALYSIS);
-    }
     public void ChangeState(EMonsterState eChangingState)
     {
         ECurrentState = eChangingState;
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
     }
-    public void OnMonsterFootStep()
-    {
-        FootDustParticle.Play();
-    }
 
-    public void OnPlayerBlockSuccess()
-    {
-        ChangeState(EMonsterState.HITTED_KNOCKBACK);
-    }
 
     public void OnValidHittedAnimEnd()
     {
@@ -106,6 +101,8 @@ public abstract class BaseMonsterController : BaseCharacterController
         }
         Debug.Assert(false);
     }
+
+
     public void SetLookDir()
     {
         if (ECurrentState == EMonsterState.ATTACK ||

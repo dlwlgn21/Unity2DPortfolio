@@ -73,14 +73,14 @@ public class PlayerController : BaseCharacterController
     private TestSkillSpawnReaper _spawnReaper;
 
     // RollCoolTime
-    public const float ROLL_INIT_COOL_TIME = 3f;
+    public const float ROLL_INIT_COOL_TIME = 2f;
     public float RollCollTime { get; private set; } = ROLL_INIT_COOL_TIME;
     public float RollCollTimer { get; set; } = ROLL_INIT_COOL_TIME;
     public bool IsPossibleRoll { get; set; } = true;
 
 
     // BombCoolTime
-    public const float BOMB_INIT_COOL_TIME = 2f;
+    public const float BOMB_INIT_COOL_TIME = 3f;
     public float BombCollTime { get; private set; } = BOMB_INIT_COOL_TIME;
     public float BombCollTimer { get; set; } = BOMB_INIT_COOL_TIME;
     public bool IsPossibleLaunchBomb { get; set; } = true;
@@ -92,6 +92,10 @@ public class PlayerController : BaseCharacterController
     public float SpawnReaperCollTimer { get; set; } = SPAWN_REAPER_INIT_COOL_TIME;
     public bool IsPossibleSpawnReaper { get; set; } = true;
 
+    private void Start()
+    {
+        _hpBar.SetFullHpBarRatio();
+    }
     public override void Init()
     {
         base.Init();
@@ -103,7 +107,7 @@ public class PlayerController : BaseCharacterController
         JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
         Debug.Assert(LedgeCheckPoint != null && JumpParticle != null);
         Debug.Assert(_hpBar != null);
-        
+
         // LaunchPoint
         LaunchPoint = transform.Find("LaunchPoint").gameObject.transform;
         CachedLaunchPointLocalRightPos = LaunchPoint.localPosition;
@@ -120,7 +124,6 @@ public class PlayerController : BaseCharacterController
         if (IsSkipThisFrame())
         {
             RigidBody.velocity = Vector2.zero;
-            ChangeState(EPlayerState.IDLE);
             return;
         }
         _stateMachine.FixedExcute();
@@ -164,7 +167,10 @@ public class PlayerController : BaseCharacterController
 
         if (IsSkipThisFrame())
         {
-            ChangeState(EPlayerState.IDLE);
+            if (ECurrentState != EPlayerState.IDLE)
+            {
+                ChangeState(EPlayerState.IDLE);
+            }
             return;
         }
         _stateMachine.Excute();
@@ -221,13 +227,9 @@ public class PlayerController : BaseCharacterController
     public void OnPlayerFootStep()
     {
         FootDustParticle.Play();
+        // TODO : 나중에 PlayerFootStep 더 좋은 Sound 찾아야 함.
+        // Managers.Sound.Play(DataManager.SFX_PLAYER_FOOT_STEP_PATH);
     }
-
-    public void OnPlayerRoll()
-    {
-        FootDustParticle.Play();
-    }
-
 
     #endregion
 

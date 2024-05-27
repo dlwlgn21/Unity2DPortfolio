@@ -10,6 +10,7 @@ public class UIWSMonsterHpBar : UIHealthBar
     {
         _parentTransform = transform.parent;
         _yMargin = transform.parent.GetComponent<Collider2D>().bounds.size.y + _yOffset;
+        SetFullHpBarRatio();
     }
 
     private void Update()

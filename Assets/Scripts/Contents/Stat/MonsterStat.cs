@@ -26,8 +26,7 @@ public class MonsterStat : BaseStat
             afterDamageHp = 0;
             return;
         }
-
-        int actualDamage = Mathf.Max(1, Mathf.Abs(damage - Defence));
+        int actualDamage = Mathf.Max(0, damage - Defence);
         beforeDamageHp = HP;
         HP -= actualDamage;
         afterDamageHp = HP;

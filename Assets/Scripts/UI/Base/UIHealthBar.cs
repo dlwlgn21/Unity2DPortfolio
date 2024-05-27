@@ -18,7 +18,7 @@ public abstract class UIHealthBar : MonoBehaviour
     private Color _damagedColor;
 
     protected abstract void Init();
-    private void Start()
+    private void Awake()
     {
         Debug.Assert(_stat != null);
         _healthBarImg = Utill.GetComponentInChildrenOrNull<Image>(gameObject, "HealthBar");
@@ -34,7 +34,7 @@ public abstract class UIHealthBar : MonoBehaviour
         _damagedColor.a = 0f;
         _damagedBarImg.color = _damagedColor;
         Debug.Assert(_damagedBarImg != null);
-        SetHealthBarRatio(1f);
+
         Init();
     }
 
@@ -45,13 +45,21 @@ public abstract class UIHealthBar : MonoBehaviour
         _damagedColor.a = 1f;
         _damagedBarImg.color = _damagedColor;
         _damagedBarImg.DOFade(0f, _fillSpeed).SetEase(Ease.Flash);
-        if (ratio < 0.5f && _currHpText.color != Color.white)
-        {
-            _currHpText.DOColor(Color.white, _fillSpeed);
-            _maxHpText.DOColor(Color.white, _fillSpeed);
-        }
+
+        //if (ratio < 0.5f && _currHpText.color != Color.white)
+        //{
+        //    _currHpText.DOColor(Color.white, _fillSpeed);
+        //    _maxHpText.DOColor(Color.white, _fillSpeed);
+        //}
+
         _currHpText.DOCounter(beforeDamageHp, Math.Max(afterDamgeHp, 0), _fillSpeed);
         SetHealthBarRatio(ratio);
+    }
+    public void SetFullHpBarRatio()
+    {
+        IncraseHP(1f);
+        _maxHpText.text = _stat.MaxHP.ToString();
+        _currHpText.text = _stat.HP.ToString();
     }
     public void IncraseHP(float ratio)
     {
@@ -62,13 +70,13 @@ public abstract class UIHealthBar : MonoBehaviour
     {
         _maxHpText.text = _stat.MaxHP.ToString();
     }
-    private void SetHealthBarRatio(float ratio)
+    protected void SetHealthBarRatio(float ratio)
     {
-        if (ratio <= 0f)
-        {
-            _currHpText.color = Color.black;
-            _maxHpText.color = Color.black;
-        }
+        //if (ratio <= 0f)
+        //{
+        //    _currHpText.color = Color.black;
+        //    _maxHpText.color = Color.black;
+        //}
         _healthBarImg.DOFillAmount(ratio, _fillSpeed);
         _healthBarImg.DOColor(_gradient.Evaluate(ratio), _fillSpeed);
     }

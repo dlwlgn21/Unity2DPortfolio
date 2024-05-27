@@ -527,6 +527,9 @@ namespace player_states
         public override void Enter()
         {
             _eLookDir = _entity.ELookDir;
+            _entity.FootDustParticle.Play();
+            Managers.Sound.Play(DataManager.SFX_PLAYER_ROLLING_PATH);
+
             PlayAnimation(EPlayerState.ROLL);
             Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS, (int)EColliderLayer.PLAYER);
         }
@@ -608,6 +611,7 @@ namespace player_states
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_1);
+            Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
         }
         public override void Excute() { CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_2); }
     }
@@ -619,6 +623,7 @@ namespace player_states
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_2);
+            Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_2_PATH);
         }
         public override void Excute() { CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_3); }
     }
@@ -631,6 +636,7 @@ namespace player_states
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_3);
+            Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
         }
         public override void Excute()
         {
@@ -718,7 +724,15 @@ namespace player_states
         {
             if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
                 _entity.HitEffectAniamtor.gameObject.SetActive(true);
-
+            int randIdx = Random.Range(0, 1);
+            if (randIdx % 2 == 0)
+            {
+                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+            }
+            else
+            {
+                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
+            }
             PlayAnimation(EPlayerState.HITTED);
             Managers.CamShake.CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
             // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.

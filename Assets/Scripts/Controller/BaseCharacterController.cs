@@ -38,6 +38,7 @@ public abstract class BaseCharacterController : MonoBehaviour
         InitStates();
     }
 
+
     public virtual void Init()
     {
         RigidBody = gameObject.GetOrAddComponent<Rigidbody2D>();

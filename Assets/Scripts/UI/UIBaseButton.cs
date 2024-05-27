@@ -16,8 +16,15 @@ public class UIBaseButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
     public void OnPointerEnter(PointerEventData eventData)  { DoScaleTween(_originalScale.x + 0.05f, Ease.OutElastic); }
     public void OnPointerExit(PointerEventData eventData)   { DoScaleTween(_originalScale.x, Ease.OutElastic); }
-    public void OnSelect(BaseEventData eventData)           { DoScaleTween(_originalScale.x + 0.05f, Ease.OutElastic); }
-    public void OnDeselect(BaseEventData eventData)         { DoScaleTween(_originalScale.x, Ease.OutElastic); }
+    public void OnSelect(BaseEventData eventData)           
+    {
+        Managers.Sound.Play(DataManager.SFX_MENU_MOVE_PATH);
+        DoScaleTween(_originalScale.x + 0.05f, Ease.OutElastic); 
+    }
+    public void OnDeselect(BaseEventData eventData)         
+    {
+        DoScaleTween(_originalScale.x, Ease.OutElastic); 
+    }
 
     protected void DoScaleTween(float endScale, Ease ease)
     {

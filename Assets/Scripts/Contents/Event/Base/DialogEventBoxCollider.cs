@@ -8,7 +8,6 @@ public abstract class DialogEventBoxCollider : EventBoxCollider
     {
         base.Init();
     }
-
     protected void RegisterOnDialogEnd() { Managers.Dialog.OnConversationEndHandler += OnDialogEnd; }
     protected void UnregisterOnDialogEnd() { Managers.Dialog.OnConversationEndHandler -= OnDialogEnd; }
     protected abstract void OnDialogEnd();

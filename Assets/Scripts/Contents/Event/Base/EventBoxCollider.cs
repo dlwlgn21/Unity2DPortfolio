@@ -16,7 +16,9 @@ public abstract class EventBoxCollider : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER)
+        {
             OnPlayerEnter();
+        }
     }
     protected abstract void OnPlayerEnter();
 }

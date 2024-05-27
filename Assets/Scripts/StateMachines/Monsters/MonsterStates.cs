@@ -187,11 +187,13 @@ namespace monster_states
         {
             base.Enter();
             _entity.StatusText.ShowPopup("경직!");
+
             if (_pc == null)
             {
                 _pc = _entity.PlayerTransform.gameObject.GetComponent<PlayerController>();
             }
             Debug.Assert(_pc != null);
+
             Managers.HitParticle.Play(_entity.transform.position);
             if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
                 _entity.HitEffectAniamtor.gameObject.SetActive(true);
@@ -235,16 +237,16 @@ namespace monster_states
             int afterDamageHp = 0;
             if (pc.ELookDir == _entity.ELookDir)
             {
+                // TODO : 이 하드코딩된 매직넘버, 즉 백어택 데미지 계수 수정하자.
                 int backAttackDamage = damage * 3;
                 _entity.Stat.OnHitted(backAttackDamage, out beforeDamgeHp, out afterDamageHp);
-                _entity.DamageText.ShowPopup(backAttackDamage);
                 pc.StatusText.ShowPopup("백어택!");
             }
             else
             {
                 _entity.Stat.OnHitted(damage, out beforeDamgeHp, out afterDamageHp);
-                _entity.DamageText.ShowPopup(damage);
             }
+            _entity.DamageText.ShowPopup(beforeDamgeHp - afterDamageHp);
             _entity.HealthBar.DecraseHP(beforeDamgeHp, afterDamageHp);
         }
     }

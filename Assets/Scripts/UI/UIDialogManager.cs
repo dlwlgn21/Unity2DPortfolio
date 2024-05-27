@@ -36,6 +36,7 @@ public class UIDialogManager
     {
         if (_isTyping)
             return;
+
         if (_paragraphQueue.Count <= 0)
         {
             if (!_isConversationEnded)
@@ -69,13 +70,22 @@ public class UIDialogManager
     }
     private void EndConversation()
     {
+        // EndConversation() 두 번 호출되는거 방지용.
+        if (IsTalking == false)
+        {
+            return;
+        }
         if (OnConversationEndHandler != null)
+        {
             OnConversationEndHandler.Invoke();
+        }
         IsTalking = false;
         _paragraphQueue.Clear();
         _isConversationEnded = false;
         if (_dialogBoxImg.activeSelf)
+        {
             _dialogBoxImg.SetActive(false);
+        }
     }
     public void OnTypingStarted()
     {
