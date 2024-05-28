@@ -1,8 +1,3 @@
-using DG.Tweening;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -12,7 +7,6 @@ public class TestProjectile : MonoBehaviour
     [SerializeField] float _speed;
     [SerializeField] float _bombRange;
     [SerializeField] Material _bombMaterial;
-
 
     private Rigidbody2D _rb;
     private Animator _animator;

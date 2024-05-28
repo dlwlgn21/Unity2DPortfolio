@@ -39,7 +39,6 @@ public class MonsterPoolManager
                 if (_blasters.Count > 0)
                 {
                     retGo = _blasters.Dequeue();
-                    retGo.GetComponent<BaseMonsterController>().InitStatForRespawn();
                 }
                 else
                 {
@@ -50,7 +49,6 @@ public class MonsterPoolManager
                 if (_cagedShokers.Count > 0)
                 {
                     retGo = _cagedShokers.Dequeue();
-                    retGo.GetComponent<BaseMonsterController>().InitStatForRespawn();
                 }
                 else
                 {
@@ -63,7 +61,6 @@ public class MonsterPoolManager
                 if (_hSlicers.Count > 0)
                 {
                     retGo = _hSlicers.Dequeue();
-                    retGo.GetComponent<BaseMonsterController>().InitStatForRespawn();
                 }
                 else
                 {
@@ -78,7 +75,6 @@ public class MonsterPoolManager
                 if (_wardens.Count > 0)
                 {
                     retGo = _wardens.Dequeue();
-                    retGo.GetComponent<BaseMonsterController>().InitStatForRespawn();
                 }
                 else
                 {
@@ -87,8 +83,10 @@ public class MonsterPoolManager
                 break;
         }
         Debug.Assert(retGo != null);
+        InitForRespawn(retGo);
         retGo.transform.position = spawnPos;
         retGo.SetActive(true);
+        retGo.GetComponent<BaseMonsterController>().SpawnEffectAnimator.Play("SpawnEffect", -1, 0f);
         return retGo;
     }
 
@@ -139,4 +137,12 @@ public class MonsterPoolManager
         return go;
     }
 
+    private void InitForRespawn(GameObject go)
+    {
+        Debug.Assert(go != null);
+        BaseMonsterController mc;
+        mc = go.GetComponent<BaseMonsterController>();
+        mc.InitStatForRespawn();
+        mc.HealthBar.transform.localScale = mc.OriginalHpBarScale;
+    }
 }

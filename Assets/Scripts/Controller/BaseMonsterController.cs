@@ -21,12 +21,15 @@ public enum EMonsterState
 public abstract class BaseMonsterController : BaseCharacterController
 {
     public UIWSMonsterHpBar HealthBar { get; set; }
+    public Animator SpawnEffectAnimator { get; set; }
     public Transform PlayerTransform { get; private set; }
     public EMonsterNames MonsterType { get; protected set; }
     public MonsterStat Stat { get; protected set; }
     public float AwarenessRangeToTrace { get; private set; }
     public float AwarenessRangeToAttack { get; private set; }
     public EMonsterState ECurrentState { get; private set; }
+    public Vector3 OriginalHpBarScale { get; private set; }
+
     protected StateMachine<BaseMonsterController> _stateMachine;
     protected State<BaseMonsterController>[] _states;
 
@@ -44,6 +47,9 @@ public abstract class BaseMonsterController : BaseCharacterController
         NormalAttackRange = 1f;
 
         HealthBar = Utill.GetComponentInChildrenOrNull<UIWSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
+        OriginalHpBarScale = HealthBar.transform.localScale;
+
+        SpawnEffectAnimator = Utill.GetComponentInChildrenOrNull<Animator>(gameObject, "MonSpawnEffectAnimator");
     }
     public void InitStatForRespawn()
     {

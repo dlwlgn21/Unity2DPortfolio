@@ -1,14 +1,5 @@
 using define;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static UnityEngine.EventSystems.EventTrigger;
-using JetBrains.Annotations;
-using System.Xml;
-using DG.Tweening;
 
 public enum EPlayerState
 {
@@ -118,12 +109,15 @@ public class PlayerController : BaseCharacterController
         // Skill
         _testThrow = GetComponent<TestThrow>();
         _spawnReaper = transform.Find("SkillSpawnReaper").gameObject.GetComponent<TestSkillSpawnReaper>();
+
+        DontDestroyOnLoad(gameObject);
     }
     void FixedUpdate()
     {
         if (IsSkipThisFrame())
         {
-            RigidBody.velocity = Vector2.zero;
+            Vector2 velo = RigidBody.velocity;
+            RigidBody.velocity = new Vector2(0f, velo.y);
             return;
         }
         _stateMachine.FixedExcute();
@@ -169,7 +163,14 @@ public class PlayerController : BaseCharacterController
         {
             if (ECurrentState != EPlayerState.IDLE)
             {
-                ChangeState(EPlayerState.IDLE);
+                if (ECurrentState == EPlayerState.JUMP)
+                {
+                    ChangeState(EPlayerState.FALL);
+                }
+                else
+                {
+                    ChangeState(EPlayerState.IDLE);
+                }
             }
             return;
         }

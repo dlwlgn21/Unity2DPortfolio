@@ -15,7 +15,6 @@ namespace player_states
         public override void Excute() { ProcessHorizontalInput(); }
         public virtual void ProcessKeyboardInput() { }
 
-
         public void FlipSpriteAccodingPlayerInput()
         {
             if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.RIGHT)
@@ -38,7 +37,7 @@ namespace player_states
         }
 
         protected void ProcessHorizontalInput()  { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
-
+        protected void SetVelocityToZero() { _entity.RigidBody.velocity = Vector2.zero; }
         protected bool IsAnimEnd()
         {
             if (_entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
@@ -288,6 +287,11 @@ namespace player_states
             if (Input.GetKeyDown(PlayerController.KeyJump))
             {
                 _entity.ChangeState(EPlayerState.JUMP);
+                return;
+            }
+            if (Input.GetKeyDown(PlayerController.KeyAttack))
+            {
+                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_1);
                 return;
             }
         }
@@ -572,6 +576,7 @@ namespace player_states
             _isGoToNextAttack = false;
             _entity.AttackLight.SetActive(true);
             _entity.RotateAttackLightAccodingCharacterLookDir();
+            SetVelocityToZero();
         }
 
         public override void Exit()
@@ -656,7 +661,11 @@ namespace player_states
      
             _entity.ChangeState(EPlayerState.IDLE); 
         }
-        public override void Enter()  { PlayAnimation(EPlayerState.CAST_LAUNCH);}
+        public override void Enter()  
+        { 
+            PlayAnimation(EPlayerState.CAST_LAUNCH);
+            SetVelocityToZero();
+        }
     }
 
     public class CastSpawn : BasePlayerState
@@ -664,7 +673,11 @@ namespace player_states
         public CastSpawn(PlayerController controller) : base(controller) { }
 
         public void OnSpawnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.IDLE); }
-        public override void Enter() { PlayAnimation(EPlayerState.CAST_SPAWN); }
+        public override void Enter() 
+        { 
+            PlayAnimation(EPlayerState.CAST_SPAWN);
+            SetVelocityToZero();
+        }
     }
 
     public class Blocking : BasePlayerState

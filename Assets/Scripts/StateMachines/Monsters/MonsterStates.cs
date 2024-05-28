@@ -1,5 +1,6 @@
 using CameraShake;
 using define;
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -311,10 +312,14 @@ namespace monster_states
     }
     public class Die : BaseMonsterState
     {
-        // TODO : 몬스터 Die 구현해야함.
+        private const float SCALE_TW_DURATION = 0.5f; 
         public Die(BaseMonsterController controller) : base(controller) { }
 
-        public override void Enter() { PlayAnimation(EMonsterState.DIE); }
+        public override void Enter() 
+        { 
+            PlayAnimation(EMonsterState.DIE);
+            _entity.HealthBar.transform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
+        }
         public override void Excute()
         {
             base.Excute();
