@@ -7,7 +7,9 @@ namespace define
     public enum ESceneType
     {
         MAIN_MENU,
-        GAME_SCENE,
+        TUTORIAL,
+        MAIN_PLAY,
+        COUNT,
     }
 
     public enum ECharacterLookDir

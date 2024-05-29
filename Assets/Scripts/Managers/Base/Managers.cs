@@ -15,6 +15,7 @@ public class Managers : MonoBehaviour
     ResourceManager _resourceManager = new ResourceManager();
     InputManager _inputManager = new InputManager();
     DataManager _dataManager = new DataManager();
+    SceneManagerEX _sceneManager = new SceneManagerEX();
     PauseManager _pauseManager = new PauseManager();
     SoundManager _soundManager = new SoundManager();
     TweenManager _tweenManager = new TweenManager();
@@ -27,6 +28,7 @@ public class Managers : MonoBehaviour
     public static InputManager Input { get { return Instance._inputManager; } }
     public static DataManager Data { get { return Instance._dataManager; } }
     public static ResourceManager Resources { get { return Instance._resourceManager; } }
+    public static SceneManagerEX Scene { get { return Instance._sceneManager; } }
     public static PauseManager Pause { get { return Instance._pauseManager; } }
     public static SoundManager Sound { get { return Instance._soundManager; } }
     public static TweenManager Tween { get { return Instance._tweenManager; } }
@@ -47,14 +49,14 @@ public class Managers : MonoBehaviour
 
     private void Update()
     {
-        switch (SceneManager.GetActiveScene().buildIndex)
+        switch (sInstance._sceneManager.GetCurrentScene())
         {
-            case (int)define.ESceneType.MAIN_MENU:
+            case define.ESceneType.MAIN_MENU:
                 {
 
+                    break;
                 }
-                break;
-            case (int)define.ESceneType.GAME_SCENE:
+            case define.ESceneType.TUTORIAL:
                 {
                     // Pause Check
                     if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
@@ -67,8 +69,14 @@ public class Managers : MonoBehaviour
                     if (sInstance._pauseManager.IsPaused)
                         return;
                     Input.OnUpdate();
+                    break;
                 }
-                break;
+            case define.ESceneType.MAIN_PLAY:
+                {
+
+                    break;
+                }
+
         }
     }
 
@@ -86,14 +94,7 @@ public class Managers : MonoBehaviour
             sInstance = go.GetComponent<Managers>();
             sInstance._soundManager.Init();
             sInstance._tweenManager.Init();
-            sInstance._mainMenuManager.Init();
             sInstance._dataManager.Init();
-            sInstance._hitParticle.Init();
-            sInstance._monsterPoolManager.Init();
-            sInstance._playerSkillPoolManager.Init();
-            sInstance._pauseManager.Init();
-            sInstance._dialogManager.Init();
-            sInstance._camShakeManager.Init();
         }
     }
     public static void Clear()          { Input.Clear(); }

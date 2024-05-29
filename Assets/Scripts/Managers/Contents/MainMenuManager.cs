@@ -23,7 +23,9 @@ public class MainMenuManager
         GameObject mainMenu = Managers.Resources.Load<GameObject>("Prefabs/UI/UIMainMenu");
         Debug.Assert(mainMenu != null);
         _mainMenu = Object.Instantiate(mainMenu);
+
         Object.DontDestroyOnLoad(_mainMenu);
+
         _newGameBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UINewGameBtn");
         _settingBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UISettingBtn");
         _exitBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UIExitBtn");
@@ -34,22 +36,26 @@ public class MainMenuManager
         GameObject fadeOut = Managers.Resources.Load<GameObject>("Prefabs/UI/UIFadeOut");
         Debug.Assert(fadeOut != null);
         _fadeout = Object.Instantiate(fadeOut);
+
         Object.DontDestroyOnLoad(_fadeout);
+
         _fadeImg = _fadeout.GetComponentInChildren<Image>();
         _fadeout.SetActive(false);
+
         _mainMenu.SetActive(true);
+
         EventSystem.current.SetSelectedGameObject(_newGameBtn.gameObject);
     }
     public void OnNewGameBtnClicked()
     {
         _isNewGameBtnClicked = true;
         _fadeout.SetActive(true);
-        _fadeImg.DOFade(0, 2.0f).SetEase(Ease.InOutExpo).OnComplete(OnFadeOutCompleted);
+        _fadeImg.DOFade(0, 3.0f).SetEase(Ease.InOutExpo).OnComplete(OnFadeOutCompleted);
         _mainMenu.SetActive(false);
         _isNewGameBtnClicked = false;
         Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
         EventSystem.current.SetSelectedGameObject(null);
-        SceneManager.LoadScene((int)define.ESceneType.GAME_SCENE);
+        Managers.Scene.LoadScene(define.ESceneType.TUTORIAL);
     }
     public void OnSettingBtnClicked()
     {
