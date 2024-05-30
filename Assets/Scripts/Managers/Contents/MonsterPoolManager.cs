@@ -22,10 +22,13 @@ public class MonsterPoolManager
     
     public void Init()
     {
-        _oriWarden = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonWarden");
-        _oriBlaster = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonBlaster");
-        _oriCagedShokcer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonCagedShoker");
-        _oriHSlicer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonHSlicer");
+        if (_oriWarden == null)
+        {
+            _oriWarden = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonWarden");
+            _oriBlaster = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonBlaster");
+            _oriCagedShokcer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonCagedShoker");
+            _oriHSlicer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonHSlicer");
+        }
     }
 
     public GameObject Get(EMonsterNames eMonName, Vector2 spawnPos)

@@ -109,8 +109,6 @@ public class PlayerController : BaseCharacterController
         // Skill
         _testThrow = GetComponent<TestThrow>();
         _spawnReaper = transform.Find("SkillSpawnReaper").gameObject.GetComponent<TestSkillSpawnReaper>();
-
-        DontDestroyOnLoad(gameObject);
     }
     void FixedUpdate()
     {
@@ -179,10 +177,13 @@ public class PlayerController : BaseCharacterController
 
 
     #region ANIM_CALL_BACK
-    public void OnNoramlAttack1ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
-    public void OnNoramlAttack2ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
-    public void OnNoramlAttack3ValidSlashed() { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
-
+    public void OnNoramlAttack1ValidSlashed()       { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
+    public void OnNoramlAttack2ValidSlashed()       { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
+    public void OnNoramlAttack3ValidSlashed()       { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
+    public void OnNormalAttack1AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).OnAttackAnimFullyPlayed(); }
+    public void OnNormalAttack2AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).OnAttackAnimFullyPlayed(); }
+    public void OnNormalAttack3AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).OnAttackAnimFullyPlayed(); }
+    
     public void OnValidLaunchTiming() 
     { 
         Debug.Assert(ECurrentState == EPlayerState.CAST_LAUNCH);

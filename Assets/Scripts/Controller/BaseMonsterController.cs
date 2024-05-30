@@ -79,7 +79,14 @@ public abstract class BaseMonsterController : BaseCharacterController
     public void HittedByPlayerSpawnReaper()     { ChangeState(EMonsterState.HITTED_PARALYSIS); }
     #endregion
 
+
+    #region ANIM_CALLBACK
+
+    public void OnAttackAnimFullyPlayed()       { ((monster_states.BaseAttack)_states[(uint)EMonsterState.ATTACK]).OnAttackAnimFullyPlayed(); }
+    public void OnMonsterDieAnimFullyPlayed()   { ((monster_states.Die)_states[(uint)EMonsterState.DIE]).OnDieAnimFullyPlayed(); }
     public void OnMonsterFootStep()             { FootDustParticle.Play(); }
+
+    #endregion
 
     public void ChangeState(EMonsterState eChangingState)
     {

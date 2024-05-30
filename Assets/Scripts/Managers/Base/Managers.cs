@@ -49,7 +49,7 @@ public class Managers : MonoBehaviour
 
     private void Update()
     {
-        switch (sInstance._sceneManager.GetCurrentScene())
+        switch (sInstance._sceneManager.ECurrentScene)
         {
             case define.ESceneType.MAIN_MENU:
                 {
@@ -57,26 +57,36 @@ public class Managers : MonoBehaviour
                     break;
                 }
             case define.ESceneType.TUTORIAL:
-                {
-                    // Pause Check
-                    if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
-                    {
-                        if (!sInstance._pauseManager.IsPaused)
-                            sInstance._pauseManager.Pause();
-                        else
-                            sInstance._pauseManager.Unpause();
-                    }
-                    if (sInstance._pauseManager.IsPaused)
-                        return;
-                    Input.OnUpdate();
-                    break;
-                }
+            /* INTENTIONAL FALL THROUGH */
             case define.ESceneType.MAIN_PLAY:
+                // Pause Check
+                if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
                 {
-
-                    break;
+                    if (!sInstance._pauseManager.IsPaused)
+                    { 
+                        sInstance._pauseManager.Pause();
+                    }
+                    else
+                    {
+                        sInstance._pauseManager.Unpause();
+                    }
+                }
+                if (sInstance._pauseManager.IsPaused)
+                {
+                    return;
                 }
 
+                // FOR TEST
+                if (UnityEngine.Input.GetKeyUp(KeyCode.P))
+                {
+                    Time.timeScale = 0.2f;
+                }
+                if (UnityEngine.Input.GetKeyUp(KeyCode.L))
+                {
+                    Time.timeScale = 1f;
+                }
+                Input.OnUpdate();
+                break;
         }
     }
 
@@ -95,6 +105,7 @@ public class Managers : MonoBehaviour
             sInstance._soundManager.Init();
             sInstance._tweenManager.Init();
             sInstance._dataManager.Init();
+            sInstance._sceneManager.Init();
         }
     }
     public static void Clear()          { Input.Clear(); }

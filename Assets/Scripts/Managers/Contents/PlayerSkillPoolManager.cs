@@ -13,7 +13,10 @@ public class PlayerSkillPoolManager
 
     public void Init()
     {
-        _oriBomb = Managers.Resources.Load<GameObject>("Prefabs/Player/Skills/Projectile");
+        if (_oriBomb == null)
+        {
+            _oriBomb = Managers.Resources.Load<GameObject>("Prefabs/Player/Skills/Projectile");
+        }
     }
 
     public GameObject Get(Vector2 spawnPos)

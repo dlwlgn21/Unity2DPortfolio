@@ -569,6 +569,8 @@ namespace player_states
                 controller.HittedByPlayerNormalAttack();
             }
         }
+        public abstract void OnAttackAnimFullyPlayed();
+
         public override void Enter()
         {
             _attackPoint = _entity.NormalAttackPoint;
@@ -590,64 +592,75 @@ namespace player_states
             if (currAnimTime >= 0.3f && currAnimTime <= 0.9f)
             {
                 if (Input.GetKey(PlayerController.KeyAttack))
+                {
                     _isGoToNextAttack = true;
+                }
             }
         }
-        protected void CheckGoToNextAttack(EPlayerState eNextAttack)
-        {
-            if (_entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-            {
-                if (_isGoToNextAttack)
-                    _entity.ChangeState(eNextAttack);
-                else
-                    _entity.ChangeState(EPlayerState.RUN);
-                return;
-            }
-            ProcessKeyboardInput();
-        }
-
     }
 
     public class NormalAttack1 : NormalAttackState
     {
         public NormalAttack1(PlayerController controller) : base(controller) { }
-
+        public override void OnAttackAnimFullyPlayed()
+        {
+            if (_isGoToNextAttack)
+            {
+                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_2);
+            }
+            else
+            {
+                _entity.ChangeState(EPlayerState.IDLE);
+            }
+        }
         public override void Enter()
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_1);
             Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
         }
-        public override void Excute() { CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_2); }
+        public override void Excute() { ProcessKeyboardInput(); }
     }
 
     public class NormalAttack2 : NormalAttackState
     {
         public NormalAttack2(PlayerController controller) : base(controller) { }
+        public override void OnAttackAnimFullyPlayed()
+        {
+            if (_isGoToNextAttack)
+            {
+                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_3);
+            }
+            else
+            {
+                _entity.ChangeState(EPlayerState.IDLE);
+            }
+        }
         public override void Enter()
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_2);
             Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_2_PATH);
         }
-        public override void Excute() { CheckGoToNextAttack(EPlayerState.NORMAL_ATTACK_3); }
+        public override void Excute() { ProcessKeyboardInput(); }
+
+
     }
 
     public class NormalAttack3 : NormalAttackState
     {
         public NormalAttack3(PlayerController controller) : base(controller) { }
-
+        public override void OnAttackAnimFullyPlayed()
+        {
+            _entity.ChangeState(EPlayerState.RUN);
+        }
         public override void Enter()
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_3);
             Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
         }
-        public override void Excute()
-        {
-            if (IsAnimEnd())
-                _entity.ChangeState(EPlayerState.RUN);
-        }
+        public override void Excute() { }
     }
 
     public class CastLaunch : BasePlayerState

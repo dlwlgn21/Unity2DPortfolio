@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using JetBrains.Annotations;
 
 public enum ECamShakeType
 {
@@ -24,10 +25,14 @@ public class CamShakeManager
     private const float MONSTER_HITTED_BY_REAPER_ATTACK_FORCE = 1.5f;
     public void Init()
     {
-        _camShakeManager = Managers.Resources.Load<GameObject>("Prefabs/Managers/CamShakeManager");
-        _playerImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "PlayerImpulseSource");
-        _monsterImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "MonsterImpulseSource");
-        Object.DontDestroyOnLoad(_camShakeManager);
+        if (GameObject.Find("CamShakeManager") == null)
+        {
+            _camShakeManager = Managers.Resources.Load<GameObject>("Prefabs/Managers/CamShakeManager");
+            _camShakeManager.name = "CamShakeManager";
+            _playerImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "PlayerImpulseSource");
+            _monsterImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "MonsterImpulseSource");
+            Object.DontDestroyOnLoad(_camShakeManager);
+        }
     }
     public void CamShake(ECamShakeType eType)
     {

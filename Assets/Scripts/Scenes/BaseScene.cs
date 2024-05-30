@@ -1,3 +1,4 @@
+using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,12 @@ using UnityEngine;
 public abstract class BaseScene : MonoBehaviour
 {
     public define.ESceneType ESceneType { get; protected set; }
+
+    public BaseScene(ESceneType eSceneType)
+    {
+        ESceneType = eSceneType;
+    }
+
 
     protected virtual void Init()
     {

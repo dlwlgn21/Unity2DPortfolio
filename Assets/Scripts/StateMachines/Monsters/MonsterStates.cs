@@ -124,6 +124,8 @@ namespace monster_states
         public BaseAttack(BaseMonsterController controller) : base(controller) { }
 
         protected int _playerLayerMask = 1 << (int)define.EColliderLayer.PLAYER;
+
+        public void OnAttackAnimFullyPlayed() { _entity.ChangeState(EMonsterState.SPAWN); }
         public override void Enter()
         {
             PlayAnimation(EMonsterState.ATTACK);
@@ -132,12 +134,7 @@ namespace monster_states
             _entity.RotateAttackLightAccodingCharacterLookDir();
             _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);
         }
-        //public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y);  }
-        public override void Excute() 
-        {
-            base.Excute();
-            ChangeStateIfAnimEnd(EMonsterState.SPAWN);  
-        }
+        public override void Excute() { }
         protected void CheckOverlapCircle()
         {
             Collider2D collider = Physics2D.OverlapCircle(_entity.NormalAttackPoint.position, _entity.NormalAttackRange, _playerLayerMask);
@@ -315,19 +312,16 @@ namespace monster_states
         private const float SCALE_TW_DURATION = 0.5f; 
         public Die(BaseMonsterController controller) : base(controller) { }
 
+        public void OnDieAnimFullyPlayed()
+        {
+            Managers.MonsterPool.Return(_entity.MonsterType, _entity.gameObject);
+        }
         public override void Enter() 
         { 
             PlayAnimation(EMonsterState.DIE);
             _entity.HealthBar.transform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
         }
-        public override void Excute()
-        {
-            base.Excute();
-            if (IsAnimEnd())
-            {
-                Managers.MonsterPool.Return(_entity.MonsterType, _entity.gameObject);
-            }
-        }
+        public override void Excute() { }
     }
 
 

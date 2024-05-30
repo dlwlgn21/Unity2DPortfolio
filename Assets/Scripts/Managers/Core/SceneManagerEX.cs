@@ -5,9 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagerEX 
 {
+    public define.ESceneType ECurrentScene { get; private set; }
+
+    public void Init()
+    {
+        ECurrentScene = define.ESceneType.MAIN_MENU;
+    }
     public void LoadScene(define.ESceneType eType)
     {
         GameObject.Find("@Scene").GetComponent<BaseScene>().Clear();
+        ECurrentScene = eType;
         SceneManager.LoadScene((int)eType);
     }
 

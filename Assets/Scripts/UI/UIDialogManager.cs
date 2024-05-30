@@ -24,13 +24,16 @@ public class UIDialogManager
 
     public void Init()
     {
-        GameObject ori = Managers.Resources.Load<GameObject>("Prefabs/UI/UIDialog");
-        _UIDialog = UnityEngine.Object.Instantiate(ori);
-        _UIDialog.name = "UIDialog";
-        _dialogBoxImg = _UIDialog.transform.GetChild(0).gameObject;
-        _NPCName = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_dialogBoxImg, "NpcName");
-        _dialogText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_dialogBoxImg, "DialogText");
-        UnityEngine.Object.DontDestroyOnLoad(_UIDialog);
+        if (GameObject.Find("UIDialog") == null)
+        {
+            GameObject ori = Managers.Resources.Load<GameObject>("Prefabs/UI/UIDialog");
+            _UIDialog = UnityEngine.Object.Instantiate(ori);
+            _UIDialog.name = "UIDialog";
+            _dialogBoxImg = _UIDialog.transform.GetChild(0).gameObject;
+            _NPCName = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_dialogBoxImg, "NpcName");
+            _dialogText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_dialogBoxImg, "DialogText");
+            UnityEngine.Object.DontDestroyOnLoad(_UIDialog);
+        }
     }
     public void DisplayNextParagraph(DialogText dText)
     {
@@ -94,5 +97,11 @@ public class UIDialogManager
     public void OnTypingEnded()
     {
         _isTyping = false;
+    }
+
+    public void Clear()
+    {
+        _paragraphQueue.Clear();
+        OnConversationEndHandler = null;
     }
 }

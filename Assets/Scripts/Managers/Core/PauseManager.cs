@@ -13,19 +13,22 @@ public class PauseManager
     Button _resumeBtn;
     public void Init()
     {
-        GameObject ori = Managers.Resources.Load<GameObject>("Prefabs/UI/UIPauseMenu");
-        if (ori == null)
-            Debug.Assert(false);
-        _pauseMenu = Object.Instantiate(ori);
-        _pauseMenu.name = "UIPauseMenu";
-        _resumeBtn = Utill.GetComponentInChildrenOrNull<Button>(_pauseMenu, "UIPauseResumeBtn");
-        _resumeBtn.onClick.AddListener(OnResumeBtnClicked);
-        Button mainMenuBtn = Utill.GetComponentInChildrenOrNull<Button>(_pauseMenu, "UIPasueMainMenuBtn");
-        mainMenuBtn.onClick.AddListener(OnMainMenuBtnClicked);
-        _pauseMenuTransform = Utill.GetComponentInChildrenOrNull<RectTransform>(_pauseMenu.gameObject, "VerticalLayout");
-        _originalScale = _pauseMenuTransform.localScale;
-        _pauseMenu.SetActive(false);
-        Object.DontDestroyOnLoad(_pauseMenu);
+        if (GameObject.Find("UIPauseMenu") == null)
+        {
+            GameObject ori = Managers.Resources.Load<GameObject>("Prefabs/UI/UIPauseMenu");
+            if (ori == null)
+                Debug.Assert(false);
+            _pauseMenu = Object.Instantiate(ori);
+            _pauseMenu.name = "UIPauseMenu";
+            _resumeBtn = Utill.GetComponentInChildrenOrNull<Button>(_pauseMenu, "UIPauseResumeBtn");
+            _resumeBtn.onClick.AddListener(OnResumeBtnClicked);
+            Button mainMenuBtn = Utill.GetComponentInChildrenOrNull<Button>(_pauseMenu, "UIPasueMainMenuBtn");
+            mainMenuBtn.onClick.AddListener(OnMainMenuBtnClicked);
+            _pauseMenuTransform = Utill.GetComponentInChildrenOrNull<RectTransform>(_pauseMenu.gameObject, "VerticalLayout");
+            _originalScale = _pauseMenuTransform.localScale;
+            _pauseMenu.SetActive(false);
+            Object.DontDestroyOnLoad(_pauseMenu);
+        }
     }
     public void Pause()
     {

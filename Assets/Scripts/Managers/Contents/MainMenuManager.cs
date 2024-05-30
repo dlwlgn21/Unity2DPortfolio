@@ -20,30 +20,33 @@ public class MainMenuManager
     Image _fadeImg;
     public void Init()
     {
-        GameObject mainMenu = Managers.Resources.Load<GameObject>("Prefabs/UI/UIMainMenu");
-        Debug.Assert(mainMenu != null);
-        _mainMenu = Object.Instantiate(mainMenu);
+        if (_mainMenu == null)
+        {
+            GameObject mainMenu = Managers.Resources.Load<GameObject>("Prefabs/UI/UIMainMenu");
+            Debug.Assert(mainMenu != null);
+            _mainMenu = Object.Instantiate(mainMenu);
+            _mainMenu.name = "UIMainMenu";
+            _newGameBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UINewGameBtn");
+            _settingBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UISettingBtn");
+            _exitBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UIExitBtn");
+            _newGameBtn.onClick.AddListener(OnNewGameBtnClicked);
+            _settingBtn.onClick.AddListener(OnSettingBtnClicked);
+            _exitBtn.onClick.AddListener(OnExitBtnClicked);
+            Object.DontDestroyOnLoad(_mainMenu);
+        }
 
-        Object.DontDestroyOnLoad(_mainMenu);
 
-        _newGameBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UINewGameBtn");
-        _settingBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UISettingBtn");
-        _exitBtn = Utill.GetComponentInChildrenOrNull<Button>(_mainMenu, "UIExitBtn");
-        _newGameBtn.onClick.AddListener(OnNewGameBtnClicked);
-        _settingBtn.onClick.AddListener(OnSettingBtnClicked);
-        _exitBtn.onClick.AddListener(OnExitBtnClicked);
-
-        GameObject fadeOut = Managers.Resources.Load<GameObject>("Prefabs/UI/UIFadeOut");
-        Debug.Assert(fadeOut != null);
-        _fadeout = Object.Instantiate(fadeOut);
-
-        Object.DontDestroyOnLoad(_fadeout);
-
-        _fadeImg = _fadeout.GetComponentInChildren<Image>();
-        _fadeout.SetActive(false);
-
+        if (_fadeout == null)
+        {
+            GameObject fadeOut = Managers.Resources.Load<GameObject>("Prefabs/UI/UIFadeOut");
+            Debug.Assert(fadeOut != null);
+            _fadeout = Object.Instantiate(fadeOut);
+            _fadeout.name = "UIFadeOut";
+            Object.DontDestroyOnLoad(_fadeout);
+            _fadeImg = _fadeout.GetComponentInChildren<Image>();
+            _fadeout.SetActive(false);
+        }
         _mainMenu.SetActive(true);
-
         EventSystem.current.SetSelectedGameObject(_newGameBtn.gameObject);
     }
     public void OnNewGameBtnClicked()

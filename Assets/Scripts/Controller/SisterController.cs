@@ -19,16 +19,30 @@ public class SisterController : QuestNPC, ITalkable
 
     public override void OnNPCDialogEnd()
     {
-        if (_isConversationStart)
+        if (_isConversationStart && gameObject.name == "StartSister")
         {
             Managers.Dialog.OnConversationEndHandler -= OnNPCDialogEnd;
             Debug.Log($"{gameObject.name} : OnNPCDialogEnd Called!!");
+            _isConversationEnd = true;
+            _animator.Play("Teleport");
+            return;
+        }
+        if (_isConversationStart && gameObject.name == "EndSister")
+        {
+            Managers.Dialog.OnConversationEndHandler -= OnNPCDialogEnd;
             _isConversationEnd = true;
             _animator.Play("Teleport");
         }
     }
     public void OnTeleportAnimFullyPlayed()
     {
-        gameObject.SetActive(false);
+        if (gameObject.name == "StartSister")
+        {
+            gameObject.SetActive(false);
+        }
+        else if (gameObject.name == "EndSister")
+        {
+            Managers.Scene.LoadScene(define.ESceneType.MAIN_PLAY);
+        }
     }
 }
