@@ -4,7 +4,7 @@ using DG.Tweening;
 
 public class UIPlayerHpBar : UIHealthBar
 {
-    protected override void Init()
+    public override void Init()
     {
         SetFullHpBarRatio();
     }

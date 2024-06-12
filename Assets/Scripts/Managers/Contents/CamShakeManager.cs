@@ -20,7 +20,7 @@ public class CamShakeManager
 
     private const float PLAYER_HITTED_BY_MONSTER_FORCE = 0.7f;
     private const float PLAYER_BLOCK_SUCCES_FORCE = 0.8f;
-    private const float MONSTER_HITTED_BY_PLAYER_NORMAL_ATTACK_FORCE = 0.5f;
+    private const float MONSTER_HITTED_BY_PLAYER_NORMAL_ATTACK_FORCE = 1f;
     private const float MONSTER_HITTED_BY_KNOCKBACK_BOMB_FORCE = 0.9f;
     private const float MONSTER_HITTED_BY_REAPER_ATTACK_FORCE = 1.5f;
     public void Init()

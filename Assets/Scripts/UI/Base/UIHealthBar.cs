@@ -17,7 +17,7 @@ public abstract class UIHealthBar : MonoBehaviour
     private float _fillSpeed = 0.5f;
     private Color _damagedColor;
 
-    protected abstract void Init();
+    public abstract void Init();
     private void Awake()
     {
         Debug.Assert(_stat != null);
@@ -34,7 +34,6 @@ public abstract class UIHealthBar : MonoBehaviour
         _damagedColor.a = 0f;
         _damagedBarImg.color = _damagedColor;
         Debug.Assert(_damagedBarImg != null);
-
         Init();
     }
 

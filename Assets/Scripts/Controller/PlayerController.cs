@@ -9,6 +9,8 @@ public enum EPlayerState
     JUMP,
     CLIMB,
     FALL,
+    FALL_TO_TWICE_JUMP,
+    TWICE_JUMP_TO_FALL,
     LAND,
     NORMAL_ATTACK_1,
     NORMAL_ATTACK_2,
@@ -26,45 +28,51 @@ public enum EPlayerNoramlAttackType
 {
     ATTACK_1,
     ATTACK_2,
-    ATTACK_3
+    ATTACK_3,
+    BACK_ATTACK,
 }
 public class PlayerController : BaseCharacterController
 {
-    public static KeyCode KeyUp = KeyCode.UpArrow;
-    public static KeyCode KeyDown = KeyCode.DownArrow;
-    public static KeyCode KeyRight = KeyCode.RightArrow;
-    public static KeyCode KeyLeft = KeyCode.LeftArrow;
-    public static KeyCode KeyAttack = KeyCode.Z;
-    public static KeyCode KeyBlock = KeyCode.X;
-    public static KeyCode KeyRoll = KeyCode.C;
-    public static KeyCode KeyJump = KeyCode.Space;
-    public static KeyCode KeyLaunchBomb = KeyCode.A;
-    public static KeyCode KeySpawnReaper = KeyCode.S;
+    public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new Vector2(2f, 1f);
+    public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new Vector2(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
+    public readonly static float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
+    public readonly static float NORMAL_ATTACK_3_FORCE_COEFF = 1.2f;
+    public readonly static float BACK_ATTACK_FORCE_COEFF = 1.5f;
+    public readonly static float BLOCK_SUCCESS_KNOCKBACK_X_FORCE = 5f;
+    public readonly static float KNOCKBACK_BOMB_FORCE = 12f;
+
+    public readonly static KeyCode KeyUp = KeyCode.UpArrow;
+    public readonly static KeyCode KeyDown = KeyCode.DownArrow;
+    public readonly static KeyCode KeyRight = KeyCode.RightArrow;
+    public readonly static KeyCode KeyLeft = KeyCode.LeftArrow;
+    public readonly static KeyCode KeyAttack = KeyCode.Z;
+    public readonly static KeyCode KeyBlock = KeyCode.X;
+    public readonly static KeyCode KeyRoll = KeyCode.C;
+    public readonly static KeyCode KeyJump = KeyCode.Space;
+    public readonly static KeyCode KeyLaunchBomb = KeyCode.A;
+    public readonly static KeyCode KeySpawnReaper = KeyCode.S;
 
     [SerializeField] private UIPlayerHpBar _hpBar;
     public UIPlayerCoolTimer RollCoolTimerImg;
     public UIPlayerCoolTimer BombCoolTimerImg;
     public UIPlayerCoolTimer SpawnReaperCoolTimerImg;
-
     public CamFollowObject CamFollowObject;
+
     public BoxCollider2D BoxCollider { get; set; }
-    public ParticleSystem JumpParticle { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
     public Transform LedgeCheckPoint { get; private set; }
-    public Transform LaunchPoint { get; set; }
-    public Vector3 CachedLaunchPointLocalRightPos { get; set; }
-    public Vector3 CachedLaunchPointLocalLeftPos { get; set; }
+    public Transform SpawnReaperPoint { get; private set; }
+    public Transform SpawnShooterPoint { get; private set; }
+
+    public Transform MovementEffectTransform { get; private set; }
 
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
 
-    // SKill
-    private TestThrow _testThrow;
-    private TestSkillSpawnReaper _spawnReaper;
 
     // RollCoolTime
-    public const float ROLL_INIT_COOL_TIME = 2f;
+    public const float ROLL_INIT_COOL_TIME = 1f;
     public float RollCollTime { get; private set; } = ROLL_INIT_COOL_TIME;
     public float RollCollTimer { get; set; } = ROLL_INIT_COOL_TIME;
     public bool IsPossibleRoll { get; set; } = true;
@@ -83,6 +91,9 @@ public class PlayerController : BaseCharacterController
     public float SpawnReaperCollTimer { get; set; } = SPAWN_REAPER_INIT_COOL_TIME;
     public bool IsPossibleSpawnReaper { get; set; } = true;
 
+    private PlayerForceFieldEffect _forceFieldEffect;
+    private bool _isInvincible = false;
+
     private void Start()
     {
         _hpBar.SetFullHpBarRatio();
@@ -93,22 +104,24 @@ public class PlayerController : BaseCharacterController
         Stat = gameObject.GetOrAddComponent<PlayerStat>();
         BoxCollider = gameObject.GetComponent<BoxCollider2D>();
         ELookDir = ECharacterLookDir.RIGHT;
-        NormalAttackRange = 1f;
+
+        NormalAttackRange = 2f;
+
         LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
-        JumpParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "JumpParticle");
-        Debug.Assert(LedgeCheckPoint != null && JumpParticle != null);
-        Debug.Assert(_hpBar != null);
 
-        // LaunchPoint
-        LaunchPoint = transform.Find("LaunchPoint").gameObject.transform;
-        CachedLaunchPointLocalRightPos = LaunchPoint.localPosition;
-        Vector3 leftPos = LaunchPoint.localPosition;
-        leftPos.x = -leftPos.x;
-        CachedLaunchPointLocalLeftPos = leftPos;
+        MovementEffectTransform = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "MovementEffectPoint");
 
-        // Skill
-        _testThrow = GetComponent<TestThrow>();
-        _spawnReaper = transform.Find("SkillSpawnReaper").gameObject.GetComponent<TestSkillSpawnReaper>();
+        #region FORCE_FIELD_EFFECT
+        _forceFieldEffect = Utill.GetComponentInChildrenOrNull<PlayerForceFieldEffect>(gameObject, "ForceFieldEffect");
+        _forceFieldEffect.ForceFieldStartEventHandler += OnForceFieldAinimStart;
+        _forceFieldEffect.ForceFieldEndEventHandler += OnForceFieldAnimFullyPlayed;
+        #endregion
+
+        // SpawnReaper
+        SpawnReaperPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnReaperPoint");
+
+        // SpawnShooter
+        SpawnShooterPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");
     }
     void FixedUpdate()
     {
@@ -187,14 +200,22 @@ public class PlayerController : BaseCharacterController
     public void OnValidLaunchTiming() 
     { 
         Debug.Assert(ECurrentState == EPlayerState.CAST_LAUNCH);
-        _testThrow.LauchBomb(ELookDir, LaunchPoint.position);
+        if (ECurrentState == EPlayerState.CAST_LAUNCH)
+        {
+            Managers.Skill.CastSpawnShooter(SpawnShooterPoint.position, ELookDir);
+        }
     }
     public void OnValidSpawnReaperTiming()
     {
         if (ECurrentState == EPlayerState.CAST_SPAWN)
         {
-            _spawnReaper.SpawnReaper(ELookDir);
+            Managers.Skill.CastSpawnReaper(SpawnReaperPoint.position, ELookDir);
         }
+    }
+
+    public void OnValidRollEffectTiming()
+    {
+        PlayMovementEffectAnimation(EPlayerMovementEffect.ROLL);
     }
 
     public void OnHittedAnimFullyPlayed()
@@ -205,7 +226,7 @@ public class PlayerController : BaseCharacterController
     public void OnRollAnimFullyPlayed()
     {
         player_states.Roll rollState = (player_states.Roll)_states[(uint)EPlayerState.ROLL];
-        rollState.OnRollAnimFullyPlayed(this);
+        rollState.OnRollAnimFullyPlayed();
         FootDustParticle.Play();
     }
     public void OnPlayerClimbAnimFullyPlayed()
@@ -226,6 +247,10 @@ public class PlayerController : BaseCharacterController
         spawnState.OnSpawnAnimFullyPlayed();
     }
 
+    public void OnPlayerNormalAttack1ValidStopEffectTiming()
+    {
+        PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_LAND);
+    }
     public void OnPlayerFootStep()
     {
         FootDustParticle.Play();
@@ -237,6 +262,14 @@ public class PlayerController : BaseCharacterController
 
     public void OnHitted(int damage, BaseMonsterController monContorller) 
     {
+        #region INVINCIBLE
+        if (_isInvincible)
+        {
+            Debug.Log("Invincible!!");
+            return;
+        }
+        #endregion
+
         #region BLOCKING
         if (ECurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
         {
@@ -264,11 +297,14 @@ public class PlayerController : BaseCharacterController
         Stat.HP -= actualDamage;
         
         if (Stat.HP <= 0)
+        {
             ChangeState(EPlayerState.DIE);
+        }
         else
+        {
             ChangeState(EPlayerState.HITTED);
+        }
         DamageText.ShowPopup(damage);
-        Managers.HitParticle.Play(transform.position);
         #endregion
     }
     public void ChangeState(EPlayerState eChangingState)
@@ -277,6 +313,27 @@ public class PlayerController : BaseCharacterController
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
     }
 
+    public void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType)
+    {
+        Managers.WorldSpaceEffect.PlayPlayerMovementEffect(eEffectType, MovementEffectTransform.position, ELookDir);
+    }
+
+    #region FORCE_FIELD
+    public void PlayEffectForceField()
+    {
+        _forceFieldEffect.PlayForceFieldEffect();
+    }
+
+    public void OnForceFieldAinimStart()
+    {
+        _isInvincible = true;
+    }
+
+    public void OnForceFieldAnimFullyPlayed()
+    {
+        _isInvincible = false;
+    }
+    #endregion
 
     protected override void InitStates()
     {
@@ -287,7 +344,9 @@ public class PlayerController : BaseCharacterController
         _states[(uint)EPlayerState.ROLL] = new player_states.Roll(this);
         _states[(uint)EPlayerState.JUMP] = new player_states.Jump(this);
         _states[(uint)EPlayerState.CLIMB] = new player_states.Climb(this);
-        _states[(uint)EPlayerState.FALL] = new player_states.Fall(this);
+        _states[(uint)EPlayerState.FALL] = new player_states.FallCanTwiceJump(this);
+        _states[(uint)EPlayerState.FALL_TO_TWICE_JUMP] = new player_states.FallToTwiceJump(this);
+        _states[(uint)EPlayerState.TWICE_JUMP_TO_FALL] = new player_states.TwiceJumpToFall(this);
         _states[(uint)EPlayerState.LAND] = new player_states.Land(this);
         _states[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1(this);
         _states[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2(this);
@@ -299,6 +358,9 @@ public class PlayerController : BaseCharacterController
         _states[(uint)EPlayerState.HITTED] = new player_states.Hitted(this);
         _states[(uint)EPlayerState.DIE] = new player_states.Die(this);
         _stateMachine.Init(this, _states[(uint)EPlayerState.IDLE]);
+
+        // 6.10 FallState에서도 이단점프 할 수 있도록 하기 위해 추가.
+        ((player_states.FallCanTwiceJump)_states[(uint)EPlayerState.FALL]).SubscribeTwiceJumpEventHandler((player_states.Jump)_states[(uint)EPlayerState.JUMP]);
     }
 
     private bool IsSkipThisFrame()

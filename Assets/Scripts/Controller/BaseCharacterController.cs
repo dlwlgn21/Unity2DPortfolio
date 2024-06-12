@@ -21,16 +21,18 @@ public abstract class BaseCharacterController : MonoBehaviour
     public UITextPopup StatusText { get; set; }
 
     public GameObject HeadLight { get; set; }
-    public GameObject AttackLight { get; set; }
 
-    public Vector3 CachedAttackPointLocalRightPos { get; set; }
-    public Vector3 CachedAttackPointLocalLeftPos { get; set; }
+
+    public AttackLightController AttackLightController { get; private set; }
+
+    private GameObject _attackLight;
+
     public Vector2 OriginalAttackLightLocalPos { get; private set; }
     protected abstract void InitStates();
 
-    public static string HIT_EFFECT_1_KEY = "Hit1";
-    public static string HIT_EFFECT_2_KEY = "Hit2";
-    public static string HIT_EFFECT_3_KEY = "Hit3";
+    public readonly static string HIT_EFFECT_1_KEY = "Hit1";
+    public readonly static string HIT_EFFECT_2_KEY = "Hit2";
+    public readonly static string HIT_EFFECT_3_KEY = "Hit3";
 
     private void Awake()
     {
@@ -38,59 +40,45 @@ public abstract class BaseCharacterController : MonoBehaviour
         InitStates();
     }
 
-
     public virtual void Init()
     {
-        RigidBody = gameObject.GetOrAddComponent<Rigidbody2D>();
-        Animator = gameObject.GetOrAddComponent<Animator>();
-        SpriteRenderer = gameObject.GetOrAddComponent<SpriteRenderer>();
-        NormalAttackPoint = transform.Find("NormalAttackPoint").gameObject.transform;
-        Debug.Assert(NormalAttackPoint != null);
-
-        // WorldSpaceUI 와 연동위해 다시 추가. 
-        CachedAttackPointLocalRightPos = NormalAttackPoint.localPosition;
-        Vector3 leftPos = NormalAttackPoint.localPosition;
-        leftPos.x = -leftPos.x;
-        CachedAttackPointLocalLeftPos = leftPos;
-
-        foreach (Animator aniamtor in gameObject.GetComponentsInChildren<Animator>())
+        if (RigidBody == null)
         {
-            if (aniamtor != null && aniamtor.gameObject.name != gameObject.name)
+            RigidBody = gameObject.GetOrAddComponent<Rigidbody2D>();
+            Animator = gameObject.GetOrAddComponent<Animator>();
+            SpriteRenderer = gameObject.GetOrAddComponent<SpriteRenderer>();
+            NormalAttackPoint = transform.Find("NormalAttackPoint").gameObject.transform;
+            Debug.Assert(NormalAttackPoint != null);
+
+            foreach (Animator aniamtor in gameObject.GetComponentsInChildren<Animator>())
             {
-                HitEffectAniamtor = aniamtor;
-                break;
+                if (aniamtor != null && aniamtor.gameObject.name != gameObject.name)
+                {
+                    HitEffectAniamtor = aniamtor;
+                    break;
+                }
             }
-        }
-        Debug.Assert(HitEffectAniamtor != null);
-        HitEffectAniamtor.gameObject.SetActive(false);
+            Debug.Assert(HitEffectAniamtor != null);
+            HitEffectAniamtor.gameObject.SetActive(false);
 
-        DamageText = Utill.GetComponentInChildrenOrNull<UITextPopup>(gameObject, "DamagePopup");
-        Debug.Assert(DamageText != null);
-        StatusText = Utill.GetComponentInChildrenOrNull<UITextPopup>(gameObject, "StatusPopup");
-        Debug.Assert(StatusText != null);
-        
-        FootDustParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "FootDustParticle");
-        Debug.Assert(FootDustParticle != null);
-        AttackLight = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "AttackLight").gameObject;
-        Debug.Assert(AttackLight != null);
-        OriginalAttackLightLocalPos = AttackLight.transform.localPosition;
-        AttackLight.SetActive(false);
+            DamageText = Utill.GetComponentInChildrenOrNull<UITextPopup>(gameObject, "DamagePopup");
+            Debug.Assert(DamageText != null);
+            StatusText = Utill.GetComponentInChildrenOrNull<UITextPopup>(gameObject, "StatusPopup");
+            Debug.Assert(StatusText != null);
 
-        HeadLight = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "HeadLight").gameObject;
-        Debug.Assert(HeadLight != null);
-    }
+            FootDustParticle = Utill.GetComponentInChildrenOrNull<ParticleSystem>(gameObject, "FootDustParticle");
+            Debug.Assert(FootDustParticle != null);
 
-    public void RotateAttackLightAccodingCharacterLookDir()
-    {
-        if (ELookDir == ECharacterLookDir.RIGHT)
-        {
-            AttackLight.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            AttackLight.transform.localPosition = OriginalAttackLightLocalPos;
-        }
-        else
-        {
-            AttackLight.transform.localRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
-            AttackLight.transform.localPosition = new Vector2(-OriginalAttackLightLocalPos.x, OriginalAttackLightLocalPos.y);
+            // AttackLight
+            _attackLight = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "AttackLight").gameObject;
+            Debug.Assert(_attackLight != null);
+            OriginalAttackLightLocalPos = _attackLight.transform.localPosition;
+            AttackLightController = _attackLight.GetComponent<AttackLightController>();
+            Debug.Assert(AttackLightController != null);
+            AttackLightController.Init();
+
+            HeadLight = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "HeadLight").gameObject;
+            Debug.Assert(HeadLight != null);
         }
     }
 
@@ -98,6 +86,6 @@ public abstract class BaseCharacterController : MonoBehaviour
     {
         if (NormalAttackPoint == null)
             return;
-        Gizmos.DrawWireSphere(NormalAttackPoint.position, 1f);
+        Gizmos.DrawWireSphere(NormalAttackPoint.position, NormalAttackRange);
     }
 }

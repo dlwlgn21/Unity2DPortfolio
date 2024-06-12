@@ -17,9 +17,12 @@ public class TutorialScene : BaseScene
         Managers.HitParticle.Init();
         Managers.MonsterPool.Init();
         Managers.SkillPool.Init();
+        Managers.Skill.Init();
+        Managers.WorldSpaceEffect.Init();
         Managers.Pause.Init();
         Managers.Dialog.Init();
         Managers.CamShake.Init();
+        Managers.CamManager.Init();
     }
     public override void Clear()
     {

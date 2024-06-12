@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,11 @@ public class BackAttackTutorialEvent : TutorialEvent
 {
     private int _playerBackAttackCount = 0;
     private const int BACK_ATTACK_TRANING_PASS_COUNT = 3;
-    private bool _isMonsterChangeStateToHitted = false;
+    private const string BACK_ATTACK_STATUS_STRING = "╧И╬Нец!";
+
+    private bool _isSucessBackAttack = false;
+    private const float RECOUNTING_TIME = 2f;
+    private float _recountingTimer = RECOUNTING_TIME;
     public override void OnDialogEnd()
     {
         base.Init();
@@ -18,16 +23,25 @@ public class BackAttackTutorialEvent : TutorialEvent
     {
         if (_isTutorialStart)
         {
-            if (!_isMonsterChangeStateToHitted && _mc.ECurrentState == EMonsterState.HITTED && _pc.ELookDir == _mc.ELookDir)
+            if (_isSucessBackAttack)
             {
-                ++_playerBackAttackCount;
-                _tutorialManager.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
-                _isMonsterChangeStateToHitted = true;
+                _recountingTimer -= Time.deltaTime;
+                if (_recountingTimer < 0f)
+                {
+                    _recountingTimer = RECOUNTING_TIME;
+                    _isSucessBackAttack = false;
+                }
             }
-            if (_mc.ECurrentState != EMonsterState.HITTED)
+            if (!_isSucessBackAttack && _pc.ELookDir == _mc.ELookDir && _pc.ECurrentState == EPlayerState.NORMAL_ATTACK_1)
             {
-                _isMonsterChangeStateToHitted = false;
+                if (_pc.StatusText.Text.text == BACK_ATTACK_STATUS_STRING)
+                {
+                    ++_playerBackAttackCount;
+                    _tutorialManager.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
+                    _isSucessBackAttack = true;
+                }
             }
+
 
             if (_playerBackAttackCount >= BACK_ATTACK_TRANING_PASS_COUNT)
             {

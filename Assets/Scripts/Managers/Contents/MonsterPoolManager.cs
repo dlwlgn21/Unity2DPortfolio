@@ -10,16 +10,15 @@ using UnityEngine.Rendering;
 public class MonsterPoolManager
 {
     public const int MAX_MONSTER_COUNT = 5;
-    private Queue<GameObject> _wardens = new Queue<GameObject>(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _wardens      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _cagedShokers = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _blasters = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _hSlicers = new Queue<GameObject>(MAX_MONSTER_COUNT);
+    private Queue<GameObject> _blasters     = new Queue<GameObject>(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _hSlicers     = new Queue<GameObject>(MAX_MONSTER_COUNT);
 
     private GameObject _oriWarden;
     private GameObject _oriBlaster;
     private GameObject _oriCagedShokcer;
     private GameObject _oriHSlicer;
-    
     public void Init()
     {
         if (_oriWarden == null)
@@ -86,10 +85,7 @@ public class MonsterPoolManager
                 break;
         }
         Debug.Assert(retGo != null);
-        InitForRespawn(retGo);
-        retGo.transform.position = spawnPos;
-        retGo.SetActive(true);
-        retGo.GetComponent<BaseMonsterController>().SpawnEffectAnimator.Play("SpawnEffect", -1, 0f);
+        InitForRespawn(retGo, spawnPos);
         return retGo;
     }
 
@@ -140,12 +136,16 @@ public class MonsterPoolManager
         return go;
     }
 
-    private void InitForRespawn(GameObject go)
+    private void InitForRespawn(GameObject go, Vector2 spawnPos)
     {
         Debug.Assert(go != null);
-        BaseMonsterController mc;
-        mc = go.GetComponent<BaseMonsterController>();
-        mc.InitStatForRespawn();
-        mc.HealthBar.transform.localScale = mc.OriginalHpBarScale;
+        go.transform.position = spawnPos;
+        go.SetActive(true);
+        BaseMonsterController mc = go.GetComponent<BaseMonsterController>();
+        mc.InitForRespawn();
+        mc.RigidBody.WakeUp();
+
+        mc.SpawnEffectController.gameObject.SetActive(true);
+        mc.SpawnEffectController.PlaySpawnEffect(spawnPos);
     }
 }

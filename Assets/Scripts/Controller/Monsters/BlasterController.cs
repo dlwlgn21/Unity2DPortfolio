@@ -15,6 +15,7 @@ public class BlasterController : BaseMonsterController
     protected override void InitStat()
     {
         Stat.Init(EMonsterNames.Blaster);
+        AwarenessRangeToAttack = 5f;
     }
     protected override void InitStates()
     {

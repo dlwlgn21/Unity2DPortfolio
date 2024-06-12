@@ -1,18 +1,16 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class UITextPopup : MonoBehaviour
 {
-    private TextMeshPro _text;
+    public TextMeshPro Text { get; private set; }
     private RectTransform _rectTransform;
     private Vector3 _originalScale;
     private void Start()
     {
-        _text = GetComponent<TextMeshPro>();
-        Debug.Assert(_text != null);
+        Text = GetComponent<TextMeshPro>();
+        Debug.Assert(Text != null);
         _rectTransform = GetComponent<RectTransform>();
         Debug.Assert(_rectTransform != null);
         _originalScale = _rectTransform.localScale;
@@ -21,8 +19,8 @@ public class UITextPopup : MonoBehaviour
     public void ShowPopup(int damage)
     {
         _rectTransform.localScale = _originalScale;
-        _text.text = damage.ToString();
-        _text.color = Color.white;
+        Text.text = damage.ToString();
+        Text.color = Color.white;
         _rectTransform
             .DOScale(_originalScale.x + 0.2f, 0.5f)
             .SetEase(Ease.OutElastic)
@@ -32,8 +30,8 @@ public class UITextPopup : MonoBehaviour
     {
         Debug.Log("UITextPopup.ShowBackAttackPopup()!!");
         _rectTransform.localScale = _originalScale;
-        _text.color = Color.red;
-        _text.text = damage.ToString();
+        Text.color = Color.red;
+        Text.text = damage.ToString();
         _rectTransform
             .DOScale(_originalScale.x + 0.4f, 0.5f)
             .SetEase(Ease.OutElastic)
@@ -42,8 +40,8 @@ public class UITextPopup : MonoBehaviour
     public void ShowPopup(string status)
     {
         _rectTransform.localScale = _originalScale;
-        _text.color = Color.white;
-        _text.text = status;
+        Text.color = Color.white;
+        Text.text = status;
         _rectTransform
             .DOScale(_originalScale.x + 0.2f, 0.5f)
             .SetEase(Ease.OutElastic)

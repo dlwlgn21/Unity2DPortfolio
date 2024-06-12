@@ -25,7 +25,7 @@ public class PlayerSkillPoolManager
         if (_bombs.Count > 0)
         {
             retGo = _bombs.Dequeue();
-            retGo.GetComponent<TestProjectile>().Init(spawnPos);
+            retGo.GetComponent<KnockbackBoom>().Init(spawnPos);
         }
         else
         {

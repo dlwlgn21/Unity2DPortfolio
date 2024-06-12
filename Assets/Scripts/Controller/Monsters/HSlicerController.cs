@@ -15,6 +15,7 @@ public class HSlicerController : BaseMonsterController
     protected override void InitStat()
     {
         Stat.Init(EMonsterNames.HeabySlicer);
+        AwarenessRangeToAttack = 2.5f;
     }
     protected override void InitStates()
     {

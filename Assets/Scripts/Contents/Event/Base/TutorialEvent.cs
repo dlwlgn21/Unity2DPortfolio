@@ -19,7 +19,7 @@ public abstract class TutorialEvent : MonoBehaviour
         _mc = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<BaseMonsterController>();
         _mc.gameObject.GetComponent<MonsterStat>().SetHPForTutorialAndAttackToZero();
         _mc.HealthBar.SetFullHpBarRatio();
-        _mc.ChangeState(EMonsterState.SPAWN);
+        _mc.ChangeState(EMonsterState.IDLE);
 
         _camManager = GameObject.FindGameObjectWithTag("CamManager").GetComponent<TutorialCameraManager>();
         _tutorialManager = GameObject.FindGameObjectWithTag("TutorialManager").GetComponent<TutorialManager>();

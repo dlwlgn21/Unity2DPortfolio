@@ -19,6 +19,7 @@ public class TutorialCameraManager : MonoBehaviour
     public static float BACK_ATTACK_TUTORIAL_X_POS = 48f;
     public static float BLOCK_TUTORIAL_X_POS = 64f;
     public void SwitchCameraToMain()
+
     {
         _mainCam.enabled = true;
         _roomCam.enabled = false;

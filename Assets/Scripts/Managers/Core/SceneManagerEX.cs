@@ -1,21 +1,36 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 public class SceneManagerEX 
 {
     public define.ESceneType ECurrentScene { get; private set; }
-
+    private GameObject _fadeout;
+    private Image _fadeImg;
+    private const float FADE_OUT_TIME = 3f;
     public void Init()
     {
         ECurrentScene = define.ESceneType.MAIN_MENU;
+        if (_fadeout == null)
+        {
+            GameObject fadeOut = Managers.Resources.Load<GameObject>("Prefabs/UI/UIFadeOut");
+            Debug.Assert(fadeOut != null);
+            _fadeout = Object.Instantiate(fadeOut);
+            _fadeout.name = "UIFadeOut";
+            Object.DontDestroyOnLoad(_fadeout);
+            _fadeImg = _fadeout.GetComponentInChildren<Image>();
+            _fadeout.SetActive(false);
+        }
     }
     public void LoadScene(define.ESceneType eType)
     {
         GameObject.Find("@Scene").GetComponent<BaseScene>().Clear();
         ECurrentScene = eType;
         SceneManager.LoadScene((int)eType);
+        _fadeout.SetActive(true);
+        _fadeImg.DOFade(0f, FADE_OUT_TIME).SetEase(Ease.InOutExpo).OnComplete(OnFadeOutCompleted);
     }
 
     public define.ESceneType GetCurrentScene()
@@ -39,5 +54,9 @@ public class SceneManagerEX
         Debug.Assert(retType != define.ESceneType.COUNT);
         return retType;
     }
-
+    public void OnFadeOutCompleted()
+    {
+        _fadeImg.color = Color.black;
+        _fadeout.SetActive(false);
+    }
 }

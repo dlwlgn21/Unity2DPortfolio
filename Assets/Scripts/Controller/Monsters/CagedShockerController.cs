@@ -15,6 +15,7 @@ public class CagedShockerController : BaseMonsterController
     protected override void InitStat()
     {
         Stat.Init(EMonsterNames.CagedShoker);
+        AwarenessRangeToAttack = 2.5f;
     }
     protected override void InitStates()
     {

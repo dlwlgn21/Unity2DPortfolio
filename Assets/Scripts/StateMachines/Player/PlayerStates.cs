@@ -1,7 +1,7 @@
 using define;
 using DG.Tweening;
+using System;
 using UnityEngine;
-
 
 namespace player_states
 {
@@ -10,28 +10,29 @@ namespace player_states
     {
         protected float _horizontalMove;
         protected float _groundCheckDistance = 0.2f;
-        public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.GROUND) | (1 << (int)define.EColliderLayer.PLATFORM);
+        public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.PLATFORM) | (1 << (int)define.EColliderLayer.LEDGE_CLIMB);
+        private readonly static Vector3 S_LEFT_ROTATION_VECTOR = new Vector3(0f, 180f, 0f);
+        private readonly static Vector3 S_RIGHT_ROTATION_VECTOR = new Vector3(0f, 0f, 0f);
         public BasePlayerState(PlayerController controller) : base(controller) { }
+        
         public override void Excute() { ProcessHorizontalInput(); }
         public virtual void ProcessKeyboardInput() { }
 
         public void FlipSpriteAccodingPlayerInput()
         {
+
+            // TODO : 이방식 그냥 horizontalMoveInput 으로 바꿔도 되는지 생각해보자.
             if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.RIGHT)
             {
-                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalLeftPos;
-                _entity.LaunchPoint.localPosition = _entity.CachedLaunchPointLocalLeftPos;
                 _entity.ELookDir = ECharacterLookDir.LEFT;
-                _entity.SpriteRenderer.flipX = true;
+                _entity.transform.localRotation = Quaternion.Euler(S_LEFT_ROTATION_VECTOR);
                 _entity.CamFollowObject.CallTurn();
 
             }
             else if (Input.GetKey(KeyCode.RightArrow) && _entity.ELookDir == ECharacterLookDir.LEFT)
             {
-                _entity.NormalAttackPoint.localPosition = _entity.CachedAttackPointLocalRightPos;
-                _entity.LaunchPoint.localPosition = _entity.CachedLaunchPointLocalRightPos;
                 _entity.ELookDir = ECharacterLookDir.RIGHT;
-                _entity.SpriteRenderer.flipX = false;
+                _entity.transform.localRotation = Quaternion.Euler(S_RIGHT_ROTATION_VECTOR);
                 _entity.CamFollowObject.CallTurn();
             }
         }
@@ -331,17 +332,38 @@ namespace player_states
 
     }
 
-    public class Jump : BasePlayerState
+    public abstract class InAir : BasePlayerState
     {
-        public Jump(PlayerController controller) : base(controller) { }
+        public static float sFirstJumpForce = 9f;
+        public static float sSecondJumpForce = 5f;
+        public static float sFallToTwiceJumpForce = 12f;
+        public InAir(PlayerController controller) : base(controller)  {  }
+
+        protected void ChangeVelocity()
+        {
+            Vector2 oriVelocity = _entity.RigidBody.velocity;
+            _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
+        }
+        protected void DoJump(float upForce)
+        {
+            ChangeVelocity();
+            _entity.RigidBody.AddForce(Vector2.up * upForce, ForceMode2D.Impulse);
+            _entity.PlayMovementEffectAnimation(EPlayerMovementEffect.JUMP);
+        }
+    }
+
+
+    public class Jump : InAir
+    {
+        public Action TwiceJumpEventHandler;
 
         private bool _isInAir;
         private bool _isTwiceJump;
         private bool _isJumpKeyDownTwice;
 
-        private const float FIRST_JUMP_FORCE = 9f;
-        private const float SECOND_JUMP_FORCE = 5f;
-        
+        public Jump(PlayerController controller) : base(controller) { }
+        ~Jump() { TwiceJumpEventHandler = null; }
+
         public override void ProcessKeyboardInput()
         {
             if (_isJumpKeyDownTwice)
@@ -358,8 +380,6 @@ namespace player_states
             _isInAir = false;
             _isTwiceJump = false;
             _isJumpKeyDownTwice = false;
-            _entity.JumpParticle.Play();
-
         }
         public override void FixedExcute()
         {
@@ -367,19 +387,26 @@ namespace player_states
             if (_isTwiceJump)
             {
                 _entity.Animator.Play("Jump", -1, 0f);
-                DoJump(SECOND_JUMP_FORCE);
+                DoJump(sSecondJumpForce);
                 _isTwiceJump = false;
+                // 6.10일 FallState에서도 이단점프 가능하게 하기 위해서 추가한 부분.
+                if (TwiceJumpEventHandler != null)
+                {
+                    TwiceJumpEventHandler.Invoke();
+                }
             }
             if (!_isInAir)
             {
-                DoJump(FIRST_JUMP_FORCE);
+                DoJump(sFirstJumpForce);
                 _isInAir = true;
             }
             else
             {
                 ChangeVelocity();
                 if (_entity.RigidBody.velocity.y <= 0f)
+                {
                     _entity.ChangeState(EPlayerState.FALL);
+                }
             }
         }
         public override void Excute()
@@ -393,20 +420,160 @@ namespace player_states
             ProcessKeyboardInput();
             FlipSpriteAccodingPlayerInput();
         }
-        private void ChangeVelocity()
-        {
-            Vector2 oriVelocity = _entity.RigidBody.velocity;
-            _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
-        }
-        private void DoJump(float upForce)
-        {
+    }
 
+    public abstract class BaseFall : InAir
+    {
+        protected Transform _ledgeCheckPoint;
+        protected LayerMask _ledgeLayerMask = 1 << (int)define.EColliderLayer.LEDGE_CLIMB;
+        protected ECharacterLookDir _eCharacterLookDir;
+        protected float _extraHeight = 0.2f;
+        protected BaseFall(PlayerController controller) : base(controller) { }
+        public override void Enter()
+        {
+            PlayAnimation(EPlayerState.FALL);
+            if (_ledgeCheckPoint == null)
+            {
+                _ledgeCheckPoint = _entity.LedgeCheckPoint;
+            }
+            _eCharacterLookDir = _entity.ELookDir;
+        }
+        public override void FixedExcute()
+        {
             ChangeVelocity();
-            _entity.RigidBody.AddForce(Vector2.up * upForce, ForceMode2D.Impulse);
+        }
+        public override void Excute()
+        {
+            base.Excute();
+            Bounds bound = _entity.BoxCollider.bounds;
+            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, _extraHeight, sGroundLayerMask);
+            BoxCast2DDebugDraw(bound.center, bound.size, _extraHeight, hit);
+            FlipSpriteAccodingPlayerInput();
+            if (hit.collider != null)
+            {
+                _entity.ChangeState(EPlayerState.LAND);
+                return;
+            }
+
+            if (IsGrabLedge())
+            {
+                _entity.ChangeState(EPlayerState.CLIMB);
+            }
         }
 
+        public bool IsGrabLedge()
+        {
+            float dist = 0.75f;
+            RaycastHit2D hit;
+            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
+            {
+                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.right, dist, _ledgeLayerMask);
+                Debug.DrawRay(_ledgeCheckPoint.position, Vector2.right * dist, UnityEngine.Color.red);
+            }
+            else
+            {
+                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.left, dist, _ledgeLayerMask);
+                Debug.DrawRay(_ledgeCheckPoint.position, Vector2.left * dist, UnityEngine.Color.red);
+            }
+            if (hit.collider != null)
+            {
+                return true;
+            }
+            return false;
+        }
 
     }
+
+    public class FallCanTwiceJump : BaseFall
+    {
+        private bool _isAlreadyTwiceJump = false;
+        private bool _isHaveToTwiceJump = false;
+        public FallCanTwiceJump(PlayerController controller) : base(controller)  { }
+        public void SubscribeTwiceJumpEventHandler(Jump jumpState)
+        {
+            jumpState.TwiceJumpEventHandler += OnPlayerTwiceJumpInJumpState;
+        }
+        public void OnPlayerTwiceJumpInJumpState()
+        {
+            _isAlreadyTwiceJump = true;
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            _isHaveToTwiceJump = false;
+        }
+        public override void ProcessKeyboardInput()
+        {
+            if (_isAlreadyTwiceJump && !_isHaveToTwiceJump)
+            {
+                return;
+            }
+
+            if (Input.GetKeyDown(PlayerController.KeyJump))
+            {
+                _isHaveToTwiceJump = true;
+                DoJump(sFallToTwiceJumpForce);
+            }
+        }
+
+        public override void Excute()
+        {
+            base.Excute();
+            Bounds bound = _entity.BoxCollider.bounds;
+            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, _extraHeight, sGroundLayerMask);
+            BoxCast2DDebugDraw(bound.center, bound.size, _extraHeight, hit);
+            FlipSpriteAccodingPlayerInput();
+            if (_isHaveToTwiceJump)
+            {
+                _entity.ChangeState(EPlayerState.FALL_TO_TWICE_JUMP);
+                return;
+            }
+
+            ProcessKeyboardInput();
+            if (hit.collider != null)
+            {
+                _entity.ChangeState(EPlayerState.LAND);
+                return;
+            }
+
+            if (IsGrabLedge())
+            {
+                _entity.ChangeState(EPlayerState.CLIMB);
+            }
+        }
+
+        public override void Exit()
+        {
+            _isAlreadyTwiceJump = false;
+        }
+    }
+
+    public class FallToTwiceJump : BasePlayerState
+    {
+        public FallToTwiceJump(PlayerController controller) : base(controller) {}
+
+        public override void Enter()
+        {
+            PlayAnimation(EPlayerState.JUMP);
+        }
+
+        public override void FixedExcute()
+        {
+            if (_entity.RigidBody.velocity.y < 0f)
+            {
+                _entity.ChangeState(EPlayerState.TWICE_JUMP_TO_FALL);
+            }
+        }
+    }
+
+    public class TwiceJumpToFall : BaseFall
+    {
+        public TwiceJumpToFall(PlayerController controller) : base(controller) {}
+    }
+
+
+
 
     public class Climb : BasePlayerState
     {
@@ -444,63 +611,6 @@ namespace player_states
                 _entity.transform.DOLocalMove(new Vector3(pos.x - X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME);
         }
     }
-    public class Fall : BasePlayerState
-    {
-        public Fall(PlayerController controller) : base(controller) { }
-
-        Transform _ledgeCheckPoint;
-        LayerMask _ledgeLayerMask = 1 << (int)define.EColliderLayer.LEDGE_CLIMB;
-        ECharacterLookDir _eCharacterLookDir;
-        float _extraHeight = 0.2f;
-
-        public override void Enter()
-        {
-            PlayAnimation(EPlayerState.FALL);
-            if (_ledgeCheckPoint == null)
-                _ledgeCheckPoint = _entity.LedgeCheckPoint;
-            _eCharacterLookDir = _entity.ELookDir;
-        }
-        public override void FixedExcute()
-        {
-            Vector2 oriVelocity = _entity.RigidBody.velocity;
-            _entity.RigidBody.velocity = new Vector2(_horizontalMove * _entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelocity.y);
-        }
-        public override void Excute()
-        {
-            base.Excute();
-            Bounds bound = _entity.BoxCollider.bounds;
-            var hit = Physics2D.BoxCast(bound.center, bound.size, 0f, Vector2.down, _extraHeight, sGroundLayerMask);
-            BoxCast2DDebugDraw(bound.center, bound.size, _extraHeight, hit);
-            FlipSpriteAccodingPlayerInput();
-            if (hit.collider != null)
-            {
-                _entity.ChangeState(EPlayerState.LAND);
-                return;
-            }
-
-            if (IsGrabLedge())
-                _entity.ChangeState(EPlayerState.CLIMB);
-        }
-
-        public bool IsGrabLedge()
-        {
-            float dist = 0.75f;
-            RaycastHit2D hit;
-            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
-            {
-                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.right, dist, _ledgeLayerMask);
-                Debug.DrawRay(_ledgeCheckPoint.position, Vector2.right * dist, UnityEngine.Color.red);
-            }
-            else
-            {
-                hit = Physics2D.Raycast(_ledgeCheckPoint.position, Vector2.left, dist, _ledgeLayerMask);
-                Debug.DrawRay(_ledgeCheckPoint.position, Vector2.left * dist, UnityEngine.Color.red);
-            }
-            if (hit.collider != null)
-                return true;
-            return false;
-        }
-    }
 
     public class Land : BasePlayerState
     {
@@ -509,6 +619,7 @@ namespace player_states
         {
             PlayAnimation(EPlayerState.LAND);
             _entity.FootDustParticle.Play();
+            _entity.PlayMovementEffectAnimation(EPlayerMovementEffect.LAND);
         }
         public override void Excute()
         {
@@ -523,39 +634,54 @@ namespace player_states
     }
     public class Roll : BasePlayerState
     {
+        private const float HORIZONTAL_ROLL_FORCE = 7.5f;
+        private const float VERTICAL_ROLL_FORCE = 2f;
         public Roll(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eLookDir;
-        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.GROUND) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB);
-        public void OnRollAnimFullyPlayed(PlayerController _entity) { _entity.ChangeState(EPlayerState.RUN); }
+        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB);
+        public void OnRollAnimFullyPlayed() { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {
             _eLookDir = _entity.ELookDir;
             _entity.FootDustParticle.Play();
             Managers.Sound.Play(DataManager.SFX_PLAYER_ROLLING_PATH);
-
             PlayAnimation(EPlayerState.ROLL);
+            _entity.RigidBody.velocity = Vector2.zero;
+            if (_eLookDir == ECharacterLookDir.RIGHT)
+            {
+                _entity.RigidBody.AddForce(new Vector2(HORIZONTAL_ROLL_FORCE, VERTICAL_ROLL_FORCE), ForceMode2D.Impulse);
+            }
+            else
+            {
+                _entity.RigidBody.AddForce(new Vector2(-HORIZONTAL_ROLL_FORCE, VERTICAL_ROLL_FORCE), ForceMode2D.Impulse);
+            }
             Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS, (int)EColliderLayer.PLAYER);
         }
         public override void FixedExcute()
         {
-            Vector2 oriVelo = _entity.RigidBody.velocity;
-            float speed = _entity.Stat.MoveSpeed * 1.5f;
-            if (_eLookDir == ECharacterLookDir.RIGHT)
-                _entity.RigidBody.velocity = new Vector2(speed * Time.fixedDeltaTime, oriVelo.y);
-            else
-                _entity.RigidBody.velocity = new Vector2(speed * -Time.fixedDeltaTime, oriVelo.y);
+            // 6.5 AddForce 방식으로 로 바꿈.
+            //Vector2 oriVelo = _entity.RigidBody.velocity;
+            //float speed = _entity.Stat.MoveSpeed * 1.5f;
+            //if (_eLookDir == ECharacterLookDir.RIGHT)
+            //    _entity.RigidBody.velocity = new Vector2(speed * Time.fixedDeltaTime, oriVelo.y);
+            //else
+            //    _entity.RigidBody.velocity = new Vector2(speed * -Time.fixedDeltaTime, oriVelo.y);
         }
 
         public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, _layerMask); }
     }
     public abstract class NormalAttackState : BasePlayerState
     {
-        public NormalAttackState(PlayerController controller) : base(controller) { }
+        static readonly protected Vector2 S_RIGHT_MOVE_FORCE = new Vector2(5f, 2f); 
+        static readonly protected Vector2 S_LEFT_MOVE_FORCE = new Vector2(-S_RIGHT_MOVE_FORCE.x, S_RIGHT_MOVE_FORCE.y); 
+
         protected ECharacterLookDir _eLookDir;
         protected bool _isGoToNextAttack;
         protected Transform _attackPoint;
         protected int _layerMask = 1 << ((int)define.EColliderLayer.MONSTERS);
+        protected EPlayerNoramlAttackType _eAttackType;
+        public NormalAttackState(PlayerController controller) : base(controller) { }
         public void DamageHittedMonsters()
         {
             Collider2D[] monsters = Physics2D.OverlapCircleAll(_attackPoint.position, 1f, _layerMask);
@@ -566,7 +692,7 @@ namespace player_states
             {
                 BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
                 Debug.Assert(controller != null);
-                controller.HittedByPlayerNormalAttack();
+                controller.HittedByPlayerNormalAttack(_entity, _eAttackType);
             }
         }
         public abstract void OnAttackAnimFullyPlayed();
@@ -576,20 +702,27 @@ namespace player_states
             _attackPoint = _entity.NormalAttackPoint;
             _eLookDir = _entity.ELookDir;
             _isGoToNextAttack = false;
-            _entity.AttackLight.SetActive(true);
-            _entity.RotateAttackLightAccodingCharacterLookDir();
+
+            // AttackLight 추가된 파트
+            _entity.AttackLightController.TurnOnLight();
+            
+
+            //_entity.RotateAttackLightAccodingCharacterLookDir();
             SetVelocityToZero();
         }
 
         public override void Exit()
         {
-            _entity.AttackLight.SetActive(false);
+            if (!_isGoToNextAttack)
+            {
+                _entity.AttackLightController.TurnOffLightGradually();
+            }
         }
 
         public override void ProcessKeyboardInput()
         {
             float currAnimTime = _entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            if (currAnimTime >= 0.3f && currAnimTime <= 0.9f)
+            if (currAnimTime >= 0.3f && currAnimTime <= 1f)
             {
                 if (Input.GetKey(PlayerController.KeyAttack))
                 {
@@ -601,7 +734,10 @@ namespace player_states
 
     public class NormalAttack1 : NormalAttackState
     {
-        public NormalAttack1(PlayerController controller) : base(controller) { }
+        public NormalAttack1(PlayerController controller) : base(controller) 
+        {
+            _eAttackType = EPlayerNoramlAttackType.ATTACK_1;
+        }
         public override void OnAttackAnimFullyPlayed()
         {
             if (_isGoToNextAttack)
@@ -618,13 +754,28 @@ namespace player_states
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_1);
             Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
+
+            if (_entity.ELookDir == ECharacterLookDir.LEFT)
+            {
+                _entity.RigidBody.AddForce(S_LEFT_MOVE_FORCE, ForceMode2D.Impulse);
+            }
+            else
+            {
+                _entity.RigidBody.AddForce(S_RIGHT_MOVE_FORCE, ForceMode2D.Impulse);
+            }
+            _entity.PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_1);
         }
         public override void Excute() { ProcessKeyboardInput(); }
+
+
     }
 
     public class NormalAttack2 : NormalAttackState
     {
-        public NormalAttack2(PlayerController controller) : base(controller) { }
+        public NormalAttack2(PlayerController controller) : base(controller) 
+        {
+            _eAttackType = EPlayerNoramlAttackType.ATTACK_2;
+        }
         public override void OnAttackAnimFullyPlayed()
         {
             if (_isGoToNextAttack)
@@ -649,10 +800,13 @@ namespace player_states
 
     public class NormalAttack3 : NormalAttackState
     {
-        public NormalAttack3(PlayerController controller) : base(controller) { }
+        public NormalAttack3(PlayerController controller) : base(controller) 
+        {
+            _eAttackType = EPlayerNoramlAttackType.ATTACK_3;
+        }
         public override void OnAttackAnimFullyPlayed()
         {
-            _entity.ChangeState(EPlayerState.RUN);
+            _entity.ChangeState(EPlayerState.IDLE);
         }
         public override void Enter()
         {
@@ -661,6 +815,11 @@ namespace player_states
             Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
         }
         public override void Excute() { }
+
+        public override void Exit()
+        {
+            _entity.AttackLightController.TurnOffLightGradually();
+        }
     }
 
     public class CastLaunch : BasePlayerState
@@ -711,7 +870,8 @@ namespace player_states
     public class BlockSuccess : BasePlayerState
     {
         bool _isKnockbackFlag;
-        float _knockbackForce = 3f;
+        private const float KNOCKBACK_FORCE = 3f;
+
         public BlockSuccess(PlayerController controller) : base(controller) { }
 
         public override void Enter()
@@ -727,9 +887,13 @@ namespace player_states
             if (!_isKnockbackFlag)
             {
                 if (_entity.ELookDir == define.ECharacterLookDir.LEFT)
-                    _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
+                {
+                    _entity.RigidBody.AddForce(Vector2.right * KNOCKBACK_FORCE, ForceMode2D.Impulse);
+                }
                 else
-                    _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
+                {
+                    _entity.RigidBody.AddForce(Vector2.left * KNOCKBACK_FORCE, ForceMode2D.Impulse);
+                }
                 _isKnockbackFlag = true;
             }
         }
@@ -737,20 +901,27 @@ namespace player_states
         public override void Excute()
         {
             if (IsAnimEnd())
+            {
                 _entity.ChangeState(EPlayerState.IDLE);
+            }
         }
     }
 
     public class Hitted : BasePlayerState
     {
+        private const float KNOCKBACK_FORCE = 2f;
         public Hitted(PlayerController controller) : base(controller) { }
 
-        public void OnHittedAnimFullyPlayed() { _entity.ChangeState(EPlayerState.RUN); }
+        public void OnHittedAnimFullyPlayed() 
+        {
+            Debug.Log("Hit Anim End!!");
+            _entity.ChangeState(EPlayerState.RUN); 
+        }
         public override void Enter()
         {
             if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
                 _entity.HitEffectAniamtor.gameObject.SetActive(true);
-            int randIdx = Random.Range(0, 1);
+            int randIdx = UnityEngine.Random.Range(0, 1);
             if (randIdx % 2 == 0)
             {
                 Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
@@ -759,10 +930,23 @@ namespace player_states
             {
                 Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
             }
+
+            if (_entity.ELookDir == define.ECharacterLookDir.LEFT)
+            {
+                _entity.RigidBody.AddForce(new Vector2(KNOCKBACK_FORCE, KNOCKBACK_FORCE), ForceMode2D.Impulse);
+            }
+            else
+            {
+                _entity.RigidBody.AddForce(new Vector2(-KNOCKBACK_FORCE, KNOCKBACK_FORCE), ForceMode2D.Impulse);
+            }
+
+
             PlayAnimation(EPlayerState.HITTED);
             Managers.CamShake.CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
+            _entity.PlayEffectForceField();
             // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.
             //_entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
+            Managers.TimeManager.OnPlayerHittedByMonster();
         }
         public override void Excute()
         {

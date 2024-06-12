@@ -16,8 +16,6 @@ public class MainMenuManager
     Button _settingBtn;
     Button _exitBtn;
 
-    GameObject _fadeout;
-    Image _fadeImg;
     public void Init()
     {
         if (_mainMenu == null)
@@ -34,26 +32,12 @@ public class MainMenuManager
             _exitBtn.onClick.AddListener(OnExitBtnClicked);
             Object.DontDestroyOnLoad(_mainMenu);
         }
-
-
-        if (_fadeout == null)
-        {
-            GameObject fadeOut = Managers.Resources.Load<GameObject>("Prefabs/UI/UIFadeOut");
-            Debug.Assert(fadeOut != null);
-            _fadeout = Object.Instantiate(fadeOut);
-            _fadeout.name = "UIFadeOut";
-            Object.DontDestroyOnLoad(_fadeout);
-            _fadeImg = _fadeout.GetComponentInChildren<Image>();
-            _fadeout.SetActive(false);
-        }
         _mainMenu.SetActive(true);
         EventSystem.current.SetSelectedGameObject(_newGameBtn.gameObject);
     }
     public void OnNewGameBtnClicked()
     {
         _isNewGameBtnClicked = true;
-        _fadeout.SetActive(true);
-        _fadeImg.DOFade(0, 3.0f).SetEase(Ease.InOutExpo).OnComplete(OnFadeOutCompleted);
         _mainMenu.SetActive(false);
         _isNewGameBtnClicked = false;
         Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
@@ -72,9 +56,5 @@ public class MainMenuManager
         Application.Quit();
     }
 
-    public void OnFadeOutCompleted()
-    {
-       _fadeImg.color = Color.black; 
-       _fadeout.SetActive(false);
-    }
+
 }
