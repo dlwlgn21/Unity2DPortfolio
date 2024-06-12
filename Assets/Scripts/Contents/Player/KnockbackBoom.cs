@@ -14,7 +14,7 @@ public class KnockbackBoom : MonoBehaviour
 
     private float _lifeTimer = LIFE_TIME;
     private bool _isValidCollided = false;
-    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MONSTERS);
+    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MONSTERS_BODY);
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -59,7 +59,7 @@ public class KnockbackBoom : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.MONSTERS)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.MONSTERS_BODY)
         {
             ProcessValidCollision();
         }

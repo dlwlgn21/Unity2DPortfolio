@@ -35,6 +35,8 @@ public class PlayerController : BaseCharacterController
 {
     public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new Vector2(2f, 1f);
     public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new Vector2(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
+    public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new Vector2(4f, 2f);
+
     public readonly static float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
     public readonly static float NORMAL_ATTACK_3_FORCE_COEFF = 1.2f;
     public readonly static float BACK_ATTACK_FORCE_COEFF = 1.5f;
@@ -190,9 +192,6 @@ public class PlayerController : BaseCharacterController
 
 
     #region ANIM_CALL_BACK
-    public void OnNoramlAttack1ValidSlashed()       { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).DamageHittedMonsters(); }
-    public void OnNoramlAttack2ValidSlashed()       { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).DamageHittedMonsters(); }
-    public void OnNoramlAttack3ValidSlashed()       { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).DamageHittedMonsters(); }
     public void OnNormalAttack1AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).OnAttackAnimFullyPlayed(); }
     public void OnNormalAttack2AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).OnAttackAnimFullyPlayed(); }
     public void OnNormalAttack3AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).OnAttackAnimFullyPlayed(); }
@@ -369,5 +368,5 @@ public class PlayerController : BaseCharacterController
             return true;
         return false;
     }
-    
+
 }

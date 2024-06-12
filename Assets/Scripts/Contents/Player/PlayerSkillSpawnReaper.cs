@@ -8,7 +8,7 @@ public class PlayerSkillSpawnReaper : MonoBehaviour
     [SerializeField] private float _attackRange;
     private Animator _animator;
     private Transform _attackPoint;
-    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MONSTERS);
+    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MONSTERS_BODY);
     private AttackLightController _attackLightController;
     
     private void Start()

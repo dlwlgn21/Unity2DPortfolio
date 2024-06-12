@@ -68,15 +68,17 @@ namespace monster_states
                 _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
                 StartBigAttackEffect();
                 _entity.BloodEffectController.PlayBloodAnimation(
-                    EPlayerNoramlAttackType.BACK_ATTACK, 
+                    EPlayerNoramlAttackType.BACK_ATTACK,
                     _entity.transform.position,
                     (_entity.ELookDir == ECharacterLookDir.LEFT) ? ECharacterLookDir.RIGHT : ECharacterLookDir.LEFT
                 );
+                AdjustKnockbackAcoddingLookDir(EPlayerNoramlAttackType.BACK_ATTACK);
             }
             else
             {
                 _entity.Stat.OnHitted(damage, out beforeDamgeHp, out afterDamageHp);
                 _entity.BloodEffectController.PlayBloodAnimation(eType, _entity.transform.position, _entity.ELookDir);
+                AdjustKnockbackAcoddingLookDir(eType);
             }
             _entity.DamageText.ShowPopup(beforeDamgeHp - afterDamageHp);
             _entity.HealthBar.DecraseHP(beforeDamgeHp, afterDamageHp);
@@ -130,7 +132,7 @@ namespace monster_states
         }
 
 
-        protected void AdjustKnockbackAcoddingLookDir(EPlayerNoramlAttackType eType)
+        private void AdjustKnockbackAcoddingLookDir(EPlayerNoramlAttackType eType)
         {
             if (_entity.ELookDir == ECharacterLookDir.LEFT)
             {
@@ -180,11 +182,6 @@ namespace monster_states
     public class Idle : BaseMonsterState
     {
         public Idle(BaseMonsterController controller) : base(controller) { }
-        public override void OnHittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eType)
-        {
-            base.OnHittedByPlayerNormalAttack(pc, eType);
-            AdjustKnockbackAcoddingLookDir(eType);
-        }
         public override void Enter() { PlayAnimation(EMonsterState.IDLE); }
         public override void Excute()
         {
@@ -225,7 +222,6 @@ namespace monster_states
         {
             base.OnHittedByPlayerNormalAttack(pc, eType);
             _isHiitedByPlayerNormalAttack = true;
-            AdjustKnockbackAcoddingLookDir(eType);
             DecreaseAnimSpeed();
             _animReturnOriginalSpeedTimer = ANIM_SLOW_TIME;
         }
@@ -308,7 +304,7 @@ namespace monster_states
     {
         public BaseAttack(BaseMonsterController controller) : base(controller) { }
 
-        protected int _playerLayerMask = 1 << (int)define.EColliderLayer.PLAYER;
+        protected int _playerLayerMask = 1 << (int)define.EColliderLayer.PLAYER_BODY;
 
         public void OnAttackAnimFullyPlayed() { _entity.ChangeState(EMonsterState.IDLE); }
         public override void Enter()

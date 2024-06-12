@@ -7,18 +7,18 @@ public class OpenInteractBox : InteractBox
     public bool IsPressEKey { get; private set; }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
             _parent.OnPlayerEnterInteractBox();
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
             _parent.OnPlayerExitInteractBox();
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
         {
             if (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E))
             {

@@ -20,14 +20,16 @@ namespace define
 
     public enum EColliderLayer
     {
-        PLAYER = 6,
-        MONSTERS = 7,
+        PLAYER_BODY = 6,
+        MONSTERS_BODY = 7,
+        PLAYER_ATTACK_BOX = 8,
         PLATFORM = 10,
         ENV = 11,
         EVENT_BOX = 12,
         CAM_CONFINER = 13,
         LEDGE_CLIMB = 14,
         PROJECTILE = 15,
+        MONSTER_ATTACK_BOX = 16,
     }
 
 

@@ -74,6 +74,8 @@ public abstract class BaseMonsterController : BaseCharacterController
             DamageFlasher = GetComponent<DamageFlasher>();
             // Addpart For BloodEffectController 6.9 day
             BloodEffectController = Utill.GetComponentInChildrenOrNull<BloodEffectController>(gameObject, "BloodEffect");
+
+            PlayerNormalAttack.PlayerNormalAttackEventHandler += HittedByPlayerNormalAttack;
         }
         InitStat();
         HealthBar.transform.localScale = OriginalHpBarScale;
@@ -98,12 +100,21 @@ public abstract class BaseMonsterController : BaseCharacterController
 
 
     #region HITTED_BY_PLAYER_NORMAL_ATTACK
-    public void HittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eAttackType)
+    public static void HittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eAttackType, BaseMonsterController instance)
     {
         //  DieState에서 플레이어 공격시에 다시 HitState로 변환되는 경우가 간혹 있었음. 그걸 막기위한 조치
-        if (ECurrentState != EMonsterState.DIE)
+        //if (ECurrentState != EMonsterState.DIE)
+        //{
+        //    ((BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(pc, eAttackType);
+            
+        //}
+        if (instance.ECurrentState != EMonsterState.DIE)
         {
-            ((BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(pc, eAttackType);
+            BaseMonsterState currState = (BaseMonsterState)instance._states[(int)instance.ECurrentState];
+            if (currState != null)
+            {
+                currState.OnHittedByPlayerNormalAttack(pc, eAttackType);
+            }
         }
     }
     #endregion

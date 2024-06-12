@@ -639,7 +639,7 @@ namespace player_states
         public Roll(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eLookDir;
-        int _layerMask = (1 << (int)EColliderLayer.MONSTERS) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB);
+        int _layerMask = (1 << (int)EColliderLayer.MONSTERS_BODY) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB);
         public void OnRollAnimFullyPlayed() { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {
@@ -656,7 +656,7 @@ namespace player_states
             {
                 _entity.RigidBody.AddForce(new Vector2(-HORIZONTAL_ROLL_FORCE, VERTICAL_ROLL_FORCE), ForceMode2D.Impulse);
             }
-            Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS, (int)EColliderLayer.PLAYER);
+            Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS_BODY, (int)EColliderLayer.PLAYER_BODY);
         }
         public override void FixedExcute()
         {
@@ -669,32 +669,34 @@ namespace player_states
             //    _entity.RigidBody.velocity = new Vector2(speed * -Time.fixedDeltaTime, oriVelo.y);
         }
 
-        public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER, _layerMask); }
+        public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER_BODY, _layerMask); }
     }
     public abstract class NormalAttackState : BasePlayerState
     {
-        static readonly protected Vector2 S_RIGHT_MOVE_FORCE = new Vector2(5f, 2f); 
-        static readonly protected Vector2 S_LEFT_MOVE_FORCE = new Vector2(-S_RIGHT_MOVE_FORCE.x, S_RIGHT_MOVE_FORCE.y); 
-
         protected ECharacterLookDir _eLookDir;
         protected bool _isGoToNextAttack;
         protected Transform _attackPoint;
-        protected int _layerMask = 1 << ((int)define.EColliderLayer.MONSTERS);
+        protected int _layerMask = 1 << ((int)define.EColliderLayer.MONSTERS_BODY);
         protected EPlayerNoramlAttackType _eAttackType;
         public NormalAttackState(PlayerController controller) : base(controller) { }
-        public void DamageHittedMonsters()
-        {
-            Collider2D[] monsters = Physics2D.OverlapCircleAll(_attackPoint.position, 1f, _layerMask);
-            if (monsters == null)
-                return;
 
-            foreach (Collider2D mon in monsters)
-            {
-                BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
-                Debug.Assert(controller != null);
-                controller.HittedByPlayerNormalAttack(_entity, _eAttackType);
-            }
-        }
+        // 이벤트 방식으로 바꾼 다음에 혹시몰라 남겨둠.
+        #region DAMAGED_HITTED_MONSTER_LEGACY
+        //public void DamageHittedMonsters()
+        //{
+        //    Collider2D[] monsters = Physics2D.OverlapCircleAll(_attackPoint.position, 1f, _layerMask);
+        //    if (monsters == null)
+        //        return;
+
+        //    foreach (Collider2D mon in monsters)
+        //    {
+        //        BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
+        //        Debug.Assert(controller != null);
+        //        Debug.Log("DamageHittedMonsters Called!!!");
+        //        //controller.HittedByPlayerNormalAttack(_entity, _eAttackType);
+        //    }
+        //}
+        #endregion
         public abstract void OnAttackAnimFullyPlayed();
 
         public override void Enter()
@@ -757,11 +759,11 @@ namespace player_states
 
             if (_entity.ELookDir == ECharacterLookDir.LEFT)
             {
-                _entity.RigidBody.AddForce(S_LEFT_MOVE_FORCE, ForceMode2D.Impulse);
+                _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_1_DASH_FORCE * Vector2.left, ForceMode2D.Impulse);
             }
             else
             {
-                _entity.RigidBody.AddForce(S_RIGHT_MOVE_FORCE, ForceMode2D.Impulse);
+                _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_1_DASH_FORCE, ForceMode2D.Impulse);
             }
             _entity.PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_1);
         }
@@ -914,7 +916,6 @@ namespace player_states
 
         public void OnHittedAnimFullyPlayed() 
         {
-            Debug.Log("Hit Anim End!!");
             _entity.ChangeState(EPlayerState.RUN); 
         }
         public override void Enter()
