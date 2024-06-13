@@ -355,6 +355,7 @@ namespace player_states
 
     public class Jump : InAir
     {
+        // TODO : Static UnityAction으로 바꿔야 함.
         public Action TwiceJumpEventHandler;
 
         private bool _isInAir;
@@ -362,6 +363,7 @@ namespace player_states
         private bool _isJumpKeyDownTwice;
 
         public Jump(PlayerController controller) : base(controller) { }
+
         ~Jump() { TwiceJumpEventHandler = null; }
 
         public override void ProcessKeyboardInput()
@@ -572,9 +574,6 @@ namespace player_states
         public TwiceJumpToFall(PlayerController controller) : base(controller) {}
     }
 
-
-
-
     public class Climb : BasePlayerState
     {
         public Climb(PlayerController controller) : base(controller) { }
@@ -634,12 +633,11 @@ namespace player_states
     }
     public class Roll : BasePlayerState
     {
-        private const float HORIZONTAL_ROLL_FORCE = 7.5f;
-        private const float VERTICAL_ROLL_FORCE = 2f;
+        private readonly Vector2 ROLL_FORCE = new Vector2(7.5f, 2f);
         public Roll(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eLookDir;
-        int _layerMask = (1 << (int)EColliderLayer.MONSTERS_BODY) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB);
+        private const int ROLL_BACK_LAYER_MASK = (1 << (int)EColliderLayer.MONSTERS_BODY) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB) | (1 << (int)EColliderLayer.MONSTER_ATTACK_BOX);
         public void OnRollAnimFullyPlayed() { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {
@@ -650,26 +648,16 @@ namespace player_states
             _entity.RigidBody.velocity = Vector2.zero;
             if (_eLookDir == ECharacterLookDir.RIGHT)
             {
-                _entity.RigidBody.AddForce(new Vector2(HORIZONTAL_ROLL_FORCE, VERTICAL_ROLL_FORCE), ForceMode2D.Impulse);
+                _entity.RigidBody.AddForce(ROLL_FORCE, ForceMode2D.Impulse);
             }
             else
             {
-                _entity.RigidBody.AddForce(new Vector2(-HORIZONTAL_ROLL_FORCE, VERTICAL_ROLL_FORCE), ForceMode2D.Impulse);
+                _entity.RigidBody.AddForce(new Vector2(-ROLL_FORCE.x, ROLL_FORCE.y), ForceMode2D.Impulse);
             }
             Physics2D.IgnoreLayerCollision((int)EColliderLayer.MONSTERS_BODY, (int)EColliderLayer.PLAYER_BODY);
         }
-        public override void FixedExcute()
-        {
-            // 6.5 AddForce 방식으로 로 바꿈.
-            //Vector2 oriVelo = _entity.RigidBody.velocity;
-            //float speed = _entity.Stat.MoveSpeed * 1.5f;
-            //if (_eLookDir == ECharacterLookDir.RIGHT)
-            //    _entity.RigidBody.velocity = new Vector2(speed * Time.fixedDeltaTime, oriVelo.y);
-            //else
-            //    _entity.RigidBody.velocity = new Vector2(speed * -Time.fixedDeltaTime, oriVelo.y);
-        }
 
-        public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER_BODY, _layerMask); }
+        public override void Exit() { Physics2D.SetLayerCollisionMask((int)EColliderLayer.PLAYER_BODY, ROLL_BACK_LAYER_MASK); }
     }
     public abstract class NormalAttackState : BasePlayerState
     {

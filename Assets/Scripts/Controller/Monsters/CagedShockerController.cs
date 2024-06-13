@@ -17,31 +17,4 @@ public class CagedShockerController : BaseMonsterController
         Stat.Init(EMonsterNames.CagedShoker);
         AwarenessRangeToAttack = 2.5f;
     }
-    protected override void InitStates()
-    {
-        base.InitStates();
-        AssignAttackState<CagedShockerAttack>();
-    }
-
-    protected override void AssignAttackState<CagedShockerAttack>()
-    {
-        _states[(uint)EMonsterState.ATTACK] = new monster_states.CagedShockerAttack(this);
-    }
-
-    public void OnNoramlAttack1ValidSlashed()
-    {
-        getAttack().OnNoramlAttack1ValidSlashed();
-    }
-    public void OnNoramlAttack2ValidSlashed()
-    {
-        getAttack().OnNoramlAttack2ValidSlashed();
-    }
-
-    CagedShockerAttack getAttack()
-    {
-        CagedShockerAttack state = (CagedShockerAttack)_states[(uint)EMonsterState.ATTACK];
-        return state;
-    }
-
-
 }

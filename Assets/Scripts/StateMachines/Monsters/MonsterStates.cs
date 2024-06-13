@@ -300,9 +300,9 @@ namespace monster_states
         }
     }
 
-    public class BaseAttack : CanSlowState
+    public class Attack : CanSlowState
     {
-        public BaseAttack(BaseMonsterController controller) : base(controller) { }
+        public Attack(BaseMonsterController controller) : base(controller) { }
 
         protected int _playerLayerMask = 1 << (int)define.EColliderLayer.PLAYER_BODY;
 
@@ -318,18 +318,6 @@ namespace monster_states
         public override void Excute()
         {
             base.Excute();
-        }
-        protected void CheckOverlapCircle()
-        {
-            Collider2D collider = Physics2D.OverlapCircle(_entity.NormalAttackPoint.position, _entity.NormalAttackRange, _playerLayerMask);
-            if (collider != null)
-            {
-                PlayerController pc = collider.GetComponent<PlayerController>();
-                if (pc != null)
-                {
-                    pc.OnHitted(_entity.Stat.Attack, _entity);
-                }
-            }
         }
         public override void Exit()
         {
@@ -384,10 +372,7 @@ namespace monster_states
                 _isAddForceThisFrame = true;
             }
         }
-
-
     }
-
     public class HittedKnockbackByBomb : HittedKnockbackByBlockSuccess
     {
         public HittedKnockbackByBomb(BaseMonsterController controller) : base(controller) 
@@ -435,41 +420,6 @@ namespace monster_states
 
 
     }
-
-
-    #region MONSTER_ATTACK_STATES
-    public class CagedShockerAttack : BaseAttack
-    {
-        public CagedShockerAttack(BaseMonsterController controller) : base(controller) { }
-
-        public void OnNoramlAttack1ValidSlashed() { CheckOverlapCircle(); }
-        public void OnNoramlAttack2ValidSlashed() { CheckOverlapCircle(); }
-    }
-
-    public class BlasterAttack : BaseAttack
-    {
-        public BlasterAttack(BaseMonsterController controller) : base(controller) { }
-
-        public void OnBlaterValidAttack() { CheckOverlapCircle(); }
-    }
-
-    public class WardenAttack : BaseAttack
-    {
-        public WardenAttack(BaseMonsterController controller) : base(controller) { }
-
-        public void OnWardenValidAttack() { CheckOverlapCircle(); }
-    }
-
-    public class HSlicerAttack : BaseAttack
-    {
-        public HSlicerAttack(BaseMonsterController controller) : base(controller) { }
-
-        public void OnHSlicerValidAttack1() { CheckOverlapCircle(); }
-        public void OnHSlicerValidAttack2() { CheckOverlapCircle(); }
-
-    }
-
-    #endregion
 }
 
 

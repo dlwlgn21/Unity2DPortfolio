@@ -128,7 +128,7 @@ public abstract class BaseMonsterController : BaseCharacterController
 
     #region ANIM_CALLBACK
 
-    public void OnAttackAnimFullyPlayed()       { ((monster_states.BaseAttack)_states[(uint)EMonsterState.ATTACK]).OnAttackAnimFullyPlayed(); }
+    public void OnAttackAnimFullyPlayed()       { ((monster_states.Attack)_states[(uint)EMonsterState.ATTACK]).OnAttackAnimFullyPlayed(); }
     public void OnMonsterDieAnimFullyPlayed()   { ((monster_states.Die)_states[(uint)EMonsterState.DIE]).OnDieAnimFullyPlayed(); }
     public void OnMonsterFootStep()             { FootDustParticle.Play(); }
 
@@ -185,13 +185,13 @@ public abstract class BaseMonsterController : BaseCharacterController
         _states = new State<BaseMonsterController>[(uint)EMonsterState.COUNT];
         _states[(uint)EMonsterState.IDLE] = new monster_states.Idle(this);
         _states[(uint)EMonsterState.TRACE] = new monster_states.Trace(this);
+        _states[(uint)EMonsterState.ATTACK] = new monster_states.Attack(this);
         _states[(uint)EMonsterState.HITTED_KNOCKBACK] = new monster_states.HittedKnockbackByBlockSuccess(this);
         _states[(uint)EMonsterState.HITTED_PARALYSIS] = new monster_states.HittedParalysis(this);
         _states[(uint)EMonsterState.HITTED_KNOCKBACK_BOMB] = new monster_states.HittedKnockbackByBomb(this);
         _states[(uint)EMonsterState.DIE] = new monster_states.Die(this);
         _stateMachine.Init(this, _states[(uint)EMonsterState.IDLE]);
     }
-    protected abstract void AssignAttackState<T>() where T : monster_states.BaseAttack;
     protected abstract void InitStat();
 
     void OnDrawGizmosSelected()
