@@ -16,9 +16,9 @@ public enum EMonsterState
     IDLE,
     TRACE,
     ATTACK,
-    HITTED_KNOCKBACK,
-    HITTED_PARALYSIS,
-    HITTED_KNOCKBACK_BOMB,
+    HITTED_BY_PLAYER_BLOCK_SUCCESS,
+    HITTED_BY_PLAYER_SKILL_PARALYSIS,
+    HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB,
     DIE,
     COUNT
 }
@@ -62,7 +62,6 @@ public abstract class BaseMonsterController : BaseCharacterController
 
             // TODO : 여기 하드코딩 되어 있는 수치들 나중에 다 MonsterData로 빼서 읽어와야 함.
             AwarenessRangeToTrace = 10f;
-            NormalAttackRange = 2f;
 
             HealthBar = Utill.GetComponentInChildrenOrNull<UIWSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
             OriginalHpBarScale = HealthBar.transform.localScale;
@@ -74,8 +73,6 @@ public abstract class BaseMonsterController : BaseCharacterController
             DamageFlasher = GetComponent<DamageFlasher>();
             // Addpart For BloodEffectController 6.9 day
             BloodEffectController = Utill.GetComponentInChildrenOrNull<BloodEffectController>(gameObject, "BloodEffect");
-
-            PlayerNormalAttack.PlayerNormalAttackEventHandler += HittedByPlayerNormalAttack;
         }
         InitStat();
         HealthBar.transform.localScale = OriginalHpBarScale;
@@ -98,31 +95,17 @@ public abstract class BaseMonsterController : BaseCharacterController
         _stateMachine.Excute();
     }
 
-
-    #region HITTED_BY_PLAYER_NORMAL_ATTACK
-    public static void HittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eAttackType, BaseMonsterController instance)
+    #region CHANGE_TO_HITTED_CALLED_BY_PLAYER
+    public void OnHittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eAttackType)
     {
-        //  DieState에서 플레이어 공격시에 다시 HitState로 변환되는 경우가 간혹 있었음. 그걸 막기위한 조치
-        //if (ECurrentState != EMonsterState.DIE)
-        //{
-        //    ((BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(pc, eAttackType);
-            
-        //}
-        if (instance.ECurrentState != EMonsterState.DIE)
+        if (ECurrentState != EMonsterState.DIE)
         {
-            BaseMonsterState currState = (BaseMonsterState)instance._states[(int)instance.ECurrentState];
-            if (currState != null)
-            {
-                currState.OnHittedByPlayerNormalAttack(pc, eAttackType);
-            }
+            ((BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(pc, eAttackType);
         }
     }
-    #endregion
-
-    #region CHANGE_TO_HITTED_CALLED_BY_PLAYER
-    public void OnPlayerBlockSuccess()          { ChangeState(EMonsterState.HITTED_KNOCKBACK); }
-    public void HittedByPlayerKnockbackBomb()   { ChangeState(EMonsterState.HITTED_KNOCKBACK_BOMB); }
-    public void HittedByPlayerSpawnReaper()     { ChangeState(EMonsterState.HITTED_PARALYSIS); }
+    public void OnPlayerBlockSuccess()          { ChangeState(EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS); }
+    public void OnHittedByPlayerKnockbackBomb()   { ChangeState(EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB); }
+    public void OnHittedByPlayerSpawnReaper()     { ChangeState(EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS); }
     #endregion
 
 
@@ -145,14 +128,14 @@ public abstract class BaseMonsterController : BaseCharacterController
     {
         switch (ECurrentState)
         {
-            case EMonsterState.HITTED_KNOCKBACK:
-                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_KNOCKBACK]).OnHittedAnimFullyPlayed();
+            case EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
+                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS]).OnHittedAnimFullyPlayed();
                 return;
-            case EMonsterState.HITTED_PARALYSIS:
-                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_PARALYSIS]).OnHittedAnimFullyPlayed();
+            case EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
+                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS]).OnHittedAnimFullyPlayed();
                 return;
-            case EMonsterState.HITTED_KNOCKBACK_BOMB:
-                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_KNOCKBACK_BOMB]).OnHittedAnimFullyPlayed();
+            case EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
+                ((monster_states.BaseHittedState)_states[(uint)EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB]).OnHittedAnimFullyPlayed();
                 return;
         }
     }
@@ -161,8 +144,8 @@ public abstract class BaseMonsterController : BaseCharacterController
     public void SetLookDir()
     {
         if (ECurrentState == EMonsterState.ATTACK ||
-            ECurrentState == EMonsterState.HITTED_KNOCKBACK ||
-            ECurrentState == EMonsterState.HITTED_PARALYSIS ||
+            ECurrentState == EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS ||
+            ECurrentState == EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS ||
             ECurrentState == EMonsterState.DIE)
         {
             return;
@@ -186,9 +169,9 @@ public abstract class BaseMonsterController : BaseCharacterController
         _states[(uint)EMonsterState.IDLE] = new monster_states.Idle(this);
         _states[(uint)EMonsterState.TRACE] = new monster_states.Trace(this);
         _states[(uint)EMonsterState.ATTACK] = new monster_states.Attack(this);
-        _states[(uint)EMonsterState.HITTED_KNOCKBACK] = new monster_states.HittedKnockbackByBlockSuccess(this);
-        _states[(uint)EMonsterState.HITTED_PARALYSIS] = new monster_states.HittedParalysis(this);
-        _states[(uint)EMonsterState.HITTED_KNOCKBACK_BOMB] = new monster_states.HittedKnockbackByBomb(this);
+        _states[(uint)EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS] = new monster_states.HittedKnockbackByBlockSuccess(this);
+        _states[(uint)EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS] = new monster_states.HittedParalysis(this);
+        _states[(uint)EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB] = new monster_states.HittedKnockbackByBomb(this);
         _states[(uint)EMonsterState.DIE] = new monster_states.Die(this);
         _stateMachine.Init(this, _states[(uint)EMonsterState.IDLE]);
     }
@@ -196,9 +179,7 @@ public abstract class BaseMonsterController : BaseCharacterController
 
     void OnDrawGizmosSelected()
     {
-        if (NormalAttackPoint == null)
-            return;
-        Gizmos.DrawWireSphere(NormalAttackPoint.position, NormalAttackRange);
+
     }
 
 

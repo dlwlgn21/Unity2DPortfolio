@@ -16,6 +16,12 @@ namespace monster_states
         protected readonly static string HIT_PARALYSIS_KEY = "HittedParalysis";
         protected readonly static string DIE_ANIM_KEY = "Die";
 
+        protected readonly static string HITTED_BACK_ATTACK_TEXT = "백어택!";
+        protected readonly static string ATTACK_TEXT = "공격!";
+        protected readonly static string HITTED_KNOCKBACK_TEXT = "넉백!";
+        protected readonly static string HITTED_PARALYSIS = "마비!";
+
+       
         public BaseMonsterState(BaseMonsterController controller) : base(controller) {}
         public override void Excute() {  _entity.SetLookDir(); }
 
@@ -64,7 +70,7 @@ namespace monster_states
                 // TODO : 이 하드코딩된 매직넘버, 즉 백어택 데미지 계수 수정하자.
                 int backAttackDamage = damage * 3;
                 _entity.Stat.OnHitted(backAttackDamage, out beforeDamgeHp, out afterDamageHp);
-                pc.StatusText.ShowPopup("백어택!");
+                pc.StatusText.ShowPopup(HITTED_BACK_ATTACK_TEXT);
                 _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
                 StartBigAttackEffect();
                 _entity.BloodEffectController.PlayBloodAnimation(
@@ -106,11 +112,11 @@ namespace monster_states
                 case EMonsterState.ATTACK:
                     _entity.Animator.Play(ATTACK_ANIM_KEY, -1, 0f);
                     return;
-                case EMonsterState.HITTED_KNOCKBACK:
-                case EMonsterState.HITTED_KNOCKBACK_BOMB:
+                case EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
+                case EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
                     _entity.Animator.Play(HIT_ANIM_KEY, -1, 0f);
                     return;
-                case EMonsterState.HITTED_PARALYSIS:
+                case EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
                     _entity.Animator.Play(HIT_PARALYSIS_KEY, -1, 0f);
                     return;
                 case EMonsterState.DIE:
@@ -222,8 +228,8 @@ namespace monster_states
         {
             base.OnHittedByPlayerNormalAttack(pc, eType);
             _isHiitedByPlayerNormalAttack = true;
-            DecreaseAnimSpeed();
             _animReturnOriginalSpeedTimer = ANIM_SLOW_TIME;
+            DecreaseAnimSpeed();
         }
 
         public override void Enter()
@@ -268,6 +274,7 @@ namespace monster_states
             {
                 // PlayerNormalAttack에 맞고 AddForce가 호출 되었다는 뜻.
                 // 그럴때는 일단 AddForce의 힘이 적용 된 다음에 이동하도록 했음.
+                Debug.Log($"Trace.FixedExcute : {_entity.RigidBody.velocity}");
                 return;
             }
             Vector2 oriVelo = _entity.RigidBody.velocity;
@@ -304,20 +311,21 @@ namespace monster_states
     {
         public Attack(BaseMonsterController controller) : base(controller) { }
 
-        protected int _playerLayerMask = 1 << (int)define.EColliderLayer.PLAYER_BODY;
-
-        public void OnAttackAnimFullyPlayed() { _entity.ChangeState(EMonsterState.IDLE); }
+        public void OnAttackAnimFullyPlayed() 
+        {
+            _entity.ChangeState(EMonsterState.IDLE); 
+        }
         public override void Enter()
         {
             base.Enter();
             PlayAnimation(EMonsterState.ATTACK);
-            _entity.StatusText.ShowPopup("공격!");
+            _entity.StatusText.ShowPopup(ATTACK_TEXT);
             _entity.AttackLightController.TurnOnLight();
-
         }
         public override void Excute()
         {
             base.Excute();
+
         }
         public override void Exit()
         {
@@ -330,50 +338,63 @@ namespace monster_states
     public abstract class BaseHittedState : BaseMonsterState
     {
         public BaseHittedState(BaseMonsterController controller) : base(controller) { }
-        
-        public override void Enter()
+        public override void Excute()  { base.Excute(); }
+        public abstract void OnHittedAnimFullyPlayed();
+        protected void SetVelocityZero()
         {
             Vector2 velo = _entity.RigidBody.velocity;
             _entity.RigidBody.velocity = new Vector2(0f, velo.y);
         }
 
-        public override void Excute()  { base.Excute(); }
-        public abstract void OnHittedAnimFullyPlayed();
+    }
+
+    public abstract class CanKnockback : BaseHittedState
+    {
+        protected float _knockbackForce;
+
+        public CanKnockback(BaseMonsterController controller) : base(controller) { }
+        public override void OnHittedAnimFullyPlayed()
+        {
+            _entity.ChangeState(EMonsterState.IDLE);
+        }
+
+        public override void Enter()
+        {
+            SetVelocityZero();
+            _entity.StatusText.ShowPopup(HITTED_KNOCKBACK_TEXT);
+            KnockbackMonster();
+            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_KNOCKBACK_BOMB);
+        }
+
+        protected void KnockbackMonster()
+        {
+            CalculateDistanceFromPlayer();
+            if (_dirToPlayer.x < 0f)
+            {
+                _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
+            }
+            else
+            {
+                _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
+            }
+            Debug.Log($"CanKnockback.KnockbackMonster(), Velocity : {_entity.RigidBody.velocity} ");
+        }
 
     }
 
-    public class HittedKnockbackByBlockSuccess : BaseHittedState
+    public class HittedKnockbackByBlockSuccess : CanKnockback
     {
-        protected float _knockbackForce = PlayerController.BLOCK_SUCCESS_KNOCKBACK_X_FORCE;
-        private bool _isAddForceThisFrame = false;
-        public HittedKnockbackByBlockSuccess(BaseMonsterController controller) : base(controller) { }
-        public override void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.IDLE);  }
+        public HittedKnockbackByBlockSuccess(BaseMonsterController controller) : base(controller) 
+        {
+            _knockbackForce = PlayerController.BLOCK_SUCCESS_KNOCKBACK_X_FORCE;
+        }
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(EMonsterState.HITTED_KNOCKBACK);
-            _entity.StatusText.ShowPopup("넉백!");
-            _isAddForceThisFrame = false;
-        }
-
-        public override void FixedExcute()
-        {
-            if (!_isAddForceThisFrame)
-            {
-                CalculateDistanceFromPlayer();
-                if (_dirToPlayer.x < 0f)
-                {
-                    _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
-                }
-                else
-                {
-                    _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
-                }
-                _isAddForceThisFrame = true;
-            }
+            PlayAnimation(EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS);
         }
     }
-    public class HittedKnockbackByBomb : HittedKnockbackByBlockSuccess
+    public class HittedKnockbackByBomb : CanKnockback
     {
         public HittedKnockbackByBomb(BaseMonsterController controller) : base(controller) 
         {
@@ -382,10 +403,8 @@ namespace monster_states
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(EMonsterState.HITTED_KNOCKBACK_BOMB);
-            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_KNOCKBACK_BOMB);
+            PlayAnimation(EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
         }
-        public override void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.IDLE); }
     }
     public class HittedParalysis : BaseHittedState
     {
@@ -393,10 +412,9 @@ namespace monster_states
         public override void OnHittedAnimFullyPlayed() { _entity.ChangeState(EMonsterState.IDLE); }
         public override void Enter()
         {
-            PlayAnimation(EMonsterState.HITTED_PARALYSIS);
-            Vector2 velo = _entity.RigidBody.velocity;
-            _entity.RigidBody.velocity = new Vector2(0f, velo.y);
-            _entity.StatusText.ShowPopup("마비!");
+            PlayAnimation(EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
+            SetVelocityZero();
+            _entity.StatusText.ShowPopup(HITTED_PARALYSIS);
             Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_REAPER_ATTACK);
         }
 
@@ -414,7 +432,7 @@ namespace monster_states
         { 
             PlayAnimation(EMonsterState.DIE);
             _entity.RigidBody.Sleep();
-            _entity.HealthBar.transform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
+            _entity.HealthBar.OnDie();
         }
         public override void Excute() { }
 

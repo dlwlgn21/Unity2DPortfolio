@@ -12,11 +12,13 @@ public class MonsterPoolManager
     public const int MAX_MONSTER_COUNT = 5;
     private Queue<GameObject> _wardens      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _cagedShokers = new Queue<GameObject>(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _redGhouls    = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _blasters     = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _hSlicers     = new Queue<GameObject>(MAX_MONSTER_COUNT);
 
     private GameObject _oriWarden;
     private GameObject _oriBlaster;
+    private GameObject _oriRedGhoul;
     private GameObject _oriCagedShokcer;
     private GameObject _oriHSlicer;
     public void Init()
@@ -25,6 +27,7 @@ public class MonsterPoolManager
         {
             _oriWarden = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonWarden");
             _oriBlaster = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonBlaster");
+            _oriRedGhoul = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonRedGhoul");
             _oriCagedShokcer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonCagedShoker");
             _oriHSlicer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonHSlicer");
         }
@@ -57,7 +60,15 @@ public class MonsterPoolManager
                     retGo = MakeMonsters(_oriCagedShokcer, spawnPos);
                 }
                 break;
-            case EMonsterNames.Dagger:
+            case EMonsterNames.RedGhoul:
+                if (_redGhouls.Count > 0)
+                {
+                    retGo = _redGhouls.Dequeue();
+                }
+                else
+                {
+                    retGo = MakeMonsters(_oriRedGhoul, spawnPos);
+                }
                 break;
             case EMonsterNames.HeabySlicer:
                 if (_hSlicers.Count > 0)
@@ -108,7 +119,11 @@ public class MonsterPoolManager
                 else
                     _cagedShokers.Enqueue(go);
                 break;
-            case EMonsterNames.Dagger:
+            case EMonsterNames.RedGhoul:
+                if (_redGhouls.Count > MAX_MONSTER_COUNT)
+                    Object.Destroy(go);
+                else
+                    _redGhouls.Enqueue(go);
                 break;
             case EMonsterNames.HeabySlicer:
                 if (_hSlicers.Count > MAX_MONSTER_COUNT)

@@ -4,16 +4,27 @@ using UnityEngine;
 
 public class UITextPopup : MonoBehaviour
 {
-    public TextMeshPro Text { get; private set; }
+    public TextMeshProUGUI Text { get; private set; }
+    private Transform _parentTransform;
     private RectTransform _rectTransform;
     private Vector3 _originalScale;
     private void Start()
     {
-        Text = GetComponent<TextMeshPro>();
+        Text = GetComponent<TextMeshProUGUI>();
         Debug.Assert(Text != null);
         _rectTransform = GetComponent<RectTransform>();
         Debug.Assert(_rectTransform != null);
         _originalScale = _rectTransform.localScale;
+        _parentTransform = transform.parent;
+    }
+
+    private void Update()
+    {
+        Vector3 currScale = _rectTransform.localScale;
+        if (_parentTransform.localRotation.eulerAngles.y > 0f)
+        {
+            _rectTransform.localScale = new Vector3(-currScale.x, currScale.y, currScale.z);
+        }
     }
 
     public void ShowPopup(int damage)
@@ -22,7 +33,7 @@ public class UITextPopup : MonoBehaviour
         Text.text = damage.ToString();
         Text.color = Color.white;
         _rectTransform
-            .DOScale(_originalScale.x + 0.2f, 0.5f)
+            .DOScale(_originalScale.z + 0.2f, 0.5f)
             .SetEase(Ease.OutElastic)
             .OnComplete(OnScaleTweenEnd);
     }
@@ -33,7 +44,7 @@ public class UITextPopup : MonoBehaviour
         Text.color = Color.red;
         Text.text = damage.ToString();
         _rectTransform
-            .DOScale(_originalScale.x + 0.4f, 0.5f)
+            .DOScale(_originalScale.z + 0.4f, 0.5f)
             .SetEase(Ease.OutElastic)
             .OnComplete(OnScaleTweenEnd);
     }
@@ -43,7 +54,7 @@ public class UITextPopup : MonoBehaviour
         Text.color = Color.white;
         Text.text = status;
         _rectTransform
-            .DOScale(_originalScale.x + 0.2f, 0.5f)
+            .DOScale(_originalScale.z + 0.2f, 0.5f)
             .SetEase(Ease.OutElastic)
             .OnComplete(OnScaleTweenEnd);
     }

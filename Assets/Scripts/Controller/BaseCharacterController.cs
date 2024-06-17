@@ -13,15 +13,12 @@ public abstract class BaseCharacterController : MonoBehaviour
     public Animator HitEffectAniamtor { get; set; }
     public Rigidbody2D RigidBody { get; set; }
     public ECharacterLookDir ELookDir { get; set; }
-    public Transform NormalAttackPoint { get; protected set; }
     public ParticleSystem FootDustParticle { get; set; }
     public SpriteRenderer SpriteRenderer { get; set; }
-    public float NormalAttackRange { get; protected set; }
     public UITextPopup DamageText { get; set; }
     public UITextPopup StatusText { get; set; }
 
     public GameObject HeadLight { get; set; }
-
 
     public AttackLightController AttackLightController { get; private set; }
 
@@ -47,8 +44,6 @@ public abstract class BaseCharacterController : MonoBehaviour
             RigidBody = gameObject.GetOrAddComponent<Rigidbody2D>();
             Animator = gameObject.GetOrAddComponent<Animator>();
             SpriteRenderer = gameObject.GetOrAddComponent<SpriteRenderer>();
-            NormalAttackPoint = transform.Find("NormalAttackPoint").gameObject.transform;
-            Debug.Assert(NormalAttackPoint != null);
 
             foreach (Animator aniamtor in gameObject.GetComponentsInChildren<Animator>())
             {
@@ -84,8 +79,6 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        if (NormalAttackPoint == null)
-            return;
-        Gizmos.DrawWireSphere(NormalAttackPoint.position, NormalAttackRange);
+
     }
 }

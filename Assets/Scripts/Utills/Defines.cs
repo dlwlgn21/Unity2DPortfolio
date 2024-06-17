@@ -30,6 +30,7 @@ namespace define
         LEDGE_CLIMB = 14,
         PROJECTILE = 15,
         MONSTER_ATTACK_BOX = 16,
+        MONSTER_BETWEEN_PLAYER_BLOCKING_BOX = 17,
     }
 
 
@@ -44,7 +45,7 @@ namespace define
         Archer = 1,
         Blaster,
         CagedShoker,
-        Dagger,
+        RedGhoul,
         HeabySlicer,
         LightSlicer,
         Sweeper,

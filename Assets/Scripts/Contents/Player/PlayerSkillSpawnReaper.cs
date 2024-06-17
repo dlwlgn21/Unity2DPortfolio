@@ -5,18 +5,14 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayerSkillSpawnReaper : MonoBehaviour
 {
-    [SerializeField] private float _attackRange;
     private Animator _animator;
-    private Transform _attackPoint;
-    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MONSTERS_BODY);
     private AttackLightController _attackLightController;
-    
+    private const float TURN_OFF_LIGHT_TIME = 0.7f;
     private void Start()
     {
-        _attackPoint = transform.Find("AttackPoint").gameObject.transform;
         _animator = GetComponent<Animator>();
         _attackLightController = Utill.GetComponentInChildrenOrNull<AttackLightController>(gameObject, "AttackLight");
-        _attackLightController.SetTurnOffLightTime(0.7f);
+        _attackLightController.SetTurnOffLightTime(TURN_OFF_LIGHT_TIME);
         gameObject.SetActive(false);
     }
 
@@ -37,16 +33,6 @@ public class PlayerSkillSpawnReaper : MonoBehaviour
     }
     public void OnValidAttackTiming()
     {
-        Collider2D[] monsters = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, MONSTER_LAYER_MASK);
-        if (monsters == null)
-            return;
-
-        foreach (Collider2D mon in monsters)
-        {
-            BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
-            Debug.Assert(controller != null);
-            controller.HittedByPlayerSpawnReaper();
-        }
         _attackLightController.TurnOffLightGradually();
     }
 
@@ -55,11 +41,13 @@ public class PlayerSkillSpawnReaper : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void OnDrawGizmosSelected()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (_attackPoint == null)
-            return;
-        Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
+        Debug.Log("PlayerSkillSpawnReaper.OnTriggerEnter!");
+        if (collision.CompareTag("Monster"))
+        {
+            Debug.Log("PlayerSkillSpawnReaper.OnTriggerEnter() collision.CompareTag(Monster)");
+            collision.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSpawnReaper();
+        }
     }
-
 }

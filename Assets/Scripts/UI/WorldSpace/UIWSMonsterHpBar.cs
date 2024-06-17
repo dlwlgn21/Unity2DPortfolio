@@ -1,23 +1,27 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class UIWSMonsterHpBar : UIHealthBar
 {
-    [SerializeField] [Range(-10f, 10f)] private float _yOffset;
+    private const float SCALE_TW_DURATION = 0.2f;
     private Transform _parentTransform;
-    private float _yMargin;
     private Vector3 _originalLocalScale;
+    private RectTransform _rectTransform;
+    private Vector3 _originalRectTransformScale;
     private void Start()
     {
         SetFullHpBarRatio();
-        _yOffset = -0.4f;
-        _originalLocalScale = transform.localScale;
+        if (_rectTransform == null)
+        {
+            AssginComponentsAndInitVariables();
+        }
     }
     public override void Init()
     {
-        if (_parentTransform == null)
+        if (_rectTransform == null)
         {
             _parentTransform = transform.parent;
-            _yMargin = transform.parent.GetComponent<Collider2D>().bounds.size.y + _yOffset;
+            AssginComponentsAndInitVariables();
         }
         SetFullHpBarRatio();
     }
@@ -32,6 +36,18 @@ public class UIWSMonsterHpBar : UIHealthBar
         {
             transform.localScale = new Vector3(1f, _originalLocalScale.y, _originalLocalScale.z);
         }
-        transform.position = _parentTransform.position + Vector3.up * (_yMargin + _yOffset);
+    }
+
+    public void OnDie()
+    {
+        _rectTransform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
+    }
+
+    private void AssginComponentsAndInitVariables()
+    {
+        _rectTransform = GetComponent<RectTransform>();
+        _originalLocalScale = transform.localScale;
+        _originalRectTransformScale = _rectTransform.localScale;
+        _rectTransform.localScale = _originalRectTransformScale;
     }
 }

@@ -637,7 +637,15 @@ namespace player_states
         public Roll(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eLookDir;
-        private const int ROLL_BACK_LAYER_MASK = (1 << (int)EColliderLayer.MONSTERS_BODY) | (1 << (int)EColliderLayer.PLATFORM) | (1 << (int)EColliderLayer.ENV) | (1 << (int)EColliderLayer.EVENT_BOX) | (1 << (int)EColliderLayer.LEDGE_CLIMB) | (1 << (int)EColliderLayer.MONSTER_ATTACK_BOX);
+        //private const int IGNORE_LAYER_MASK = (1 << (int)EColliderLayer.MONSTERS_BODY);
+        private const int ROLL_BACK_LAYER_MASK = 
+            (1 << (int)EColliderLayer.MONSTERS_BODY) | 
+            (1 << (int)EColliderLayer.PLATFORM) | 
+            (1 << (int)EColliderLayer.ENV) | 
+            (1 << (int)EColliderLayer.EVENT_BOX) | 
+            (1 << (int)EColliderLayer.LEDGE_CLIMB) | 
+            (1 << (int)EColliderLayer.MONSTER_ATTACK_BOX) | 
+            (1 << (int)EColliderLayer.MONSTER_BETWEEN_PLAYER_BLOCKING_BOX);
         public void OnRollAnimFullyPlayed() { _entity.ChangeState(EPlayerState.RUN); }
         public override void Enter()
         {
@@ -668,36 +676,14 @@ namespace player_states
         protected EPlayerNoramlAttackType _eAttackType;
         public NormalAttackState(PlayerController controller) : base(controller) { }
 
-        // 이벤트 방식으로 바꾼 다음에 혹시몰라 남겨둠.
-        #region DAMAGED_HITTED_MONSTER_LEGACY
-        //public void DamageHittedMonsters()
-        //{
-        //    Collider2D[] monsters = Physics2D.OverlapCircleAll(_attackPoint.position, 1f, _layerMask);
-        //    if (monsters == null)
-        //        return;
-
-        //    foreach (Collider2D mon in monsters)
-        //    {
-        //        BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
-        //        Debug.Assert(controller != null);
-        //        Debug.Log("DamageHittedMonsters Called!!!");
-        //        //controller.HittedByPlayerNormalAttack(_entity, _eAttackType);
-        //    }
-        //}
-        #endregion
         public abstract void OnAttackAnimFullyPlayed();
 
         public override void Enter()
         {
-            _attackPoint = _entity.NormalAttackPoint;
             _eLookDir = _entity.ELookDir;
             _isGoToNextAttack = false;
-
             // AttackLight 추가된 파트
             _entity.AttackLightController.TurnOnLight();
-            
-
-            //_entity.RotateAttackLightAccodingCharacterLookDir();
             SetVelocityToZero();
         }
 
@@ -936,10 +922,6 @@ namespace player_states
             // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.
             //_entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
             Managers.TimeManager.OnPlayerHittedByMonster();
-        }
-        public override void Excute()
-        {
-
         }
     }
 

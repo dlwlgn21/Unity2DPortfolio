@@ -75,9 +75,7 @@ public class KnockbackBoom : MonoBehaviour
 
         foreach (Collider2D mon in monsters)
         {
-            BaseMonsterController controller = mon.gameObject.GetComponent<BaseMonsterController>();
-            Debug.Assert(controller != null);
-            controller.HittedByPlayerKnockbackBomb();
+            mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerKnockbackBomb();
         }
     }
 

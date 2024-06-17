@@ -107,7 +107,6 @@ public class PlayerController : BaseCharacterController
         BoxCollider = gameObject.GetComponent<BoxCollider2D>();
         ELookDir = ECharacterLookDir.RIGHT;
 
-        NormalAttackRange = 2f;
 
         LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
 
