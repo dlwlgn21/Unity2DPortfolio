@@ -16,7 +16,6 @@ public class Managers : MonoBehaviour
     MainMenuManager _mainMenuManager = new MainMenuManager();
     MonsterPoolManager _monsterPoolManager = new MonsterPoolManager();
     PlayerSkillPoolManager _playerSkillPoolManager = new PlayerSkillPoolManager();
-    PlayerSkillManager _playerSkillManager = new PlayerSkillManager();
     CamShakeManager _camShakeManager = new CamShakeManager();
     CameraManager _camManager = new CameraManager();
     UIDialogManager _dialogManager = new UIDialogManager();
@@ -34,7 +33,6 @@ public class Managers : MonoBehaviour
     public static MainMenuManager MainMenu { get { return Instance._mainMenuManager; } }
     public static MonsterPoolManager MonsterPool { get { return Instance._monsterPoolManager; } }
     public static PlayerSkillPoolManager SkillPool { get { return Instance._playerSkillPoolManager; } }
-    public static PlayerSkillManager Skill { get { return Instance._playerSkillManager; } }
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
     public static CamShakeManager CamShake { get { return Instance._camShakeManager; } }
     public static CameraManager CamManager { get { return Instance._camManager; } }

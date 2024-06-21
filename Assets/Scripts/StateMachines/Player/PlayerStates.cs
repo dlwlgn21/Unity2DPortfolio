@@ -18,7 +18,6 @@ namespace player_states
         
         public override void Excute() { ProcessHorizontalInput(); }
         public virtual void ProcessKeyboardInput() { }
-
         public void FlipSpriteAccodingPlayerInput()
         {
 
@@ -37,7 +36,6 @@ namespace player_states
                 _entity.CamFollowObject.CallTurn();
             }
         }
-
         protected void ProcessHorizontalInput()  { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
         protected void SetVelocityToZero() { _entity.RigidBody.velocity = Vector2.zero; }
         protected bool IsAnimEnd()
@@ -165,62 +163,7 @@ namespace player_states
         }
     }
 
-    public abstract class BaseCanSkillState : BasePlayerState
-    {
-        public BaseCanSkillState(PlayerController controller) : base(controller) {}
-
-        public override void Excute() 
-        { 
-            base.Excute();
-        }
-
-        protected bool IsChangeStateToRoll()
-        {
-            if (Input.GetKeyDown(PlayerController.KeyRoll))
-            {
-                if (_entity.IsPossibleRoll)
-                {
-                    _entity.ChangeState(EPlayerState.ROLL);
-                    _entity.RollCoolTimerImg.StartCoolTime(_entity.RollCollTime);
-                    _entity.IsPossibleRoll = false;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        protected bool IsChangeStateToLaunchBomb()
-        {
-            if (Input.GetKeyDown(PlayerController.KeyLaunchBomb))
-            {
-                if (_entity.IsPossibleLaunchBomb)
-                {
-                    _entity.ChangeState(EPlayerState.CAST_LAUNCH);
-                    _entity.BombCoolTimerImg.StartCoolTime(_entity.BombCollTime);
-                    _entity.IsPossibleLaunchBomb = false;
-                    return true;
-                }
-            }
-            return false;
-        }
-        protected bool IsChangeStateToSpawnReaper()
-        {
-            if (Input.GetKeyDown(PlayerController.KeySpawnReaper))
-            {
-                if (_entity.IsPossibleSpawnReaper)
-                {
-                    _entity.ChangeState(EPlayerState.CAST_SPAWN);
-                    _entity.SpawnReaperCoolTimerImg.StartCoolTime(_entity.SpawnReaperCollTime);
-                    _entity.IsPossibleSpawnReaper = false;
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-
-    public class Idle : BaseCanSkillState
+    public class Idle : BasePlayerState
     {
         public Idle(PlayerController controller) : base(controller) { }
         public override void ProcessKeyboardInput()
@@ -246,7 +189,6 @@ namespace player_states
                 return;
             }
         }
-
         public override void Enter()       
         { PlayAnimation(EPlayerState.IDLE); }
 
@@ -256,22 +198,10 @@ namespace player_states
         {
             base.Excute();
             FlipSpriteAccodingPlayerInput();
-            if (IsChangeStateToRoll())
-            {
-                return;
-            }
-            if (IsChangeStateToLaunchBomb())
-            {
-                return;
-            }
-            if (IsChangeStateToSpawnReaper())
-            {
-                return;
-            }
             ProcessKeyboardInput();
         }
     }
-    public class Run : BaseCanSkillState
+    public class Run : BasePlayerState
     {
         public Run(PlayerController controller) : base(controller) { }
 
@@ -319,18 +249,6 @@ namespace player_states
                 return;
             }
             FlipSpriteAccodingPlayerInput();
-            if (IsChangeStateToRoll())
-            {
-                return;
-            }
-            if (IsChangeStateToLaunchBomb())
-            {
-                return;
-            }
-            if (IsChangeStateToSpawnReaper())
-            {
-                return;
-            }
             ProcessKeyboardInput();
         }
 

@@ -19,7 +19,6 @@ public class MainPlayScene : BaseScene
         Managers.HitParticle.Init();
         Managers.MonsterPool.Init();
         Managers.SkillPool.Init();
-        Managers.Skill.Init();
         Managers.Pause.Init();
         Managers.Dialog.Init();
         Managers.CamShake.Init();

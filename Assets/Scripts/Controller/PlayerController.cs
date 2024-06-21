@@ -40,6 +40,8 @@ public class PlayerController : BaseCharacterController
     public static UnityAction<EPlayerState> HitEffectEventHandler;
     public static UnityAction<EPlayerMovementEffect> MovementEventHandler;
     public static UnityAction<int, int, int> HitUIEventHandler;
+    public static UnityAction<EPlayerSkill> PlayerSkillKeyDownEventHandler;
+    public static UnityAction<EPlayerSkill> PlayerSkillValidAnimTimingEventHandler;
 
     public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new Vector2(2f, 1f);
     public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new Vector2(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
@@ -67,11 +69,7 @@ public class PlayerController : BaseCharacterController
     public readonly static KeyCode KeyLaunchBomb = KeyCode.A;
     public readonly static KeyCode KeySpawnReaper = KeyCode.S;
 
-    public UIPlayerCoolTimer RollCoolTimerImg;
-    public UIPlayerCoolTimer BombCoolTimerImg;
-    public UIPlayerCoolTimer SpawnReaperCoolTimerImg;
     public CamFollowObject CamFollowObject;
-
     public BoxCollider2D BoxCollider { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
@@ -81,26 +79,6 @@ public class PlayerController : BaseCharacterController
 
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
-
-    // RollCoolTime
-    public const float ROLL_INIT_COOL_TIME = 1f;
-    public float RollCollTime { get; private set; } = ROLL_INIT_COOL_TIME;
-    public float RollCollTimer { get; set; } = ROLL_INIT_COOL_TIME;
-    public bool IsPossibleRoll { get; set; } = true;
-
-
-    // BombCoolTime
-    public const float BOMB_INIT_COOL_TIME = 3f;
-    public float BombCollTime { get; private set; } = BOMB_INIT_COOL_TIME;
-    public float BombCollTimer { get; set; } = BOMB_INIT_COOL_TIME;
-    public bool IsPossibleLaunchBomb { get; set; } = true;
-
-
-    // SpawnReaperCoolTime
-    public const float SPAWN_REAPER_INIT_COOL_TIME = 5f;
-    public float SpawnReaperCollTime { get; private set; } = SPAWN_REAPER_INIT_COOL_TIME;
-    public float SpawnReaperCollTimer { get; set; } = SPAWN_REAPER_INIT_COOL_TIME;
-    public bool IsPossibleSpawnReaper { get; set; } = true;
 
     public bool IsInvincible { get; set; } = false;
 
@@ -116,51 +94,20 @@ public class PlayerController : BaseCharacterController
     }
     void FixedUpdate()
     {
+        #region PAUSE
         if (IsSkipThisFrame())
         {
             Vector2 velo = RigidBody.velocity;
             RigidBody.velocity = new Vector2(0f, velo.y);
             return;
         }
+        #endregion
         _stateMachine.FixedExcute();
     }
 
     void Update()
     {
-        #region ROLL_COOL_TIME
-        if (!IsPossibleRoll)
-        {
-            RollCollTimer -= Time.deltaTime;
-            if (RollCollTimer <= 0f)
-            {
-                RollCollTimer = RollCollTime;
-                IsPossibleRoll = true;
-            }
-        }
-        #endregion
-        #region BOMB_COOL_TIME
-        if (!IsPossibleLaunchBomb)
-        {
-            BombCollTimer -= Time.deltaTime;
-            if (BombCollTimer <= 0f)
-            {
-                BombCollTimer = BombCollTime;
-                IsPossibleLaunchBomb = true;
-            }
-        }
-        #endregion
-        #region SPAWN_REAPER_COOL_TIME
-        if (!IsPossibleSpawnReaper)
-        {
-            SpawnReaperCollTimer -= Time.deltaTime;
-            if (SpawnReaperCollTimer <= 0f)
-            {
-                SpawnReaperCollTimer = SpawnReaperCollTime;
-                IsPossibleSpawnReaper = true;
-            }
-        }
-        #endregion
-
+        #region PAUSE
         if (IsSkipThisFrame())
         {
             if (ECurrentState != EPlayerState.IDLE)
@@ -176,6 +123,21 @@ public class PlayerController : BaseCharacterController
             }
             return;
         }
+        #endregion
+        #region SKILLS
+        if (Input.GetKeyDown(KeyRoll))
+        {
+            PlayerSkillKeyDownEventHandler?.Invoke(EPlayerSkill.ROLL);
+        }
+        else if (Input.GetKeyDown(KeySpawnReaper))
+        {
+            PlayerSkillKeyDownEventHandler?.Invoke(EPlayerSkill.SPAWN_REAPER);
+        }
+        else if (Input.GetKeyDown(KeyLaunchBomb))
+        {
+            PlayerSkillKeyDownEventHandler?.Invoke(EPlayerSkill.SPAWN_SHOOTER);
+        }
+        #endregion
         _stateMachine.Excute();
     }
 
@@ -190,14 +152,14 @@ public class PlayerController : BaseCharacterController
         Debug.Assert(ECurrentState == EPlayerState.CAST_LAUNCH);
         if (ECurrentState == EPlayerState.CAST_LAUNCH)
         {
-            Managers.Skill.CastSpawnShooter(SpawnShooterPoint.position, ELookDir);
+            PlayerSkillValidAnimTimingEventHandler?.Invoke(EPlayerSkill.SPAWN_SHOOTER);
         }
     }
     public void OnValidSpawnReaperTiming()
     {
         if (ECurrentState == EPlayerState.CAST_SPAWN)
         {
-            Managers.Skill.CastSpawnReaper(SpawnReaperPoint.position, ELookDir);
+            PlayerSkillValidAnimTimingEventHandler?.Invoke(EPlayerSkill.SPAWN_REAPER);
         }
     }
 

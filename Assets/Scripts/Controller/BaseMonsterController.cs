@@ -80,8 +80,8 @@ public abstract class BaseMonsterController : BaseCharacterController
         {
             IsHittedByPlayerNormalAttack = true;
 
-            int beforeDamageHP = 0;
-            int AfterDamageHP = 0;
+            int beforeDamageHP;
+            int AfterDamageHP;
             Stat.OnHitted(damage, out beforeDamageHP, out AfterDamageHP);
             HittedByNormalAttackNoArgsEventHandler?.Invoke();
             HittedByNormalAttackEffectEventHandler?.Invoke(eAttackType);
