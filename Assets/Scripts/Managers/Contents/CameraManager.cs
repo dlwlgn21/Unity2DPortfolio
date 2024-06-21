@@ -6,6 +6,8 @@ using UnityEngine.U2D;
 
 public class CameraManager 
 {
+    
+
     private CinemachineVirtualCamera _currSceneMainVirtualCam;
     //private GameObject _camZoomImg;
     private float _initialOrthographicSize;
@@ -39,8 +41,12 @@ public class CameraManager
         }
     }
 
+    public void OnMonsterHittedByPlayerNormalAttack()
+    {
+        StartCamZoom();
+    }
 
-    public void StartCamZoom()
+    private void StartCamZoom()
     {
         if (_isWorking)
         {

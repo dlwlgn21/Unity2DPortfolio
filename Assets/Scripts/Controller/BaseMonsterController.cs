@@ -1,16 +1,7 @@
 using define;
-using DG.Tweening;
 using monster_states;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using static UnityEditor.Rendering.InspectorCurveEditor;
-
 public enum EMonsterState
 { 
     IDLE,
@@ -25,30 +16,28 @@ public enum EMonsterState
 
 public abstract class BaseMonsterController : BaseCharacterController
 {
+    public static UnityAction BigAttackEventHandler;
+    public static UnityAction HittedByNormalAttackNoArgsEventHandler;
+    public static UnityAction<EPlayerNoramlAttackType> HittedByNormalAttackEffectEventHandler;
+    public static UnityAction<int, int, int> HittedByNormalAttackWSUIEventHandler;
+
+    public static UnityAction<EMonsterState> MonsterChangeStateEventHandler;
+
     private readonly static Vector3 sLeftRotationVector = new Vector3(0f, 180f, 0f);
     private readonly static Vector3 sRightRotationVector = new Vector3(0f, 0f, 0f);
-    public UIWSMonsterHpBar HealthBar { get; set; }
-    public SpawnEffectController SpawnEffectController { get; private set; }
+    public UIWSMonsterHpBar HealthBar { get; private set; }
     public Transform PlayerTransform { get; private set; }
     public EMonsterNames MonsterType { get; protected set; }
     public MonsterStat Stat { get; protected set; }
     public float AwarenessRangeToTrace { get; private set; }
     public float AwarenessRangeToAttack { get; protected set; }
     public EMonsterState ECurrentState { get; private set; }
-    public Vector3 OriginalHpBarScale { get; private set; }
 
     protected StateMachine<BaseMonsterController> _stateMachine;
     protected State<BaseMonsterController>[] _states;
     protected PlayerController _pc;
-
-    public const string HITTED_STATUS_TEXT_STRING = "피격!";
-
-
-    // Added part for DamageFlash 6.8 day
-    public DamageFlasher DamageFlasher { get; private set; }
-    // Added part for BloodEffect 6.9 day
-    public BloodEffectController BloodEffectController { get; private set; }
-
+    public bool IsHittedByPlayerNormalAttack { get; private set; } = false;
+    public bool IsDoingInit { get; private set; } = false;
     public override void Init()
     {
         if (HealthBar == null)
@@ -62,27 +51,16 @@ public abstract class BaseMonsterController : BaseCharacterController
 
             // TODO : 여기 하드코딩 되어 있는 수치들 나중에 다 MonsterData로 빼서 읽어와야 함.
             AwarenessRangeToTrace = 10f;
-
             HealthBar = Utill.GetComponentInChildrenOrNull<UIWSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
-            OriginalHpBarScale = HealthBar.transform.localScale;
-
-            SpawnEffectController = Utill.GetComponentInChildrenOrNull<SpawnEffectController>(gameObject, "MonSpawnEffect");
-            SpawnEffectController.gameObject.SetActive(false);
-
-            // Addpart For DamageFlash 6.8 day
-            DamageFlasher = GetComponent<DamageFlasher>();
-            // Addpart For BloodEffectController 6.9 day
-            BloodEffectController = Utill.GetComponentInChildrenOrNull<BloodEffectController>(gameObject, "BloodEffect");
         }
         InitStat();
-        HealthBar.transform.localScale = OriginalHpBarScale;
-
+        IsHittedByPlayerNormalAttack = false;
     }
     public void InitForRespawn()
     {
         InitStat();
         Init();
-        HealthBar.Init();
+        HealthBar.OnMonsterInit();
         ChangeState(EMonsterState.IDLE);
     }
 
@@ -96,31 +74,46 @@ public abstract class BaseMonsterController : BaseCharacterController
     }
 
     #region CHANGE_TO_HITTED_CALLED_BY_PLAYER
-    public void OnHittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eAttackType)
+    public void OnHittedByPlayerNormalAttack(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
     {
         if (ECurrentState != EMonsterState.DIE)
         {
-            ((BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(pc, eAttackType);
+            IsHittedByPlayerNormalAttack = true;
+
+            int beforeDamageHP = 0;
+            int AfterDamageHP = 0;
+            Stat.OnHitted(damage, out beforeDamageHP, out AfterDamageHP);
+            HittedByNormalAttackNoArgsEventHandler?.Invoke();
+            HittedByNormalAttackEffectEventHandler?.Invoke(eAttackType);
+            HittedByNormalAttackWSUIEventHandler?.Invoke(damage, beforeDamageHP, AfterDamageHP);
+            #region PROCESS_BACK_TTACK_OR_THIRD_ATTACK
+            if (eAttackType == EPlayerNoramlAttackType.BACK_ATTACK || eAttackType == EPlayerNoramlAttackType.ATTACK_3)
+            {
+                BigAttackEventHandler?.Invoke();
+                Managers.HitParticle.PlayBigHittedParticle(transform.position);
+            }
+            #endregion
+            ((BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(eLookDir, damage, eAttackType);
+            
+            IsHittedByPlayerNormalAttack = false;
         }
     }
-    public void OnPlayerBlockSuccess()          { ChangeState(EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS); }
-    public void OnHittedByPlayerKnockbackBomb()   { ChangeState(EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB); }
-    public void OnHittedByPlayerSpawnReaper()     { ChangeState(EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS); }
+    public void OnPlayerBlockSuccess()              { ChangeState(EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS); }
+    public void OnHittedByPlayerKnockbackBomb()     { ChangeState(EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB); }
+    public void OnHittedByPlayerSpawnReaper()       { ChangeState(EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS); }
     #endregion
 
-
     #region ANIM_CALLBACK
-
     public void OnAttackAnimFullyPlayed()       { ((monster_states.Attack)_states[(uint)EMonsterState.ATTACK]).OnAttackAnimFullyPlayed(); }
     public void OnMonsterDieAnimFullyPlayed()   { ((monster_states.Die)_states[(uint)EMonsterState.DIE]).OnDieAnimFullyPlayed(); }
     public void OnMonsterFootStep()             { FootDustParticle.Play(); }
-
     #endregion
 
     public void ChangeState(EMonsterState eChangingState)
     {
         ECurrentState = eChangingState;
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
+        MonsterChangeStateEventHandler?.Invoke(eChangingState);
     }
 
 
@@ -139,7 +132,6 @@ public abstract class BaseMonsterController : BaseCharacterController
                 return;
         }
     }
-
 
     public void SetLookDir()
     {

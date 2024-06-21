@@ -7,5 +7,15 @@ public class UIPlayerHpBar : UIHealthBar
     public override void Init()
     {
         SetFullHpBarRatio();
+        PlayerController.HitUIEventHandler += OnPlayerHittedByMonsterNormalAttack;
+    }
+
+    private void OnDestroy()
+    {
+        PlayerController.HitUIEventHandler -= OnPlayerHittedByMonsterNormalAttack;
+    }
+    public void OnPlayerHittedByMonsterNormalAttack(int damage, int beforeDamgeHp, int afterDamageHp)
+    {
+        DecraseHP(beforeDamgeHp, afterDamageHp);
     }
 }

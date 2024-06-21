@@ -7,8 +7,6 @@ using UnityEngine.Rendering.Universal;
 public class PlayerSkillSpawnShooter : MonoBehaviour
 {
     private Animator _animator;
-    //private Light2D _headLight;
-    //private Light2D _WeaponLight;
     private Transform _shootPoint;
     
     private PlayerSkillLaunchBomb _launchBomb;
@@ -19,8 +17,6 @@ public class PlayerSkillSpawnShooter : MonoBehaviour
         if (_animator == null)
         {
             _animator = GetComponent<Animator>();
-            //_headLight = Utill.GetComponentInChildrenOrNull<Light2D>(gameObject, "HeadLight");
-            //_WeaponLight = Utill.GetComponentInChildrenOrNull<Light2D>(gameObject, "WeaponLight");
             _shootPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "ShootPoint");
             _spawnEffectAnimator = Utill.GetComponentInChildrenOrNull<Animator>(gameObject, "SpawnEffect");
             GameObject bomb = Managers.Resources.Load<GameObject>("Prefabs/Player/Skills/SkillLaunchBomb");
@@ -30,6 +26,7 @@ public class PlayerSkillSpawnShooter : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
 
     public void SpawnShooter(Vector2 pos, ECharacterLookDir eLookDir)
     {

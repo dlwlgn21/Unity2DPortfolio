@@ -14,14 +14,31 @@ public class DamageFlasher : MonoBehaviour
     const string FLASH_AMOUNT = "_FlashAmount";
 
     private SpriteRenderer _spriteRenderer;
+    private BaseMonsterController _mc;
     private void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         Debug.Assert(_normalMat != null && _damageFlashMat != null);
+        _mc = GetComponent<BaseMonsterController>();
     }
 
+    private void OnEnable()
+    {
+        BaseMonsterController.HittedByNormalAttackNoArgsEventHandler += OnHittedMonsterByPlayerNormalAttack;
+    }
 
-    public void StartDamageFlash()
+    private void OnDisable()
+    {
+        BaseMonsterController.HittedByNormalAttackNoArgsEventHandler -= OnHittedMonsterByPlayerNormalAttack;
+    }
+    public void OnHittedMonsterByPlayerNormalAttack()
+    {
+        if (_mc.IsHittedByPlayerNormalAttack)
+        {
+            StartDamageFlash();
+        }
+    }
+    private void StartDamageFlash()
     {
         StartCoroutine(DamageFlashCo());
     }

@@ -19,4 +19,22 @@ public abstract class BaseStat : MonoBehaviour
     public int Attack { get { return _attack; } set { _attack = value; } }
     public int Defence { get { return _defence; } set { _defence = value; } }
     public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
+
+    public void OnHitted(int damage, out int beforeDamageHp, out int afterDamageHp)
+    {
+        if (HP <= 0)
+        {
+            beforeDamageHp = 0;
+            afterDamageHp = 0;
+            return;
+        }
+        int actualDamage = Mathf.Max(0, damage - Defence);
+        beforeDamageHp = HP;
+        HP -= actualDamage;
+        afterDamageHp = HP;
+        if (HP <= 0)
+        {
+            HP = 0;
+        }
+    }
 }

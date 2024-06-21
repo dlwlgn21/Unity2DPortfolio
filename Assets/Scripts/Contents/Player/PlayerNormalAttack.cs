@@ -1,3 +1,4 @@
+using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class PlayerNormalAttack : MonoBehaviour
 {
     [SerializeField] private EPlayerNoramlAttackType _eAttackType;
     PlayerController _pc;
+
     public EPlayerNoramlAttackType EAttackType { get; private set; }
 
     private void Awake()
@@ -19,9 +21,30 @@ public class PlayerNormalAttack : MonoBehaviour
     {
         if (collision.CompareTag("Monster"))
         {
-            collision.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerNormalAttack(_pc, EAttackType);
+            BaseMonsterController mc = collision.gameObject.GetComponent<BaseMonsterController>();
+            Debug.Assert(mc != null);
+            switch (EAttackType)
+            {
+                case EPlayerNoramlAttackType.ATTACK_1:
+                    if (mc.ELookDir == _pc.ELookDir)
+                    {
+                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, _pc.Stat.Attack * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BACK_ATTACK);
+                    }
+                    else
+                    {
+                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, _pc.Stat.Attack, EPlayerNoramlAttackType.ATTACK_1);
+                    }
+                    break;
+                case EPlayerNoramlAttackType.ATTACK_2:
+                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, (int)(_pc.Stat.Attack * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.ATTACK_2);
+                    break;
+                case EPlayerNoramlAttackType.ATTACK_3:
+                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, _pc.Stat.Attack * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.ATTACK_3);
+                    break;
+            }
         }
     }
+
 
 
 }

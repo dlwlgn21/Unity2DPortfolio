@@ -6,7 +6,6 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayerSkillManager
 {
-
     PlayerSkillSpawnReaper _spawnReaper;
     PlayerSkillSpawnShooter _spawnShooter;
     public void Init()
@@ -24,7 +23,6 @@ public class PlayerSkillManager
             Object.DontDestroyOnLoad(spawnShooter);
         }
     }
-
     public void CastSpawnReaper(Vector2 pos, ECharacterLookDir eLookDir)
     {
         _spawnReaper.SpawnReaper(pos, eLookDir);

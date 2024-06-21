@@ -10,7 +10,6 @@ public enum EPlayerMovementEffect
     LAND,
 }
 
-
 public class PlayerMovementEffectController : WorldSpaceEffectController
 {
     private const string JUMP_LAND_KEY = "JumpEffect";
@@ -19,33 +18,36 @@ public class PlayerMovementEffectController : WorldSpaceEffectController
     private const string DASH_ATTACK_LAND_KEY = "DashAttackStopEffect";
     private const float DASH_ATTACK_LAND_X_OFFSET = 0.4f;
     private const float LAND_Y_OFFSET = 0.3f;
+
+    private PlayerController _pc;
+
+    private void Awake()
+    {
+        PlayerController.MovementEventHandler += OnPlayerMovemnt;
+    }
     public void Start()
     {
         AssignComponents();
-        gameObject.SetActive(false);
+        SetComponentsEnabled(false);
+        _pc = transform.parent.GetComponent<PlayerController>();
     }
 
-    public void PlayEffect(EPlayerMovementEffect eType, Vector2 pos, ECharacterLookDir eLookDir)
+    private void Update()
     {
-        if (!gameObject.activeSelf)
-        {
-            gameObject.SetActive(true);
-        }
-        if (_animator == null)
-        {
-            AssignComponents();
-        }
+        FixPosition();
+    }
 
+    private void OnDestroy()
+    {
+        PlayerController.MovementEventHandler -= OnPlayerMovemnt;
+    }
+
+    private void OnPlayerMovemnt(EPlayerMovementEffect eType)
+    {
+        SetComponentsEnabled(true);
+        Vector2 pos = _pc.transform.position;
         _fixedWorldPos = pos;
-        if (eLookDir == ECharacterLookDir.LEFT)
-        {
-            _spriteRenderer.flipX = true;
-        }
-        else
-        {
-            _spriteRenderer.flipX = false;
-        }
-
+        ECharacterLookDir eLookDir = _pc.ELookDir;
         switch (eType)
         {
             case EPlayerMovementEffect.JUMP:

@@ -25,6 +25,64 @@ public class SoundManager
     }
 
 
+    public void OnPlayerChangeState(EPlayerState eState)
+    {
+        switch (eState)
+        {
+            case EPlayerState.IDLE:
+                break;
+            case EPlayerState.RUN:
+                break;
+            case EPlayerState.ROLL:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_ROLLING_PATH);
+                break;
+            case EPlayerState.JUMP:
+                break;
+            case EPlayerState.CLIMB:
+                break;
+            case EPlayerState.FALL:
+                break;
+            case EPlayerState.FALL_TO_TWICE_JUMP:
+                break;
+            case EPlayerState.TWICE_JUMP_TO_FALL:
+                break;
+            case EPlayerState.LAND:
+                break;
+            case EPlayerState.NORMAL_ATTACK_1:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
+                break;
+            case EPlayerState.NORMAL_ATTACK_2:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_2_PATH);
+                break;
+            case EPlayerState.NORMAL_ATTACK_3:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
+                break;
+            case EPlayerState.CAST_LAUNCH:
+                break;
+            case EPlayerState.CAST_SPAWN:
+                break;
+            case EPlayerState.HITTED:
+                int randIdx = UnityEngine.Random.Range(0, 1);
+                if (randIdx % 2 == 0)
+                {
+                    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+                }
+                else
+                {
+                    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
+                }
+                break;
+            case EPlayerState.BLOCKING:
+                break;
+            case EPlayerState.BLOCK_SUCESS:
+                break;
+            case EPlayerState.DIE:
+                break;
+            case EPlayerState.COUNT:
+                break;
+        }
+    }
+
     public void Play(string path, ESoundType eType = ESoundType.SFX)
     {
         if (!path.Contains("Sound"))

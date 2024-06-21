@@ -1,7 +1,8 @@
 using define;
 using DG.Tweening;
+using UnityEditorInternal;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 namespace monster_states
 {
@@ -15,80 +16,16 @@ namespace monster_states
         protected readonly static string HIT_ANIM_KEY = "Hitted";
         protected readonly static string HIT_PARALYSIS_KEY = "HittedParalysis";
         protected readonly static string DIE_ANIM_KEY = "Die";
-
-        protected readonly static string HITTED_BACK_ATTACK_TEXT = "백어택!";
-        protected readonly static string ATTACK_TEXT = "공격!";
-        protected readonly static string HITTED_KNOCKBACK_TEXT = "넉백!";
-        protected readonly static string HITTED_PARALYSIS = "마비!";
-
-       
         public BaseMonsterState(BaseMonsterController controller) : base(controller) {}
         public override void Excute() {  _entity.SetLookDir(); }
 
-        public virtual void OnHittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eType)
+        public virtual void OnHittedByPlayerNormalAttack(ECharacterLookDir ePlayerLookDir, int damage, EPlayerNoramlAttackType eType)
         {
-            // TODO : HitEffect도 따로 빼서 스스로 관리할 수 있게 해야함.
-            if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
-            {
-                _entity.HitEffectAniamtor.gameObject.SetActive(true);
-            }
-            _entity.StatusText.ShowPopup(BaseMonsterController.HITTED_STATUS_TEXT_STRING);
-            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_PLAYER_NORMAL_ATTACK);
-            switch (eType)
-            {
-                case EPlayerNoramlAttackType.ATTACK_1:
-                    {
-                        ProcessHitted(pc, pc.Stat.Attack, EPlayerNoramlAttackType.ATTACK_1);
-                        break;
-                    }
-                case EPlayerNoramlAttackType.ATTACK_2:
-                    {
-                        ProcessHitted(pc, (int)(pc.Stat.Attack * 1.5f), EPlayerNoramlAttackType.ATTACK_2);
-                        break;
-                    }
-
-                case EPlayerNoramlAttackType.ATTACK_3:
-                    {
-                        ProcessHitted(pc, pc.Stat.Attack * 2, EPlayerNoramlAttackType.ATTACK_3);
-                        StartBigAttackEffect();
-                        break;
-                    }
-                default:
-                    break;
-            }
+            AdjustKnockbackAcoddingLookDir(eType);
             if (_entity.Stat.HP <= 0)
             {
                 _entity.ChangeState(EMonsterState.DIE);
             }
-        }
-        private void ProcessHitted(PlayerController pc, int damage, EPlayerNoramlAttackType eType)
-        {
-            int beforeDamgeHp = 0;
-            int afterDamageHp = 0;
-            if (pc.ELookDir == _entity.ELookDir && eType == EPlayerNoramlAttackType.ATTACK_1)
-            {
-                // TODO : 이 하드코딩된 매직넘버, 즉 백어택 데미지 계수 수정하자.
-                int backAttackDamage = damage * 3;
-                _entity.Stat.OnHitted(backAttackDamage, out beforeDamgeHp, out afterDamageHp);
-                pc.StatusText.ShowPopup(HITTED_BACK_ATTACK_TEXT);
-                _entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
-                StartBigAttackEffect();
-                _entity.BloodEffectController.PlayBloodAnimation(
-                    EPlayerNoramlAttackType.BACK_ATTACK,
-                    _entity.transform.position,
-                    (_entity.ELookDir == ECharacterLookDir.LEFT) ? ECharacterLookDir.RIGHT : ECharacterLookDir.LEFT
-                );
-                AdjustKnockbackAcoddingLookDir(EPlayerNoramlAttackType.BACK_ATTACK);
-            }
-            else
-            {
-                _entity.Stat.OnHitted(damage, out beforeDamgeHp, out afterDamageHp);
-                _entity.BloodEffectController.PlayBloodAnimation(eType, _entity.transform.position, _entity.ELookDir);
-                AdjustKnockbackAcoddingLookDir(eType);
-            }
-            _entity.DamageText.ShowPopup(beforeDamgeHp - afterDamageHp);
-            _entity.HealthBar.DecraseHP(beforeDamgeHp, afterDamageHp);
-            _entity.DamageFlasher.StartDamageFlash();
         }
 
         protected bool IsAnimEnd()
@@ -122,13 +59,6 @@ namespace monster_states
                 case EMonsterState.DIE:
                     _entity.Animator.Play(DIE_ANIM_KEY, -1, 0f);
                     return;
-            }
-        }
-        protected void ChangeStateIfAnimEnd(EMonsterState eState)
-        {
-            if (IsAnimEnd())
-            {
-                _entity.ChangeState(eState);
             }
         }
         protected void CalculateDistanceFromPlayer()
@@ -177,12 +107,6 @@ namespace monster_states
                 }
             }
         }
-        private void StartBigAttackEffect()
-        {
-            Managers.CamManager.StartCamZoom();
-            Managers.TimeManager.OnPlayerNormalAttackSuccess();
-            Managers.HitParticle.PlayBigHittedParticle(_entity.transform.position);
-        }
     }
 
     public class Idle : BaseMonsterState
@@ -224,9 +148,9 @@ namespace monster_states
         {
             _entity.Animator.speed = 1f;
         }
-        public override void OnHittedByPlayerNormalAttack(PlayerController pc, EPlayerNoramlAttackType eType)
+        public override void OnHittedByPlayerNormalAttack(ECharacterLookDir ePlayerLookDir, int damage, EPlayerNoramlAttackType eType)
         {
-            base.OnHittedByPlayerNormalAttack(pc, eType);
+            base.OnHittedByPlayerNormalAttack(ePlayerLookDir, damage, eType);
             _isHiitedByPlayerNormalAttack = true;
             _animReturnOriginalSpeedTimer = ANIM_SLOW_TIME;
             DecreaseAnimSpeed();
@@ -274,7 +198,6 @@ namespace monster_states
             {
                 // PlayerNormalAttack에 맞고 AddForce가 호출 되었다는 뜻.
                 // 그럴때는 일단 AddForce의 힘이 적용 된 다음에 이동하도록 했음.
-                Debug.Log($"Trace.FixedExcute : {_entity.RigidBody.velocity}");
                 return;
             }
             Vector2 oriVelo = _entity.RigidBody.velocity;
@@ -309,6 +232,8 @@ namespace monster_states
 
     public class Attack : CanSlowState
     {
+        public static UnityAction MonsterAttackStartEventHandler;
+        public static UnityAction MonsterAttackEndEventHandler;
         public Attack(BaseMonsterController controller) : base(controller) { }
 
         public void OnAttackAnimFullyPlayed() 
@@ -319,8 +244,7 @@ namespace monster_states
         {
             base.Enter();
             PlayAnimation(EMonsterState.ATTACK);
-            _entity.StatusText.ShowPopup(ATTACK_TEXT);
-            _entity.AttackLightController.TurnOnLight();
+            MonsterAttackStartEventHandler?.Invoke();
         }
         public override void Excute()
         {
@@ -330,7 +254,7 @@ namespace monster_states
         public override void Exit()
         {
             base.Exit();
-            _entity.AttackLightController.TurnOffLightGradually();
+            MonsterAttackEndEventHandler?.Invoke();
         }
     }
 
@@ -361,9 +285,7 @@ namespace monster_states
         public override void Enter()
         {
             SetVelocityZero();
-            _entity.StatusText.ShowPopup(HITTED_KNOCKBACK_TEXT);
             KnockbackMonster();
-            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_KNOCKBACK_BOMB);
         }
 
         protected void KnockbackMonster()
@@ -377,7 +299,6 @@ namespace monster_states
             {
                 _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
             }
-            Debug.Log($"CanKnockback.KnockbackMonster(), Velocity : {_entity.RigidBody.velocity} ");
         }
 
     }
@@ -414,8 +335,6 @@ namespace monster_states
         {
             PlayAnimation(EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
             SetVelocityZero();
-            _entity.StatusText.ShowPopup(HITTED_PARALYSIS);
-            Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_REAPER_ATTACK);
         }
 
 
@@ -432,7 +351,7 @@ namespace monster_states
         { 
             PlayAnimation(EMonsterState.DIE);
             _entity.RigidBody.Sleep();
-            _entity.HealthBar.OnDie();
+            _entity.HealthBar.OnMonsterDie();
         }
         public override void Excute() { }
 

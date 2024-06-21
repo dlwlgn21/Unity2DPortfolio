@@ -2,6 +2,7 @@ using define;
 using DG.Tweening;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace player_states
 {
@@ -246,9 +247,11 @@ namespace player_states
             }
         }
 
-        public override void Enter()       { PlayAnimation(EPlayerState.IDLE); }
+        public override void Enter()       
+        { PlayAnimation(EPlayerState.IDLE); }
 
-        public override void FixedExcute() { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
+        public override void FixedExcute() 
+        { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
         public override void Excute()
         {
             base.Excute();
@@ -297,7 +300,8 @@ namespace player_states
             }
         }
 
-        public override void Enter() { PlayAnimation(EPlayerState.RUN); }
+        public override void Enter() 
+        { PlayAnimation(EPlayerState.RUN); }
 
         public override void FixedExcute()
         {
@@ -347,8 +351,8 @@ namespace player_states
         protected void DoJump(float upForce)
         {
             ChangeVelocity();
-            _entity.RigidBody.AddForce(Vector2.up * upForce, ForceMode2D.Impulse);
             _entity.PlayMovementEffectAnimation(EPlayerMovementEffect.JUMP);
+            _entity.RigidBody.AddForce(Vector2.up * upForce, ForceMode2D.Impulse);
         }
     }
 
@@ -617,8 +621,6 @@ namespace player_states
         public override void Enter()
         {
             PlayAnimation(EPlayerState.LAND);
-            _entity.FootDustParticle.Play();
-            _entity.PlayMovementEffectAnimation(EPlayerMovementEffect.LAND);
         }
         public override void Excute()
         {
@@ -637,7 +639,6 @@ namespace player_states
         public Roll(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eLookDir;
-        //private const int IGNORE_LAYER_MASK = (1 << (int)EColliderLayer.MONSTERS_BODY);
         private const int ROLL_BACK_LAYER_MASK = 
             (1 << (int)EColliderLayer.MONSTERS_BODY) | 
             (1 << (int)EColliderLayer.PLATFORM) | 
@@ -650,8 +651,7 @@ namespace player_states
         public override void Enter()
         {
             _eLookDir = _entity.ELookDir;
-            _entity.FootDustParticle.Play();
-            Managers.Sound.Play(DataManager.SFX_PLAYER_ROLLING_PATH);
+
             PlayAnimation(EPlayerState.ROLL);
             _entity.RigidBody.velocity = Vector2.zero;
             if (_eLookDir == ECharacterLookDir.RIGHT)
@@ -669,6 +669,7 @@ namespace player_states
     }
     public abstract class NormalAttackState : BasePlayerState
     {
+        static public UnityAction NormalAttackExitEventHandler;
         protected ECharacterLookDir _eLookDir;
         protected bool _isGoToNextAttack;
         protected Transform _attackPoint;
@@ -682,8 +683,6 @@ namespace player_states
         {
             _eLookDir = _entity.ELookDir;
             _isGoToNextAttack = false;
-            // AttackLight 추가된 파트
-            _entity.AttackLightController.TurnOnLight();
             SetVelocityToZero();
         }
 
@@ -691,7 +690,7 @@ namespace player_states
         {
             if (!_isGoToNextAttack)
             {
-                _entity.AttackLightController.TurnOffLightGradually();
+                NormalAttackExitEventHandler?.Invoke();
             }
         }
 
@@ -728,8 +727,8 @@ namespace player_states
         public override void Enter()
         {
             base.Enter();
+
             PlayAnimation(EPlayerState.NORMAL_ATTACK_1);
-            Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
 
             if (_entity.ELookDir == ECharacterLookDir.LEFT)
             {
@@ -739,7 +738,8 @@ namespace player_states
             {
                 _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_1_DASH_FORCE, ForceMode2D.Impulse);
             }
-            _entity.PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_1);
+
+
         }
         public override void Excute() { ProcessKeyboardInput(); }
 
@@ -767,9 +767,9 @@ namespace player_states
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_2);
-            Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_2_PATH);
         }
-        public override void Excute() { ProcessKeyboardInput(); }
+        public override void Excute() 
+        { ProcessKeyboardInput(); }
 
 
     }
@@ -777,24 +777,18 @@ namespace player_states
     public class NormalAttack3 : NormalAttackState
     {
         public NormalAttack3(PlayerController controller) : base(controller) 
-        {
-            _eAttackType = EPlayerNoramlAttackType.ATTACK_3;
-        }
+        { _eAttackType = EPlayerNoramlAttackType.ATTACK_3; }
         public override void OnAttackAnimFullyPlayed()
-        {
-            _entity.ChangeState(EPlayerState.IDLE);
-        }
+        { _entity.ChangeState(EPlayerState.IDLE); }
         public override void Enter()
         {
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_3);
-            Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
         }
-        public override void Excute() { }
 
         public override void Exit()
         {
-            _entity.AttackLightController.TurnOffLightGradually();
+            NormalAttackExitEventHandler?.Invoke();
         }
     }
 
@@ -820,7 +814,8 @@ namespace player_states
     {
         public CastSpawn(PlayerController controller) : base(controller) { }
 
-        public void OnSpawnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.IDLE); }
+        public void OnSpawnAnimFullyPlayed() 
+        { _entity.ChangeState(EPlayerState.IDLE); }
         public override void Enter() 
         { 
             PlayAnimation(EPlayerState.CAST_SPAWN);
@@ -832,14 +827,18 @@ namespace player_states
     {
         public Blocking(PlayerController controller) : base(controller) { }
 
-        public override void Enter()        { PlayAnimation(EPlayerState.BLOCKING); }
+        public override void Enter()        
+        { PlayAnimation(EPlayerState.BLOCKING); }
 
-        public override void FixedExcute()  { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
+        public override void FixedExcute()  
+        { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
 
         public override void Excute()
         {
             if (IsAnimEnd())
+            {
                 _entity.ChangeState(EPlayerState.IDLE);
+            }
         }
     }
 
@@ -853,8 +852,6 @@ namespace player_states
         public override void Enter()
         {
             PlayAnimation(EPlayerState.BLOCK_SUCESS);
-            _entity.StatusText.ShowPopup("Block!");
-            Managers.CamShake.CamShake(ECamShakeType.PLAYER_BLOCK_SUCCES);
             _isKnockbackFlag = false;
         }
 
@@ -894,18 +891,6 @@ namespace player_states
         }
         public override void Enter()
         {
-            if (!_entity.HitEffectAniamtor.gameObject.activeSelf)
-                _entity.HitEffectAniamtor.gameObject.SetActive(true);
-            int randIdx = UnityEngine.Random.Range(0, 1);
-            if (randIdx % 2 == 0)
-            {
-                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
-            }
-            else
-            {
-                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
-            }
-
             if (_entity.ELookDir == define.ECharacterLookDir.LEFT)
             {
                 _entity.RigidBody.AddForce(new Vector2(KNOCKBACK_FORCE, KNOCKBACK_FORCE), ForceMode2D.Impulse);
@@ -915,13 +900,7 @@ namespace player_states
                 _entity.RigidBody.AddForce(new Vector2(-KNOCKBACK_FORCE, KNOCKBACK_FORCE), ForceMode2D.Impulse);
             }
 
-
             PlayAnimation(EPlayerState.HITTED);
-            Managers.CamShake.CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
-            _entity.PlayEffectForceField();
-            // TODO : 플레이어 HitEffectAnimation 살릴지 말지 결정해야 함.
-            //_entity.HitEffectAniamtor.Play(BaseCharacterController.HIT_EFFECT_3_KEY, -1, 0f);
-            Managers.TimeManager.OnPlayerHittedByMonster();
         }
     }
 
@@ -936,7 +915,9 @@ namespace player_states
         public override void Excute()
         {
             if (IsAnimEnd())
+            {
                 _entity.gameObject.SetActive(false);
+            }
         }
     }
 }

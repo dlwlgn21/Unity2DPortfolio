@@ -16,7 +16,7 @@ public class TimeManager : MonoBehaviour
         _isTimeScaling = false;
     }
 
-    public void OnPlayerNormalAttackSuccess()
+    public void OnMonsterHittedByPlayerNormalAttack()
     {
         if (_isTimeScaling)
         {

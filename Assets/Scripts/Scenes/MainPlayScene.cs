@@ -20,11 +20,13 @@ public class MainPlayScene : BaseScene
         Managers.MonsterPool.Init();
         Managers.SkillPool.Init();
         Managers.Skill.Init();
-        Managers.WorldSpaceEffect.Init();
         Managers.Pause.Init();
         Managers.Dialog.Init();
         Managers.CamShake.Init();
         Managers.CamManager.Init();
+
+        // For Event Test
+        Managers.RegisterStaticEventManager.Init();
     }
 
     public override void Clear()

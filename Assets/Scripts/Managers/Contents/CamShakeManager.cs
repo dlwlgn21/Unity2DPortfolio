@@ -34,6 +34,40 @@ public class CamShakeManager
             Object.DontDestroyOnLoad(_camShakeManager);
         }
     }
+
+    public void OnMonsterHittedByPlayerNormalAttack()
+    {
+        CamShake(ECamShakeType.MONSTER_HITTED_BY_PLAYER_NORMAL_ATTACK);
+    }
+
+    public void OnPlayerHittedByMonsterNormalAttack(EPlayerState eState)
+    {
+        switch (eState)
+        {
+            case EPlayerState.HITTED:
+                CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
+                break;
+            case EPlayerState.BLOCK_SUCESS:
+                CamShake(ECamShakeType.PLAYER_BLOCK_SUCCES);
+                break;
+        }
+        CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
+    }
+
+    public void OnMonsterHittedByPlayerSkill(EMonsterState eState)
+    {
+        switch (eState)
+        {
+            case EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
+            case EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
+                Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_KNOCKBACK_BOMB);
+                break;
+            case EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
+                CamShake(ECamShakeType.MONSTER_HITTED_BY_REAPER_ATTACK);
+                break;
+        }
+    }
+
     public void CamShake(ECamShakeType eType)
     {
         switch (eType)

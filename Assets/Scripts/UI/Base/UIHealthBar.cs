@@ -20,6 +20,7 @@ public abstract class UIHealthBar : MonoBehaviour
     public abstract void Init();
     private void Awake()
     {
+        Debug.Log($"{transform.parent.gameObject.name} : UIHealthBar Called!");
         Debug.Assert(_stat != null);
         _healthBarImg = Utill.GetComponentInChildrenOrNull<Image>(gameObject, "HealthBar");
         Debug.Assert(_healthBarImg != null);
@@ -37,7 +38,8 @@ public abstract class UIHealthBar : MonoBehaviour
         Init();
     }
 
-    public void DecraseHP(int beforeDamageHp, int afterDamgeHp)
+
+    protected void DecraseHP(int beforeDamageHp, int afterDamgeHp)
     {
         float ratio = (float)afterDamgeHp / _stat.MaxHP;
         _damagedBarImg.fillAmount = _healthBarImg.fillAmount;
@@ -58,7 +60,7 @@ public abstract class UIHealthBar : MonoBehaviour
     {
         IncraseHP(1f);
         _maxHpText.text = _stat.MaxHP.ToString();
-        _currHpText.text = _stat.HP.ToString();
+        _currHpText.text = _stat.MaxHP.ToString();
     }
     public void IncraseHP(float ratio)
     {

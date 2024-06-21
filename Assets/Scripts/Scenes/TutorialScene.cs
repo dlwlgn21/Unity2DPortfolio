@@ -18,7 +18,6 @@ public class TutorialScene : BaseScene
         Managers.MonsterPool.Init();
         Managers.SkillPool.Init();
         Managers.Skill.Init();
-        Managers.WorldSpaceEffect.Init();
         Managers.Pause.Init();
         Managers.Dialog.Init();
         Managers.CamShake.Init();

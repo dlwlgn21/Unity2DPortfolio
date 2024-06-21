@@ -34,12 +34,16 @@ public class BackAttackTutorialEvent : TutorialEvent
             }
             if (!_isSucessBackAttack && _pc.ELookDir == _mc.ELookDir && _pc.ECurrentState == EPlayerState.NORMAL_ATTACK_1)
             {
-                if (_pc.StatusText.Text.text == BACK_ATTACK_STATUS_STRING)
-                {
-                    ++_playerBackAttackCount;
-                    _tutorialManager.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
-                    _isSucessBackAttack = true;
-                }
+                // TODO : 이곳 고쳐야 함. 여러가지 방법이 있을 것.
+                //if (_pc.StatusText.Text.text == BACK_ATTACK_STATUS_STRING)
+                //{
+                //    ++_playerBackAttackCount;
+                //    _tutorialManager.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
+                //    _isSucessBackAttack = true;
+                //}
+                ++_playerBackAttackCount;
+                _tutorialManager.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
+                _isSucessBackAttack = true;
             }
 
 

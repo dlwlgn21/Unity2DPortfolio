@@ -2,13 +2,20 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public class UITextPopup : MonoBehaviour
+public enum EPopupType
+{ 
+    DAMAGE,
+    STATUS
+}
+
+public abstract class UITextPopup : MonoBehaviour
 {
+    [SerializeField] protected EPopupType _ePopupType;
     public TextMeshProUGUI Text { get; private set; }
     private Transform _parentTransform;
     private RectTransform _rectTransform;
     private Vector3 _originalScale;
-    private void Start()
+    private void Awake()
     {
         Text = GetComponent<TextMeshProUGUI>();
         Debug.Assert(Text != null);
@@ -16,8 +23,9 @@ public class UITextPopup : MonoBehaviour
         Debug.Assert(_rectTransform != null);
         _originalScale = _rectTransform.localScale;
         _parentTransform = transform.parent;
+        Init();
     }
-
+    protected abstract void Init();
     private void Update()
     {
         Vector3 currScale = _rectTransform.localScale;
@@ -37,17 +45,19 @@ public class UITextPopup : MonoBehaviour
             .SetEase(Ease.OutElastic)
             .OnComplete(OnScaleTweenEnd);
     }
-    public void ShowBackAttackPopup(int damage)
-    {
-        Debug.Log("UITextPopup.ShowBackAttackPopup()!!");
-        _rectTransform.localScale = _originalScale;
-        Text.color = Color.red;
-        Text.text = damage.ToString();
-        _rectTransform
-            .DOScale(_originalScale.z + 0.4f, 0.5f)
-            .SetEase(Ease.OutElastic)
-            .OnComplete(OnScaleTweenEnd);
-    }
+    //public void ShowBackAttackPopup(int damage)
+    //{
+    //    Debug.Log("UITextPopup.ShowBackAttackPopup()!!");
+    //    _rectTransform.localScale = _originalScale;
+    //    Text.color = Color.red;
+    //    Text.text = damage.ToString();
+    //    _rectTransform
+    //        .DOScale(_originalScale.z + 0.4f, 0.5f)
+    //        .SetEase(Ease.OutElastic)
+    //        .OnComplete(OnScaleTweenEnd);
+    //}
+
+
     public void ShowPopup(string status)
     {
         _rectTransform.localScale = _originalScale;

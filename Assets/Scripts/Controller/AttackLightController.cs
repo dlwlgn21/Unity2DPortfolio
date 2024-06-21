@@ -12,8 +12,9 @@ public class AttackLightController : MonoBehaviour
     private void Awake()
     {
         AssignComponents();
+        Init();
     }
-    public void Init()
+    public virtual void Init()
     {
         AssignComponents();
         _light.intensity = 0f;

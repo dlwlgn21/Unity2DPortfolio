@@ -1,5 +1,7 @@
 using define;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public enum EPlayerState
 {
@@ -33,12 +35,23 @@ public enum EPlayerNoramlAttackType
 }
 public class PlayerController : BaseCharacterController
 {
+    public static UnityAction<EPlayerState> PlayerChangeStateEventHandler;
+    public static UnityAction HitEventHandler;
+    public static UnityAction<EPlayerState> HitEffectEventHandler;
+    public static UnityAction<EPlayerMovementEffect> MovementEventHandler;
+    public static UnityAction<int, int, int> HitUIEventHandler;
+
     public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new Vector2(2f, 1f);
     public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new Vector2(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
     public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new Vector2(4f, 2f);
 
     public readonly static float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
     public readonly static float NORMAL_ATTACK_3_FORCE_COEFF = 1.2f;
+
+    public readonly static float NORMAL_ATTACK_2_DAMAGE_COEFF = 1.5f;
+    public readonly static int  NORMAL_ATTACK_3_DAMAGE_COEFF = 2;
+    public readonly static int  BACK_ATTACK_DAMAGE_COEFF = 3;
+
     public readonly static float BACK_ATTACK_FORCE_COEFF = 1.5f;
     public readonly static float BLOCK_SUCCESS_KNOCKBACK_X_FORCE = 5f;
     public readonly static float KNOCKBACK_BOMB_FORCE = 12f;
@@ -54,7 +67,6 @@ public class PlayerController : BaseCharacterController
     public readonly static KeyCode KeyLaunchBomb = KeyCode.A;
     public readonly static KeyCode KeySpawnReaper = KeyCode.S;
 
-    [SerializeField] private UIPlayerHpBar _hpBar;
     public UIPlayerCoolTimer RollCoolTimerImg;
     public UIPlayerCoolTimer BombCoolTimerImg;
     public UIPlayerCoolTimer SpawnReaperCoolTimerImg;
@@ -67,11 +79,8 @@ public class PlayerController : BaseCharacterController
     public Transform SpawnReaperPoint { get; private set; }
     public Transform SpawnShooterPoint { get; private set; }
 
-    public Transform MovementEffectTransform { get; private set; }
-
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
-
 
     // RollCoolTime
     public const float ROLL_INIT_COOL_TIME = 1f;
@@ -93,35 +102,16 @@ public class PlayerController : BaseCharacterController
     public float SpawnReaperCollTimer { get; set; } = SPAWN_REAPER_INIT_COOL_TIME;
     public bool IsPossibleSpawnReaper { get; set; } = true;
 
-    private PlayerForceFieldEffect _forceFieldEffect;
-    private bool _isInvincible = false;
+    public bool IsInvincible { get; set; } = false;
 
-    private void Start()
-    {
-        _hpBar.SetFullHpBarRatio();
-    }
     public override void Init()
     {
         base.Init();
         Stat = gameObject.GetOrAddComponent<PlayerStat>();
         BoxCollider = gameObject.GetComponent<BoxCollider2D>();
         ELookDir = ECharacterLookDir.RIGHT;
-
-
         LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
-
-        MovementEffectTransform = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "MovementEffectPoint");
-
-        #region FORCE_FIELD_EFFECT
-        _forceFieldEffect = Utill.GetComponentInChildrenOrNull<PlayerForceFieldEffect>(gameObject, "ForceFieldEffect");
-        _forceFieldEffect.ForceFieldStartEventHandler += OnForceFieldAinimStart;
-        _forceFieldEffect.ForceFieldEndEventHandler += OnForceFieldAnimFullyPlayed;
-        #endregion
-
-        // SpawnReaper
         SpawnReaperPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnReaperPoint");
-
-        // SpawnShooter
         SpawnShooterPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");
     }
     void FixedUpdate()
@@ -252,8 +242,6 @@ public class PlayerController : BaseCharacterController
     public void OnPlayerFootStep()
     {
         FootDustParticle.Play();
-        // TODO : 나중에 PlayerFootStep 더 좋은 Sound 찾아야 함.
-        // Managers.Sound.Play(DataManager.SFX_PLAYER_FOOT_STEP_PATH);
     }
 
     #endregion
@@ -261,9 +249,8 @@ public class PlayerController : BaseCharacterController
     public void OnHitted(int damage, BaseMonsterController monContorller) 
     {
         #region INVINCIBLE
-        if (_isInvincible)
+        if (IsInvincible)
         {
-            Debug.Log("Invincible!!");
             return;
         }
         #endregion
@@ -271,15 +258,14 @@ public class PlayerController : BaseCharacterController
         #region BLOCKING
         if (ECurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
         {
-            HitEffectAniamtor.gameObject.SetActive(true);
-            HitEffectAniamtor.Play(HIT_EFFECT_3_KEY, -1, 0f);
+            HitEffectEventHandler?.Invoke(EPlayerState.BLOCK_SUCESS);
             ChangeState(EPlayerState.BLOCK_SUCESS);
             monContorller.OnPlayerBlockSuccess();
             return;
         }
         #endregion
 
-        #region IGNORE
+        #region IGNORE_ACODDING_PLAYER_STATE
         if (ECurrentState == EPlayerState.BLOCK_SUCESS || 
             ECurrentState == EPlayerState.CLIMB || 
             ECurrentState == EPlayerState.ROLL ||
@@ -289,11 +275,13 @@ public class PlayerController : BaseCharacterController
         }
         #endregion
 
-        #region DAMAGE
-        int actualDamage = Mathf.Max(0, damage - Stat.Defence);
-        _hpBar.DecraseHP(Stat.HP, Stat.HP - actualDamage);
-        Stat.HP -= actualDamage;
-        
+        #region ACTUAL_DAMAGE
+        int beforeDamageHP;
+        int afterDamageHP;
+        Stat.OnHitted(damage, out beforeDamageHP, out afterDamageHP);
+        HitUIEventHandler?.Invoke(damage, beforeDamageHP, afterDamageHP);
+        HitEffectEventHandler?.Invoke(EPlayerState.HITTED);
+        HitEventHandler?.Invoke();
         if (Stat.HP <= 0)
         {
             ChangeState(EPlayerState.DIE);
@@ -302,36 +290,67 @@ public class PlayerController : BaseCharacterController
         {
             ChangeState(EPlayerState.HITTED);
         }
-        DamageText.ShowPopup(damage);
         #endregion
     }
     public void ChangeState(EPlayerState eChangingState)
     {
         ECurrentState = eChangingState;
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
+        PlayerChangeStateEventHandler?.Invoke(eChangingState);
+
+        switch (eChangingState)
+        {
+            case EPlayerState.IDLE:
+                break;
+            case EPlayerState.RUN:
+                break;
+            case EPlayerState.ROLL:
+                FootDustParticle.Play();
+                break;
+            case EPlayerState.JUMP:
+                break;
+            case EPlayerState.CLIMB:
+                break;
+            case EPlayerState.FALL:
+                break;
+            case EPlayerState.FALL_TO_TWICE_JUMP:
+                break;
+            case EPlayerState.TWICE_JUMP_TO_FALL:
+                break;
+            case EPlayerState.LAND:
+                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND);
+                FootDustParticle.Play();
+                break;
+            case EPlayerState.NORMAL_ATTACK_1:
+                PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_1);
+                break;
+            case EPlayerState.NORMAL_ATTACK_2:
+                break;
+            case EPlayerState.NORMAL_ATTACK_3:
+                break;
+            case EPlayerState.CAST_LAUNCH:
+                break;
+            case EPlayerState.CAST_SPAWN:
+                break;
+            case EPlayerState.HITTED:
+                break;
+            case EPlayerState.BLOCKING:
+                break;
+            case EPlayerState.BLOCK_SUCESS:
+                break;
+            case EPlayerState.DIE:
+                break;
+            case EPlayerState.COUNT:
+                break;
+            default:
+                break;
+        }
     }
 
     public void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType)
     {
-        Managers.WorldSpaceEffect.PlayPlayerMovementEffect(eEffectType, MovementEffectTransform.position, ELookDir);
+        MovementEventHandler?.Invoke(eEffectType);
     }
-
-    #region FORCE_FIELD
-    public void PlayEffectForceField()
-    {
-        _forceFieldEffect.PlayForceFieldEffect();
-    }
-
-    public void OnForceFieldAinimStart()
-    {
-        _isInvincible = true;
-    }
-
-    public void OnForceFieldAnimFullyPlayed()
-    {
-        _isInvincible = false;
-    }
-    #endregion
 
     protected override void InitStates()
     {

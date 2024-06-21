@@ -4,10 +4,11 @@ using UnityEngine;
 public class UIWSMonsterHpBar : UIHealthBar
 {
     private const float SCALE_TW_DURATION = 0.2f;
-    private Transform _parentTransform;
     private Vector3 _originalLocalScale;
     private RectTransform _rectTransform;
     private Vector3 _originalRectTransformScale;
+    private BaseMonsterController _mc;
+
     private void Start()
     {
         SetFullHpBarRatio();
@@ -16,11 +17,27 @@ public class UIWSMonsterHpBar : UIHealthBar
             AssginComponentsAndInitVariables();
         }
     }
+
+    private void OnEnable()
+    {
+        BaseMonsterController.HittedByNormalAttackWSUIEventHandler += OnMonsterHittedByPlayerNormalAttack;
+    }
+
+    private void OnDisable()
+    {
+        BaseMonsterController.HittedByNormalAttackWSUIEventHandler -= OnMonsterHittedByPlayerNormalAttack;
+    }
+
+    public void OnMonsterInit()
+    {
+        Init();
+        InitScale();
+    }
+
     public override void Init()
     {
         if (_rectTransform == null)
         {
-            _parentTransform = transform.parent;
             AssginComponentsAndInitVariables();
         }
         SetFullHpBarRatio();
@@ -28,7 +45,7 @@ public class UIWSMonsterHpBar : UIHealthBar
 
     private void Update()
     {
-        if (_parentTransform.localRotation.eulerAngles.y > 0f)
+        if (transform.parent.localRotation.eulerAngles.y > 0f)
         {
             transform.localScale = new Vector3(-1f, _originalLocalScale.y, _originalLocalScale.z);
         }
@@ -38,16 +55,30 @@ public class UIWSMonsterHpBar : UIHealthBar
         }
     }
 
-    public void OnDie()
+    public void OnMonsterDie()
     {
         _rectTransform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
+    }
+    public void OnMonsterHittedByPlayerNormalAttack(int damage, int beforeDamageHP, int afterDamageHP)
+    {
+        if (_mc.IsHittedByPlayerNormalAttack)
+        {
+            DecraseHP(beforeDamageHP, afterDamageHP);
+        }
     }
 
     private void AssginComponentsAndInitVariables()
     {
+        Debug.Log("AssginComponentsAndInitVariables");
         _rectTransform = GetComponent<RectTransform>();
         _originalLocalScale = transform.localScale;
         _originalRectTransformScale = _rectTransform.localScale;
         _rectTransform.localScale = _originalRectTransformScale;
+        _mc = transform.parent.gameObject.GetComponent<BaseMonsterController>();
+    }
+
+    private void InitScale()
+    {
+        transform.localScale = _originalLocalScale;
     }
 }

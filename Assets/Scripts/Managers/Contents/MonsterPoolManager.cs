@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEditor.Searcher;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 public class MonsterPoolManager
 {
+    public static UnityAction<BaseMonsterController, Vector2> MonsterSpawnEventHandler;
     public const int MAX_MONSTER_COUNT = 5;
     private Queue<GameObject> _wardens      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _cagedShokers = new Queue<GameObject>(MAX_MONSTER_COUNT); 
@@ -159,8 +161,6 @@ public class MonsterPoolManager
         BaseMonsterController mc = go.GetComponent<BaseMonsterController>();
         mc.InitForRespawn();
         mc.RigidBody.WakeUp();
-
-        mc.SpawnEffectController.gameObject.SetActive(true);
-        mc.SpawnEffectController.PlaySpawnEffect(spawnPos);
+        MonsterSpawnEventHandler?.Invoke(mc, spawnPos);
     }
 }
