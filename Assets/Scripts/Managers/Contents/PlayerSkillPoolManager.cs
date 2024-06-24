@@ -19,13 +19,13 @@ public class PlayerSkillPoolManager
         }
     }
 
-    public GameObject Get(Vector2 spawnPos)
+    public GameObject GetKnockbackBoom(Vector2 spawnPos)
     {
         GameObject retGo = null;
         if (_bombs.Count > 0)
         {
             retGo = _bombs.Dequeue();
-            retGo.GetComponent<KnockbackBoom>().Init(spawnPos);
+            retGo.GetComponent<PlayerSkillKnockbackBoomObject>().Init(spawnPos);
         }
         else
         {
@@ -37,13 +37,17 @@ public class PlayerSkillPoolManager
         return retGo;
     }
 
-    public void Return(GameObject go)
+    public void ReturnKnockbackBoom(GameObject go)
     {
         go.SetActive(false);
         if (_bombs.Count > MAX_BOMB_COUNT)
+        {
             Object.Destroy(go);
+        }
         else
+        {
             _bombs.Enqueue(go);
+        }
     }
 
     private GameObject MakeBomb(GameObject original, Vector2 spawnPos)
