@@ -4,17 +4,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WardenController : BaseMonsterController
+public class WardenController : NormalMonsterController, IMelleAttackable
 {
+
     public override void Init()
     {
         base.Init();
         InitStat();
-        MonsterType = EMonsterNames.Warden;
+        EMonsterType = EMonsterNames.Warden;
+        EMonsterAttackType = ENormalMonsterAttackType.MELLE_ATTACK;
     }
-    protected override void InitStat()
+    public override void InitStat()
     {
         Stat.Init(EMonsterNames.Warden);
-        AwarenessRangeToAttack = 2f;
+    }
+
+    protected override void InitStates()
+    {
+        base.InitStates();
+        AllocateMelleAttackState();
+    }
+    public void AllocateMelleAttackState()
+    {
+        _states[(uint)ENormalMonsterState.MELLE_ATTACK] = new monster_states.MelleAttack(this);
     }
 }

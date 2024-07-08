@@ -22,10 +22,9 @@ public enum ETutorialTraning
 public class TutorialManager : MonoBehaviour
 {
 
-    [SerializeField] private OpenInteractBox _rollOpenInteractBox;
-    [SerializeField] private OpenInteractBox _backAttackOpenInteractBox;
-    [SerializeField] private OpenInteractBox _blockOpenInteractBox;
-
+    [SerializeField] private GameObject _rollOpenInteractBox;
+    [SerializeField] private GameObject _backAttackOpenInteractBox;
+    [SerializeField] private GameObject _blockOpenInteractBox;
     public GameObject KeyZ { get; private set; }
     public GameObject KeyX { get; private set; }
     public GameObject KeyC { get; private set; }
@@ -101,37 +100,37 @@ public class TutorialManager : MonoBehaviour
     {
         ActiveAttackKey();
         ActiveAttackKeyText();
-        _rollOpenInteractBox.gameObject.SetActive(false);
+        _rollOpenInteractBox.SetActive(false);
     }
     public void UnactiveAttackKeyTutorial()
     {
         UnactiveAttackKey();
         UnactiveAttackKeyText();
-        _rollOpenInteractBox.gameObject.SetActive(true);
+        _rollOpenInteractBox.SetActive(true);
     }
     public void ActiveRollKeyTutorial()
     {
         ActiveRollKey();
         ActiveRollKeyText();
-        _backAttackOpenInteractBox.gameObject.SetActive(false);
+        _backAttackOpenInteractBox.SetActive(false);
     }
     public void UnactiveRollKeyTutorial()
     {
         UnactiveRollKey();
         UnactiveRollKeyText();
-        _backAttackOpenInteractBox.gameObject.SetActive(true);
+        _backAttackOpenInteractBox.SetActive(true);
     }
 
     public void ActiveBackAttackTutorial()
     {
         _backAttackTexts.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
-        _blockOpenInteractBox.gameObject.SetActive(false);
+        _blockOpenInteractBox.SetActive(false);
     }
 
     public void UnactiveBackAttackTutorial()
     {
         _backAttackTexts.SetActive(false);
-        _blockOpenInteractBox.gameObject.SetActive(true);
+        _blockOpenInteractBox.SetActive(true);
     }
 
     public void ActiveSuccessText(ETutorialTraning eType)

@@ -34,7 +34,7 @@ public class PlayerSkillSpawnRepaerController : BasePlayerSkillController
     {
         if (eType == EPlayerSkill.SPAWN_REAPER)
         {
-            if (IsPossibleDoSkill)
+            if (IsPosibbleValidStateToDoSkill())
             {
                 _pc.ChangeState(EPlayerState.CAST_SPAWN);
                 _uiCoolTimerImg.StartCoolTime(SkillCoolTime);

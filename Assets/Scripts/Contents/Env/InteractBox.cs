@@ -1,18 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
-using System.Runtime.CompilerServices;
 
-public abstract class InteractBox : MonoBehaviour
+public class InteractBox : MonoBehaviour
 {
-    protected DoorController _parent;
+    [SerializeField] protected GameObject _iZonePlayerDetectable;
+    protected IZonePlayerDetetable _detectable;
     protected BoxCollider2D _boxCollider;
+
     private void Start()
     {
-        _parent = gameObject.transform.parent.gameObject.GetComponent<DoorController>();
-        Debug.Assert(_parent != null);
+        _detectable = _iZonePlayerDetectable.GetComponent<IZonePlayerDetetable>();
+        Debug.Assert(_detectable != null);
         _boxCollider = GetComponent<BoxCollider2D>();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        {
+            _detectable.OnPlayerEnter(collision);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        {
+            _detectable.OnPlayerExit(collision);
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        {
+            _detectable.OnPlayerStay(collision);
+        }
+    }
+
+
+    public void ActiveBox()
+    {
+        _boxCollider.enabled = true;
+    }
+    public void UnactiveBox()
+    {
+        _boxCollider.enabled = false;
+    }
 }

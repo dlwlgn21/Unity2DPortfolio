@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttackLightController : AttackLightController
+public class PlayerAttackLightController : LightController
 {
     public override void Init()
     {

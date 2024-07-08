@@ -1,6 +1,5 @@
 using UnityEngine;
 using Cinemachine;
-using JetBrains.Annotations;
 
 public enum ECamShakeType
 {
@@ -10,7 +9,6 @@ public enum ECamShakeType
     MONSTER_HITTED_BY_KNOCKBACK_BOMB,
     MONSTER_HITTED_BY_REAPER_ATTACK,
 }
-
 public class CamShakeManager
 {
     private GameObject _camShakeManager;
@@ -44,7 +42,7 @@ public class CamShakeManager
     {
         switch (eState)
         {
-            case EPlayerState.HITTED:
+            case EPlayerState.HITTED_MELLE_ATTACK:
                 CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
                 break;
             case EPlayerState.BLOCK_SUCESS:
@@ -54,15 +52,15 @@ public class CamShakeManager
         CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
     }
 
-    public void OnMonsterHittedByPlayerSkill(EMonsterState eState)
+    public void OnMonsterHittedByPlayerSkill(ENormalMonsterState eState)
     {
         switch (eState)
         {
-            case EMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
-            case EMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
+            case ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
+            case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
                 Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_KNOCKBACK_BOMB);
                 break;
-            case EMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
+            case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
                 CamShake(ECamShakeType.MONSTER_HITTED_BY_REAPER_ATTACK);
                 break;
         }

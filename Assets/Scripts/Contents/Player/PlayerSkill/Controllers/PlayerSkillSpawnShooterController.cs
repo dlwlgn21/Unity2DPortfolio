@@ -34,7 +34,7 @@ public class PlayerSkillSpawnShooterController : BasePlayerSkillController
     {
         if (eType == EPlayerSkill.SPAWN_SHOOTER)
         {
-            if (IsPossibleDoSkill)
+            if (IsPosibbleValidStateToDoSkill())
             {
                 _pc.ChangeState(EPlayerState.CAST_LAUNCH);
                 _uiCoolTimerImg.StartCoolTime(SkillCoolTime);

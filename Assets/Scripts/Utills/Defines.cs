@@ -8,7 +8,8 @@ namespace define
     {
         MAIN_MENU,
         TUTORIAL,
-        MAIN_PLAY,
+        ABANDON_ROAD_SCENE,
+        COLOSSAL_BOSS_CAVE_SCENE,
         COUNT,
     }
 
@@ -31,6 +32,8 @@ namespace define
         PROJECTILE = 15,
         MONSTER_ATTACK_BOX = 16,
         MONSTER_BETWEEN_PLAYER_BLOCKING_BOX = 17,
+        BOSS_COLOSSAL_BODY = 18,
+        BOSS_COLOSSAL_ATTACK_BOX = 19,
     }
 
 
@@ -47,9 +50,11 @@ namespace define
         CagedShoker,
         RedGhoul,
         HeabySlicer,
-        LightSlicer,
-        Sweeper,
+        Gunner,
+        Shielder,
         Warden,
+        Flamer,
+        BossColossal,
     }
 
 

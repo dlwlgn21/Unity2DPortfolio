@@ -4,17 +4,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HSlicerController : BaseMonsterController
+public class HSlicerController : NormalMonsterController, IMelleAttackable
 {
     public override void Init()
     {
         base.Init();
         InitStat();
-        MonsterType = EMonsterNames.HeabySlicer;
+        EMonsterType = EMonsterNames.HeabySlicer;
+        EMonsterAttackType = ENormalMonsterAttackType.MELLE_ATTACK;
     }
-    protected override void InitStat()
+    public override void InitStat()
     {
         Stat.Init(EMonsterNames.HeabySlicer);
-        AwarenessRangeToAttack = 2.5f;
+    }
+
+    protected override void InitStates()
+    {
+        base.InitStates();
+        AllocateMelleAttackState();
+    }
+    public void AllocateMelleAttackState()
+    {
+        _states[(uint)ENormalMonsterState.MELLE_ATTACK] = new monster_states.MelleAttack(this);
     }
 }

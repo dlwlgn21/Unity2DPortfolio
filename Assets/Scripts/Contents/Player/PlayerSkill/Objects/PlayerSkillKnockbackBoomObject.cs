@@ -87,7 +87,7 @@ public class PlayerSkillKnockbackBoomObject : MonoBehaviour
 
     private void ReturnToPool()
     {
-        Managers.SkillPool.ReturnKnockbackBoom(gameObject);
+        Managers.ProjectilePool.ReturnPlayerKnockbackBoom(gameObject);
     }
     private void ProcessValidCollision()
     {

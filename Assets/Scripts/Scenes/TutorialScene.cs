@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialScene : BaseScene
+public class TutorialScene : PlayScene
 {
     public TutorialScene() : base(define.ESceneType.TUTORIAL) { }
 
@@ -14,13 +14,6 @@ public class TutorialScene : BaseScene
     protected override void Init()
     {
         base.Init();
-        Managers.HitParticle.Init();
-        Managers.MonsterPool.Init();
-        Managers.SkillPool.Init();
-        Managers.Pause.Init();
-        Managers.Dialog.Init();
-        Managers.CamShake.Init();
-        Managers.CamManager.Init();
     }
     public override void Clear()
     {

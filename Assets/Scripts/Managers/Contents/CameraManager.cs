@@ -19,23 +19,28 @@ public class CameraManager
             _currSceneMainVirtualCam = go.GetComponent<CinemachineVirtualCamera>();
             _initialOrthographicSize = _currSceneMainVirtualCam.m_Lens.OrthographicSize;
             _zoomInSize = _initialOrthographicSize - 1f;
+            Debug.Log("CameraManager.Init() Called");
         }
-        Debug.Assert(_currSceneMainVirtualCam != null);
     }
 
     public void OnMonsterHittedByPlayerNormalAttack()
     {
+        // TODO : 왜 이곳에서 _currSceneMainVirtualCam == null이 되는지 알아내야 한다.
         Debug.Assert(_currSceneMainVirtualCam != null);
+        if (Managers.Scene.GetCurrentScene() == define.ESceneType.TUTORIAL)
+        {
+            return;
+        }
         StartCamZoom();
     }
 
     private void StartCamZoom()
     {
-        if (_isWorking)
+        Debug.Assert(_currSceneMainVirtualCam != null);
+        if (_isWorking || _currSceneMainVirtualCam == null)
         {
             return;
         }
-        
         _currSceneMainVirtualCam.StartCoroutine(StartCamZoomCo());
     }
 

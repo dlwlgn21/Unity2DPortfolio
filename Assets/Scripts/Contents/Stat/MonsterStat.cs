@@ -13,7 +13,6 @@ public class MonsterStat : BaseStat
 
     [SerializeField]
     protected int _exp;
-
     public int MonsterType { get { return _monsterType; } set { _monsterType = value; } }
 
     public int Exp { get { return _exp; } set { _exp = value; } }
@@ -31,7 +30,6 @@ public class MonsterStat : BaseStat
             Defence = dict[(int)eMonster].defence;
             MoveSpeed = dict[(int)eMonster].moveSpeed;
             Exp = dict[(int)eMonster].exp;
-
         }
     }
 

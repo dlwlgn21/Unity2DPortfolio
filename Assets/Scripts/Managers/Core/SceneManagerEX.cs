@@ -44,8 +44,8 @@ public class SceneManagerEX
             case (int)define.ESceneType.TUTORIAL:
                 retType = define.ESceneType.TUTORIAL;
                 break;
-            case (int)define.ESceneType.MAIN_PLAY:
-                retType = define.ESceneType.MAIN_PLAY;
+            case (int)define.ESceneType.ABANDON_ROAD_SCENE:
+                retType = define.ESceneType.ABANDON_ROAD_SCENE;
                 break;
             default:
                 Debug.Assert(false);

@@ -19,7 +19,10 @@ public enum EPlayerState
     NORMAL_ATTACK_3,
     CAST_LAUNCH,
     CAST_SPAWN,
-    HITTED,
+    HITTED_MELLE_ATTACK,
+    HITTED_PROJECTILE_DAMAGE,
+    HITTED_PROJECTILE_KONCKBACK,
+    HITTED_PROJECTILE_STUN,
     BLOCKING,
     BLOCK_SUCESS,
     DIE,
@@ -36,9 +39,8 @@ public enum EPlayerNoramlAttackType
 public class PlayerController : BaseCharacterController
 {
     public static UnityAction<EPlayerState> PlayerChangeStateEventHandler;
-    public static UnityAction HitEventHandler;
     public static UnityAction<EPlayerState> HitEffectEventHandler;
-    public static UnityAction<EPlayerMovementEffect> MovementEventHandler;
+    public static UnityAction<EPlayerMovementEffect, ECharacterLookDir, Vector2> MovementEffectEventHandler;
     public static UnityAction<int, int, int> HitUIEventHandler;
     public static UnityAction<EPlayerSkill> PlayerSkillKeyDownEventHandler;
     public static UnityAction<EPlayerSkill> PlayerSkillValidAnimTimingEventHandler;
@@ -73,7 +75,8 @@ public class PlayerController : BaseCharacterController
     public BoxCollider2D BoxCollider { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
-    public Transform LedgeCheckPoint { get; private set; }
+    public Transform LedgeHeadRayPoint { get; private set; }
+    public Transform LedgeBodyRayPoint { get; private set; }
     public Transform SpawnReaperPoint { get; private set; }
     public Transform SpawnShooterPoint { get; private set; }
 
@@ -88,10 +91,26 @@ public class PlayerController : BaseCharacterController
         Stat = gameObject.GetOrAddComponent<PlayerStat>();
         BoxCollider = gameObject.GetComponent<BoxCollider2D>();
         ELookDir = ECharacterLookDir.RIGHT;
-        LedgeCheckPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeCheckPoint");
+        LedgeHeadRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeHeadRayPoint");
+        LedgeBodyRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeBodyRayPoint");
         SpawnReaperPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnReaperPoint");
         SpawnShooterPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");
+
+
+        #region SUBSCRIBE_EVENT
+        MonsterKnockbackProjectile.KnockbackProjectileHitEventHandler += OnHittedByMonsterKnockbackProjectile;
+        MonsterDamageProjectile.DamageProjectileHitEventHandler += OnHittedByMonsterDamageProjectile;
+        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterMelleAttack;
+        #endregion
     }
+
+    private void OnDestroy()
+    {
+        MonsterKnockbackProjectile.KnockbackProjectileHitEventHandler -= OnHittedByMonsterKnockbackProjectile;
+        MonsterDamageProjectile.DamageProjectileHitEventHandler -= OnHittedByMonsterDamageProjectile;
+        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr -= OnHittedByMonsterMelleAttack;
+    }
+
     void FixedUpdate()
     {
         #region PAUSE
@@ -141,13 +160,13 @@ public class PlayerController : BaseCharacterController
         _stateMachine.Excute();
     }
 
+    private void OnAnimFullyPlayed()
+    {
+        ((player_states.BasePlayerState)_states[(uint)ECurrentState]).OnAnimFullyPlayed();
+    }
 
-    #region ANIM_CALL_BACK
-    public void OnNormalAttack1AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_1); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_1]).OnAttackAnimFullyPlayed(); }
-    public void OnNormalAttack2AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_2); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_2]).OnAttackAnimFullyPlayed(); }
-    public void OnNormalAttack3AnimFullyPlayed()    { Debug.Assert(ECurrentState == EPlayerState.NORMAL_ATTACK_3); ((player_states.NormalAttackState)_states[(uint)EPlayerState.NORMAL_ATTACK_3]).OnAttackAnimFullyPlayed(); }
-    
-    public void OnValidLaunchTiming() 
+    #region ANIM_CALL_BACK_TIMING
+    private void OnValidLaunchTiming() 
     { 
         Debug.Assert(ECurrentState == EPlayerState.CAST_LAUNCH);
         if (ECurrentState == EPlayerState.CAST_LAUNCH)
@@ -155,7 +174,7 @@ public class PlayerController : BaseCharacterController
             PlayerSkillValidAnimTimingEventHandler?.Invoke(EPlayerSkill.SPAWN_SHOOTER);
         }
     }
-    public void OnValidSpawnReaperTiming()
+    private void OnValidSpawnReaperTiming()
     {
         if (ECurrentState == EPlayerState.CAST_SPAWN)
         {
@@ -163,52 +182,24 @@ public class PlayerController : BaseCharacterController
         }
     }
 
-    public void OnValidRollEffectTiming()
+    private void OnValidRollEffectTiming()
     {
-        PlayMovementEffectAnimation(EPlayerMovementEffect.ROLL);
+        PlayMovementEffectAnimation(EPlayerMovementEffect.ROLL, ELookDir, transform.position);
     }
 
-    public void OnHittedAnimFullyPlayed()
+    private void OnPlayerNormalAttack1ValidStopEffectTiming()
     {
-        player_states.Hitted hittedState = (player_states.Hitted)_states[(uint)EPlayerState.HITTED];
-        hittedState.OnHittedAnimFullyPlayed();
+        PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_LAND, ELookDir, transform.position);
     }
-    public void OnRollAnimFullyPlayed()
-    {
-        player_states.Roll rollState = (player_states.Roll)_states[(uint)EPlayerState.ROLL];
-        rollState.OnRollAnimFullyPlayed();
-        FootDustParticle.Play();
-    }
-    public void OnPlayerClimbAnimFullyPlayed()
-    {
-        player_states.Climb climbState = (player_states.Climb)_states[(uint)EPlayerState.CLIMB];
-        climbState.OnClimbAnimFullyPlayed();
-    }
-
-    public void OnPlayerLaunchAnimFullyPlayed()
-    {
-        player_states.CastLaunch launchState = (player_states.CastLaunch)_states[(uint)EPlayerState.CAST_LAUNCH];
-        launchState.OnLaunchAnimFullyPlayed();
-    }
-
-    public void OnPlayerSpawnReaperAnimFullyPlayed()
-    {
-        player_states.CastSpawn spawnState = (player_states.CastSpawn)_states[(uint)EPlayerState.CAST_SPAWN];
-        spawnState.OnSpawnAnimFullyPlayed();
-    }
-
-    public void OnPlayerNormalAttack1ValidStopEffectTiming()
-    {
-        PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_LAND);
-    }
-    public void OnPlayerFootStep()
+    private void OnPlayerFootStep()
     {
         FootDustParticle.Play();
     }
 
     #endregion
 
-    public void OnHitted(int damage, BaseMonsterController monContorller) 
+    #region HITTED_BY_MONSTERS
+    private void OnHittedByMonsterMelleAttack(int damage, BaseMonsterController monContorller)
     {
         #region INVINCIBLE
         if (IsInvincible)
@@ -220,16 +211,15 @@ public class PlayerController : BaseCharacterController
         #region BLOCKING
         if (ECurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
         {
-            HitEffectEventHandler?.Invoke(EPlayerState.BLOCK_SUCESS);
-            ChangeState(EPlayerState.BLOCK_SUCESS);
+            ProcessBlockSuccess();
             monContorller.OnPlayerBlockSuccess();
             return;
         }
         #endregion
 
-        #region IGNORE_ACODDING_PLAYER_STATE
-        if (ECurrentState == EPlayerState.BLOCK_SUCESS || 
-            ECurrentState == EPlayerState.CLIMB || 
+        #region IGNORE
+        if (ECurrentState == EPlayerState.BLOCK_SUCESS ||
+            ECurrentState == EPlayerState.CLIMB ||
             ECurrentState == EPlayerState.ROLL ||
             ECurrentState == EPlayerState.CAST_SPAWN)
         {
@@ -237,29 +227,60 @@ public class PlayerController : BaseCharacterController
         }
         #endregion
 
-        #region ACTUAL_DAMAGE
-        int beforeDamageHP;
-        int afterDamageHP;
-        Stat.OnHitted(damage, out beforeDamageHP, out afterDamageHP);
-        HitUIEventHandler?.Invoke(damage, beforeDamageHP, afterDamageHP);
-        HitEffectEventHandler?.Invoke(EPlayerState.HITTED);
-        HitEventHandler?.Invoke();
-        if (Stat.HP <= 0)
+        ActualDamgedFromMonsterAttack(damage, monContorller.ELookDir);
+    }
+
+
+    public void OnHittedByMonsterKnockbackProjectile(ECharacterLookDir eLuanchDir, Vector2 force)
+    {
+        if (IsInvincibleOrBlockSucess())
         {
-            ChangeState(EPlayerState.DIE);
+            return;
+        }
+        if (IsChangeStateToBlockSucess())
+        {
+            return;
+        }
+
+        ChangeState(EPlayerState.HITTED_PROJECTILE_KONCKBACK);
+        Managers.TimeManager.OnPlayerHittedByMonster();
+
+        HitEffectEventHandler?.Invoke(EPlayerState.HITTED_PROJECTILE_KONCKBACK);
+        player_states.HittedProjectileKnockback state = (player_states.HittedProjectileKnockback)_states[(uint)EPlayerState.HITTED_PROJECTILE_KONCKBACK];
+        if (eLuanchDir == ECharacterLookDir.LEFT)
+        {
+            state.AdjustKnockbackForce(new Vector2(-force.x, force.y));
         }
         else
         {
-            ChangeState(EPlayerState.HITTED);
+            state.AdjustKnockbackForce(force);
         }
-        #endregion
     }
+
+    public void OnHittedByMonsterDamageProjectile(ECharacterLookDir eLuanchDir, int damage)
+    {
+        if (IsInvincibleOrBlockSucess())
+        {
+            return;
+        }
+        if (IsChangeStateToBlockSucess())
+        {
+            return;
+        }
+        ActualDamgedFromMonsterAttack(damage, eLuanchDir);
+    }
+    #endregion
+
+    public void ProcessStatusEffect(NormalMonsterAttackStatusEffect effct)
+    {
+        //effct.OnPlayerHitted(this);
+    }
+
     public void ChangeState(EPlayerState eChangingState)
     {
         ECurrentState = eChangingState;
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
         PlayerChangeStateEventHandler?.Invoke(eChangingState);
-
         switch (eChangingState)
         {
             case EPlayerState.IDLE:
@@ -270,6 +291,7 @@ public class PlayerController : BaseCharacterController
                 FootDustParticle.Play();
                 break;
             case EPlayerState.JUMP:
+                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND, ELookDir, transform.position);
                 break;
             case EPlayerState.CLIMB:
                 break;
@@ -278,13 +300,14 @@ public class PlayerController : BaseCharacterController
             case EPlayerState.FALL_TO_TWICE_JUMP:
                 break;
             case EPlayerState.TWICE_JUMP_TO_FALL:
+                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND, ELookDir, transform.position);
                 break;
             case EPlayerState.LAND:
-                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND);
+                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND, ELookDir, transform.position);
                 FootDustParticle.Play();
                 break;
             case EPlayerState.NORMAL_ATTACK_1:
-                PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_1);
+                PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_1, ELookDir, transform.position);
                 break;
             case EPlayerState.NORMAL_ATTACK_2:
                 break;
@@ -294,7 +317,7 @@ public class PlayerController : BaseCharacterController
                 break;
             case EPlayerState.CAST_SPAWN:
                 break;
-            case EPlayerState.HITTED:
+            case EPlayerState.HITTED_MELLE_ATTACK:
                 break;
             case EPlayerState.BLOCKING:
                 break;
@@ -308,12 +331,6 @@ public class PlayerController : BaseCharacterController
                 break;
         }
     }
-
-    public void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType)
-    {
-        MovementEventHandler?.Invoke(eEffectType);
-    }
-
     protected override void InitStates()
     {
         _stateMachine = new StateMachine<PlayerController>();
@@ -334,18 +351,79 @@ public class PlayerController : BaseCharacterController
         _states[(uint)EPlayerState.CAST_SPAWN] = new player_states.CastSpawn(this);
         _states[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
         _states[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
-        _states[(uint)EPlayerState.HITTED] = new player_states.Hitted(this);
+        _states[(uint)EPlayerState.HITTED_MELLE_ATTACK] = new player_states.HittedMelleAttack(this);
+        _states[(uint)EPlayerState.HITTED_PROJECTILE_KONCKBACK] = new player_states.HittedProjectileKnockback(this);
         _states[(uint)EPlayerState.DIE] = new player_states.Die(this);
         _stateMachine.Init(this, _states[(uint)EPlayerState.IDLE]);
 
         // 6.10 FallState에서도 이단점프 할 수 있도록 하기 위해 추가.
         ((player_states.FallCanTwiceJump)_states[(uint)EPlayerState.FALL]).SubscribeTwiceJumpEventHandler((player_states.Jump)_states[(uint)EPlayerState.JUMP]);
     }
+    private void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType, ECharacterLookDir eLookDir, Vector2 pos)
+    {
+        MovementEffectEventHandler?.Invoke(eEffectType, eLookDir, pos);
+    }
+
 
     private bool IsSkipThisFrame()
     {
         if (Managers.Pause.IsPaused || Managers.Dialog.IsTalking)
             return true;
+        return false;
+    }
+
+    private void ActualDamgedFromMonsterAttack(int damge, ECharacterLookDir eMonsterLookDir)
+    {
+        #region ACTUAL_DAMAGE
+        int beforeDamageHP;
+        int afterDamageHP;
+        Stat.OnHitted(damge, out beforeDamageHP, out afterDamageHP);
+        HitUIEventHandler?.Invoke(damge, beforeDamageHP, afterDamageHP);
+        HitEffectEventHandler?.Invoke(EPlayerState.HITTED_MELLE_ATTACK);
+        Managers.TimeManager.OnPlayerHittedByMonster();
+        if (Stat.HP <= 0)
+        {
+            ChangeState(EPlayerState.DIE);
+        }
+        else
+        {
+            ChangeState(EPlayerState.HITTED_MELLE_ATTACK);
+        }
+        player_states.BaseHitted state = (player_states.BaseHitted)_states[(uint)EPlayerState.HITTED_MELLE_ATTACK];
+
+        Debug.Assert(state != null);
+        if (eMonsterLookDir == ECharacterLookDir.LEFT)
+        {
+            state.AdjustKnockbackForce(new Vector2(-2, 2));
+        }
+        else
+        {
+            state.AdjustKnockbackForce(new Vector2(2, 2));
+        }
+        #endregion
+    }
+
+    private void ProcessBlockSuccess()
+    {
+        HitEffectEventHandler?.Invoke(EPlayerState.BLOCK_SUCESS);
+        ChangeState(EPlayerState.BLOCK_SUCESS);
+    }
+    private bool IsChangeStateToBlockSucess()
+    {
+        if (ECurrentState == EPlayerState.BLOCKING)
+        {
+            ProcessBlockSuccess();
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsInvincibleOrBlockSucess()
+    {
+        if (IsInvincible || ECurrentState == EPlayerState.BLOCK_SUCESS)
+        {
+            return true;
+        }
         return false;
     }
 

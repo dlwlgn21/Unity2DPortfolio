@@ -20,7 +20,6 @@ public abstract class UIHealthBar : MonoBehaviour
     public abstract void Init();
     private void Awake()
     {
-        Debug.Log($"{transform.parent.gameObject.name} : UIHealthBar Called!");
         Debug.Assert(_stat != null);
         _healthBarImg = Utill.GetComponentInChildrenOrNull<Image>(gameObject, "HealthBar");
         Debug.Assert(_healthBarImg != null);

@@ -8,40 +8,19 @@ enum EDoorState
     CLOSING,
 }
 
-public class DoorController : MonoBehaviour
+public class DoorController : BaseInteractableController
 {
-    [SerializeField] private float _closeDistance;
-    private Transform _eKey;
-    private OpenInteractBox _openInteractBox;
-    private CloseInteractBox _closeinteractBox;
     private Animator _animator;
     private EDoorState _eDoorState;
     private bool _isDoorOpenOnce = false;
+    private bool _isDoorClosed = false;
     private void Start()
     {
-        _eKey = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "EKey");
-        Debug.Assert(_eKey != null);
-        _eKey.gameObject.SetActive(false);
-        _openInteractBox = Utill.GetComponentInChildrenOrNull<OpenInteractBox>(gameObject, "OpenInteractBox");
-        Debug.Assert(_openInteractBox != null);
-        _closeinteractBox = Utill.GetComponentInChildrenOrNull<CloseInteractBox>(gameObject, "CloseInteractBox");
-        Debug.Assert(_closeinteractBox != null);
+        base.Init();
         _animator = GetComponent<Animator>();
         _eDoorState = EDoorState.IDLE;
     }
 
-    private void Update()
-    {
-        if (_isDoorOpenOnce)
-            return;
-
-        switch (_eDoorState)
-        { 
-            case EDoorState.IDLE:
-                ProcessIdleState();
-                break;
-        }
-    }
     private void ChangeState(EDoorState eState)
     {
         _eDoorState = eState;
@@ -61,19 +40,76 @@ public class DoorController : MonoBehaviour
                 break;
         }
     }
-    private void ProcessIdleState()
+
+
+
+    public override void OnPlayerEnter(Collider2D collision)
     {
-        if (_openInteractBox.IsPressEKey)
-            ChangeState(EDoorState.OPENING);
+        if (IsPlayerLeftFromDoor(collision.transform.position))
+        {
+            // Open
+            if (_isDoorOpenOnce)
+            {
+                return;
+            }
+            _interactKey.ActiveInteractKey();
+        }
+        else
+        {
+            // Close
+            if (_isDoorClosed)
+            {
+                return;
+            }
+            ChangeState(EDoorState.CLOSING);
+            _isDoorClosed = true;
+        }
     }
 
-    public void OnPlayerEnterCloseInteractBox()     { ChangeState(EDoorState.CLOSING); }
-    public void OnDoorOpeningAnimEnd()              { ChangeState(EDoorState.OPEN); }
-    public void OnDoorClosingAnimEnd()      
-    { 
+    public override void OnPlayerStay(Collider2D collision)
+    {
+        if (IsPlayerLeftFromDoor(collision.transform.position))
+        {
+            // Open
+            if (_isDoorOpenOnce)
+            {
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E))
+            {
+                _interactKey.UnactiveInteractKey();
+                ChangeState(EDoorState.OPENING);
+                _isDoorOpenOnce = true;
+            }
+        }
+    }
+
+    public override void OnPlayerExit(Collider2D collision)
+    {
+        if (IsPlayerLeftFromDoor(collision.transform.position))
+        {
+            // Open
+            if (_isDoorOpenOnce)
+            {
+                return;
+            }
+            _interactKey.UnactiveInteractKey();
+        }
+    }
+
+    private bool IsPlayerLeftFromDoor(Vector2 playerPos)
+    {
+        if (Mathf.Abs(playerPos.x) - Mathf.Abs(transform.position.x) < 0f)
+        {
+            return true;
+        }
+        return false;
+    }
+    private void OnDoorOpeningAnimEnd()
+    { ChangeState(EDoorState.OPEN); }
+    private void OnDoorClosingAnimEnd()
+    {
         ChangeState(EDoorState.IDLE);
         _isDoorOpenOnce = true;
     }
-    public void OnPlayerEnterInteractBox()          { _eKey.gameObject.SetActive(true); }
-    public void OnPlayerExitInteractBox()           { _eKey.gameObject.SetActive(false); }
 }

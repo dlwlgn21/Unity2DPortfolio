@@ -37,4 +37,9 @@ public abstract class BaseStat : MonoBehaviour
             HP = 0;
         }
     }
+
+    public void InitHP()
+    {
+        HP = MaxHP;
+    }
 }

@@ -61,7 +61,7 @@ public class SoundManager
                 break;
             case EPlayerState.CAST_SPAWN:
                 break;
-            case EPlayerState.HITTED:
+            case EPlayerState.HITTED_MELLE_ATTACK:
                 int randIdx = UnityEngine.Random.Range(0, 1);
                 if (randIdx % 2 == 0)
                 {

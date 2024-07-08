@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class TutorialEvent : MonoBehaviour
+public abstract class TutorialSequence : MonoBehaviour
 {
     protected bool _isTutorialStart = false;
-    protected BaseMonsterController _mc;
+    protected NormalMonsterController _spawnendMonsterController;
     protected PlayerController _pc;
     protected int _playerOriginalAttackDamage;
     protected TutorialCameraManager _camManager;
@@ -16,13 +16,17 @@ public abstract class TutorialEvent : MonoBehaviour
         _pc = player.GetComponent<PlayerController>();
         Vector2 playerPos = player.GetComponent<Transform>().position;
 
-        _mc = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<BaseMonsterController>();
-        _mc.gameObject.GetComponent<MonsterStat>().SetHPForTutorialAndAttackToZero();
-        _mc.HealthBar.SetFullHpBarRatio();
-        _mc.ChangeState(EMonsterState.IDLE);
+        #region SPAWN_MONSTER
+        _spawnendMonsterController = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<NormalMonsterController>();
+        _spawnendMonsterController.gameObject.GetComponent<MonsterStat>().SetHPForTutorialAndAttackToZero();
+        _spawnendMonsterController.HealthBar.SetFullHpBarRatio();
+        _spawnendMonsterController.ChangeState(ENormalMonsterState.IDLE);
+        #endregion
 
+        #region MANAGER
         _camManager = GameObject.FindGameObjectWithTag("CamManager").GetComponent<TutorialCameraManager>();
         _tutorialManager = GameObject.FindGameObjectWithTag("TutorialManager").GetComponent<TutorialManager>();
+        #endregion
     }
     public abstract void OnDialogEnd();
 

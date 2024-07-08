@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class TestStaticRegisterEventManager
 {
+    private bool _isAlreadyInited = false;
     public void Init()
     {
-        #region PLAYER
-        PlayerController.HitEffectEventHandler += Managers.CamShake.OnPlayerHittedByMonsterNormalAttack;
-        PlayerController.HitEventHandler += Managers.TimeManager.OnPlayerHittedByMonster;
-        PlayerController.PlayerChangeStateEventHandler += Managers.Sound.OnPlayerChangeState;
-        #endregion
+        if (!_isAlreadyInited)
+        {
+            #region PLAYER
+            PlayerController.HitEffectEventHandler += Managers.CamShake.OnPlayerHittedByMonsterNormalAttack;
+            PlayerController.PlayerChangeStateEventHandler += Managers.Sound.OnPlayerChangeState;
+            #endregion
 
-        #region MONSTER
-        BaseMonsterController.BigAttackEventHandler += Managers.CamManager.OnMonsterHittedByPlayerNormalAttack;
-        BaseMonsterController.BigAttackEventHandler += Managers.TimeManager.OnMonsterHittedByPlayerNormalAttack;
-        BaseMonsterController.HittedByNormalAttackNoArgsEventHandler += Managers.CamShake.OnMonsterHittedByPlayerNormalAttack;
-        BaseMonsterController.MonsterChangeStateEventHandler += Managers.CamShake.OnMonsterHittedByPlayerSkill;
-        #endregion
+            #region MONSTER
+            BaseMonsterController.BigAttackEventHandler += Managers.CamManager.OnMonsterHittedByPlayerNormalAttack;
+            BaseMonsterController.HittedByNormalAttackNoArgsEventHandler += Managers.CamShake.OnMonsterHittedByPlayerNormalAttack;
+            NormalMonsterController.MonsterChangeStateEventHandler += Managers.CamShake.OnMonsterHittedByPlayerSkill;
+            #endregion
+
+            _isAlreadyInited = true;
+        }
 
     }
 
@@ -25,15 +29,13 @@ public class TestStaticRegisterEventManager
     {
         #region PLAYER
         PlayerController.HitEffectEventHandler -= Managers.CamShake.OnPlayerHittedByMonsterNormalAttack;
-        PlayerController.HitEventHandler -= Managers.TimeManager.OnPlayerHittedByMonster;
         PlayerController.PlayerChangeStateEventHandler -= Managers.Sound.OnPlayerChangeState;
         #endregion
 
         #region MONSTER
         BaseMonsterController.BigAttackEventHandler -= Managers.CamManager.OnMonsterHittedByPlayerNormalAttack;
-        BaseMonsterController.BigAttackEventHandler -= Managers.TimeManager.OnMonsterHittedByPlayerNormalAttack;
         BaseMonsterController.HittedByNormalAttackNoArgsEventHandler -= Managers.CamShake.OnMonsterHittedByPlayerNormalAttack;
-        BaseMonsterController.MonsterChangeStateEventHandler -= Managers.CamShake.OnMonsterHittedByPlayerSkill;
+        NormalMonsterController.MonsterChangeStateEventHandler -= Managers.CamShake.OnMonsterHittedByPlayerSkill;
         #endregion
 
 

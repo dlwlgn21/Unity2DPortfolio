@@ -6,12 +6,12 @@ using UnityEngine.Rendering.Universal;
 public class PlayerSkillSpawnReaperObject : MonoBehaviour
 {
     private Animator _animator;
-    private AttackLightController _attackLightController;
+    private LightController _attackLightController;
     private const float TURN_OFF_LIGHT_TIME = 0.7f;
     private void Start()
     {
         _animator = GetComponent<Animator>();
-        _attackLightController = Utill.GetComponentInChildrenOrNull<AttackLightController>(gameObject, "AttackLight");
+        _attackLightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "AttackLight");
         _attackLightController.SetTurnOffLightTime(TURN_OFF_LIGHT_TIME);
         gameObject.SetActive(false);
     }

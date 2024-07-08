@@ -36,7 +36,7 @@ public class PlayerHitEffectController : WorldSpaceEffectController
         SetFixedFos(_pc.transform.position);
         switch (eState)
         {
-            case EPlayerState.HITTED:
+            case EPlayerState.HITTED_MELLE_ATTACK:
                 _animator.Play(HIT_EFFECT_2_KEY, -1, 0f);
                 break;
             case EPlayerState.BLOCK_SUCESS:

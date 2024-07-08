@@ -26,6 +26,15 @@ public abstract class BasePlayerSkillController : MonoBehaviour
         _pc = transform.parent.GetComponent<PlayerController>();
     }
 
+    protected bool IsPosibbleValidStateToDoSkill()
+    {
+        if (IsPossibleDoSkill && (_pc.ECurrentState == EPlayerState.IDLE || _pc.ECurrentState == EPlayerState.RUN))
+        {
+            return true;
+        }
+        return false;
+    }
+    
     protected IEnumerator AfterGivenCoolTimePossibleDoSkillCo(float coolTimeInSec)
     {
         Debug.Assert(IsPossibleDoSkill == false);

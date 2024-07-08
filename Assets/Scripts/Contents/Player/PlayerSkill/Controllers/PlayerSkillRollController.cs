@@ -25,7 +25,7 @@ public class PlayerSkillRollController : BasePlayerSkillController
     {
         if (eType == EPlayerSkill.ROLL)
         {
-            if (IsPossibleDoSkill)
+            if (IsPosibbleValidStateToDoSkill())
             {
                 _pc.ChangeState(EPlayerState.ROLL);
                 _uiCoolTimerImg.StartCoolTime(SkillCoolTime);

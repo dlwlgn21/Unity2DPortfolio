@@ -12,27 +12,45 @@ public class MonsterPoolManager
 {
     public static UnityAction<BaseMonsterController, Vector2> MonsterSpawnEventHandler;
     public const int MAX_MONSTER_COUNT = 5;
+    private Queue<GameObject> _archers      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _wardens      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _gunners      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _cagedShokers = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _redGhouls    = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _blasters     = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _hSlicers     = new Queue<GameObject>(MAX_MONSTER_COUNT);
+    private Queue<GameObject> _shielders    = new Queue<GameObject>(MAX_MONSTER_COUNT);
+    private Queue<GameObject> _flamers      = new Queue<GameObject>(MAX_MONSTER_COUNT);
 
+    private GameObject _oriArcher;
     private GameObject _oriWarden;
+    private GameObject _oriGunner;
     private GameObject _oriBlaster;
     private GameObject _oriRedGhoul;
     private GameObject _oriCagedShokcer;
     private GameObject _oriHSlicer;
+    private GameObject _oriShielder;
+    private GameObject _oriFlamer;
     public void Init()
     {
         if (_oriWarden == null)
         {
             _oriWarden = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonWarden");
+            _oriGunner = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonGunner");
             _oriBlaster = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonBlaster");
             _oriRedGhoul = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonRedGhoul");
             _oriCagedShokcer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonCagedShoker");
             _oriHSlicer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonHSlicer");
+            _oriArcher = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonArcher");
+            _oriShielder = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonShielder");
+            _oriFlamer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonFlamer");
+            monster_states.Die.MonsterDieEventHandelr += Return;
         }
+    }
+
+    public void Clear()
+    {
+        monster_states.Die.MonsterDieEventHandelr -= Return;
     }
 
     public GameObject Get(EMonsterNames eMonName, Vector2 spawnPos)
@@ -41,60 +59,31 @@ public class MonsterPoolManager
         switch (eMonName)
         {
             case EMonsterNames.Archer:
+                retGo = DequeOrMakeMonster(_archers, _oriArcher, spawnPos);
                 break;
             case EMonsterNames.Blaster:
-                if (_blasters.Count > 0)
-                {
-                    retGo = _blasters.Dequeue();
-                }
-                else
-                {
-                    retGo = MakeMonsters(_oriBlaster, spawnPos);
-                }
+                retGo = DequeOrMakeMonster(_blasters, _oriBlaster, spawnPos);
                 break;
             case EMonsterNames.CagedShoker:
-                if (_cagedShokers.Count > 0)
-                {
-                    retGo = _cagedShokers.Dequeue();
-                }
-                else
-                {
-                    retGo = MakeMonsters(_oriCagedShokcer, spawnPos);
-                }
+                retGo = DequeOrMakeMonster(_cagedShokers, _oriCagedShokcer, spawnPos);
                 break;
             case EMonsterNames.RedGhoul:
-                if (_redGhouls.Count > 0)
-                {
-                    retGo = _redGhouls.Dequeue();
-                }
-                else
-                {
-                    retGo = MakeMonsters(_oriRedGhoul, spawnPos);
-                }
+                retGo = DequeOrMakeMonster(_redGhouls, _oriRedGhoul, spawnPos);
                 break;
             case EMonsterNames.HeabySlicer:
-                if (_hSlicers.Count > 0)
-                {
-                    retGo = _hSlicers.Dequeue();
-                }
-                else
-                {
-                    retGo = MakeMonsters(_oriHSlicer, spawnPos);
-                }
+                retGo = DequeOrMakeMonster(_hSlicers, _oriHSlicer, spawnPos);
                 break;
-            case EMonsterNames.LightSlicer:
+            case EMonsterNames.Gunner:
+                retGo = DequeOrMakeMonster(_gunners, _oriGunner, spawnPos);
                 break;
-            case EMonsterNames.Sweeper:
+            case EMonsterNames.Shielder:
+                retGo = DequeOrMakeMonster(_shielders, _oriShielder, spawnPos);
                 break;
             case EMonsterNames.Warden:
-                if (_wardens.Count > 0)
-                {
-                    retGo = _wardens.Dequeue();
-                }
-                else
-                {
-                    retGo = MakeMonsters(_oriWarden, spawnPos);
-                }
+                retGo = DequeOrMakeMonster(_wardens, _oriWarden, spawnPos);
+                break;
+            case EMonsterNames.Flamer:
+                retGo = DequeOrMakeMonster(_flamers, _oriFlamer, spawnPos);
                 break;
         }
         Debug.Assert(retGo != null);
@@ -102,46 +91,37 @@ public class MonsterPoolManager
         return retGo;
     }
 
-    public void Return(EMonsterNames eMonName, GameObject go)
+    public void Return(BaseMonsterController mc)
     {
-        go.SetActive(false);
-        switch (eMonName)
+        mc.gameObject.SetActive(false);
+        switch (mc.EMonsterType)
         {
             case EMonsterNames.Archer:
+                DestroyOrEnque(_archers, mc.gameObject);
                 break;
             case EMonsterNames.Blaster:
-                if (_blasters.Count > MAX_MONSTER_COUNT)
-                    Object.Destroy(go);
-                else
-                    _blasters.Enqueue(go);
+                DestroyOrEnque(_blasters, mc.gameObject);
                 break;
             case EMonsterNames.CagedShoker:
-                if (_cagedShokers.Count > MAX_MONSTER_COUNT)
-                    Object.Destroy(go);
-                else
-                    _cagedShokers.Enqueue(go);
+                DestroyOrEnque(_cagedShokers, mc.gameObject);
                 break;
             case EMonsterNames.RedGhoul:
-                if (_redGhouls.Count > MAX_MONSTER_COUNT)
-                    Object.Destroy(go);
-                else
-                    _redGhouls.Enqueue(go);
+                DestroyOrEnque(_redGhouls, mc.gameObject);
                 break;
             case EMonsterNames.HeabySlicer:
-                if (_hSlicers.Count > MAX_MONSTER_COUNT)
-                    Object.Destroy(go);
-                else
-                    _hSlicers.Enqueue(go);
+                DestroyOrEnque(_hSlicers, mc.gameObject);
                 break;
-            case EMonsterNames.LightSlicer:
+            case EMonsterNames.Gunner:
+                DestroyOrEnque(_gunners, mc.gameObject);
                 break;
-            case EMonsterNames.Sweeper:
+            case EMonsterNames.Shielder:
+                DestroyOrEnque(_shielders, mc.gameObject);
                 break;
             case EMonsterNames.Warden:
-                if (_wardens.Count > MAX_MONSTER_COUNT)
-                    Object.Destroy(go);
-                else
-                    _wardens.Enqueue(go);
+                DestroyOrEnque(_wardens, mc.gameObject);
+                break;
+            case EMonsterNames.Flamer:
+                DestroyOrEnque(_flamers, mc.gameObject);
                 break;
         }
     }
@@ -158,9 +138,37 @@ public class MonsterPoolManager
         Debug.Assert(go != null);
         go.transform.position = spawnPos;
         go.SetActive(true);
-        BaseMonsterController mc = go.GetComponent<BaseMonsterController>();
+        NormalMonsterController mc = go.GetComponent<NormalMonsterController>();
         mc.InitForRespawn();
         mc.RigidBody.WakeUp();
         MonsterSpawnEventHandler?.Invoke(mc, spawnPos);
+    }
+
+    private void DestroyOrEnque(Queue<GameObject> q, GameObject go)
+    {
+        if (q.Count > MAX_MONSTER_COUNT)
+        {
+            Debug.Assert(false);
+            Object.Destroy(go);
+        }
+        else
+        {
+            q.Enqueue(go);
+        }
+    }
+
+    private GameObject DequeOrMakeMonster(Queue<GameObject> q, GameObject oriGo, Vector2 spawnPos)
+    {
+        GameObject retGo = null;
+        if (q.Count > 0)
+        {
+            retGo = q.Dequeue();
+        }
+        else
+        {
+            retGo = MakeMonsters(oriGo, spawnPos);
+        }
+        Debug.Assert(retGo != null);
+        return retGo;
     }
 }

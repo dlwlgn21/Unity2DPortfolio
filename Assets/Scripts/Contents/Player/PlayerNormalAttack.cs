@@ -22,7 +22,10 @@ public class PlayerNormalAttack : MonoBehaviour
         if (collision.CompareTag("Monster"))
         {
             BaseMonsterController mc = collision.gameObject.GetComponent<BaseMonsterController>();
-            Debug.Assert(mc != null);
+            if (mc == null)
+            {
+                return;
+            }
             switch (EAttackType)
             {
                 case EPlayerNoramlAttackType.ATTACK_1:

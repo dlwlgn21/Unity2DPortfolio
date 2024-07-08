@@ -2,18 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TimeManager : MonoBehaviour
 {
-    private bool _isTimeScaling;
+    private bool _isTimeScaling = false;
 
     const float ATTACK_SUCCESS_SLOW_TIME = 0.3f;
     const float HITTED_BY_MONSTER_SLOW_TIME = 0.2f;
     const float ATTACK_SUCCESS_TIME_SCALE_VALUE = 0.5f;
     const float HITTED_BY_MONSTER_TIME_SCALE_VALUE = 0.5f;
+
     public void Init()
     {
         _isTimeScaling = false;
+        gameObject.SetActive(true);
+        Debug.Log("TimeManager.Init() Called");
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("TimeManager.OnDestroy() Called");
     }
 
     public void OnMonsterHittedByPlayerNormalAttack()
@@ -22,7 +31,8 @@ public class TimeManager : MonoBehaviour
         {
             return;
         }
-        StartCoroutine(StartTimeScaleOnPlayerNormalAttackSuccess());
+        Debug.Assert(this != null);
+        StartCoroutine(StartTimeScaleOnPlayerNormalAttackSuccessCo());
     }
 
     public void OnPlayerHittedByMonster()
@@ -31,10 +41,11 @@ public class TimeManager : MonoBehaviour
         {
             return;
         }
-        StartCoroutine(StartTimeScaleOnPlayerHittedByMonster());
+        Debug.Assert(this != null);
+        StartCoroutine(StartTimeScaleOnPlayerHittedByMonsterCo());
     }
 
-    private IEnumerator StartTimeScaleOnPlayerNormalAttackSuccess()
+    private IEnumerator StartTimeScaleOnPlayerNormalAttackSuccessCo()
     {
         _isTimeScaling = true;
         Time.timeScale = ATTACK_SUCCESS_TIME_SCALE_VALUE;
@@ -42,7 +53,7 @@ public class TimeManager : MonoBehaviour
         TimeScalingEnd();
     }
 
-    private IEnumerator StartTimeScaleOnPlayerHittedByMonster()
+    private IEnumerator StartTimeScaleOnPlayerHittedByMonsterCo()
     {
         _isTimeScaling = true;
         Time.timeScale = HITTED_BY_MONSTER_TIME_SCALE_VALUE;

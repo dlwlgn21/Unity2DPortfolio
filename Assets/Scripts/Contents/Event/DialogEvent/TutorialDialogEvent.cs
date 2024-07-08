@@ -5,7 +5,7 @@ using UnityEngine;
 public class TutorialDialogEvent : DialogEventBoxCollider, ITalkable
 {
     [SerializeField] private DialogText _dialogText;
-    [SerializeField] private TutorialEvent _currTutorialEvent;
+    [SerializeField] private TutorialSequence _currTutorialEvent;
     [SerializeField] private TutorialPillar _pillar;
 
     private bool _isDialogStart = false;
