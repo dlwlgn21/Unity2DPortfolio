@@ -10,22 +10,16 @@ public class ProjectilePoolManager
     public const int MAX_BOMB_COUNT = 10;
 
     private Queue<GameObject> _bombs = new Queue<GameObject>(MAX_BOMB_COUNT);
-    private Queue<GameObject> _monsterDamageProjectiles = new Queue<GameObject>(MAX_BOMB_COUNT);
-    private Queue<GameObject> _monsterKnockbackProjectiles = new Queue<GameObject>(MAX_BOMB_COUNT);
-    private Queue<GameObject> _monsterStunProjectiles = new Queue<GameObject>(MAX_BOMB_COUNT);
+    private Queue<GameObject> _monsterProjectiles = new Queue<GameObject>(MAX_BOMB_COUNT);
 
     private GameObject _oriPlayerBomb;
-    private GameObject _oriMonsterDamageProjectile;
-    private GameObject _oriMonsterKnockbackProjectile;
-    private GameObject _oriMonsterStunProjectile;
+    private GameObject _oriMonsterProjectile;
     public void Init()
     {
         if (_oriPlayerBomb == null)
         {
-            _oriPlayerBomb = Managers.Resources.Load<GameObject>("Prefabs/Player/Skills/Projectile");
-            _oriMonsterDamageProjectile = Managers.Resources.Load<GameObject>("Prefabs/Monsters/Projectile/MonsterDamageProjectile");
-            _oriMonsterKnockbackProjectile = Managers.Resources.Load<GameObject>("Prefabs/Monsters/Projectile/MonsterKnockbackProjectile");
-            _oriMonsterStunProjectile = Managers.Resources.Load<GameObject>("Prefabs/Monsters/Projectile/MonsterStunProjectile");
+            _oriPlayerBomb = Managers.Resources.Load<GameObject>("Prefabs/Player/Skills/PlayerProjectile");
+            _oriMonsterProjectile = Managers.Resources.Load<GameObject>("Prefabs/Monsters/Projectile/MonsterProjectile");
         }
     }
 
@@ -35,7 +29,7 @@ public class ProjectilePoolManager
         if (_bombs.Count > 0)
         {
             retGo = _bombs.Dequeue();
-            retGo.GetComponent<PlayerSkillKnockbackBoomObject>().Init(spawnPos);
+            retGo.GetComponent<PlayerSkillProjectileController>().Init(spawnPos);
         }
         else
         {
@@ -47,36 +41,13 @@ public class ProjectilePoolManager
         return retGo;
     }
 
-    //public BaseMonsterProjectile GetMonsterProjectile(EMonsterProjectileType eType)
-    //{
-    //    switch (eType)
-    //    {
-    //        case EMonsterProjectileType.DAMAGE:
-    //            return DequeOrMakeProjectile(_monsterDamageProjectiles, eType);
-    //        case EMonsterProjectileType.KNOCKBACK:
-    //            return DequeOrMakeProjectile(_monsterKnockbackProjectiles, eType);
-    //        case EMonsterProjectileType.STUN:
-    //            return DequeOrMakeProjectile(_monsterStunProjectiles, eType);
-    //    }
-    //    Debug.Assert(false);
-    //    return null;
-    //}
-
-    public MonsterKnockbackProjectile GetMonsterKnockbackProjectile(Vector2 force)
+    public MonsterProjectileController GetMonsterProjectile()
     {
-        MonsterKnockbackProjectile ret = (MonsterKnockbackProjectile)DequeOrMakeProjectile(_monsterKnockbackProjectiles, EMonsterProjectileType.KNOCKBACK);
+        MonsterProjectileController ret = DequeOrMakeProjectile(_monsterProjectiles);
         Debug.Assert(ret != null);
-        ret.KnockbackForce = force;
         return ret;
     }
 
-    public MonsterDamageProjectile GetMonsterDamageProjectile(int damage)
-    {
-        MonsterDamageProjectile ret = (MonsterDamageProjectile)DequeOrMakeProjectile(_monsterDamageProjectiles, EMonsterProjectileType.DAMAGE);
-        Debug.Assert(ret != null);
-        ret.Damage = damage;
-        return ret;
-    }
 
     public void ReturnMonsterProjectile(GameObject go, EMonsterProjectileType eType)
     {
@@ -106,16 +77,16 @@ public class ProjectilePoolManager
     }
 
 
-    private BaseMonsterProjectile DequeOrMakeProjectile(Queue<GameObject> q, EMonsterProjectileType eType)
+    private MonsterProjectileController DequeOrMakeProjectile(Queue<GameObject> q)
     {
-        BaseMonsterProjectile retProjectile;
+        MonsterProjectileController retProjectile;
         if (q.Count > 0)
         {
-            retProjectile = q.Dequeue().GetComponent<BaseMonsterProjectile>();
+            retProjectile = q.Dequeue().GetComponent<MonsterProjectileController>();
         }
         else
         {
-            retProjectile = MakeProjectile(eType);
+            retProjectile = MakeProjectile();
         }
         retProjectile.Init();
         Debug.Assert(retProjectile != null);
@@ -124,62 +95,23 @@ public class ProjectilePoolManager
 
     private void EnqueOrDestroy(GameObject go, EMonsterProjectileType eType)
     {
-        switch (eType)
+        if (_monsterProjectiles.Count > MAX_BOMB_COUNT)
         {
-            case EMonsterProjectileType.DAMAGE:
-                if (_monsterDamageProjectiles.Count > MAX_BOMB_COUNT)
-                {
-                    Debug.Assert(false);
-                    Object.Destroy(go);
-                }
-                else
-                {
-                    _monsterDamageProjectiles.Enqueue(go);
-                }
-                break;
-            case EMonsterProjectileType.KNOCKBACK:
-                if (_monsterKnockbackProjectiles.Count > MAX_BOMB_COUNT)
-                {
-                    Debug.Assert(false);
-                    Object.Destroy(go);
-                }
-                else
-                {
-                    _monsterKnockbackProjectiles.Enqueue(go);
-                }
-                break;
-            case EMonsterProjectileType.STUN:
-                if (_monsterStunProjectiles.Count > MAX_BOMB_COUNT)
-                {
-                    Debug.Assert(false);
-                    Object.Destroy(go);
-                }
-                else
-                {
-                    _monsterStunProjectiles.Enqueue(go);
-                }
-                break;
+            Debug.Assert(false);
+            Object.Destroy(go);
         }
-
+        else
+        {
+            _monsterProjectiles.Enqueue(go);
+        }
     }
-    private BaseMonsterProjectile MakeProjectile(EMonsterProjectileType eType)
+    private MonsterProjectileController MakeProjectile()
     {
         GameObject go = null;
-        switch (eType)
-        {
-            case EMonsterProjectileType.DAMAGE:
-                go = Object.Instantiate(_oriMonsterDamageProjectile);
-                break;
-            case EMonsterProjectileType.KNOCKBACK:
-                go = Object.Instantiate(_oriMonsterKnockbackProjectile);
-                break;
-            case EMonsterProjectileType.STUN:
-                go = Object.Instantiate(_oriMonsterStunProjectile);
-                break;
-        }
+        go = Object.Instantiate(_oriMonsterProjectile);
         Debug.Assert(go != null);
         Object.DontDestroyOnLoad(go);
-        BaseMonsterProjectile retProjectile = go.GetComponent<BaseMonsterProjectile>();
+        MonsterProjectileController retProjectile = go.GetComponent<MonsterProjectileController>();
         return retProjectile;
     }
 }

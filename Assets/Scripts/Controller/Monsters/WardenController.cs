@@ -16,7 +16,7 @@ public class WardenController : NormalMonsterController, IMelleAttackable
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.Warden);
+        Stat.InitBasicStat(EMonsterNames.Warden);
     }
 
     protected override void InitStates()

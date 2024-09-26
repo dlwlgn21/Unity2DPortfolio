@@ -14,7 +14,7 @@ public class FlamerController : NormalMonsterController, IMelleAttackable
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.Flamer);
+        Stat.InitBasicStat(EMonsterNames.Flamer);
     }
 
     protected override void InitStates()

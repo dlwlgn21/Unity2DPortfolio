@@ -15,7 +15,7 @@ public class BlasterController : NormalMonsterController, IMelleAttackable
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.Blaster);
+        Stat.InitBasicStat(EMonsterNames.Blaster);
     }
 
     protected override void InitStates()

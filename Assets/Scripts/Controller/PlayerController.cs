@@ -1,4 +1,7 @@
 using define;
+using DG.DemiLib;
+using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -20,6 +23,7 @@ public enum EPlayerState
     CAST_LAUNCH,
     CAST_SPAWN,
     HITTED_MELLE_ATTACK,
+    HITTED_STATUS_PARALLYSIS,
     HITTED_PROJECTILE_DAMAGE,
     HITTED_PROJECTILE_KONCKBACK,
     HITTED_PROJECTILE_STUN,
@@ -44,10 +48,12 @@ public class PlayerController : BaseCharacterController
     public static UnityAction<int, int, int> HitUIEventHandler;
     public static UnityAction<EPlayerSkill> PlayerSkillKeyDownEventHandler;
     public static UnityAction<EPlayerSkill> PlayerSkillValidAnimTimingEventHandler;
+    public static UnityAction<EMonsterStatusEffect, float> PlayerStatusEffectEventHandler;
+    public static UnityAction PlayerDieEventHandelr;
 
-    public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new Vector2(2f, 1f);
-    public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new Vector2(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
-    public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new Vector2(4f, 2f);
+    public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new(2f, 1f);
+    public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
+    public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new(3f, 2f);
 
     public readonly static float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
     public readonly static float NORMAL_ATTACK_3_FORCE_COEFF = 1.2f;
@@ -71,8 +77,10 @@ public class PlayerController : BaseCharacterController
     public readonly static KeyCode KeyLaunchBomb = KeyCode.A;
     public readonly static KeyCode KeySpawnReaper = KeyCode.S;
 
+    private const float BURN_TIME_IN_SEC = 2.0f;
+
     public CamFollowObject CamFollowObject;
-    public BoxCollider2D BoxCollider { get; set; }
+    public CapsuleCollider2D CapsuleCollider { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
     public Transform LedgeHeadRayPoint { get; private set; }
@@ -84,12 +92,16 @@ public class PlayerController : BaseCharacterController
     private State<PlayerController>[] _states;
 
     public bool IsInvincible { get; set; } = false;
+    public bool IsSlowState { get; set; } = false;
 
+    public bool IsBurned { get; set; } = false;
+
+    private int _lastBurnedDamage;
     public override void Init()
     {
         base.Init();
         Stat = gameObject.GetOrAddComponent<PlayerStat>();
-        BoxCollider = gameObject.GetComponent<BoxCollider2D>();
+        CapsuleCollider = gameObject.GetComponent<CapsuleCollider2D>();
         ELookDir = ECharacterLookDir.RIGHT;
         LedgeHeadRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeHeadRayPoint");
         LedgeBodyRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeBodyRayPoint");
@@ -98,17 +110,25 @@ public class PlayerController : BaseCharacterController
 
 
         #region SUBSCRIBE_EVENT
-        MonsterKnockbackProjectile.KnockbackProjectileHitEventHandler += OnHittedByMonsterKnockbackProjectile;
-        MonsterDamageProjectile.DamageProjectileHitEventHandler += OnHittedByMonsterDamageProjectile;
-        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterMelleAttack;
+        MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
+        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;
+        PlayerFallDeadZone.PlayerFallDeadZoneEventHandler += OnPlayerFallToDeadZone;
         #endregion
     }
 
     private void OnDestroy()
     {
-        MonsterKnockbackProjectile.KnockbackProjectileHitEventHandler -= OnHittedByMonsterKnockbackProjectile;
-        MonsterDamageProjectile.DamageProjectileHitEventHandler -= OnHittedByMonsterDamageProjectile;
-        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr -= OnHittedByMonsterMelleAttack;
+        MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr -= OnHittedByMonsterAttack;
+        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr -= OnHittedByMonsterAttack;
+        PlayerFallDeadZone.PlayerFallDeadZoneEventHandler -= OnPlayerFallToDeadZone;
+        PlayerChangeStateEventHandler = null;
+        HitEffectEventHandler = null;
+        MovementEffectEventHandler = null;
+        HitUIEventHandler = null;
+        PlayerSkillKeyDownEventHandler = null;
+        PlayerSkillValidAnimTimingEventHandler = null;
+        PlayerStatusEffectEventHandler = null;
+        PlayerDieEventHandelr = null;
     }
 
     void FixedUpdate()
@@ -141,20 +161,6 @@ public class PlayerController : BaseCharacterController
                 }
             }
             return;
-        }
-        #endregion
-        #region SKILLS
-        if (Input.GetKeyDown(KeyRoll))
-        {
-            PlayerSkillKeyDownEventHandler?.Invoke(EPlayerSkill.ROLL);
-        }
-        else if (Input.GetKeyDown(KeySpawnReaper))
-        {
-            PlayerSkillKeyDownEventHandler?.Invoke(EPlayerSkill.SPAWN_REAPER);
-        }
-        else if (Input.GetKeyDown(KeyLaunchBomb))
-        {
-            PlayerSkillKeyDownEventHandler?.Invoke(EPlayerSkill.SPAWN_SHOOTER);
         }
         #endregion
         _stateMachine.Excute();
@@ -196,86 +202,34 @@ public class PlayerController : BaseCharacterController
         FootDustParticle.Play();
     }
 
+    private void OnAttackLightTurnOnTiming()
+    {
+
+    }
+
     #endregion
 
-    #region HITTED_BY_MONSTERS
-    private void OnHittedByMonsterMelleAttack(int damage, BaseMonsterController monContorller)
+    private void OnHittedByMonsterAttack(BaseMonsterController mc)
     {
-        #region INVINCIBLE
         if (IsInvincible)
         {
             return;
         }
-        #endregion
-
-        #region BLOCKING
-        if (ECurrentState == EPlayerState.BLOCKING && ELookDir != monContorller.ELookDir)
+        if (ECurrentState == EPlayerState.BLOCKING && ELookDir != mc.ELookDir)
         {
-            ProcessBlockSuccess();
-            monContorller.OnPlayerBlockSuccess();
+            HitEffectEventHandler?.Invoke(EPlayerState.BLOCK_SUCESS);
+            ChangeState(EPlayerState.BLOCK_SUCESS);
+            mc.OnPlayerBlockSuccess();
             return;
         }
-        #endregion
-
-        #region IGNORE
-        if (ECurrentState == EPlayerState.BLOCK_SUCESS ||
-            ECurrentState == EPlayerState.CLIMB ||
-            ECurrentState == EPlayerState.ROLL ||
-            ECurrentState == EPlayerState.CAST_SPAWN)
+        if (!IsValidStateToChangeHitState())
         {
             return;
         }
-        #endregion
-
-        ActualDamgedFromMonsterAttack(damage, monContorller.ELookDir);
+        ActualDamgedFromMonsterAttack(mc.Stat.Attack);
+        ChangeHitOrDieState();
+        ProcessStatusEffect(mc);
     }
-
-
-    public void OnHittedByMonsterKnockbackProjectile(ECharacterLookDir eLuanchDir, Vector2 force)
-    {
-        if (IsInvincibleOrBlockSucess())
-        {
-            return;
-        }
-        if (IsChangeStateToBlockSucess())
-        {
-            return;
-        }
-
-        ChangeState(EPlayerState.HITTED_PROJECTILE_KONCKBACK);
-        Managers.TimeManager.OnPlayerHittedByMonster();
-
-        HitEffectEventHandler?.Invoke(EPlayerState.HITTED_PROJECTILE_KONCKBACK);
-        player_states.HittedProjectileKnockback state = (player_states.HittedProjectileKnockback)_states[(uint)EPlayerState.HITTED_PROJECTILE_KONCKBACK];
-        if (eLuanchDir == ECharacterLookDir.LEFT)
-        {
-            state.AdjustKnockbackForce(new Vector2(-force.x, force.y));
-        }
-        else
-        {
-            state.AdjustKnockbackForce(force);
-        }
-    }
-
-    public void OnHittedByMonsterDamageProjectile(ECharacterLookDir eLuanchDir, int damage)
-    {
-        if (IsInvincibleOrBlockSucess())
-        {
-            return;
-        }
-        if (IsChangeStateToBlockSucess())
-        {
-            return;
-        }
-        ActualDamgedFromMonsterAttack(damage, eLuanchDir);
-    }
-    #endregion
-
-    public void ProcessStatusEffect(NormalMonsterAttackStatusEffect effct)
-    {
-        //effct.OnPlayerHitted(this);
-    }
-
     public void ChangeState(EPlayerState eChangingState)
     {
         ECurrentState = eChangingState;
@@ -291,7 +245,7 @@ public class PlayerController : BaseCharacterController
                 FootDustParticle.Play();
                 break;
             case EPlayerState.JUMP:
-                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND, ELookDir, transform.position);
+                PlayMovementEffectAnimation(EPlayerMovementEffect.JUMP, ELookDir, transform.position);
                 break;
             case EPlayerState.CLIMB:
                 break;
@@ -300,7 +254,6 @@ public class PlayerController : BaseCharacterController
             case EPlayerState.FALL_TO_TWICE_JUMP:
                 break;
             case EPlayerState.TWICE_JUMP_TO_FALL:
-                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND, ELookDir, transform.position);
                 break;
             case EPlayerState.LAND:
                 PlayMovementEffectAnimation(EPlayerMovementEffect.LAND, ELookDir, transform.position);
@@ -352,6 +305,7 @@ public class PlayerController : BaseCharacterController
         _states[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
         _states[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
         _states[(uint)EPlayerState.HITTED_MELLE_ATTACK] = new player_states.HittedMelleAttack(this);
+        _states[(uint)EPlayerState.HITTED_STATUS_PARALLYSIS] = new player_states.HittedParallysis(this);
         _states[(uint)EPlayerState.HITTED_PROJECTILE_KONCKBACK] = new player_states.HittedProjectileKnockback(this);
         _states[(uint)EPlayerState.DIE] = new player_states.Die(this);
         _stateMachine.Init(this, _states[(uint)EPlayerState.IDLE]);
@@ -364,7 +318,6 @@ public class PlayerController : BaseCharacterController
         MovementEffectEventHandler?.Invoke(eEffectType, eLookDir, pos);
     }
 
-
     private bool IsSkipThisFrame()
     {
         if (Managers.Pause.IsPaused || Managers.Dialog.IsTalking)
@@ -372,15 +325,24 @@ public class PlayerController : BaseCharacterController
         return false;
     }
 
-    private void ActualDamgedFromMonsterAttack(int damge, ECharacterLookDir eMonsterLookDir)
+    private void ActualDamgedFromMonsterAttack(int damge)
     {
         #region ACTUAL_DAMAGE
         int beforeDamageHP;
         int afterDamageHP;
-        Stat.OnHitted(damge, out beforeDamageHP, out afterDamageHP);
+        int actualDamage = Stat.DecreaseHpAndGetActualDamageAmount(damge, out beforeDamageHP, out afterDamageHP);
+        // TODO : 이부분 나중에 따로 뺄거임.
+        InvokePlayerHitEvent(actualDamage, beforeDamageHP, afterDamageHP);
+        #endregion
+    }
+    private void InvokePlayerHitEvent(int damge, int beforeDamageHP, int afterDamageHP)
+    {
         HitUIEventHandler?.Invoke(damge, beforeDamageHP, afterDamageHP);
         HitEffectEventHandler?.Invoke(EPlayerState.HITTED_MELLE_ATTACK);
         Managers.TimeManager.OnPlayerHittedByMonster();
+    }
+    private void ChangeHitOrDieState()
+    {
         if (Stat.HP <= 0)
         {
             ChangeState(EPlayerState.DIE);
@@ -389,42 +351,77 @@ public class PlayerController : BaseCharacterController
         {
             ChangeState(EPlayerState.HITTED_MELLE_ATTACK);
         }
-        player_states.BaseHitted state = (player_states.BaseHitted)_states[(uint)EPlayerState.HITTED_MELLE_ATTACK];
-
-        Debug.Assert(state != null);
-        if (eMonsterLookDir == ECharacterLookDir.LEFT)
-        {
-            state.AdjustKnockbackForce(new Vector2(-2, 2));
-        }
-        else
-        {
-            state.AdjustKnockbackForce(new Vector2(2, 2));
-        }
-        #endregion
     }
 
-    private void ProcessBlockSuccess()
+    private void ProcessStatusEffect(BaseMonsterController mc)
     {
-        HitEffectEventHandler?.Invoke(EPlayerState.BLOCK_SUCESS);
-        ChangeState(EPlayerState.BLOCK_SUCESS);
-    }
-    private bool IsChangeStateToBlockSucess()
-    {
-        if (ECurrentState == EPlayerState.BLOCKING)
+        switch (mc.Stat.EStatusEffectType)
         {
-            ProcessBlockSuccess();
-            return true;
+            case EMonsterStatusEffect.NONE:
+            case EMonsterStatusEffect.KNOCKBACK:
+                player_states.BaseHitted state = (player_states.BaseHitted)_states[(uint)EPlayerState.HITTED_MELLE_ATTACK];
+                Debug.Assert(state != null);
+                Vector2 knockbackForce = mc.Stat.KnockbackForce;
+                if (mc.ELookDir == ECharacterLookDir.LEFT)
+                {
+                    state.AdjustKnockbackForce(new(-knockbackForce.x, knockbackForce.y));
+                }
+                else
+                {
+                    state.AdjustKnockbackForce(knockbackForce);
+                }
+                break;
+            case EMonsterStatusEffect.BLIND:
+                Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.MONSTER_BLIND_EFFECT);
+                break;
+            case EMonsterStatusEffect.BURN:
+                if (!IsBurned)
+                {
+                    _lastBurnedDamage = mc.Stat.Attack;
+                    StartCoroutine(BurnPlayerCo());
+                    PlayerStatusEffectEventHandler?.Invoke(EMonsterStatusEffect.BURN, BURN_TIME_IN_SEC);
+                }
+                break;
+            case EMonsterStatusEffect.SLOW:
+                if (!IsSlowState)
+                {
+                    StartCoroutine(StartSlowStateCountdownCo(mc.Stat.SlowTimeInSec));
+                    PlayerStatusEffectEventHandler?.Invoke(EMonsterStatusEffect.SLOW, mc.Stat.SlowTimeInSec);
+                }
+                break;
+            case EMonsterStatusEffect.PARALLYSIS:
+                ChangeState(EPlayerState.HITTED_STATUS_PARALLYSIS);
+                break;
         }
-        return false;
     }
-
-    private bool IsInvincibleOrBlockSucess()
+    private void OnPlayerFallToDeadZone()
     {
-        if (IsInvincible || ECurrentState == EPlayerState.BLOCK_SUCESS)
-        {
-            return true;
-        }
-        return false;
+        ChangeState(EPlayerState.DIE);
     }
-
+    public bool IsValidStateToChangeHitState()
+    {
+        if (ECurrentState == EPlayerState.BLOCK_SUCESS ||
+            ECurrentState == EPlayerState.CLIMB ||
+            ECurrentState == EPlayerState.ROLL ||
+            ECurrentState == EPlayerState.CAST_SPAWN)
+        {
+            return false;
+        }
+        return true;
+    }
+    private IEnumerator StartSlowStateCountdownCo(float slowTimeInSec)
+    {
+        IsSlowState = true;
+        yield return new WaitForSeconds(slowTimeInSec);
+        IsSlowState = false;
+    }
+    private IEnumerator BurnPlayerCo()
+    {
+        IsBurned = true;
+        yield return new WaitForSeconds(1f);
+        ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+        yield return new WaitForSeconds(1f);
+        ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+        IsBurned = false;
+    }
 }

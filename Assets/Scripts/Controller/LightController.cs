@@ -7,10 +7,9 @@ using UnityEngine.Rendering.Universal;
 public class LightController : MonoBehaviour
 {
     Light2D _light;
-    [SerializeField] private float _turnOffGraduallyLightTime = 0.1f;
+    [SerializeField] private float _turnOffGraduallyLightTime;
     private float _initialIntencity;
     private bool _isDoingTurnOffLight = false;
-
     private void Awake()
     {
         AssignComponents();
@@ -44,16 +43,16 @@ public class LightController : MonoBehaviour
 
     IEnumerator StartTurnOffLightCo()
     {
+        // TODO : 이거 나중에 손보자. 바꿔야함. 끄는중에 켜면, 끄는 값을 덮어 씌어버리는 문제가 생김. 이거 고쳐야함.
         float elapsedTime = 0f;
         _isDoingTurnOffLight = true;
         while (elapsedTime < _turnOffGraduallyLightTime)
         {
             elapsedTime += Time.deltaTime;
-            _light.intensity = Mathf.Lerp(_initialIntencity, 0f, elapsedTime / _turnOffGraduallyLightTime); 
+            _light.intensity = Mathf.Lerp(_initialIntencity, 0f, elapsedTime / _turnOffGraduallyLightTime);
             yield return null;
         }
         _isDoingTurnOffLight = false;
-        _light.enabled = false;
     }
 
     private void AssignComponents()
@@ -61,7 +60,6 @@ public class LightController : MonoBehaviour
         if (_light == null)
         {
             _light = GetComponent<Light2D>();
-            
         }
     }
 }

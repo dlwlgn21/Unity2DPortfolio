@@ -11,6 +11,7 @@ public class NormalMonsterAttackLightController : LightController
         _mc = transform.parent.GetComponent<NormalMonsterController>();
         NormalMonsterController.MonsterAttackStartEventHandler += OnMonsterAttackStart;
         NormalMonsterController.MonsterAttackEndEventHandler += OnMonsterAttackEnd;
+        
     }
 
     private void OnDestroy()
@@ -19,8 +20,9 @@ public class NormalMonsterAttackLightController : LightController
         NormalMonsterController.MonsterAttackEndEventHandler -= OnMonsterAttackEnd;
     }
 
-    public void OnMonsterAttackStart()
+    private void OnMonsterAttackStart()
     {
+        Debug.Log("OnMonsterAttackStart");
         if (_mc.ECurrentState == ENormalMonsterState.MELLE_ATTACK || 
             _mc.ECurrentState == ENormalMonsterState.LAUNCH_ATTACK)
         {
@@ -28,13 +30,13 @@ public class NormalMonsterAttackLightController : LightController
         }
     }
 
-    public void OnMonsterAttackEnd()
+    private void OnMonsterAttackEnd()
     {
+        Debug.Log("OnMonsterAttackEnd");
         if (_mc.ECurrentState == ENormalMonsterState.MELLE_ATTACK ||
             _mc.ECurrentState == ENormalMonsterState.LAUNCH_ATTACK)
         {
             TurnOffLightGradually();
         }
     }
-
 }

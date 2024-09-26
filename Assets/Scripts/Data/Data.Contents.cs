@@ -39,6 +39,7 @@ namespace data
     public class MonsterStat
     {
         public int monsterType;
+        public int monsterStatusEffect;
         public int maxHp;
         public int attack;
         public int defence;

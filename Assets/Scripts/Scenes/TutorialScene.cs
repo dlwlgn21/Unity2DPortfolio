@@ -18,5 +18,6 @@ public class TutorialScene : PlayScene
     public override void Clear()
     {
         Managers.Dialog.Clear();
+        Managers.CamSwitch.Clear();
     }
 }

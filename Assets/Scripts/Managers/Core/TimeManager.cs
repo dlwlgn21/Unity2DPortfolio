@@ -17,13 +17,8 @@ public class TimeManager : MonoBehaviour
     {
         _isTimeScaling = false;
         gameObject.SetActive(true);
-        Debug.Log("TimeManager.Init() Called");
     }
 
-    private void OnDestroy()
-    {
-        Debug.Log("TimeManager.OnDestroy() Called");
-    }
 
     public void OnMonsterHittedByPlayerNormalAttack()
     {

@@ -4,9 +4,13 @@ using DG.Tweening;
 
 public class UIPlayerHpBar : UIHealthBar
 {
-    public override void Init()
+    private void Start()
     {
         SetFullHpBarRatio();
+    }
+    public override void Init()
+    {
+        //SetFullHpBarRatio();
         PlayerController.HitUIEventHandler += OnPlayerHittedByMonsterNormalAttack;
     }
 

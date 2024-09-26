@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerAttackLightController : LightController
 {
+    static readonly float DELAYED_TURN_ON_LIGHT_TIME_IN_SEC = 0.1f;
     public override void Init()
     {
         base.Init();
@@ -16,20 +17,25 @@ public class PlayerAttackLightController : LightController
         PlayerController.PlayerChangeStateEventHandler -= OnPlayerNormalAttackStart;
         player_states.NormalAttackState.NormalAttackExitEventHandler -= OnPlayerAttackEnd;
     }
-    public void OnPlayerNormalAttackStart(EPlayerState eState)
+    private void OnPlayerNormalAttackStart(EPlayerState eState)
     {
         switch (eState)
         {
             case EPlayerState.NORMAL_ATTACK_1:
-            case EPlayerState.NORMAL_ATTACK_2:
-            case EPlayerState.NORMAL_ATTACK_3:
-                TurnOnLight();
+                StartCoroutine(TurnOnLightDelayed());
                 break;
         }
     }
 
-    public void OnPlayerAttackEnd()
+    private void OnPlayerAttackEnd()
     {
         TurnOffLightGradually();
+    }
+
+
+    IEnumerator TurnOnLightDelayed()
+    {
+        yield return new WaitForSeconds(DELAYED_TURN_ON_LIGHT_TIME_IN_SEC);
+        TurnOnLight();
     }
 }

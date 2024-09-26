@@ -6,18 +6,15 @@ public enum ECameraType
     MAIN_PLAY_CAM,
     ROOM_CAM
 }
-
 public class TutorialCameraManager : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera _mainCam;
     [SerializeField] private CinemachineVirtualCamera _roomCam;
-
     public static float ATTACK_TUTORIAL_X_POS = 18f;
-    public static float ROLL_TUTORIAL_X_POS = 33f;
-    public static float BACK_ATTACK_TUTORIAL_X_POS = 48f;
-    public static float BLOCK_TUTORIAL_X_POS = 64f;
+    public static float ROLL_TUTORIAL_X_POS = 35f;
+    public static float BACK_ATTACK_TUTORIAL_X_POS = 51f;
+    public static float BLOCK_TUTORIAL_X_POS = 67f;
     public void SwitchCameraToMain()
-
     {
         _mainCam.enabled = true;
         _roomCam.enabled = false;

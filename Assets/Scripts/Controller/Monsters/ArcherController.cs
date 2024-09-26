@@ -6,6 +6,7 @@ using UnityEngine;
 public class ArcherController : NormalMonsterController, ILaunchAttackable
 {
     private Transform _launchPoint;
+    private readonly Vector2 PROJECTILE_KNOCKBACK_FORCE = new Vector2(4f, 4f);
     public override void Init()
     {
         base.Init();
@@ -16,7 +17,8 @@ public class ArcherController : NormalMonsterController, ILaunchAttackable
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.Archer);
+        Stat.InitBasicStat(EMonsterNames.Archer);
+        Stat.KnockbackForce = PROJECTILE_KNOCKBACK_FORCE;
     }
 
     protected override void InitStates()
@@ -32,7 +34,7 @@ public class ArcherController : NormalMonsterController, ILaunchAttackable
     public void OnValidLaunchAnimTiming()
     {
         Managers.ProjectilePool
-            .GetMonsterDamageProjectile(Stat.Attack)
-            .OnValidShootAnimTiming(ELookDir, _launchPoint.position);
+            .GetMonsterProjectile()
+            .OnValidShootAnimTiming(ELookDir, _launchPoint.position, this);
     }
 }

@@ -19,7 +19,7 @@ public class MonsterPoolManager
     private Queue<GameObject> _redGhouls    = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _blasters     = new Queue<GameObject>(MAX_MONSTER_COUNT); 
     private Queue<GameObject> _hSlicers     = new Queue<GameObject>(MAX_MONSTER_COUNT);
-    private Queue<GameObject> _shielders    = new Queue<GameObject>(MAX_MONSTER_COUNT);
+    //private Queue<GameObject> _shielders    = new Queue<GameObject>(MAX_MONSTER_COUNT);
     private Queue<GameObject> _flamers      = new Queue<GameObject>(MAX_MONSTER_COUNT);
 
     private GameObject _oriArcher;
@@ -29,7 +29,7 @@ public class MonsterPoolManager
     private GameObject _oriRedGhoul;
     private GameObject _oriCagedShokcer;
     private GameObject _oriHSlicer;
-    private GameObject _oriShielder;
+    //private GameObject _oriShielder;
     private GameObject _oriFlamer;
     public void Init()
     {
@@ -42,7 +42,7 @@ public class MonsterPoolManager
             _oriCagedShokcer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonCagedShoker");
             _oriHSlicer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonHSlicer");
             _oriArcher = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonArcher");
-            _oriShielder = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonShielder");
+            //_oriShielder = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonShielder");
             _oriFlamer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonFlamer");
             monster_states.Die.MonsterDieEventHandelr += Return;
         }
@@ -77,7 +77,7 @@ public class MonsterPoolManager
                 retGo = DequeOrMakeMonster(_gunners, _oriGunner, spawnPos);
                 break;
             case EMonsterNames.Shielder:
-                retGo = DequeOrMakeMonster(_shielders, _oriShielder, spawnPos);
+                //retGo = DequeOrMakeMonster(_shielders, _oriShielder, spawnPos);
                 break;
             case EMonsterNames.Warden:
                 retGo = DequeOrMakeMonster(_wardens, _oriWarden, spawnPos);
@@ -115,7 +115,7 @@ public class MonsterPoolManager
                 DestroyOrEnque(_gunners, mc.gameObject);
                 break;
             case EMonsterNames.Shielder:
-                DestroyOrEnque(_shielders, mc.gameObject);
+                //DestroyOrEnque(_shielders, mc.gameObject);
                 break;
             case EMonsterNames.Warden:
                 DestroyOrEnque(_wardens, mc.gameObject);
@@ -140,7 +140,6 @@ public class MonsterPoolManager
         go.SetActive(true);
         NormalMonsterController mc = go.GetComponent<NormalMonsterController>();
         mc.InitForRespawn();
-        mc.RigidBody.WakeUp();
         MonsterSpawnEventHandler?.Invoke(mc, spawnPos);
     }
 

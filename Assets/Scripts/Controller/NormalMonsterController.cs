@@ -1,6 +1,7 @@
 using define;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -45,6 +46,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         InitStat();
         Init();
         HealthBar.OnMonsterInit();
+        RigidBody.WakeUp();
         ChangeState(ENormalMonsterState.IDLE);
     }
     private void FixedUpdate()
@@ -109,14 +111,12 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             {
                 BigAttackEventHandler?.Invoke();
                 Managers.TimeManager.OnMonsterHittedByPlayerNormalAttack();
-                Managers.HitParticle.PlayBigHittedParticle(transform.position);
             }
             #endregion
             ((monster_states.BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(eLookDir, damage, eAttackType);
             IsHittedByPlayerNormalAttack = false;
         }
     }
-
     public override void OnPlayerBlockSuccess() 
     { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS); }
     public override void OnHittedByPlayerKnockbackBomb() 
@@ -124,12 +124,18 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     public override void OnHittedByPlayerSpawnReaper() 
     { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS); }
 
+    public override void OnDie()
+    {
+        Animator.speed = 1f;
+    }
+
+    #region ANIM_CALLBACK
     private void OnMonsterFootStep() 
     { FootDustParticle.Play(); }
 
-    protected override void OnAnimFullyPlayed()
+    private void OnAnimFullyPlayed()
     { ((monster_states.BaseMonsterState)_states[(uint)ECurrentState]).OnAnimFullyPlayed(); }
-
+    #endregion
 
     void OnDrawGizmosSelected()
     {

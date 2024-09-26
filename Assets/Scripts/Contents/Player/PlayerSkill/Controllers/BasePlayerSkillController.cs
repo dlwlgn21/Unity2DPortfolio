@@ -16,7 +16,7 @@ public abstract class BasePlayerSkillController : MonoBehaviour
     protected EPlayerSkill _eSkillType;
 
     protected float _initCoolTime;
-    public float SkillCoolTime { get; protected set; }
+    public float SkillCoolTimeInSec { get; protected set; }
     public bool IsPossibleDoSkill { get; protected set; }
     public abstract void Init();
 
@@ -35,6 +35,38 @@ public abstract class BasePlayerSkillController : MonoBehaviour
         return false;
     }
     
+    protected void DoSkill(EPlayerSkill eType)
+    {
+        switch (eType)
+        {
+            case EPlayerSkill.ROLL:
+                {
+                    _pc.ChangeState(EPlayerState.ROLL);
+                    ProcessSkillLogic();
+                }
+                break;
+            case EPlayerSkill.SPAWN_REAPER:
+                {
+                    _pc.ChangeState(EPlayerState.CAST_SPAWN);
+                    ProcessSkillLogic();
+                }
+                break;
+            case EPlayerSkill.SPAWN_SHOOTER:
+                {
+                    _pc.ChangeState(EPlayerState.CAST_LAUNCH);
+                    ProcessSkillLogic();
+                }
+                break;
+        }
+    }
+
+    private void ProcessSkillLogic()
+    {
+        _uiCoolTimerImg.StartCoolTime(SkillCoolTimeInSec);
+        IsPossibleDoSkill = false;
+        StartCoroutine(AfterGivenCoolTimePossibleDoSkillCo(SkillCoolTimeInSec));
+    }
+
     protected IEnumerator AfterGivenCoolTimePossibleDoSkillCo(float coolTimeInSec)
     {
         Debug.Assert(IsPossibleDoSkill == false);

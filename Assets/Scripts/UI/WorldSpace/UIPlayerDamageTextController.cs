@@ -15,8 +15,8 @@ public class UIPlayerDamageTextController : UITextPopup
         PlayerController.HitUIEventHandler -= OnPlayerHittedByMonsterNormalAttack;
     }
 
-    public void OnPlayerHittedByMonsterNormalAttack(int damage, int beforeDamageHp, int afterDamageHp)
+    public void OnPlayerHittedByMonsterNormalAttack(int actualDamage, int beforeDamageHp, int afterDamageHp)
     {
-        ShowPopup(damage);
+        ShowPopup(actualDamage);
     }
 }

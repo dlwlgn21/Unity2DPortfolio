@@ -10,27 +10,17 @@ public class PlayerSkillRollController : BasePlayerSkillController
     {
         _eSkillType = EPlayerSkill.ROLL;
         _initCoolTime = ROLL_INIT_COOL_TIME_IN_SEC;
-        SkillCoolTime = ROLL_INIT_COOL_TIME_IN_SEC;
+        SkillCoolTimeInSec = ROLL_INIT_COOL_TIME_IN_SEC;
         IsPossibleDoSkill = true;
-        PlayerController.PlayerSkillKeyDownEventHandler += OnPlayerRollKeyDown;
         Debug.Assert(_uiCoolTimerImg != null);
     }
-
-    private void OnDestroy()
+    private void Update()
     {
-        PlayerController.PlayerSkillKeyDownEventHandler -= OnPlayerRollKeyDown;
-    }
-
-    private void OnPlayerRollKeyDown(EPlayerSkill eType)
-    {
-        if (eType == EPlayerSkill.ROLL)
+        if (Input.GetKeyDown(PlayerController.KeyRoll))
         {
             if (IsPosibbleValidStateToDoSkill())
             {
-                _pc.ChangeState(EPlayerState.ROLL);
-                _uiCoolTimerImg.StartCoolTime(SkillCoolTime);
-                IsPossibleDoSkill = false;
-                StartCoroutine(AfterGivenCoolTimePossibleDoSkillCo(SkillCoolTime));
+                DoSkill(EPlayerSkill.ROLL);
             }
         }
     }

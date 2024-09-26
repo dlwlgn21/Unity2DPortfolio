@@ -41,8 +41,9 @@ public class InteractBox : MonoBehaviour
     {
         _boxCollider.enabled = true;
     }
-    public void UnactiveBox()
+    public void Unactive()
     {
         _boxCollider.enabled = false;
+        gameObject.SetActive(false);
     }
 }

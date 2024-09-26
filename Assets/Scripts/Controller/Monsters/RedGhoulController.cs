@@ -14,7 +14,8 @@ public class RedGhoulController : NormalMonsterController, IMelleAttackable
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.RedGhoul);
+        Stat.InitBasicStat(EMonsterNames.RedGhoul);
+        Stat.SlowTimeInSec = 2.0f;
     }
 
     protected override void InitStates()

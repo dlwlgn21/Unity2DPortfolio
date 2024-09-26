@@ -21,13 +21,15 @@ public class UIWSMonsterHpBar : UIHealthBar
     private void OnEnable()
     {
         BaseMonsterController.HittedByNormalAttackWSUIEventHandler += OnMonsterHittedByPlayerNormalAttack;
+        monster_states.Die.MonsterDieEventHandelr += OnMonsterDie;
     }
 
-    private void OnDisable()
+
+    private void OnDestroy()
     {
         BaseMonsterController.HittedByNormalAttackWSUIEventHandler -= OnMonsterHittedByPlayerNormalAttack;
+        monster_states.Die.MonsterDieEventHandelr -= OnMonsterDie;
     }
-
     public void OnMonsterInit()
     {
         Init();
@@ -55,9 +57,12 @@ public class UIWSMonsterHpBar : UIHealthBar
         }
     }
 
-    public void OnMonsterDie()
+    public void OnMonsterDie(BaseMonsterController mc)
     {
-        _rectTransform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
+        if (mc == _mc)
+        {
+            _rectTransform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
+        }
     }
     public void OnMonsterHittedByPlayerNormalAttack(int damage, int beforeDamageHP, int afterDamageHP)
     {
@@ -69,7 +74,6 @@ public class UIWSMonsterHpBar : UIHealthBar
 
     private void AssginComponentsAndInitVariables()
     {
-        Debug.Log("AssginComponentsAndInitVariables");
         _rectTransform = GetComponent<RectTransform>();
         _originalLocalScale = transform.localScale;
         _originalRectTransformScale = _rectTransform.localScale;

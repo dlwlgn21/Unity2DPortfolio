@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class GunnerController : NormalMonsterController, ILaunchAttackable
 {
     private Transform _launchPoint;
-    private readonly Vector2 PROJECTILE_KNOCKBACK_FORCE = new Vector2(4f, 4f);
+    private const float PROJECTILE_SLOW_TIME_IN_SEC = 2f;
     public override void Init()
     {
         base.Init();
@@ -18,7 +18,8 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.Gunner);
+        Stat.InitBasicStat(EMonsterNames.Gunner);
+        Stat.SlowTimeInSec = PROJECTILE_SLOW_TIME_IN_SEC;
     }
 
     protected override void InitStates()
@@ -34,7 +35,7 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
     public void OnValidLaunchAnimTiming()
     {
         Managers.ProjectilePool
-            .GetMonsterKnockbackProjectile(PROJECTILE_KNOCKBACK_FORCE)
-            .OnValidShootAnimTiming(ELookDir, _launchPoint.position);
+            .GetMonsterProjectile()
+            .OnValidShootAnimTiming(ELookDir, _launchPoint.position, this);
     }
 }

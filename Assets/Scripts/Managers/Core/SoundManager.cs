@@ -12,18 +12,21 @@ public class SoundManager
     private Dictionary<string, AudioClip> _clips = new Dictionary<string, AudioClip>();
     public void Init()
     {
-        GameObject root = new GameObject() { name = "@SoundManager" };
-        GameObject sfxGo = new GameObject() { name = "SFX" };
-        GameObject bgmGo = new GameObject() { name = "BGM" };
-        sfxGo.transform.parent = root.transform;
-        bgmGo.transform.parent = root.transform;
-        _audioSources[(int)ESoundType.SFX] = sfxGo.AddComponent<AudioSource>();
-        _audioSources[(int)ESoundType.BGM] = bgmGo.AddComponent<AudioSource>();
-        UnityEngine.Object.DontDestroyOnLoad(root);
-        _audioSources[(int)ESoundType.SFX].loop = false;
-        _audioSources[(int)ESoundType.BGM].loop = true;
+        if (GameObject.Find("@SoundManager") == null)
+        {
+            GameObject root = new() { name = "@SoundManager" };
+            GameObject sfxGo = new() { name = "SFX" };
+            GameObject bgmGo = new() { name = "BGM" };
+            sfxGo.transform.parent = root.transform;
+            bgmGo.transform.parent = root.transform;
+            _audioSources[(int)ESoundType.SFX] = sfxGo.AddComponent<AudioSource>();
+            _audioSources[(int)ESoundType.BGM] = bgmGo.AddComponent<AudioSource>();
+            UnityEngine.Object.DontDestroyOnLoad(root);
+            _audioSources[(int)ESoundType.SFX].loop = false;
+            _audioSources[(int)ESoundType.BGM].loop = true;
+            PlayerController.PlayerChangeStateEventHandler += Managers.Sound.OnPlayerChangeState;
+        }
     }
-
 
     public void OnPlayerChangeState(EPlayerState eState)
     {
@@ -113,6 +116,8 @@ public class SoundManager
     public void Clear()
     {
         _clips.Clear();
+        // TODO : 이거 문제 일어날 수 있으니까 나중에 Clear 잘 짜자.
+        PlayerController.PlayerChangeStateEventHandler -= Managers.Sound.OnPlayerChangeState;
     }
 
     private AudioClip GetOrAddAudioClip(string path)

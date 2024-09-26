@@ -23,14 +23,24 @@ public class CamShakeManager
     private const float MONSTER_HITTED_BY_REAPER_ATTACK_FORCE = 1.5f;
     public void Init()
     {
-        if (GameObject.Find("CamShakeManager") == null)
+        if (GameObject.Find("@CamShakeManager") == null)
         {
             _camShakeManager = Managers.Resources.Load<GameObject>("Prefabs/Managers/CamShakeManager");
-            _camShakeManager.name = "CamShakeManager";
+            _camShakeManager.name = "@CamShakeManager";
             _playerImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "PlayerImpulseSource");
             _monsterImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "MonsterImpulseSource");
             Object.DontDestroyOnLoad(_camShakeManager);
+            PlayerController.HitEffectEventHandler += Managers.CamShake.OnPlayerHittedByMonsterNormalAttack;
+            BaseMonsterController.HittedByNormalAttackNoArgsEventHandler += Managers.CamShake.OnMonsterHittedByPlayerNormalAttack;
+            NormalMonsterController.MonsterChangeStateEventHandler += Managers.CamShake.OnMonsterHittedByPlayerSkill;
+
         }
+    }
+    public void Clear()
+    {
+        PlayerController.HitEffectEventHandler -= Managers.CamShake.OnPlayerHittedByMonsterNormalAttack;
+        BaseMonsterController.HittedByNormalAttackNoArgsEventHandler -= Managers.CamShake.OnMonsterHittedByPlayerNormalAttack;
+        NormalMonsterController.MonsterChangeStateEventHandler -= Managers.CamShake.OnMonsterHittedByPlayerSkill;
     }
 
     public void OnMonsterHittedByPlayerNormalAttack()

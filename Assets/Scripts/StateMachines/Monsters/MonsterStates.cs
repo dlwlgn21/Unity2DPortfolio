@@ -402,9 +402,7 @@ namespace monster_states
         public override void Enter() 
         { 
             PlayAnimation(ENormalMonsterState.DIE);
-            _entity.Animator.speed = 1f;
-            _entity.HealthBar.OnMonsterDie();
-            _entity.RigidBody.Sleep();
+            _entity.OnDie();
         }
         public override void Excute() { }
     }

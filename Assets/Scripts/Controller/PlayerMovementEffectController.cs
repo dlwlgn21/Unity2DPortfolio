@@ -1,4 +1,5 @@
 using define;
+using player_states;
 using UnityEngine;
 
 public enum EPlayerMovementEffect
@@ -12,16 +13,18 @@ public enum EPlayerMovementEffect
 
 public class PlayerMovementEffectController : WorldSpaceEffectController
 {
-    private const string JUMP_LAND_KEY = "JumpEffect";
+    private const string JUMP_AND_LAND_KEY = "JumpEffect";
     private const string ROLL_KEY = "RollEffect";
     private const string DASH_ATTACK_KEY = "DashAttackEffect";
     private const string DASH_ATTACK_LAND_KEY = "DashAttackStopEffect";
     private const float DASH_ATTACK_LAND_X_OFFSET = 0.4f;
-    private const float LAND_Y_OFFSET = 0.3f;
+    private const float LAND_Y_OFFSET = 0.215f;
 
+    [SerializeField] private float _jumpYOffset;
     private void Awake()
     {
         PlayerController.MovementEffectEventHandler += OnPlayerMovemnt;
+        InAir.JumpEventHandler += OnPlayerJump;
         DontDestroyOnLoad(gameObject);
     }
     public void Start()
@@ -33,19 +36,19 @@ public class PlayerMovementEffectController : WorldSpaceEffectController
     private void OnDestroy()
     {
         PlayerController.MovementEffectEventHandler -= OnPlayerMovemnt;
+        InAir.JumpEventHandler -= OnPlayerJump;
     }
 
+    private void OnPlayerJump(Vector2 pos)
+    {
+        SetForPlayAnimation(pos);
+        _animator.Play(JUMP_AND_LAND_KEY, -1, 0f);
+    }
     private void OnPlayerMovemnt(EPlayerMovementEffect eType, ECharacterLookDir eLookDir, Vector2 pos)
     {
-        SetComponentsEnabled(true);
-        transform.position = pos;
-        _spriteRenderer.flipX = false;
-
+        SetForPlayAnimation(pos);
         switch (eType)
         {
-            case EPlayerMovementEffect.JUMP:
-                _animator.Play(JUMP_LAND_KEY, -1, 0f);
-                break;
             case EPlayerMovementEffect.ROLL:
                 FlipSpriteIfLeft(eLookDir);
                 _animator.Play(ROLL_KEY, -1, 0f);
@@ -68,7 +71,7 @@ public class PlayerMovementEffectController : WorldSpaceEffectController
                 break;
             case EPlayerMovementEffect.LAND:
                 transform.position = new Vector2(pos.x, pos.y - LAND_Y_OFFSET);
-                _animator.Play(JUMP_LAND_KEY, -1, 0f);
+                _animator.Play(JUMP_AND_LAND_KEY, -1, 0f);
                 break;
         }
     }
@@ -81,4 +84,11 @@ public class PlayerMovementEffectController : WorldSpaceEffectController
         }
     }
 
+
+    private void SetForPlayAnimation(Vector2 pos)
+    {
+        SetComponentsEnabled(true);
+        transform.position = pos;
+        _spriteRenderer.flipX = false;
+    }
 }

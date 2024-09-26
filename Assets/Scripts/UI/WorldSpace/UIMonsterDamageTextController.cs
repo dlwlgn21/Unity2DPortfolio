@@ -13,11 +13,11 @@ public class UIMonsterDamageTextController : UITextPopup
         BaseMonsterController.HittedByNormalAttackWSUIEventHandler -= OnMonsterHittedByPlayerNormalAttack;
     }
 
-    public void OnMonsterHittedByPlayerNormalAttack(int damage, int beforeDamageHP, int afterDamageHP)
+    public void OnMonsterHittedByPlayerNormalAttack(int actualDamage, int beforeDamageHP, int afterDamageHP)
     {
         if (_mc.IsHittedByPlayerNormalAttack)
         {
-            ShowPopup(damage);
+            ShowPopup(actualDamage);
         }
     }
 }

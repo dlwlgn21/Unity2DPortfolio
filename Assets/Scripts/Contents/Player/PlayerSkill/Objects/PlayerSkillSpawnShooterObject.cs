@@ -53,7 +53,7 @@ public class PlayerSkillSpawnShooterObject : MonoBehaviour
     {
         GameObject go = Managers.ProjectilePool.GetPlayerKnockbackBoom(_shootPoint.position);
         Debug.Assert(go != null);
-        go.GetComponent<PlayerSkillKnockbackBoomObject>().Launch(_ePlayerLookDir);
+        go.GetComponent<PlayerSkillProjectileController>().Launch(_ePlayerLookDir);
     }
     public void OnTransparenyAnimStart()
     {

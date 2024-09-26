@@ -25,10 +25,10 @@ public enum EColossalBossState
     DIE,
     COUNT
 }
-public class ColossalBossMonsterController : BaseMonsterController, IMelleAttackable
+public class ColossalBossMonsterController : BaseMonsterController, IMelleAttackable, IZonePlayerDetetable
 {
     static public UnityAction<EColossalBossState> ColossalChangeStateEventHandler;
-
+    private readonly Vector2 COLOSSAL_KNOCKBACK_FORCE = new Vector2(7f, 7f);
     public EColossalBossPhase EColossalPhase { get; private set; } = EColossalBossPhase.FIRST_PHASE;
     public EColossalBossState ECurrentState { get; private set; }
     protected StateMachine<ColossalBossMonsterController> _stateMachine;
@@ -38,6 +38,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     public bool IsPlayerInFistAttackZone { get; set; }
     public bool IsPlayerInBurstAttackZone { get; set; }
 
+    public bool IsWake { get; private set; }
 
     #region ATTACK_LIGHTS
     [SerializeField] private ColossalBossAttackLightController _fistAttackLight;
@@ -52,11 +53,12 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         InitStates();
         //AllocateMelleAttackState();
         EMonsterType = EMonsterNames.BossColossal;
-
+        Animator.enabled = false;
         #region ATTACK_ZONE_DETECTION_EVENT
         ColossalAttackZoneDetection.ColossalAttackZoneEnterEvnetHandler += OnPlayerEnterAttackZone;
         ColossalAttackZoneDetection.ColossalAttackZoneExitEvnetHandler += OnPlayerExitAttackZone;
         #endregion
+        Stat.KnockbackForce = COLOSSAL_KNOCKBACK_FORCE;
     }
 
     private void OnDestroy()
@@ -67,10 +69,18 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     private void FixedUpdate()
     {
+        if (!IsWake)
+        {
+            return;
+        }
         _stateMachine.FixedExcute();
     }
     void Update()
     {
+        if (!IsWake)
+        {
+            return;
+        }
         _stateMachine.Excute();
     }
 
@@ -85,7 +95,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         //_states[(uint)EColossalBossState.SPIN_MELLE_ATTACK] = new monster_states.BossColossalSpinAttack(this);
     }
 
-    protected override void OnAnimFullyPlayed()
+    private void OnAnimFullyPlayed()
     {
         ((monster_states.BaseBossMonsterState)_states[(uint)ECurrentState]).OnAnimFullyPlayed();
     }
@@ -161,7 +171,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         _states[(uint)EColossalBossState.BURF]                  = new monster_states.BossColossalBurf(this);
         _states[(uint)EColossalBossState.DIE]                   = new monster_states.BossColossalDie(this);
         
-        _stateMachine.Init(this, _states[(uint)EColossalBossState.WAKE]);
+        //_stateMachine.Init(this, _states[(uint)EColossalBossState.WAKE]);
     }
 
 
@@ -176,8 +186,8 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
             #region PROCESS_BACK_ATTACK_OR_THIRD_ATTACK
             if (eAttackType == EPlayerNoramlAttackType.BACK_ATTACK || eAttackType == EPlayerNoramlAttackType.ATTACK_3)
             {
+                BigAttackEventHandler?.Invoke();
                 Managers.TimeManager.OnMonsterHittedByPlayerNormalAttack();
-                Managers.HitParticle.PlayBigHittedParticle(transform.position);
             }
             #endregion
             IsHittedByPlayerNormalAttack = false;
@@ -244,9 +254,13 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     #endregion
     public override void InitStat()
     {
-        Stat.Init(define.EMonsterNames.BossColossal);
+        Stat.InitBasicStat(define.EMonsterNames.BossColossal);
     }
 
+    public override void OnDie()
+    {
+
+    }
 
     #region OVERRIDE_ABSTRACT_HITTED_PLAYER_SPECIAL_ATTACK
     public override void OnPlayerBlockSuccess()
@@ -265,5 +279,23 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         // TODO : 이거 나중에 처리해야함. 마비는 먹히도록 바꾸자.
         HittedByNormalAttackNoArgsEventHandler?.Invoke();
     }
+
+    public void OnPlayerEnter(Collider2D collision)
+    {
+        IsWake = true;
+        Animator.enabled = true;
+        _stateMachine.Init(this, _states[(uint)EColossalBossState.WAKE]);
+    }
+
+    public void OnPlayerStay(Collider2D collision)
+    {
+    }
+
+    public void OnPlayerExit(Collider2D collision)
+    {
+        GameObject.Find("ColossalBossWakeZone")?.GetComponent<InteractBox>().Unactive();
+    }
+
+
     #endregion
 }

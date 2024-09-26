@@ -15,7 +15,7 @@ public class HSlicerController : NormalMonsterController, IMelleAttackable
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.HeabySlicer);
+        Stat.InitBasicStat(EMonsterNames.HeabySlicer);
     }
 
     protected override void InitStates()

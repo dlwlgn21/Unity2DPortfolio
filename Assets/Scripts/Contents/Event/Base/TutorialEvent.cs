@@ -24,8 +24,7 @@ public abstract class TutorialSequence : MonoBehaviour
         #endregion
 
         #region MANAGER
-        _camManager = GameObject.FindGameObjectWithTag("CamManager").GetComponent<TutorialCameraManager>();
-        _tutorialManager = GameObject.FindGameObjectWithTag("TutorialManager").GetComponent<TutorialManager>();
+        _tutorialManager = GameObject.Find("TutorialManager").GetComponent<TutorialManager>();
         #endregion
     }
     public abstract void OnDialogEnd();
@@ -42,6 +41,6 @@ public abstract class TutorialSequence : MonoBehaviour
 
     protected void SwitchCamToMain()
     {
-        _camManager.SwitchCameraToMain();
+        Managers.CamSwitch.SwitchCameraToMain();
     }
 }

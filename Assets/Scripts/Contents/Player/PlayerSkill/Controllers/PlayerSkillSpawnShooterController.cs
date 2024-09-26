@@ -10,7 +10,7 @@ public class PlayerSkillSpawnShooterController : BasePlayerSkillController
     {
         _eSkillType = EPlayerSkill.SPAWN_REAPER;
         _initCoolTime = SPAWN_SHOOTER_COOL_TIME_IN_SEC;
-        SkillCoolTime = SPAWN_SHOOTER_COOL_TIME_IN_SEC;
+        SkillCoolTimeInSec = SPAWN_SHOOTER_COOL_TIME_IN_SEC;
         IsPossibleDoSkill = true;
         Debug.Assert(_uiCoolTimerImg != null);
         if (_spawnShooter == null)
@@ -21,29 +21,23 @@ public class PlayerSkillSpawnShooterController : BasePlayerSkillController
             DontDestroyOnLoad(spawnShooter);
         }
         PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnShooterAnimValidTiming;
-        PlayerController.PlayerSkillKeyDownEventHandler += OnPlayerSpawnShooterKeyDown;
     }
 
     private void OnDestroy()
     {
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnShooterAnimValidTiming;
-        PlayerController.PlayerSkillKeyDownEventHandler -= OnPlayerSpawnShooterKeyDown;
     }
 
-    private void OnPlayerSpawnShooterKeyDown(EPlayerSkill eType)
+    private void Update()
     {
-        if (eType == EPlayerSkill.SPAWN_SHOOTER)
+        if (Input.GetKeyDown(PlayerController.KeyLaunchBomb))
         {
             if (IsPosibbleValidStateToDoSkill())
             {
-                _pc.ChangeState(EPlayerState.CAST_LAUNCH);
-                _uiCoolTimerImg.StartCoolTime(SkillCoolTime);
-                IsPossibleDoSkill = false;
-                StartCoroutine(AfterGivenCoolTimePossibleDoSkillCo(SkillCoolTime));
+                DoSkill(EPlayerSkill.SPAWN_SHOOTER);
             }
         }
     }
-
     private void OnPlayerSpawnShooterAnimValidTiming(EPlayerSkill eType)
     {
         if (eType == EPlayerSkill.SPAWN_SHOOTER)

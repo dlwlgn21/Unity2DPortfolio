@@ -13,6 +13,6 @@ public class ShielderController : NormalMonsterController
     }
     public override void InitStat()
     {
-        Stat.Init(EMonsterNames.Shielder);
+        Stat.InitBasicStat(EMonsterNames.Shielder);
     }
 }

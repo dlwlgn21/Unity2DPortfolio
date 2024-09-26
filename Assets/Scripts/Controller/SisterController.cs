@@ -13,7 +13,6 @@ public enum ESister
     LAST_MEET,
 }
 
-
 public class SisterController : QuestNPC, ITalkable
 {
     [SerializeField] private ESister _eSisterType;

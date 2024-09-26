@@ -24,8 +24,8 @@ public abstract class UIHealthBar : MonoBehaviour
         _healthBarImg = Utill.GetComponentInChildrenOrNull<Image>(gameObject, "HealthBar");
         Debug.Assert(_healthBarImg != null);
 
-        _currHpText = _healthBarImg.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        _maxHpText = _healthBarImg.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        _currHpText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_healthBarImg.gameObject, "CurrHpText");
+        _maxHpText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_healthBarImg.gameObject, "MaxHpText");
         _currHpText.text = _stat.HP.ToString();
         ChangeMaxHpText();
 

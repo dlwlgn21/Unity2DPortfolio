@@ -10,7 +10,7 @@ public class PlayerSkillSpawnRepaerController : BasePlayerSkillController
     {
         _eSkillType = EPlayerSkill.SPAWN_REAPER;
         _initCoolTime = SPAWN_REAPER_COOL_TIME_IN_SEC;
-        SkillCoolTime = SPAWN_REAPER_COOL_TIME_IN_SEC;
+        SkillCoolTimeInSec = SPAWN_REAPER_COOL_TIME_IN_SEC;
         IsPossibleDoSkill = true;
         Debug.Assert(_uiCoolTimerImg != null);
         if (_spawnReaper == null)
@@ -21,29 +21,22 @@ public class PlayerSkillSpawnRepaerController : BasePlayerSkillController
             DontDestroyOnLoad(spawnReaper);
         }
         PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnReaperAnimValidTiming;
-        PlayerController.PlayerSkillKeyDownEventHandler += OnPlayerSpawnReaperKeyDown;
     }
 
     private void OnDestroy()
     {
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnReaperAnimValidTiming;
-        PlayerController.PlayerSkillKeyDownEventHandler -= OnPlayerSpawnReaperKeyDown;
     }
-
-    private void OnPlayerSpawnReaperKeyDown(EPlayerSkill eType)
+    private void Update()
     {
-        if (eType == EPlayerSkill.SPAWN_REAPER)
+        if (Input.GetKeyDown(PlayerController.KeySpawnReaper))
         {
             if (IsPosibbleValidStateToDoSkill())
             {
-                _pc.ChangeState(EPlayerState.CAST_SPAWN);
-                _uiCoolTimerImg.StartCoolTime(SkillCoolTime);
-                IsPossibleDoSkill = false;
-                StartCoroutine(AfterGivenCoolTimePossibleDoSkillCo(SkillCoolTime));
+                DoSkill(EPlayerSkill.SPAWN_REAPER);
             }
         }
     }
-
     private void OnPlayerSpawnReaperAnimValidTiming(EPlayerSkill eType)
     {
         if (eType == EPlayerSkill.SPAWN_REAPER)

@@ -36,13 +36,6 @@ namespace define
         BOSS_COLOSSAL_ATTACK_BOX = 19,
     }
 
-
-    public enum EKeyboardInputType
-    { 
-        NO_KEY_DOWN,
-        ANY_KEY_DOWN,
-    }
-
     public enum EMonsterNames
     {
         Archer = 1,
@@ -57,7 +50,12 @@ namespace define
         BossColossal,
     }
 
-
+    public enum EProjectileState
+    {
+        MUZZLE,
+        PROJECTILE,
+        HIT
+    }
     public enum ESoundType
     {
         SFX,
