@@ -116,6 +116,11 @@ public class PlayerController : BaseCharacterController
         #endregion
     }
 
+    public void OnItemAccuaire()
+    {
+
+    }
+
     private void OnDestroy()
     {
         MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr -= OnHittedByMonsterAttack;

@@ -23,4 +23,14 @@ public class Utill
         return null;
     }
 
+    public static T GetFirstComponentInChildrenOrNull<T>(GameObject go) where T : UnityEngine.Component
+    {
+        foreach (var component in go.GetComponentsInChildren<T>())
+        {
+            if (component != null)
+                return component;
+        }
+        return null;
+    }
+
 }

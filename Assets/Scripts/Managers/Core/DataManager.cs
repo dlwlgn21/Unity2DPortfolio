@@ -10,8 +10,14 @@ public interface ILoader<Key, Value>
 
 public class DataManager
 {
-    public Dictionary<int, data.PlayerStat> PlayerStatDict { get; private set; } = new Dictionary<int, data.PlayerStat>();
-    public Dictionary<int, data.MonsterStat> MonsterStatDict { get; private set; } = new Dictionary<int, data.MonsterStat>();
+    public Dictionary<int, data.PlayerStat> PlayerStatDict { get; private set; } = new();
+    public Dictionary<int, data.MonsterStat> MonsterStatDict { get; private set; } = new();
+    public Dictionary<int, data.HealingPotionStat> HealingPotionDict { get; private set; } = new();
+
+    public Dictionary<int, data.HelmetStat> HelmetItemDict { get; private set; } = new();
+    public Dictionary<int, data.SwordStat> SwordItemDict { get; private set; } = new();
+    public Dictionary<int, data.ArmorStat> ArmorItemDict { get; private set; } = new();
+
 
     public const string SFX_PALY_SCENE_BGM_PATH = "Sound/SFX_PlaySceneBgm";
 
@@ -28,10 +34,15 @@ public class DataManager
 
     public void Init()
     {
-        PlayerStatDict = LoadJson<data.PlayerStatData, int, data.PlayerStat>("Player/Data_PlayerStat").MakeDict();
+        PlayerStatDict = LoadJson<data.PlayerStatLoader, int, data.PlayerStat>("Player/Data_PlayerStat").MakeDict();
         Debug.Assert(PlayerStatDict.Count != 0);
-        MonsterStatDict = LoadJson<data.MonsterStatData, int, data.MonsterStat>("Monsters/Data_MonstersStat").MakeDict();
+        MonsterStatDict = LoadJson<data.MonsterStatLoader, int, data.MonsterStat>("Monsters/Data_MonstersStat").MakeDict();
         Debug.Assert(MonsterStatDict.Count != 0);
+        HealingPotionDict = LoadJson<data.HealingPotionLoader, int, data.HealingPotionStat>("Item/Data_HealingPotionStat").MakeDict();
+
+        HelmetItemDict = LoadJson<data.HelmetLoader, int, data.HelmetStat>("Item/Data_HelmetStat").MakeDict();
+        SwordItemDict = LoadJson<data.SwordLoader, int, data.SwordStat>("Item/Data_SwordStat").MakeDict();
+        ArmorItemDict = LoadJson<data.ArmorLoader, int, data.ArmorStat>("Item/Data_ArmorStat").MakeDict();
     }
 
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
@@ -39,5 +50,4 @@ public class DataManager
         TextAsset textAsset = Managers.Resources.Load<TextAsset>($"Data/{path}");
         return JsonUtility.FromJson<Loader>(textAsset.text);
     }
-
 }
