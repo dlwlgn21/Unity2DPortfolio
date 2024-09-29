@@ -62,4 +62,21 @@ namespace define
         BGM,
         COUNT
     }
+
+    public enum EItemEquippableType
+    { 
+        Helmet,
+        Armor,
+        Sword,
+        Count
+    }
+
+    public enum EItemConsumableType
+    { 
+        Hp,
+        CoolTimeReset,
+        Count
+    }
+
+
 }

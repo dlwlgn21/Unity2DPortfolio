@@ -24,6 +24,7 @@ public class PlayerNormalAttack : MonoBehaviour
             BaseMonsterController mc = collision.gameObject.GetComponent<BaseMonsterController>();
             if (mc == null)
             {
+                Debug.Assert(false);
                 return;
             }
             switch (EAttackType)

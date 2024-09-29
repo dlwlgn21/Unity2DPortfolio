@@ -10,8 +10,10 @@ public class InputManager
 
     public void OnUpdate()
     {
-        if (Input.anyKeyDown && KeyboardHandler != null)
-            KeyboardHandler.Invoke();
+        if (Input.anyKeyDown)
+        {
+            KeyboardHandler?.Invoke();
+        }
     }
 
     public void Clear()

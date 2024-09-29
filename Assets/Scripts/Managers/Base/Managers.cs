@@ -11,6 +11,7 @@ public class Managers : MonoBehaviour
     readonly SceneManagerEX _sceneManager = new();
     readonly PauseManager _pauseManager = new();
     readonly SoundManager _soundManager = new();
+    readonly UIManager _uiManager = new();
     readonly TweenManager _tweenManager = new();
     readonly GameEventManager _gameEventManager = new();
     readonly MainMenuManager _mainMenuManager = new();
@@ -30,12 +31,12 @@ public class Managers : MonoBehaviour
     public static DataManager Data { get { return Instance._dataManager; } }
     public static ResourceManager Resources { get { return Instance._resourceManager; } }
     public static SceneManagerEX Scene { get { return Instance._sceneManager; } }
+    public static UIManager UI { get { return Instance._uiManager; } }
     public static PauseManager Pause { get { return Instance._pauseManager; } }
     public static SoundManager Sound { get { return Instance._soundManager; } }
     public static TweenManager Tween { get { return Instance._tweenManager; } }
     public static MainMenuManager MainMenu { get { return Instance._mainMenuManager; } }
     public static MonsterPoolManager MonsterPool { get { return Instance._monsterPoolManager; } }
-
     public static MonsterSpawnManager MonsterSpawn { get { return Instance._monsterSpawnManager; } }
     public static ProjectilePoolManager ProjectilePool { get { return Instance._projectilePoolManager; } }
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
@@ -56,7 +57,6 @@ public class Managers : MonoBehaviour
         {
             case define.ESceneType.MAIN_MENU:
                 {
-
                     break;
                 }
             case define.ESceneType.TUTORIAL:
@@ -79,7 +79,6 @@ public class Managers : MonoBehaviour
                 {
                     return;
                 }
-
                 // FOR TEST
                 if (UnityEngine.Input.GetKeyUp(KeyCode.P))
                 {
@@ -89,7 +88,7 @@ public class Managers : MonoBehaviour
                 {
                     Time.timeScale = 1f;
                 }
-                Input.OnUpdate();
+                sInstance._inputManager.OnUpdate();
                 break;
         }
     }
@@ -111,7 +110,7 @@ public class Managers : MonoBehaviour
             sInstance._dataManager.Init();
             sInstance._sceneManager.Init();
             sInstance._fullScreenEffectManager.Init();
-
+            sInstance._uiManager.Init();
             // TODO : 6.5일 TimeManager를 위해 추가. 꼼수사용하는 거 같아서 뭔가 찝찝. 나중에 바꾸던지 해용
             GameObject timeManager = GameObject.Find("@TimeManager");
             if (timeManager == null)

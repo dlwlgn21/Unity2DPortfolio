@@ -9,7 +9,7 @@ public class SceneManagerEX
     public define.ESceneType ECurrentScene { get; private set; }
     public void Init()
     {
-        ECurrentScene = define.ESceneType.MAIN_MENU;
+        ECurrentScene = GetCurrentESceneType();
     }
     public void LoadScene(define.ESceneType eType)
     {
@@ -19,7 +19,7 @@ public class SceneManagerEX
         Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.SCENE_TRANSITION);
     }
 
-    public define.ESceneType GetCurrentScene()
+    define.ESceneType GetCurrentESceneType()
     {
         define.ESceneType retType = define.ESceneType.COUNT;
         switch (SceneManager.GetActiveScene().buildIndex)
