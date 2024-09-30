@@ -8,9 +8,7 @@ public class ConsumableItemController : ItemController
 {
     [SerializeField] EItemConsumableName _eConsumableName;
 
-
-
-    public override void PushItem()
+    public override void PushItemToInventory()
     {
         Managers.UI.PushItemToInventory(
             new ItemInfo()

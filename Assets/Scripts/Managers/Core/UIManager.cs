@@ -45,7 +45,7 @@ public class UIManager
     
     public void PushItemToInventory(ItemInfo itemInfo, int itemId)
     {
-        Image emptyImg = _inven.GetEmptySlotIconOrNull();
+        UI_Inventory_ItemIcon emptySlotIcon = _inven.GetEmptyIconOrNull();
         Sprite sprite = null;
 
         switch (itemInfo.EItemType)
@@ -62,8 +62,37 @@ public class UIManager
 
         }
         Debug.Assert(sprite != null);
-        emptyImg.sprite = sprite;
-        emptyImg.enabled = true;
+        emptySlotIcon.Image.sprite = sprite;
+        emptySlotIcon.Image.enabled = true;
+        emptySlotIcon.ItemInfo = itemInfo;
+        emptySlotIcon.ItemId = itemId;
+    }
+
+    public void SwapItemIcon(int aIdx, int bIdx)
+    {
+        Debug.Assert(aIdx != bIdx);
+        UI_Inventory_ItemIcon a = _inven.GetIconAtOrNull(aIdx);
+        UI_Inventory_ItemIcon b = _inven.GetIconAtOrNull(bIdx);
+
+        Sprite tmpSprite = null;
+        bool tmpImgEnabled = false;
+        ItemInfo tmpIteminfo;
+        int tmpItemId = 0;
+
+        tmpSprite = a.Image.sprite;
+        tmpImgEnabled = a.Image.enabled;
+        tmpIteminfo = a.ItemInfo;
+        tmpItemId = a.ItemId;
+        
+        a.Image.sprite = b.Image.sprite;
+        a.Image.enabled = b.Image.enabled;
+        a.ItemInfo = b.ItemInfo;
+        a.ItemId = b.ItemId;
+
+        b.Image.sprite = tmpSprite;
+        b.Image.enabled = tmpImgEnabled;
+        b.ItemInfo = tmpIteminfo;
+        b.ItemId = tmpItemId;
     }
 
     public void OnIKeyDowned()
@@ -117,7 +146,7 @@ public class UIManager
         {
             case EItemEquippableName.Helmet:
                 {
-                    data.HelmetStat helmetStat;
+                    data.HelmetInfo helmetStat;
                     Managers.Data.HelmetItemDict.TryGetValue(itemId, out helmetStat);
                     Debug.Assert(helmetStat != null);
                     _spriteMap.TryGetValue(helmetStat.iconSpritePath, out sprite);
@@ -132,7 +161,7 @@ public class UIManager
                 }
             case EItemEquippableName.Armor:
                 {
-                    data.ArmorStat armorStat;
+                    data.ArmorInfo armorStat;
                     Managers.Data.ArmorItemDict.TryGetValue(itemId, out armorStat);
                     Debug.Assert(armorStat != null);
                     _spriteMap.TryGetValue(armorStat.iconSpritePath, out sprite);
@@ -147,7 +176,7 @@ public class UIManager
                 break;
             case EItemEquippableName.Sword:
                 {
-                    data.SwordStat swordStat;
+                    data.SwordInfo swordStat;
                     Managers.Data.SwordItemDict.TryGetValue(itemId, out swordStat);
                     Debug.Assert(swordStat != null);
                     _spriteMap.TryGetValue(swordStat.iconSpritePath, out sprite);
@@ -172,7 +201,7 @@ public class UIManager
         switch (eType)
         {
             case EItemConsumableName.Hp:
-                data.HealingPotionStat potionStat;
+                data.HealingPotionInfo potionStat;
                 Managers.Data.HealingPotionDict.TryGetValue(itemId, out potionStat);
                 _spriteMap.TryGetValue(potionStat.iconSpritePath, out sprite);
                 if (sprite == null)

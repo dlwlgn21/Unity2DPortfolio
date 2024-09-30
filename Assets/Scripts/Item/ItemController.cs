@@ -34,7 +34,7 @@ public abstract class ItemController : MonoBehaviour
                 _particle.Play();
                 GetComponent<BoxCollider2D>().enabled = false;
                 _btnSprite.SetActive(false);
-                PushItem();
+                PushItemToInventory();
             }
         }
     }
@@ -47,5 +47,5 @@ public abstract class ItemController : MonoBehaviour
         }
     }
 
-    public abstract void PushItem();
+    public abstract void PushItemToInventory();
 }

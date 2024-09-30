@@ -7,7 +7,7 @@ using UnityEngine;
 public class EquipableItemController : ItemController
 {
     [SerializeField] EItemEquippableName _eEquipableName;
-    public override void PushItem()
+    public override void PushItemToInventory()
     {
         Managers.UI.PushItemToInventory(
             new ItemInfo() 

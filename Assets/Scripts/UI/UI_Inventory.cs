@@ -10,7 +10,7 @@ public class UI_Inventory : MonoBehaviour
     static readonly int MAX_ROW_COUNT = 4;
     static readonly int MAX_COL_COUNT = 5;
     public List<Image> EquippableSlots { get; private set; } = new((int)define.EItemEquippableName.Count);
-    public List<Image> InventoryItemSlots { get; private set; } = new(INVENTORY_SLOT_COUNT);
+    public List<UI_Inventory_ItemIcon> InventoryItemIcons { get; private set; } = new(INVENTORY_SLOT_COUNT);
 
     bool[,] _itemSlotMatrix = new bool[MAX_ROW_COUNT, MAX_COL_COUNT];
     private void Awake()
@@ -24,12 +24,20 @@ public class UI_Inventory : MonoBehaviour
         }
         for (int i = 1; i <= INVENTORY_SLOT_COUNT; ++i)
         {
-            InventoryItemSlots.Add(Utill.GetComponentInChildrenOrNull<Image>(gameObject, $"UI_ItemIcon{i:00}"));
-            InventoryItemSlots[i - 1].enabled = false;
+            InventoryItemIcons.Add(Utill.GetComponentInChildrenOrNull<UI_Inventory_ItemIcon>(gameObject, $"UI_ItemIcon{i:00}"));
         }
     }
 
-    public Image GetEmptySlotIconOrNull()
+    public UI_Inventory_ItemIcon GetIconAtOrNull(int idx)
+    {
+        if (idx >= INVENTORY_SLOT_COUNT)
+        {
+            Debug.Assert(false);
+            return null;
+        }
+        return InventoryItemIcons[idx];
+    }
+    public UI_Inventory_ItemIcon GetEmptyIconOrNull()
     {
         for (int i = 0; i < MAX_ROW_COUNT; ++i)
         {
@@ -38,7 +46,7 @@ public class UI_Inventory : MonoBehaviour
                 if (!_itemSlotMatrix[i, j])
                 {
                     _itemSlotMatrix[i, j] = true;
-                    return InventoryItemSlots[i * MAX_COL_COUNT + j];
+                    return InventoryItemIcons[i * MAX_COL_COUNT + j];
                 }
             }
         }

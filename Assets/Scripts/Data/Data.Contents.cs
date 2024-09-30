@@ -65,7 +65,7 @@ namespace data
 
 
     [Serializable]
-    public class Item
+    public class ItemInfoData
     {
         public string name;
         public string description;
@@ -74,21 +74,21 @@ namespace data
 
     #region HealingPotion
     [Serializable]
-    public class HealingPotionStat : Item
+    public class HealingPotionInfo : ItemInfoData
     {
         public int id;
         public int level;
         public int healAmount;
     }
     [Serializable]
-    public class HealingPotionLoader : ILoader<int, HealingPotionStat>
+    public class HealingPotionLoader : ILoader<int, HealingPotionInfo>
     {
-        public List<HealingPotionStat> healingPotionStats = new();
+        public List<HealingPotionInfo> healingPotionStats = new();
 
-        public Dictionary<int, HealingPotionStat> MakeDict()
+        public Dictionary<int, HealingPotionInfo> MakeDict()
         {
-            Dictionary<int, HealingPotionStat> dict = new();
-            foreach (HealingPotionStat potion in healingPotionStats)
+            Dictionary<int, HealingPotionInfo> dict = new();
+            foreach (HealingPotionInfo potion in healingPotionStats)
             {
                 dict.Add(potion.id, potion);
             }
@@ -100,20 +100,20 @@ namespace data
 
     #region Sword
     [Serializable]
-    public class SwordStat : Item
+    public class SwordInfo : ItemInfoData
     {
         public int id;
         public int damage;
     }
     [Serializable]
-    public class SwordLoader : ILoader<int, SwordStat>
+    public class SwordLoader : ILoader<int, SwordInfo>
     {
-        public List<SwordStat> swordStats = new();
+        public List<SwordInfo> swordStats = new();
 
-        public Dictionary<int, SwordStat> MakeDict()
+        public Dictionary<int, SwordInfo> MakeDict()
         {
-            Dictionary<int, SwordStat> dict = new();
-            foreach (SwordStat sword in swordStats)
+            Dictionary<int, SwordInfo> dict = new();
+            foreach (SwordInfo sword in swordStats)
             {
                 dict.Add(sword.id, sword);
             }
@@ -124,20 +124,20 @@ namespace data
 
     #region Armor
     [Serializable]
-    public class ArmorStat : Item
+    public class ArmorInfo : ItemInfoData
     {
         public int id;
         public int defence;
     }
     [Serializable]
-    public class ArmorLoader : ILoader<int, ArmorStat>
+    public class ArmorLoader : ILoader<int, ArmorInfo>
     {
-        public List<ArmorStat> armorStats = new();
+        public List<ArmorInfo> armorStats = new();
 
-        public Dictionary<int, ArmorStat> MakeDict()
+        public Dictionary<int, ArmorInfo> MakeDict()
         {
-            Dictionary<int, ArmorStat> dict = new();
-            foreach (ArmorStat armor in armorStats)
+            Dictionary<int, ArmorInfo> dict = new();
+            foreach (ArmorInfo armor in armorStats)
             {
                 dict.Add(armor.id, armor);
             }
@@ -148,20 +148,20 @@ namespace data
 
     #region Helmet
     [Serializable]
-    public class HelmetStat : Item
+    public class HelmetInfo : ItemInfoData
     {
         public int id;
         public int defence;
     }
     [Serializable]
-    public class HelmetLoader : ILoader<int, HelmetStat>
+    public class HelmetLoader : ILoader<int, HelmetInfo>
     {
-        public List<HelmetStat> helmetStats = new();
+        public List<HelmetInfo> helmetStats = new();
 
-        public Dictionary<int, HelmetStat> MakeDict()
+        public Dictionary<int, HelmetInfo> MakeDict()
         {
-            Dictionary<int, HelmetStat> dict = new();
-            foreach (HelmetStat helmet in helmetStats)
+            Dictionary<int, HelmetInfo> dict = new();
+            foreach (HelmetInfo helmet in helmetStats)
             {
                 dict.Add(helmet.id, helmet);
             }
