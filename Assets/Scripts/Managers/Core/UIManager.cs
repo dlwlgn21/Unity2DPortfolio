@@ -45,27 +45,39 @@ public class UIManager
     
     public void PushItemToInventory(ItemInfo itemInfo, int itemId)
     {
-        UI_Inventory_ItemIcon emptySlotIcon = _inven.GetEmptyIconOrNull();
         Sprite sprite = null;
-
+        UI_Inventory_ItemIcon emptyIcon = null;
         switch (itemInfo.EItemType)
         {
             case EItemType.Equippable:
                 AssignSpriteEquipable(itemInfo.EEquippableName, itemId, out sprite);
+                emptyIcon = _inven.GetEmptyIconOrNull();
+                Debug.Assert(sprite != null && emptyIcon != null);
+                emptyIcon.ItemInfo = itemInfo;
                 break;
             case EItemType.Consumable:
                 AssignSpriteConsumable(itemInfo.EConsumableName, itemId, out sprite);
+                emptyIcon = _inven.GetSameCousmableIconOrNull(itemId);
+                if (emptyIcon == null)
+                    emptyIcon = _inven.GetEmptyIconOrNull();
+                emptyIcon.ItemInfo = itemInfo;
+                emptyIcon.IncreaseConsuambleText();
                 break;
             default:
                 Debug.Assert(false);
                 break;
 
         }
-        Debug.Assert(sprite != null);
-        emptySlotIcon.Image.sprite = sprite;
-        emptySlotIcon.Image.enabled = true;
-        emptySlotIcon.ItemInfo = itemInfo;
-        emptySlotIcon.ItemId = itemId;
+        // TODO : Inventory가 꽉 찼을때 처리 이곳에서 해주어야 함.
+        if (emptyIcon == null)
+        {
+            Debug.Log("Inventory Full!!!!");
+            return;
+        }
+        emptyIcon.ItemId = itemId;
+        emptyIcon.Image.sprite = sprite;
+        emptyIcon.Image.enabled = true;
+
     }
 
     public void SwapItemIcon(int aIdx, int bIdx)
@@ -73,26 +85,8 @@ public class UIManager
         Debug.Assert(aIdx != bIdx);
         UI_Inventory_ItemIcon a = _inven.GetIconAtOrNull(aIdx);
         UI_Inventory_ItemIcon b = _inven.GetIconAtOrNull(bIdx);
-
-        Sprite tmpSprite = null;
-        bool tmpImgEnabled = false;
-        ItemInfo tmpIteminfo;
-        int tmpItemId = 0;
-
-        tmpSprite = a.Image.sprite;
-        tmpImgEnabled = a.Image.enabled;
-        tmpIteminfo = a.ItemInfo;
-        tmpItemId = a.ItemId;
-        
-        a.Image.sprite = b.Image.sprite;
-        a.Image.enabled = b.Image.enabled;
-        a.ItemInfo = b.ItemInfo;
-        a.ItemId = b.ItemId;
-
-        b.Image.sprite = tmpSprite;
-        b.Image.enabled = tmpImgEnabled;
-        b.ItemInfo = tmpIteminfo;
-        b.ItemId = tmpItemId;
+        Debug.Assert(a != null && b != null);
+        a.Swap(b);
     }
 
     public void OnIKeyDowned()

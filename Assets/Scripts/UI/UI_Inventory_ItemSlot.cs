@@ -11,13 +11,12 @@ public class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
     private void Awake()
     {
         _icon = Utill.GetFirstComponentInChildrenOrNull<UI_Inventory_ItemIcon>(gameObject);
-        Debug.Log($"{gameObject.name}'s Icon : {_icon.gameObject.name}");
+        //Debug.Log($"{gameObject.name}'s Icon : {_icon.gameObject.name}");
         SlotIdx = int.Parse(gameObject.name.Substring(gameObject.name.Length - 2)) - 1;
     }
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log($"{gameObject.name}'s OnDrop!!");
-        // TODO : 자기 자신이 PointerClick에 들어감여..
+        //Debug.Log($"{gameObject.name}'s OnDrop!!");
         GameObject dragedObject = eventData.pointerDrag;
         if (dragedObject != null)
         {

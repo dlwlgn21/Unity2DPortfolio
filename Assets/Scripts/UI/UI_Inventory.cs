@@ -39,20 +39,44 @@ public class UI_Inventory : MonoBehaviour
     }
     public UI_Inventory_ItemIcon GetEmptyIconOrNull()
     {
-        for (int i = 0; i < MAX_ROW_COUNT; ++i)
+        //for (int i = 0; i < MAX_ROW_COUNT; ++i)
+        //{
+        //    for (int j = 0; j < MAX_COL_COUNT; ++j)
+        //    {
+        //        if (!_itemSlotMatrix[i, j])
+        //        {
+        //            _itemSlotMatrix[i, j] = true;
+        //            return InventoryItemIcons[i * MAX_COL_COUNT + j];
+        //        }
+        //    }
+        //}
+
+        for (int i = 0; i < INVENTORY_SLOT_COUNT; ++i)
         {
-            for (int j = 0; j < MAX_COL_COUNT; ++j)
+            if (!InventoryItemIcons[i].Image.enabled)
+                return InventoryItemIcons[i];
+        }
+        return null;
+    }
+
+    public UI_Inventory_ItemIcon GetSameCousmableIconOrNull(int coumableItemId)
+    {
+        for (int i = 0; i < INVENTORY_SLOT_COUNT; ++i)
+        {
+            if (InventoryItemIcons[i].Image.enabled && 
+                InventoryItemIcons[i].ItemInfo.EItemType == define.EItemType.Consumable &&
+                InventoryItemIcons[i].ItemId == coumableItemId)
             {
-                if (!_itemSlotMatrix[i, j])
-                {
-                    _itemSlotMatrix[i, j] = true;
-                    return InventoryItemIcons[i * MAX_COL_COUNT + j];
-                }
+                return InventoryItemIcons[i];
             }
         }
         return null;
     }
 
+    //public void SetItemSlotMatrix(int idx, bool isTrue)
+    //{
+    //    _itemSlotMatrix[idx / MAX_COL_COUNT, idx % MAX_COL_COUNT] = isTrue;
+    //}
     public void RefreshUI()
     {
 
