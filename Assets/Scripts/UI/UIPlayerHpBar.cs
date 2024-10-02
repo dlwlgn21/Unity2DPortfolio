@@ -12,14 +12,22 @@ public class UIPlayerHpBar : UIHealthBar
     {
         //SetFullHpBarRatio();
         PlayerController.HitUIEventHandler += OnPlayerHittedByMonsterNormalAttack;
+        PlayerController.PlayerIncreaseHpEventHandler += OnPlayerHpItemUsed;
     }
 
     private void OnDestroy()
     {
         PlayerController.HitUIEventHandler -= OnPlayerHittedByMonsterNormalAttack;
+        PlayerController.PlayerIncreaseHpEventHandler -= OnPlayerHpItemUsed;
     }
-    public void OnPlayerHittedByMonsterNormalAttack(int damage, int beforeDamgeHp, int afterDamageHp)
+    void OnPlayerHittedByMonsterNormalAttack(int damage, int beforeDamgeHp, int afterDamageHp)
     {
         DecraseHP(beforeDamgeHp, afterDamageHp);
+    }
+
+    void OnPlayerHpItemUsed(int beforeHp, int afterHealdHp)
+    {
+        IncraseHP((float)afterHealdHp / _stat.MaxHP);
+        DoCounterHp(beforeHp, afterHealdHp);
     }
 }

@@ -71,7 +71,7 @@ namespace define
         Count
     }
 
-    public enum EItemEquippableName
+    public enum EItemEquippableType
     { 
         Helmet,
         Armor,
@@ -79,7 +79,7 @@ namespace define
         Count
     }
 
-    public enum EItemConsumableName
+    public enum EItemConsumableType
     { 
         Hp,
         Count

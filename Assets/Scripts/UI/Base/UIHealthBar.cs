@@ -52,7 +52,7 @@ public abstract class UIHealthBar : MonoBehaviour
         //    _maxHpText.DOColor(Color.white, _fillSpeed);
         //}
 
-        _currHpText.DOCounter(beforeDamageHp, Math.Max(afterDamgeHp, 0), _fillSpeed);
+        DoCounterHp(beforeDamageHp, Math.Max(afterDamgeHp, 0));
         SetHealthBarRatio(ratio);
     }
     public void SetFullHpBarRatio()
@@ -64,6 +64,11 @@ public abstract class UIHealthBar : MonoBehaviour
     public void IncraseHP(float ratio)
     {
         SetHealthBarRatio(ratio);
+    }
+
+    protected void DoCounterHp(int fromValue, int endValue)
+    {
+        _currHpText.DOCounter(fromValue, endValue, _fillSpeed);
     }
 
     public void ChangeMaxHpText()

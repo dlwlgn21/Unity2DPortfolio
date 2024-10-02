@@ -6,17 +6,17 @@ using UnityEngine;
 
 public class EquipableItemController : ItemController
 {
-    [SerializeField] EItemEquippableName _eEquipableName;
+    [SerializeField] EItemEquippableType _eEquipableName;
     public override void PushItemToInventory()
     {
         Managers.UI.PushItemToInventory(
-            new ItemInfo() 
+            new ItemInfo()
             {
                 EItemType = _eItemType,
-                EEquippableName = _eEquipableName,
-                EConsumableName = EItemConsumableName.Count
-            }, 
-            _id
+                EEquippableType = _eEquipableName,
+                EConsumableType = EItemConsumableType.Count,
+                ItemId = _id
+            }
         );
     }
 }

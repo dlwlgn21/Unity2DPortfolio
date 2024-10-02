@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class ConsumableItemController : ItemController
 {
-    [SerializeField] EItemConsumableName _eConsumableName;
+    [SerializeField] EItemConsumableType _eConsumableName;
 
     public override void PushItemToInventory()
     {
@@ -14,10 +14,10 @@ public class ConsumableItemController : ItemController
             new ItemInfo()
             {
                 EItemType = _eItemType,
-                EEquippableName = EItemEquippableName.Count,
-                EConsumableName = _eConsumableName
-            },
-            _id
+                EEquippableType = EItemEquippableType.Count,
+                EConsumableType = _eConsumableName,
+                ItemId = _id
+            }
         );
     }
 }

@@ -50,6 +50,7 @@ public class PlayerController : BaseCharacterController
     public static UnityAction<EPlayerSkill> PlayerSkillValidAnimTimingEventHandler;
     public static UnityAction<EMonsterStatusEffect, float> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
+    public static UnityAction<int, int> PlayerIncreaseHpEventHandler; // UIPlayerHPBar
 
     public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new(2f, 1f);
     public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
@@ -116,9 +117,20 @@ public class PlayerController : BaseCharacterController
         #endregion
     }
 
-    public void OnItemAccuaire()
+    public void OnCousumableItemUsed(EItemConsumableType eType, int amount)
     {
-
+        switch (eType)
+        {
+            case EItemConsumableType.Hp:
+                {
+                    PlayerIncreaseHpEventHandler?.Invoke(Stat.HP, Mathf.Clamp(Stat.HP + amount, 1, Stat.MaxHP));
+                    Stat.IncreaseHp(amount);
+                    break;
+                }
+            default:
+                Debug.Assert(false);
+                break;
+        }
     }
 
     private void OnDestroy()
@@ -134,6 +146,7 @@ public class PlayerController : BaseCharacterController
         PlayerSkillValidAnimTimingEventHandler = null;
         PlayerStatusEffectEventHandler = null;
         PlayerDieEventHandelr = null;
+        PlayerIncreaseHpEventHandler = null;
     }
 
     void FixedUpdate()

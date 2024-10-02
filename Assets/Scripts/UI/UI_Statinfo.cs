@@ -13,6 +13,9 @@ public class UI_Statinfo : MonoBehaviour
     {
         _damageValueText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(gameObject, "DamageValueText");
         _defenceValueText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(gameObject, "DefenceValueText");
+    }
+    private void Start()
+    {
         _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 

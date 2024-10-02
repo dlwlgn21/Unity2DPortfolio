@@ -24,16 +24,16 @@ public class UI_Inventory_ItemDesc : MonoBehaviour
         SetImagesEnabled(false);
     }
 
-    public void ShowItemDesc(ItemInfo itemInfo, int itemId)
+    public void ShowItemDesc(ItemInfo itemInfo)
     {
         SetImagesEnabled(true);
         switch (itemInfo.EItemType)
         {
             case EItemType.Equippable:
-                FullfillEquipableItemDesc(itemInfo.EEquippableName, itemId);
+                FullfillEquipableItemDesc(itemInfo.EEquippableType, itemInfo.ItemId);
                 break;
             case EItemType.Consumable:
-                FullfillConsumableItemDesc(itemInfo.EConsumableName, itemId);
+                FullfillConsumableItemDesc(itemInfo.EConsumableType, itemInfo.ItemId);
                 break;
             default:
                 Debug.Assert(false);
@@ -48,11 +48,11 @@ public class UI_Inventory_ItemDesc : MonoBehaviour
         _descText.text = "";
     }
 
-    void FullfillEquipableItemDesc(EItemEquippableName eType, int itemId)
+    void FullfillEquipableItemDesc(EItemEquippableType eType, int itemId)
     {
         switch (eType)
         {
-            case EItemEquippableName.Helmet:
+            case EItemEquippableType.Helmet:
                 {
                     data.HelmetInfo helmetStat;
                     Managers.Data.HelmetItemDict.TryGetValue(itemId, out helmetStat);
@@ -61,7 +61,7 @@ public class UI_Inventory_ItemDesc : MonoBehaviour
                     SetTexts(helmetStat);
                     break;
                 }
-            case EItemEquippableName.Armor:
+            case EItemEquippableType.Armor:
                 {
                     data.ArmorInfo armorStat;
                     Managers.Data.ArmorItemDict.TryGetValue(itemId, out armorStat);
@@ -71,7 +71,7 @@ public class UI_Inventory_ItemDesc : MonoBehaviour
                     break;
 
                 }
-            case EItemEquippableName.Sword:
+            case EItemEquippableType.Sword:
                 {
                     data.SwordInfo swordStat;
                     Managers.Data.SwordItemDict.TryGetValue(itemId, out swordStat);
@@ -85,11 +85,11 @@ public class UI_Inventory_ItemDesc : MonoBehaviour
                 break;
         }
     }
-    void FullfillConsumableItemDesc(EItemConsumableName eType, int itemId)
+    void FullfillConsumableItemDesc(EItemConsumableType eType, int itemId)
     {
         switch (eType)
         {
-            case EItemConsumableName.Hp:
+            case EItemConsumableType.Hp:
                 {
                     data.HealingPotionInfo potionStat;
                     Managers.Data.HealingPotionDict.TryGetValue(itemId, out potionStat);

@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using define;
 public class UI_Inventory : MonoBehaviour
 {
-    static readonly int INVENTORY_SLOT_COUNT = 20;
-    static readonly int MAX_ROW_COUNT = 4;
-    static readonly int MAX_COL_COUNT = 5;
-    public List<Image> EquippableSlots { get; private set; } = new((int)define.EItemEquippableName.Count);
+    static public readonly int INVENTORY_SLOT_COUNT = 20;
+    static public readonly int MAX_ROW_COUNT = 4;
+    static public readonly int MAX_COL_COUNT = 5;
+    public List<Image> EquippableSlots { get; private set; } = new((int)define.EItemEquippableType.Count);
     public List<UI_Inventory_ItemIcon> InventoryItemIcons { get; private set; } = new(INVENTORY_SLOT_COUNT);
 
     bool[,] _itemSlotMatrix = new bool[MAX_ROW_COUNT, MAX_COL_COUNT];
@@ -18,7 +18,7 @@ public class UI_Inventory : MonoBehaviour
         EquippableSlots.Add(Utill.GetComponentInChildrenOrNull<Image>(gameObject, "UI_HelmetItemIcon"));
         EquippableSlots.Add(Utill.GetComponentInChildrenOrNull<Image>(gameObject, "UI_ArmorItemIcon"));
         EquippableSlots.Add(Utill.GetComponentInChildrenOrNull<Image>(gameObject, "UI_SwordItemIcon"));
-        for (int i = 0; i < (int)define.EItemEquippableName.Count; ++i)
+        for (int i = 0; i < (int)define.EItemEquippableType.Count; ++i)
         {
             EquippableSlots[i].enabled = false;
         }
@@ -39,18 +39,6 @@ public class UI_Inventory : MonoBehaviour
     }
     public UI_Inventory_ItemIcon GetEmptyIconOrNull()
     {
-        //for (int i = 0; i < MAX_ROW_COUNT; ++i)
-        //{
-        //    for (int j = 0; j < MAX_COL_COUNT; ++j)
-        //    {
-        //        if (!_itemSlotMatrix[i, j])
-        //        {
-        //            _itemSlotMatrix[i, j] = true;
-        //            return InventoryItemIcons[i * MAX_COL_COUNT + j];
-        //        }
-        //    }
-        //}
-
         for (int i = 0; i < INVENTORY_SLOT_COUNT; ++i)
         {
             if (!InventoryItemIcons[i].Image.enabled)
@@ -65,7 +53,7 @@ public class UI_Inventory : MonoBehaviour
         {
             if (InventoryItemIcons[i].Image.enabled && 
                 InventoryItemIcons[i].ItemInfo.EItemType == define.EItemType.Consumable &&
-                InventoryItemIcons[i].ItemId == coumableItemId)
+                InventoryItemIcons[i].ItemInfo.ItemId == coumableItemId)
             {
                 return InventoryItemIcons[i];
             }
@@ -73,10 +61,20 @@ public class UI_Inventory : MonoBehaviour
         return null;
     }
 
-    //public void SetItemSlotMatrix(int idx, bool isTrue)
-    //{
-    //    _itemSlotMatrix[idx / MAX_COL_COUNT, idx % MAX_COL_COUNT] = isTrue;
-    //}
+    public UI_Inventory_ItemIcon GetSpecifiedConsumableOrNull(EItemConsumableType eConsumableName, int itemId)
+    {
+        for (int i = 0; i < INVENTORY_SLOT_COUNT; ++i)
+        {
+            if (InventoryItemIcons[i].Image.enabled &&
+                InventoryItemIcons[i].ItemInfo.EConsumableType == eConsumableName &&
+                InventoryItemIcons[i].ItemInfo.ItemId == itemId)
+            {
+                return InventoryItemIcons[i];
+            }
+        }
+        return null;
+    }
+
     public void RefreshUI()
     {
 

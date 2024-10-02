@@ -1,14 +1,56 @@
 using define;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 public struct ItemInfo
 {
     public EItemType EItemType;
-    public EItemEquippableName EEquippableName;
-    public EItemConsumableName EConsumableName;
+    public EItemEquippableType EEquippableType;
+    public EItemConsumableType EConsumableType;
+    public int ItemId;
+
+    public void Init()
+    {
+        EItemType = define.EItemType.Count;
+        EEquippableType = define.EItemEquippableType.Count;
+        EConsumableType = define.EItemConsumableType.Count;
+        ItemId = int.MinValue;
+    }
+    public static bool operator ==(ItemInfo a, ItemInfo b)
+    {
+        if (a.EItemType == EItemType.Equippable)
+        {
+            return a.EItemType == b.EItemType && a.EEquippableType == b.EEquippableType && a.ItemId == b.ItemId;
+        }
+        else
+        {
+            return a.EItemType == b.EItemType && a.EConsumableType == b.EConsumableType && a.ItemId == b.ItemId;
+        }
+    }
+    public static bool operator !=(ItemInfo a, ItemInfo b)
+    {
+        if (a.EItemType == EItemType.Equippable)
+        {
+            return a.EItemType != b.EItemType || a.EEquippableType != b.EEquippableType || a.ItemId != b.ItemId;
+        }
+        else
+        {
+            return a.EItemType != b.EItemType || a.EConsumableType != b.EConsumableType || a.ItemId != b.ItemId;
+        }
+    }
+    public override bool Equals(object o)
+    {
+        Debug.Assert(false, "Don't Call This Method!!!");
+        return true;
+    }
+    public override int GetHashCode()
+    {
+        Debug.Assert(false, "Don't Call This Method!!!");
+        return 0;
+    }
 }
 
 public class UIManager
@@ -43,21 +85,21 @@ public class UIManager
         Managers.Input.KeyboardHandler += OnIKeyDowned;
     }
     
-    public void PushItemToInventory(ItemInfo itemInfo, int itemId)
+    public void PushItemToInventory(ItemInfo itemInfo)
     {
         Sprite sprite = null;
         UI_Inventory_ItemIcon emptyIcon = null;
         switch (itemInfo.EItemType)
         {
             case EItemType.Equippable:
-                AssignSpriteEquipable(itemInfo.EEquippableName, itemId, out sprite);
+                AssignSpriteEquipable(itemInfo.EEquippableType, itemInfo.ItemId, out sprite);
                 emptyIcon = _inven.GetEmptyIconOrNull();
                 Debug.Assert(sprite != null && emptyIcon != null);
                 emptyIcon.ItemInfo = itemInfo;
                 break;
             case EItemType.Consumable:
-                AssignSpriteConsumable(itemInfo.EConsumableName, itemId, out sprite);
-                emptyIcon = _inven.GetSameCousmableIconOrNull(itemId);
+                AssignSpriteConsumable(itemInfo.EConsumableType, itemInfo.ItemId, out sprite);
+                emptyIcon = _inven.GetSameCousmableIconOrNull(itemInfo.ItemId);
                 if (emptyIcon == null)
                     emptyIcon = _inven.GetEmptyIconOrNull();
                 emptyIcon.ItemInfo = itemInfo;
@@ -74,12 +116,15 @@ public class UIManager
             Debug.Log("Inventory Full!!!!");
             return;
         }
-        emptyIcon.ItemId = itemId;
         emptyIcon.Image.sprite = sprite;
         emptyIcon.Image.enabled = true;
 
     }
 
+    public UI_Inventory_ItemIcon GetSpecifiedConsumableOrNull(EItemConsumableType eConsumableName, int itemId)
+    {
+        return _inven.GetSpecifiedConsumableOrNull(eConsumableName, itemId);
+    }
     public void SwapItemIcon(int aIdx, int bIdx)
     {
         Debug.Assert(aIdx != bIdx);
@@ -89,13 +134,26 @@ public class UIManager
         a.Swap(b);
     }
 
+    public void ClearSlotAt(int slotIdx)
+    {
+        Debug.Assert(slotIdx < UI_Inventory.INVENTORY_SLOT_COUNT);
+        _inven.GetIconAtOrNull(slotIdx).Clear();
+    }
+    public Sprite GetEquipableItemSprite(ItemInfo itemInfo, EItemEquippableType eType)
+    {
+        Sprite sprite;
+        AssignSpriteEquipable(eType, itemInfo.ItemId, out sprite);
+        Debug.Assert(sprite != null);
+        return sprite;
+    }
+
     public void OnIKeyDowned()
     {
         if (Managers.Scene.ECurrentScene != define.ESceneType.MAIN_MENU)
         {
             if (Input.GetKeyDown(KeyCode.I))
             {
-                ShowStatIvenUI();
+                ShowIvenUI();
             }
         }
     }
@@ -120,6 +178,19 @@ public class UIManager
         }
     }
 
+    void ShowIvenUI()
+    {
+        if (!_inven.gameObject.activeSelf)
+        {
+            _inven.gameObject.SetActive(true);
+            _inven.RefreshUI();
+
+        }
+        else
+        {
+            _inven.gameObject.SetActive(false);
+        }
+    }
 
     public Sprite GetSpriteOrNull(string key)
     {
@@ -133,12 +204,12 @@ public class UIManager
 
 
     #region PushItems
-    void AssignSpriteEquipable(EItemEquippableName eType, int itemId, out Sprite sprite)
+    void AssignSpriteEquipable(EItemEquippableType eType, int itemId, out Sprite sprite)
     {
         sprite = null;
         switch (eType)
         {
-            case EItemEquippableName.Helmet:
+            case EItemEquippableType.Helmet:
                 {
                     data.HelmetInfo helmetStat;
                     Managers.Data.HelmetItemDict.TryGetValue(itemId, out helmetStat);
@@ -153,7 +224,7 @@ public class UIManager
                     }
                     break;
                 }
-            case EItemEquippableName.Armor:
+            case EItemEquippableType.Armor:
                 {
                     data.ArmorInfo armorStat;
                     Managers.Data.ArmorItemDict.TryGetValue(itemId, out armorStat);
@@ -168,7 +239,7 @@ public class UIManager
                     }
                 }
                 break;
-            case EItemEquippableName.Sword:
+            case EItemEquippableType.Sword:
                 {
                     data.SwordInfo swordStat;
                     Managers.Data.SwordItemDict.TryGetValue(itemId, out swordStat);
@@ -189,12 +260,12 @@ public class UIManager
         }
         Debug.Assert(sprite != null);
     }
-    void AssignSpriteConsumable(EItemConsumableName eType, int itemId, out Sprite sprite)
+    void AssignSpriteConsumable(EItemConsumableType eType, int itemId, out Sprite sprite)
     {
         sprite = null;
         switch (eType)
         {
-            case EItemConsumableName.Hp:
+            case EItemConsumableType.Hp:
                 data.HealingPotionInfo potionStat;
                 Managers.Data.HealingPotionDict.TryGetValue(itemId, out potionStat);
                 _spriteMap.TryGetValue(potionStat.iconSpritePath, out sprite);
