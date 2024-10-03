@@ -1,3 +1,4 @@
+using data;
 using define;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
+
 public struct ItemInfo
 {
     public EItemType EItemType;
@@ -82,9 +85,10 @@ public class UIManager
             _inven.gameObject.SetActive(false);
         }
 
-        Managers.Input.KeyboardHandler += OnIKeyDowned;
+        Managers.Input.KeyboardHandler += OnUIKeyDowned;
     }
-    
+
+    #region PushIventoryItem
     public void PushItemToInventory(ItemInfo itemInfo)
     {
         Sprite sprite = null;
@@ -118,9 +122,35 @@ public class UIManager
         }
         emptyIcon.Image.sprite = sprite;
         emptyIcon.Image.enabled = true;
-
     }
 
+    public bool TryPushEquipableItemToInventoryAt(ItemInfo itemInfo, int slotIdx)
+    {
+        if (!IsEmptySlotAt(slotIdx))
+            return false;
+
+        Sprite sprite = null;
+        UI_Inventory_ItemIcon emptyIcon = null;
+        switch (itemInfo.EItemType)
+        {
+            case EItemType.Equippable:
+                AssignSpriteEquipable(itemInfo.EEquippableType, itemInfo.ItemId, out sprite);
+                emptyIcon = _inven.GetIconAtOrNull(slotIdx);
+                Debug.Assert(sprite != null && emptyIcon != null);
+                emptyIcon.ItemInfo = itemInfo;
+                emptyIcon.Image.sprite = sprite;
+                emptyIcon.Image.enabled = true;
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+
+        }
+        return true;
+    }
+    #endregion
+
+    #region IconHelpers
     public UI_Inventory_ItemIcon GetSpecifiedConsumableOrNull(EItemConsumableType eConsumableName, int itemId)
     {
         return _inven.GetSpecifiedConsumableOrNull(eConsumableName, itemId);
@@ -134,7 +164,7 @@ public class UIManager
         a.Swap(b);
     }
 
-    public void ClearSlotAt(int slotIdx)
+    public void ClearInventorySlotAt(int slotIdx)
     {
         Debug.Assert(slotIdx < UI_Inventory.INVENTORY_SLOT_COUNT);
         _inven.GetIconAtOrNull(slotIdx).Clear();
@@ -146,8 +176,56 @@ public class UIManager
         Debug.Assert(sprite != null);
         return sprite;
     }
-
-    public void OnIKeyDowned()
+    public Sprite GetSpriteOrNull(string key)
+    {
+        Debug.Assert(!string.IsNullOrEmpty(key));
+        Sprite sprite;
+        if (_spriteMap.TryGetValue(key, out sprite))
+            return sprite;
+        else
+            return null;
+    }
+    public Sprite GetSpriteByItemInfoOrNull(ItemInfo itemInfo)
+    {
+        switch (itemInfo.EItemType)
+        {
+            case EItemType.Equippable:
+                switch (itemInfo.EEquippableType)
+                {
+                    case EItemEquippableType.Helmet:
+                        data.HelmetInfo helmetInfo;
+                        Managers.Data.HelmetItemDict.TryGetValue(itemInfo.ItemId, out helmetInfo);
+                        return GetSpriteOrNull(helmetInfo.iconSpritePath);
+                    case EItemEquippableType.Armor:
+                        data.ArmorInfo armorInfo;
+                        Managers.Data.ArmorItemDict.TryGetValue(itemInfo.ItemId, out armorInfo);
+                        return GetSpriteOrNull(armorInfo.iconSpritePath);
+                    case EItemEquippableType.Sword:
+                        data.SwordInfo swordInfo;
+                        Managers.Data.SwordItemDict.TryGetValue(itemInfo.ItemId, out swordInfo);
+                        return GetSpriteOrNull(swordInfo.iconSpritePath);
+                    default:
+                        Debug.Assert(false);
+                        return null;
+                }
+            case EItemType.Consumable:
+                switch (itemInfo.EConsumableType)
+                {
+                    case EItemConsumableType.Hp:
+                        data.HealingPotionInfo helingPotionInfo;
+                        Managers.Data.HealingPotionDict.TryGetValue(itemInfo.ItemId, out helingPotionInfo);
+                        return GetSpriteOrNull(helingPotionInfo.iconSpritePath);
+                    default:
+                        Debug.Assert(false);
+                        return null;
+                }
+            default:
+                Debug.Assert(false);
+                return null;
+        }
+    }
+    #endregion
+    public void OnUIKeyDowned()
     {
         if (Managers.Scene.ECurrentScene != define.ESceneType.MAIN_MENU)
         {
@@ -155,26 +233,32 @@ public class UIManager
             {
                 ShowIvenUI();
             }
+            else if (Input.GetKeyDown(KeyCode.U))
+            {
+                ShowStatUI();
+            }
         }
+    }
+    public void RefreshStatUI()
+    {
+        _stat.RefreshUI();
     }
     public void Clear()
     {
-        Managers.Input.KeyboardHandler -= OnIKeyDowned;
+        Managers.Input.KeyboardHandler -= OnUIKeyDowned;
     }
-    void ShowStatIvenUI()
+    #region ShowUI
+    void ShowStatUI()
     {
         if (!_stat.gameObject.activeSelf)
         {
             _stat.gameObject.SetActive(true);
-            _inven.gameObject.SetActive(true);
             _stat.RefreshUI();
-            _inven.RefreshUI();
 
         }
         else
         {
             _stat.gameObject.SetActive(false);
-            _inven.gameObject.SetActive(false);
         }
     }
 
@@ -191,19 +275,14 @@ public class UIManager
             _inven.gameObject.SetActive(false);
         }
     }
-
-    public Sprite GetSpriteOrNull(string key)
-    {
-        Debug.Assert(!string.IsNullOrEmpty(key));
-        Sprite sprite;
-        if (_spriteMap.TryGetValue(key, out sprite))
-            return sprite;
-        else
-            return null;
-    }
-
+    #endregion
 
     #region PushItems
+
+    bool IsEmptySlotAt(int slotIdx)
+    {
+        return _inven.GetIconAtOrNull(slotIdx).IsEmpty();
+    }
     void AssignSpriteEquipable(EItemEquippableType eType, int itemId, out Sprite sprite)
     {
         sprite = null;

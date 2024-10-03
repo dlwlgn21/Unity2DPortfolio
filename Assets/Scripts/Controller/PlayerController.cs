@@ -117,6 +117,8 @@ public class PlayerController : BaseCharacterController
         #endregion
     }
 
+
+    #region ItemEquipOrConsume
     public void OnCousumableItemUsed(EItemConsumableType eType, int amount)
     {
         switch (eType)
@@ -132,7 +134,61 @@ public class PlayerController : BaseCharacterController
                 break;
         }
     }
-
+    public void OnItemEqiuped(ItemInfo itemInfo)
+    {
+        switch (itemInfo.EEquippableType)
+        {
+            case EItemEquippableType.Helmet:
+                {
+                    data.HelmetInfo info = Managers.Data.HelmetItemDict[itemInfo.ItemId];
+                    Debug.Assert(info != null);
+                    Stat.HelmetPlusDefence = info.defence;
+                    break;
+                }
+            case EItemEquippableType.Armor:
+                {
+                    data.ArmorInfo info = Managers.Data.ArmorItemDict[itemInfo.ItemId];
+                    Debug.Assert(info != null);
+                    Stat.ArmorPlusDefence = info.defence;
+                    break;
+                }
+            case EItemEquippableType.Sword:
+                {
+                    data.SwordInfo info = Managers.Data.SwordItemDict[itemInfo.ItemId];
+                    Debug.Assert(info != null);
+                    Stat.SwordPlusDamage = info.damage;
+                    break;
+                }
+            default:
+                Debug.Assert(false);
+                break;
+        }
+    }
+    public void OnItemUnequiped(EItemEquippableType eType)
+    {
+        switch (eType)
+        {
+            case EItemEquippableType.Helmet:
+                {
+                    Stat.HelmetPlusDefence = 0;
+                    break;
+                }
+            case EItemEquippableType.Armor:
+                {
+                    Stat.ArmorPlusDefence = 0;
+                    break;
+                }
+            case EItemEquippableType.Sword:
+                {
+                    Stat.SwordPlusDamage = 0;
+                    break;
+                }
+            default:
+                Debug.Assert(false);
+                break;
+        }
+    }
+    #endregion
     private void OnDestroy()
     {
         MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr -= OnHittedByMonsterAttack;

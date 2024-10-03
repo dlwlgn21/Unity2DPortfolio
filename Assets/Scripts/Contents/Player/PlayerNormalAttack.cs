@@ -19,6 +19,9 @@ public class PlayerNormalAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
+        int totalDamage = _pc.Stat.Attack + _pc.Stat.SwordPlusDamage;
+
         if (collision.CompareTag("Monster"))
         {
             BaseMonsterController mc = collision.gameObject.GetComponent<BaseMonsterController>();
@@ -32,18 +35,18 @@ public class PlayerNormalAttack : MonoBehaviour
                 case EPlayerNoramlAttackType.ATTACK_1:
                     if (mc.ELookDir == _pc.ELookDir)
                     {
-                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, _pc.Stat.Attack * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BACK_ATTACK);
+                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, totalDamage * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BACK_ATTACK);
                     }
                     else
                     {
-                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, _pc.Stat.Attack, EPlayerNoramlAttackType.ATTACK_1);
+                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, totalDamage, EPlayerNoramlAttackType.ATTACK_1);
                     }
                     break;
                 case EPlayerNoramlAttackType.ATTACK_2:
-                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, (int)(_pc.Stat.Attack * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.ATTACK_2);
+                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, (int)(totalDamage * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.ATTACK_2);
                     break;
                 case EPlayerNoramlAttackType.ATTACK_3:
-                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, _pc.Stat.Attack * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.ATTACK_3);
+                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, totalDamage * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.ATTACK_3);
                     break;
             }
         }

@@ -122,5 +122,9 @@ public class Managers : MonoBehaviour
             }
         }
     }
-    public static void Clear()          { Input.Clear(); }
+    public static void Clear()          
+    {
+        sInstance._inputManager.Clear(); 
+        sInstance._uiManager.Clear(); 
+    }
 }

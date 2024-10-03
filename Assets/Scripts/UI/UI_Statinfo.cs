@@ -21,7 +21,9 @@ public class UI_Statinfo : MonoBehaviour
 
     public void RefreshUI()
     {
-        _damageValueText.text = $"{_pc.Stat.Attack}";
-        _defenceValueText.text = $"{_pc.Stat.Defence}";
+        if (_pc == null)
+            _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        _damageValueText.text = $"{_pc.Stat.Attack + _pc.Stat.SwordPlusDamage} (+{_pc.Stat.SwordPlusDamage})";
+        _defenceValueText.text = $"{_pc.Stat.Defence + _pc.Stat.HelmetPlusDefence + _pc.Stat.ArmorPlusDefence} (+{_pc.Stat.HelmetPlusDefence + _pc.Stat.ArmorPlusDefence})";
     }
 }

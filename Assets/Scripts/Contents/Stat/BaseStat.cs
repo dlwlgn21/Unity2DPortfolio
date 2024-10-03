@@ -20,7 +20,7 @@ public abstract class BaseStat : MonoBehaviour
     public int Defence { get { return _defence; } set { _defence = value; } }
     public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
 
-    public int DecreaseHpAndGetActualDamageAmount(int damage, out int beforeDamageHp, out int afterDamageHp)
+    public virtual int DecreaseHpAndGetActualDamageAmount(int damage, out int beforeDamageHp, out int afterDamageHp)
     {
         if (HP <= 0)
         {
@@ -28,7 +28,7 @@ public abstract class BaseStat : MonoBehaviour
             afterDamageHp = 0;
             return 0;
         }
-        int actualDamage = Mathf.Max(0, damage - Defence);
+        int actualDamage = Mathf.Max(1, damage - Defence);
         beforeDamageHp = HP;
         HP -= actualDamage;
         afterDamageHp = HP;
