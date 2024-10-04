@@ -10,7 +10,7 @@ public class ConsumableItemController : ItemController
 
     public override void PushItemToInventory()
     {
-        Managers.UI.PushItemToInventory(
+        Managers.UI.TryPushItemToInventory(
             new ItemInfo()
             {
                 EItemType = _eItemType,

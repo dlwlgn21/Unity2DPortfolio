@@ -15,12 +15,15 @@ public struct ItemInfo
     public EItemConsumableType EConsumableType;
     public int ItemId;
 
-    public void Init()
+    public ItemInfo(EItemType eItemType, 
+                    EItemEquippableType eEquipType, 
+                    EItemConsumableType eConType, 
+                    int itemId)
     {
-        EItemType = define.EItemType.Count;
-        EEquippableType = define.EItemEquippableType.Count;
-        EConsumableType = define.EItemConsumableType.Count;
-        ItemId = int.MinValue;
+        EItemType = eItemType;
+        EEquippableType = eEquipType;
+        EConsumableType = eConType;
+        ItemId = itemId;
     }
     public static bool operator ==(ItemInfo a, ItemInfo b)
     {
@@ -60,6 +63,7 @@ public class UIManager
 {
     UI_Statinfo _stat;
     UI_Inventory _inven;
+    //UI_PlayerHUD _playerHud;
     public UI_Inventory_ItemDesc ItemDesc { get; private set; }
 
     Dictionary<string, Sprite> _spriteMap = new();
@@ -85,11 +89,20 @@ public class UIManager
             _inven.gameObject.SetActive(false);
         }
 
+        //{
+        //    // UI_PlayerHUD
+        //    GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/Player/UI_PlayerHUD");
+        //    Debug.Assert(go != null);
+        //    Object.DontDestroyOnLoad(go);
+        //    go.name = "UI_PlayerHUD";
+        //    _playerHud = go.GetComponent<UI_PlayerHUD>();
+        //}
+        Managers.Input.KeyboardHandler -= OnUIKeyDowned;
         Managers.Input.KeyboardHandler += OnUIKeyDowned;
     }
 
     #region PushIventoryItem
-    public void PushItemToInventory(ItemInfo itemInfo)
+    public bool TryPushItemToInventory(ItemInfo itemInfo)
     {
         Sprite sprite = null;
         UI_Inventory_ItemIcon emptyIcon = null;
@@ -111,17 +124,52 @@ public class UIManager
                 break;
             default:
                 Debug.Assert(false);
-                break;
+                return false;
 
         }
         // TODO : Inventory가 꽉 찼을때 처리 이곳에서 해주어야 함.
         if (emptyIcon == null)
         {
             Debug.Log("Inventory Full!!!!");
-            return;
+            return false;
         }
         emptyIcon.Image.sprite = sprite;
         emptyIcon.Image.enabled = true;
+        return true;
+    }
+
+    public bool TryPushDiscardItemToInventoryAt(ItemInfo itemInfo, int slotIdx, int consumableCount)
+    {
+        if (!IsEmptySlotAt(slotIdx))
+            return false;
+        Sprite sprite = null;
+        UI_Inventory_ItemIcon icon = _inven.GetIconAtOrNull(slotIdx);
+        if (icon == null)
+        {
+            Debug.Assert(false);
+            return false;
+        }
+
+        switch (itemInfo.EItemType)
+        {
+            case EItemType.Equippable:
+                AssignSpriteEquipable(itemInfo.EEquippableType, itemInfo.ItemId, out sprite);
+                icon.ItemInfo = itemInfo;
+                break;
+            case EItemType.Consumable:
+                AssignSpriteConsumable(itemInfo.EConsumableType, itemInfo.ItemId, out sprite);
+                icon.ItemInfo = itemInfo;
+                icon.AssignConsumableCount(consumableCount);
+                break;
+            default:
+                Debug.Assert(false);
+                return false;
+
+        }
+        Debug.Assert(sprite != null);
+        icon.Image.sprite = sprite;
+        icon.Image.enabled = true;
+        return true;
     }
 
     public bool TryPushEquipableItemToInventoryAt(ItemInfo itemInfo, int slotIdx)

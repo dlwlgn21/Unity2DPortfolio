@@ -11,11 +11,7 @@ public class UI_PlayerConsumableIcon : MonoBehaviour
     public TextMeshProUGUI CountText { get; set; }
     private void Awake()
     {
-        Image = GetComponent<Image>();
-        Image.enabled = false;
-        CountText = Utill.GetFirstComponentInChildrenOrNull<TextMeshProUGUI>(gameObject);
-        CountText.text = "";
-        Debug.Assert(Image != null && CountText != null);
+        Init();
     }
 
     public void OnDropConsumableIcon(Sprite sprite, string countText)
@@ -28,11 +24,22 @@ public class UI_PlayerConsumableIcon : MonoBehaviour
 
     public void ResetItemIcon()
     {
+        if (Image == null)
+            Init();
         Image.enabled = false;
         CountText.text = "";
     }
     public bool IsPossibleConsum()
     {
         return Image.enabled;
+    }
+
+    void Init()
+    {
+        Image = GetComponent<Image>();
+        Image.enabled = false;
+        CountText = Utill.GetFirstComponentInChildrenOrNull<TextMeshProUGUI>(gameObject);
+        CountText.text = "";
+        Debug.Assert(Image != null && CountText != null);
     }
 }

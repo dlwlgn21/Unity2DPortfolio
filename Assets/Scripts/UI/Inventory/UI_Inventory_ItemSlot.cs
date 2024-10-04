@@ -18,19 +18,38 @@ public class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
         GameObject dragedObject = eventData.pointerDrag;
         if (dragedObject != null)
         {
-            UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
-            if (dragedIcon != null && SlotIdx != dragedIcon.SlotIdx)
             {
-                Managers.UI.SwapItemIcon(SlotIdx, dragedIcon.SlotIdx);
-                return;
+                // case Icon Drop
+                UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
+                if (dragedIcon != null && SlotIdx != dragedIcon.SlotIdx)
+                {
+                    Managers.UI.SwapItemIcon(SlotIdx, dragedIcon.SlotIdx);
+                    return;
+                }
             }
 
-            UI_Inventory_EquipableItemIcon equipedItemIcon = dragedObject.GetComponent<UI_Inventory_EquipableItemIcon>();
-            if (equipedItemIcon != null)
             {
-                if (Managers.UI.TryPushEquipableItemToInventoryAt(equipedItemIcon.ItemInfo, SlotIdx))
+                // case EuqipedIcon Drop
+                UI_Inventory_EquipableItemIcon equipedItemIcon = dragedObject.GetComponent<UI_Inventory_EquipableItemIcon>();
+                if (equipedItemIcon != null)
                 {
-                    equipedItemIcon.Clear();
+                    if (Managers.UI.TryPushEquipableItemToInventoryAt(equipedItemIcon.ItemInfo, SlotIdx))
+                    {
+                        equipedItemIcon.Clear();
+                        return;
+                    }
+                }
+            }
+            {
+                // case DiscardIcon Drop
+                UI_Inventory_ItemDiscardIcon discardItemIcon = dragedObject.GetComponent<UI_Inventory_ItemDiscardIcon>();
+                if (discardItemIcon != null)
+                {
+                    if (Managers.UI.TryPushDiscardItemToInventoryAt(discardItemIcon.ItemInfo, SlotIdx, discardItemIcon.ConsumableItemCount))
+                    {
+                        discardItemIcon.Clear();
+                        return;
+                    }
                 }
             }
         }

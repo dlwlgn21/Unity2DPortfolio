@@ -9,26 +9,55 @@ public class PlayerConsumableSlotManager : MonoBehaviour
 
     private void Awake()
     {
-        _slots.Add(Utill.GetComponentInChildrenOrNull<UI_PlayerConsumableSlot>(gameObject, "PlayerConsumableSlot01"));
-        _slots.Add(Utill.GetComponentInChildrenOrNull<UI_PlayerConsumableSlot>(gameObject, "PlayerConsumableSlot02"));
-        UI_PlayerConsumableSlot.SameConsumableDropEventHandelr += SwapIfSameItemMoving;
-        
+        Init();
     }
 
-    bool SwapIfSameItemMoving(ItemInfo itemInfo, int slotIdx)
+    void DisacrdIfSameItemDroped(ItemInfo itemInfo, int slotIdx)
     {
-        if (_slots[0].ItemInfo == _slots[1].ItemInfo)
+        Init();
+        if (slotIdx == 0)
         {
-            _slots[0].Swap(_slots[1]);
-            return true;
+            if (itemInfo == _slots[1].Info)
+            {
+                _slots[1].Discard();
+            }
         }
-        return false;
+        else
+        {
+            if (itemInfo == _slots[0].Info)
+            {
+                _slots[0].Discard();
+            }
+        }
     }
 
-
-    private void OnDestroy()
+    void OnDiscardBtnClicked(ItemInfo itemInfo)
     {
-        UI_PlayerConsumableSlot.SameConsumableDropEventHandelr -= SwapIfSameItemMoving;
+        for (int i = 0; i < 2; ++i)
+        {
+            if (itemInfo == _slots[i].Info)
+            {
+                _slots[i].Discard();
+                return;
+            }
+        }
     }
+
+    void Init()
+    {
+        if (_slots.Count == 0)
+        {
+            _slots.Add(Utill.GetComponentInChildrenOrNull<UI_PlayerConsumableSlot>(gameObject, "PlayerConsumableSlot01"));
+            _slots.Add(Utill.GetComponentInChildrenOrNull<UI_PlayerConsumableSlot>(gameObject, "PlayerConsumableSlot02"));
+            UI_PlayerConsumableSlot.SameConsumableDropEventHandelr -= DisacrdIfSameItemDroped;
+            UI_PlayerConsumableSlot.SameConsumableDropEventHandelr += DisacrdIfSameItemDroped;
+            UI_Inventory_ItemDiscardSlot.ItemDiscardEventHandler -= OnDiscardBtnClicked;
+            UI_Inventory_ItemDiscardSlot.ItemDiscardEventHandler += OnDiscardBtnClicked;
+        }
+    }
+    //private void OnDestroy()
+    //{
+    //    UI_PlayerConsumableSlot.SameConsumableDropEventHandelr -= SwapIfSameItemMoving;
+    //}
 
 }

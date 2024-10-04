@@ -18,13 +18,29 @@ public class UI_Inventory_EquipableItemSlot : MonoBehaviour, IDropHandler
         GameObject dragedObject = eventData.pointerDrag;
         if (dragedObject != null)
         {
-            UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
-            if (dragedIcon != null && 
-                dragedIcon.ItemInfo.EItemType == EItemType.Equippable &&
-                dragedIcon.ItemInfo.EEquippableType == _eEquippableType)
             {
-                _icon.EqiupItem(dragedIcon.ItemInfo);
-                Managers.UI.ClearInventorySlotAt(dragedIcon.SlotIdx);
+                // case InventoryItem -> Equip
+                UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
+                if (dragedIcon != null && 
+                    dragedIcon.ItemInfo.EItemType == EItemType.Equippable &&
+                    dragedIcon.ItemInfo.EEquippableType == _eEquippableType)
+                {
+                    _icon.EqiupItem(dragedIcon.ItemInfo);
+                    Managers.UI.ClearInventorySlotAt(dragedIcon.SlotIdx);
+                }
+            }
+            {
+                // case DiscardItem -> Equip
+                UI_Inventory_ItemDiscardIcon discardIcon = dragedObject.GetComponent<UI_Inventory_ItemDiscardIcon>();
+                if (discardIcon != null &&
+                    discardIcon.ItemInfo.EItemType == EItemType.Equippable &&
+                    discardIcon.ItemInfo.EEquippableType == _eEquippableType)
+                {
+                    _icon.EqiupItem(discardIcon.ItemInfo);
+                    discardIcon.Clear();
+                }
+
+
             }
         }
     }

@@ -2,13 +2,14 @@ using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
 {
+    static public UnityAction<ItemInfo> ItemDiscardEventHandler;
     UI_Inventory_ItemDiscardIcon _icon;
-    UI_Inventory_ItemIcon _currDiscardingIcon;
-
+    
     private void Awake()
     {
         _icon = Utill.GetFirstComponentInChildrenOrNull<UI_Inventory_ItemDiscardIcon>(gameObject);
@@ -22,19 +23,16 @@ public class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
             UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
             if (dragedIcon != null)
             {
-                _currDiscardingIcon = dragedIcon;
-                _icon.OnDropDiscardIcon(dragedIcon.ItemInfo, Managers.UI.GetSpriteByItemInfoOrNull(dragedIcon.ItemInfo));
+                _icon.OnDropDiscardIcon(dragedIcon.ItemInfo, Managers.UI.GetSpriteByItemInfoOrNull(dragedIcon.ItemInfo), dragedIcon.ConsumableItemCount);
+                Managers.UI.ClearInventorySlotAt(dragedIcon.SlotIdx);
             }
         }
     }
 
     public void OnDiscardBtnClicked()
     {
-        if (_currDiscardingIcon != null)
-        {
-            _icon.Clear();
-            Managers.UI.ClearInventorySlotAt(_currDiscardingIcon.SlotIdx);
-            _currDiscardingIcon = null;
-        }
+        if (ItemDiscardEventHandler != null)
+            ItemDiscardEventHandler.Invoke(_icon.ItemInfo);
+        _icon.Clear();
     }
 }

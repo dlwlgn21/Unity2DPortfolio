@@ -8,28 +8,25 @@ using System;
 
 public class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
 {
-    public static Func<ItemInfo, int, bool> SameConsumableDropEventHandelr;
+    public static UnityAction<ItemInfo, int> SameConsumableDropEventHandelr;
     PlayerController _pc;
     UI_PlayerConsumableIcon _icon;
-    public ItemInfo ItemInfo { get; private set; }
+    public ItemInfo Info { get; private set; }
     public int SlotIdx { get; private set; }
     private void Awake()
     {
-        _icon = Utill.GetFirstComponentInChildrenOrNull<UI_PlayerConsumableIcon>(gameObject);
-        Debug.Assert(_icon != null);
-        ItemInfo.Init();
-        SlotIdx = int.Parse(gameObject.name.Substring(gameObject.name.Length - 2)) - 1;
-        Managers.Input.KeyboardHandler += OnKeyDown;
-
+        Init();
     }
 
     private void Start()
     {
+        Init();
         _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         Debug.Assert(_pc != null);
     }
     public void OnDrop(PointerEventData eventData)
     {
+        Init();
         GameObject dragedObject = eventData.pointerDrag;
         if (dragedObject != null)
         {
@@ -38,28 +35,33 @@ public class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
             {
                 if (SameConsumableDropEventHandelr != null)
                 {
-                    ItemInfo = dragedIcon.ItemInfo;
-                    if (SameConsumableDropEventHandelr.Invoke(dragedIcon.ItemInfo, SlotIdx) == false)
-                    {
-                        _icon.OnDropConsumableIcon(dragedIcon.Image.sprite, dragedIcon.ConsumableItemCountText.text);
-                    }
+                    SameConsumableDropEventHandelr.Invoke(dragedIcon.ItemInfo, SlotIdx);
+                    Info = dragedIcon.ItemInfo;
+                    _icon.OnDropConsumableIcon(dragedIcon.Image.sprite, dragedIcon.ConsumableItemCountText.text);
                 }
             }
         }
     }
+
+    public void Discard()
+    {
+        _icon.ResetItemIcon();
+        Info = new ItemInfo();
+    }
     public void Swap(UI_PlayerConsumableSlot a)
     {
-        ItemInfo tmpItemInfo = a.ItemInfo;
+        Debug.Assert(a != null);
+        ItemInfo tmpItemInfo = a.Info;
         bool tmpImgEnabled = a._icon.Image.enabled;
         Sprite tmpSprite = a._icon.Image.sprite;
         string tmpText = a._icon.CountText.text;
 
-        a.ItemInfo = this.ItemInfo;
+        a.Info = this.Info;
         a._icon.Image.enabled = this._icon.Image.enabled;
         a._icon.Image.sprite = this._icon.Image.sprite;
         a._icon.CountText.text = this._icon.CountText.text;
 
-        this.ItemInfo = tmpItemInfo;
+        this.Info = tmpItemInfo;
         this._icon.Image.enabled = tmpImgEnabled;
         this._icon.Image.sprite = tmpSprite;
         this._icon.CountText.text = tmpText;
@@ -97,8 +99,7 @@ public class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                 _pc.OnCousumableItemUsed(EItemConsumableType.Hp, info.healAmount);
                 if (int.Parse(_icon.CountText.text) <= 0)
                 {
-                    _icon.ResetItemIcon();
-                    ItemInfo.Init();
+                    Discard();
                 }
                 return true;
             }
@@ -106,13 +107,24 @@ public class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
         return false;
     }
 
-    private void OnDestroy()
+    void Init()
     {
-        if (SameConsumableDropEventHandelr != null)
+        if (_icon == null)
         {
-            SameConsumableDropEventHandelr = null;
+            _icon = Utill.GetFirstComponentInChildrenOrNull<UI_PlayerConsumableIcon>(gameObject);
+            Debug.Assert(_icon != null);
+            Info = new ItemInfo(EItemType.Count, EItemEquippableType.Count, EItemConsumableType.Count, int.MinValue);
+            SlotIdx = int.Parse(gameObject.name.Substring(gameObject.name.Length - 2)) - 1;
+            Managers.Input.KeyboardHandler -= OnKeyDown;
+            Managers.Input.KeyboardHandler += OnKeyDown;
         }
-        Managers.Input.KeyboardHandler -= OnKeyDown;
-
     }
+    //private void OnDestroy()
+    //{
+    //    if (SameConsumableDropEventHandelr != null)
+    //    {
+    //        SameConsumableDropEventHandelr = null;
+    //    }
+    //    Managers.Input.KeyboardHandler -= OnKeyDown;
+    //}
 }

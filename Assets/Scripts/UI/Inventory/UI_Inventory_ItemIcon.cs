@@ -22,9 +22,19 @@ public class UI_Inventory_ItemIcon : UI_Inventory_BaseItemIcon
 
     public override void Clear()
     {
-        ItemInfo.Init();
+        ItemInfo = new ItemInfo();
         Image.enabled = false;
         ConsumableItemCountText.gameObject.SetActive(false);
+    }
+
+    public void AssignConsumableCount(int count)
+    {
+        if (ItemInfo.EItemType == define.EItemType.Consumable)
+        {
+            ConsumableItemCountText.gameObject.SetActive(true);
+            ConsumableItemCount = count;
+            ConsumableItemCountText.text = ConsumableItemCount.ToString();
+        }
     }
     public void IncreaseConsuambleText()
     {
