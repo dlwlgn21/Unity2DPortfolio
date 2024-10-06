@@ -1,3 +1,4 @@
+using define;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +13,8 @@ public class UI_PlayerConsumableIcon : MonoBehaviour
     private void Awake()
     {
         Init();
+        Managers.UI.UI_IventroyConsumablePushedEventHandler -= OnConsumablePushed;
+        Managers.UI.UI_IventroyConsumablePushedEventHandler += OnConsumablePushed;
     }
 
     public void OnDropConsumableIcon(Sprite sprite, string countText)
@@ -41,5 +44,15 @@ public class UI_PlayerConsumableIcon : MonoBehaviour
         CountText = Utill.GetFirstComponentInChildrenOrNull<TextMeshProUGUI>(gameObject);
         CountText.text = "";
         Debug.Assert(Image != null && CountText != null);
+    }
+
+    void OnConsumablePushed()
+    {
+        // TODO : 여기 ItemId 매직넘버 고쳐야 함.
+        UI_Inventory_ItemIcon itemIcon = Managers.UI.GetSpecifiedConsumableOrNull(EItemConsumableType.Hp, 1);
+        if (IsPossibleConsum() && itemIcon.Image.sprite == Image.sprite)
+        {
+            CountText.text = itemIcon.ConsumableItemCount.ToString();
+        }
     }
 }

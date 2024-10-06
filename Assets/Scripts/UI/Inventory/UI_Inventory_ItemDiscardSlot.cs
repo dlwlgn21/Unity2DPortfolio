@@ -4,16 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
 {
     static public UnityAction<ItemInfo> ItemDiscardEventHandler;
     UI_Inventory_ItemDiscardIcon _icon;
-    
+    [SerializeField] Button _btn;
     private void Awake()
     {
         _icon = Utill.GetFirstComponentInChildrenOrNull<UI_Inventory_ItemDiscardIcon>(gameObject);
-        Debug.Assert(_icon != null);
+        Debug.Assert(_icon != null && _btn != null);
+        _btn.gameObject.SetActive(false);
+        UI_Inventory_ItemDiscardIcon.DiscardIconOnDropEventHandler -= OnDropIcon;
+        UI_Inventory_ItemDiscardIcon.DiscardIconOnClearEventHandler -= OnClearIcon;
+        UI_Inventory_ItemDiscardIcon.DiscardIconOnDropEventHandler += OnDropIcon;
+        UI_Inventory_ItemDiscardIcon.DiscardIconOnClearEventHandler += OnClearIcon;
     }
     public void OnDrop(PointerEventData eventData)
     {
@@ -34,5 +40,14 @@ public class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
         if (ItemDiscardEventHandler != null)
             ItemDiscardEventHandler.Invoke(_icon.ItemInfo);
         _icon.Clear();
+    }
+    void OnDropIcon()
+    {
+        _btn.gameObject.SetActive(true);
+    }
+
+    void OnClearIcon()
+    {
+        _btn.gameObject.SetActive(false);
     }
 }

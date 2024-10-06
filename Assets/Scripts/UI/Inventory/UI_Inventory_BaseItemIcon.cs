@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using define;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public abstract class UI_Inventory_BaseItemIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public ItemInfo ItemInfo { get; set; }
     public Image Image { get; set; }
     protected Transform _cacheParent;
-
     private void Awake()
     {
         Image = GetComponent<Image>();
@@ -31,6 +31,7 @@ public abstract class UI_Inventory_BaseItemIcon : MonoBehaviour, IPointerEnterHa
         if (Image.enabled)
         {
             Managers.UI.ItemDesc.ShowItemDesc(ItemInfo);
+            transform.DOScale(DoTweenValueContainer.TWEEN_SCALE_END_VALUE, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic);
         }
     }
     public void OnPointerExit(PointerEventData eventData)
@@ -38,6 +39,7 @@ public abstract class UI_Inventory_BaseItemIcon : MonoBehaviour, IPointerEnterHa
         if (Image.enabled)
         {
             Managers.UI.ItemDesc.HideItemDesc();
+            transform.DOScale(Vector3.one, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic);
         }
     }
     #endregion

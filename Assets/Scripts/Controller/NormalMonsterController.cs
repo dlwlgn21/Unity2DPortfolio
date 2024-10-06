@@ -74,6 +74,11 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         {
             return;
         }
+        if (_pc == null)
+        {
+            _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            PlayerTransform = _pc.transform;
+        }
         Vector2 dir = PlayerTransform.position - transform.position;
         if (dir.x > 0)
         {

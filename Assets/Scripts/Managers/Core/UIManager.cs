@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
@@ -64,6 +65,7 @@ public class UIManager
     UI_Statinfo _stat;
     UI_Inventory _inven;
     //UI_PlayerHUD _playerHud;
+    public UnityAction UI_IventroyConsumablePushedEventHandler; 
     public UI_Inventory_ItemDesc ItemDesc { get; private set; }
 
     Dictionary<string, Sprite> _spriteMap = new();
@@ -121,6 +123,7 @@ public class UIManager
                     emptyIcon = _inven.GetEmptyIconOrNull();
                 emptyIcon.ItemInfo = itemInfo;
                 emptyIcon.IncreaseConsuambleText();
+                CallConsumablePushedEvent();
                 break;
             default:
                 Debug.Assert(false);
@@ -409,6 +412,12 @@ public class UIManager
                 break;
         }
         Debug.Assert(sprite != null);
+    }
+
+    void CallConsumablePushedEvent()
+    {
+        if (UI_IventroyConsumablePushedEventHandler != null)
+            UI_IventroyConsumablePushedEventHandler.Invoke();
     }
     #endregion
 }
