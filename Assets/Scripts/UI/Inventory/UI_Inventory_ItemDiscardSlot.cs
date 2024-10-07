@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
+public sealed class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
 {
     static public UnityAction<ItemInfo> ItemDiscardEventHandler;
     UI_Inventory_ItemDiscardIcon _icon;

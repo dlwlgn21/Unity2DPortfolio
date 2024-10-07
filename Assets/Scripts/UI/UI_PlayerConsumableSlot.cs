@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using System;
 using DG.Tweening;
 
-public class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
+public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
 {
     public static float CONSUMABLE_COOL_TIME_IN_SEC = 5f;
     public static UnityAction<ItemInfo, int> SameConsumableDropEventHandelr;

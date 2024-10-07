@@ -104,7 +104,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         _stateMachine.Init(this, _states[(uint)ENormalMonsterState.IDLE]);
     }
 
-
+    #region HittedByPlayer
     public override void OnHittedByPlayerNormalAttack(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
     {
         if (ECurrentState != ENormalMonsterState.DIE)
@@ -122,6 +122,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             IsHittedByPlayerNormalAttack = false;
         }
     }
+
     public override void OnPlayerBlockSuccess() 
     { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS); }
     public override void OnHittedByPlayerKnockbackBomb() 
@@ -129,6 +130,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     public override void OnHittedByPlayerSpawnReaper() 
     { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS); }
 
+    #endregion
     public override void OnDie()
     {
         Animator.speed = 1f;

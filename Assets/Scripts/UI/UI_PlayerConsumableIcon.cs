@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
-public class UI_PlayerConsumableIcon : MonoBehaviour
+public sealed class UI_PlayerConsumableIcon : MonoBehaviour
 {
     public Image Image { get; set; }
     public TextMeshProUGUI CountText { get; set; }

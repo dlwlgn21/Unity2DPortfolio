@@ -64,9 +64,11 @@ public class UIManager
 {
     UI_Statinfo _stat;
     UI_Inventory _inven;
+    UI_SkillTree _skillTree;
     //UI_PlayerHUD _playerHud;
     public UnityAction UI_IventroyConsumablePushedEventHandler; 
-    public UI_Inventory_ItemDesc ItemDesc { get; private set; }
+    public UI_Inventory_ItemDescription ItemDesc { get; private set; }
+    public UI_Skill_Description SkillDesc { get; private set; }
 
     Dictionary<string, Sprite> _spriteMap = new();
     public void Init()
@@ -87,7 +89,7 @@ public class UIManager
             Object.DontDestroyOnLoad(go);
             go.name = "UI_Inventory";
             _inven = go.GetComponent<UI_Inventory>();
-            ItemDesc = Utill.GetComponentInChildrenOrNull<UI_Inventory_ItemDesc>(go, "UI_ItemDescription");
+            ItemDesc = Utill.GetComponentInChildrenOrNull<UI_Inventory_ItemDescription>(go, "UI_ItemDescription");
             _inven.gameObject.SetActive(false);
         }
 
@@ -99,6 +101,17 @@ public class UIManager
         //    go.name = "UI_PlayerHUD";
         //    _playerHud = go.GetComponent<UI_PlayerHUD>();
         //}
+
+        {
+            // SkillTree
+            GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/Skill/UI_SkillTree");
+            Debug.Assert(go != null);
+            Object.DontDestroyOnLoad(go);
+            go.name = "UI_SkillTree";
+            _skillTree = go.GetComponent<UI_SkillTree>();
+            SkillDesc = Utill.GetComponentInChildrenOrNull<UI_Skill_Description>(go, "UI_SkillDescription");
+            _skillTree.gameObject.SetActive(false);
+        }
         Managers.Input.KeyboardHandler -= OnUIKeyDowned;
         Managers.Input.KeyboardHandler += OnUIKeyDowned;
     }
@@ -296,6 +309,10 @@ public class UIManager
             {
                 ShowStatUI();
             }
+            else if (Input.GetKeyDown(KeyCode.O))
+            {
+                ShowSkillUI();
+            }
         }
     }
     public void RefreshStatUI()
@@ -334,6 +351,18 @@ public class UIManager
             _inven.gameObject.SetActive(false);
         }
     }
+    void ShowSkillUI()
+    {
+        if (!_skillTree.gameObject.activeSelf)
+        {
+            _skillTree.gameObject.SetActive(true);
+        }
+        else
+        {
+            _skillTree.gameObject.SetActive(false);
+        }
+    }
+
     #endregion
 
     #region PushItems

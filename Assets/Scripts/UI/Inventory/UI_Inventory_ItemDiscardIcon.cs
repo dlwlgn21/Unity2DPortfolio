@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UI_Inventory_ItemDiscardIcon : UI_Inventory_BaseItemIcon
+public sealed class UI_Inventory_ItemDiscardIcon : UI_Inventory_BaseItemIcon
 {
     static public UnityAction DiscardIconOnDropEventHandler;
     static public UnityAction DiscardIconOnClearEventHandler;

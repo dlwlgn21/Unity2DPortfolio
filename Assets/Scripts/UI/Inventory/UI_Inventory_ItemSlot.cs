@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
+public sealed class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
 {
     UI_Inventory_ItemIcon _icon;
     public int SlotIdx { get; private set; }

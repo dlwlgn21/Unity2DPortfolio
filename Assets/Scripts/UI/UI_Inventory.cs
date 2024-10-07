@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using define;
-public class UI_Inventory : MonoBehaviour
+public sealed class UI_Inventory : MonoBehaviour
 {
     static public readonly int INVENTORY_SLOT_COUNT = 20;
     static public readonly int MAX_ROW_COUNT = 4;

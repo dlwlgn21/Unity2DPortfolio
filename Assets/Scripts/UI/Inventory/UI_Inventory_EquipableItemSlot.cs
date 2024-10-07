@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_Inventory_EquipableItemSlot : MonoBehaviour, IDropHandler
+public sealed class UI_Inventory_EquipableItemSlot : MonoBehaviour, IDropHandler
 {
     UI_Inventory_EquipableItemIcon _icon;
     [SerializeField] EItemEquippableType _eEquippableType;

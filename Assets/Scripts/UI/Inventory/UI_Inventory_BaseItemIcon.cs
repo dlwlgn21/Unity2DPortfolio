@@ -38,7 +38,7 @@ public abstract class UI_Inventory_BaseItemIcon : MonoBehaviour, IPointerEnterHa
     {
         if (Image.enabled)
         {
-            Managers.UI.ItemDesc.HideItemDesc();
+            Managers.UI.ItemDesc.HideDescription();
             transform.DOScale(Vector3.one, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic);
         }
     }

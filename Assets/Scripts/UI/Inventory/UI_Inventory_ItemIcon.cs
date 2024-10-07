@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-public class UI_Inventory_ItemIcon : UI_Inventory_BaseItemIcon
+public sealed class UI_Inventory_ItemIcon : UI_Inventory_BaseItemIcon
 {
     public int SlotIdx { get; private set; }
     public int ConsumableItemCount { get; private set; }

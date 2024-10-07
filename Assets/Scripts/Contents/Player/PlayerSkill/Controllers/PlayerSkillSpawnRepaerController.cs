@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using define;
 public class PlayerSkillSpawnRepaerController : BasePlayerSkillController
 {
     private const float SPAWN_REAPER_COOL_TIME_IN_SEC = 5f;
     private PlayerSkillSpawnReaperObject _spawnReaper;
     public override void Init()
     {
-        _eSkillType = EPlayerSkill.SPAWN_REAPER;
+        _eSkillType = ESkillType.Spawn_Reaper;
         _initCoolTime = SPAWN_REAPER_COOL_TIME_IN_SEC;
         SkillCoolTimeInSec = SPAWN_REAPER_COOL_TIME_IN_SEC;
-        IsPossibleDoSkill = true;
+        IsCanUseSkill = true;
         Debug.Assert(_uiCoolTimerImg != null);
         if (_spawnReaper == null)
         {
@@ -31,15 +31,15 @@ public class PlayerSkillSpawnRepaerController : BasePlayerSkillController
     {
         if (Input.GetKeyDown(PlayerController.KeySpawnReaper))
         {
-            if (IsPosibbleValidStateToDoSkill())
+            if (IsValidStateToUseSkill())
             {
-                DoSkill(EPlayerSkill.SPAWN_REAPER);
+                UseSkill(ESkillType.Spawn_Reaper);
             }
         }
     }
-    private void OnPlayerSpawnReaperAnimValidTiming(EPlayerSkill eType)
+    private void OnPlayerSpawnReaperAnimValidTiming(ESkillType eType)
     {
-        if (eType == EPlayerSkill.SPAWN_REAPER)
+        if (eType == ESkillType.Spawn_Reaper)
         {
             _spawnReaper.SpawnReaper(_pc.SpawnReaperPoint.position, _pc.ELookDir);
         }

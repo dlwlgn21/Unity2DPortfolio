@@ -46,8 +46,8 @@ public class PlayerController : BaseCharacterController
     public static UnityAction<EPlayerState> HitEffectEventHandler;
     public static UnityAction<EPlayerMovementEffect, ECharacterLookDir, Vector2> MovementEffectEventHandler;
     public static UnityAction<int, int, int> HitUIEventHandler;
-    public static UnityAction<EPlayerSkill> PlayerSkillKeyDownEventHandler;
-    public static UnityAction<EPlayerSkill> PlayerSkillValidAnimTimingEventHandler;
+    public static UnityAction<ESkillType> PlayerSkillKeyDownEventHandler;
+    public static UnityAction<ESkillType> PlayerSkillValidAnimTimingEventHandler;
     public static UnityAction<EAttackStatusEffect, float> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
     public static UnityAction<int, int> PlayerIncreaseHpEventHandler; // UIPlayerHPBar
@@ -251,14 +251,14 @@ public class PlayerController : BaseCharacterController
         Debug.Assert(ECurrentState == EPlayerState.CAST_LAUNCH);
         if (ECurrentState == EPlayerState.CAST_LAUNCH)
         {
-            PlayerSkillValidAnimTimingEventHandler?.Invoke(EPlayerSkill.SPAWN_SHOOTER);
+            PlayerSkillValidAnimTimingEventHandler?.Invoke(ESkillType.Spawn_Panda);
         }
     }
     private void OnValidSpawnReaperTiming()
     {
         if (ECurrentState == EPlayerState.CAST_SPAWN)
         {
-            PlayerSkillValidAnimTimingEventHandler?.Invoke(EPlayerSkill.SPAWN_REAPER);
+            PlayerSkillValidAnimTimingEventHandler?.Invoke(ESkillType.Spawn_Reaper);
         }
     }
 

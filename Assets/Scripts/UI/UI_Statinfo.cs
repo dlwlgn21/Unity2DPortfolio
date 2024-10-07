@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Statinfo : MonoBehaviour
+public sealed class UI_Statinfo : MonoBehaviour
 {
     TextMeshProUGUI _damageValueText;
     TextMeshProUGUI _defenceValueText;

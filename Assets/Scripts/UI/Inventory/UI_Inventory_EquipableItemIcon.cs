@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class UI_Inventory_EquipableItemIcon : UI_Inventory_BaseItemIcon
+public sealed class UI_Inventory_EquipableItemIcon : UI_Inventory_BaseItemIcon
 {
     [SerializeField] EItemEquippableType _eEquipableType;
     PlayerController _pc;

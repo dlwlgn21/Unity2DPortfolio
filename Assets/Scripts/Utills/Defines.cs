@@ -23,8 +23,9 @@ namespace define
         Left,
         Right
     }
-    public enum ESlkillType
+    public enum ESkillType
     {
+        Roll,
         Spawn_Reaper,
         Spawn_Panda,
         Casting_BlackFlame,

@@ -11,12 +11,14 @@ public interface ILoader<Key, Value>
 public class DataManager
 {
     public Dictionary<int, data.PlayerStat> PlayerStatDict { get; private set; } = new();
+    public Dictionary<int, data.SkillInfo> SkillInfoDict { get; private set; } = new();
     public Dictionary<int, data.MonsterStat> MonsterStatDict { get; private set; } = new();
     public Dictionary<int, data.HealingPotionInfo> HealingPotionDict { get; private set; } = new();
 
     public Dictionary<int, data.HelmetInfo> HelmetItemDict { get; private set; } = new();
     public Dictionary<int, data.SwordInfo> SwordItemDict { get; private set; } = new();
     public Dictionary<int, data.ArmorInfo> ArmorItemDict { get; private set; } = new();
+
 
 
     public const string SFX_PALY_SCENE_BGM_PATH = "Sound/SFX_PlaySceneBgm";
@@ -35,9 +37,8 @@ public class DataManager
     public void Init()
     {
         PlayerStatDict = LoadJson<data.PlayerStatLoader, int, data.PlayerStat>("Player/Data_PlayerStat").MakeDict();
-        Debug.Assert(PlayerStatDict.Count != 0);
         MonsterStatDict = LoadJson<data.MonsterStatLoader, int, data.MonsterStat>("Monsters/Data_MonstersStat").MakeDict();
-        Debug.Assert(MonsterStatDict.Count != 0);
+        SkillInfoDict = LoadJson<data.SkillInfoLoader, int, data.SkillInfo>("Skill/Data_SkillInfo").MakeDict();
         HealingPotionDict = LoadJson<data.HealingPotionLoader, int, data.HealingPotionInfo>("Item/Data_HealingPotionStat").MakeDict();
 
         HelmetItemDict = LoadJson<data.HelmetLoader, int, data.HelmetInfo>("Item/Data_HelmetStat").MakeDict();

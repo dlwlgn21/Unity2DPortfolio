@@ -63,9 +63,41 @@ namespace data
     }
     #endregion
 
+    #region PlayerSkill
+    [Serializable]
+    public class SkillInfo
+    {
+        public string name;
+        public string description;
+        public int id;
+        public int attackType;
+        public float coolTime;
+        public float parallysisTime;
+        public float knockbackForceX;
+        public float knockbackForceY;
+        public int damage;
+    }
 
     [Serializable]
-    public class ItemInfoData
+    public class SkillInfoLoader : ILoader<int, SkillInfo>
+    {
+        public List<SkillInfo> skillInfos = new();
+
+        public Dictionary<int, SkillInfo> MakeDict()
+        {
+            Dictionary<int, SkillInfo> dict = new();
+            foreach (SkillInfo info in skillInfos)
+            {
+                dict.Add(info.id, info);
+            }
+            return dict;
+        }
+    }
+    #endregion
+
+    #region items
+    [Serializable]
+    public class BaseItemInfoData
     {
         public string name;
         public string description;
@@ -74,7 +106,7 @@ namespace data
 
     #region HealingPotion
     [Serializable]
-    public class HealingPotionInfo : ItemInfoData
+    public class HealingPotionInfo : BaseItemInfoData
     {
         public int id;
         public int level;
@@ -100,7 +132,7 @@ namespace data
 
     #region Sword
     [Serializable]
-    public class SwordInfo : ItemInfoData
+    public class SwordInfo : BaseItemInfoData
     {
         public int id;
         public int damage;
@@ -124,7 +156,7 @@ namespace data
 
     #region Armor
     [Serializable]
-    public class ArmorInfo : ItemInfoData
+    public class ArmorInfo : BaseItemInfoData
     {
         public int id;
         public int defence;
@@ -148,7 +180,7 @@ namespace data
 
     #region Helmet
     [Serializable]
-    public class HelmetInfo : ItemInfoData
+    public class HelmetInfo : BaseItemInfoData
     {
         public int id;
         public int defence;
@@ -168,5 +200,6 @@ namespace data
             return dict;
         }
     }
+    #endregion
     #endregion
 }
