@@ -47,7 +47,7 @@ public class PauseManager
     public void OnMainMenuBtnClicked()
     {
         onUnpause();
-        SceneManager.LoadScene((int)define.ESceneType.MAIN_MENU);
+        SceneManager.LoadScene((int)define.ESceneType.MainMenu);
     }
 
     private void onUnpause()

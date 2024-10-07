@@ -9,7 +9,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
     [SerializeField] float _bombRange;
 
     private Light2D _light;
-    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MONSTERS_BODY);
+    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MonsterBody);
 
     private const string MUZZLE_ANIM_KEY = "Muzzle";
     private const string PROJECTILE_ANIM_KEY = "Projectile";
@@ -40,7 +40,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.MONSTERS_BODY)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.MonsterBody)
         {
             _animator.Play(HIT_ANIM_KEY, -1, 0f);
             _isHit = true;
@@ -71,7 +71,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
     private void OnMuzzleAnimFullyPlayed()
     {
         _animator.Play(PROJECTILE_ANIM_KEY, -1, 0f);
-        if (_eLaunchDir == define.ECharacterLookDir.LEFT)
+        if (_eLaunchDir == define.ECharacterLookDir.Left)
         {
             _rb.velocity = Vector2.left * _speed;
             _sr.flipX = true;

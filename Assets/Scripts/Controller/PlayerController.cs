@@ -48,7 +48,7 @@ public class PlayerController : BaseCharacterController
     public static UnityAction<int, int, int> HitUIEventHandler;
     public static UnityAction<EPlayerSkill> PlayerSkillKeyDownEventHandler;
     public static UnityAction<EPlayerSkill> PlayerSkillValidAnimTimingEventHandler;
-    public static UnityAction<EMonsterStatusEffect, float> PlayerStatusEffectEventHandler;
+    public static UnityAction<EAttackStatusEffect, float> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
     public static UnityAction<int, int> PlayerIncreaseHpEventHandler; // UIPlayerHPBar
 
@@ -103,7 +103,7 @@ public class PlayerController : BaseCharacterController
         base.Init();
         Stat = gameObject.GetOrAddComponent<PlayerStat>();
         CapsuleCollider = gameObject.GetComponent<CapsuleCollider2D>();
-        ELookDir = ECharacterLookDir.RIGHT;
+        ELookDir = ECharacterLookDir.Right;
         LedgeHeadRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeHeadRayPoint");
         LedgeBodyRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeBodyRayPoint");
         SpawnReaperPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnReaperPoint");
@@ -431,12 +431,12 @@ public class PlayerController : BaseCharacterController
     {
         switch (mc.Stat.EStatusEffectType)
         {
-            case EMonsterStatusEffect.NONE:
-            case EMonsterStatusEffect.KNOCKBACK:
+            case EAttackStatusEffect.None:
+            case EAttackStatusEffect.Knockback:
                 player_states.BaseHitted state = (player_states.BaseHitted)_states[(uint)EPlayerState.HITTED_MELLE_ATTACK];
                 Debug.Assert(state != null);
                 Vector2 knockbackForce = mc.Stat.KnockbackForce;
-                if (mc.ELookDir == ECharacterLookDir.LEFT)
+                if (mc.ELookDir == ECharacterLookDir.Left)
                 {
                     state.AdjustKnockbackForce(new(-knockbackForce.x, knockbackForce.y));
                 }
@@ -445,25 +445,25 @@ public class PlayerController : BaseCharacterController
                     state.AdjustKnockbackForce(knockbackForce);
                 }
                 break;
-            case EMonsterStatusEffect.BLIND:
+            case EAttackStatusEffect.Blind:
                 Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.MONSTER_BLIND_EFFECT);
                 break;
-            case EMonsterStatusEffect.BURN:
+            case EAttackStatusEffect.Burn:
                 if (!IsBurned)
                 {
                     _lastBurnedDamage = mc.Stat.Attack;
                     StartCoroutine(BurnPlayerCo());
-                    PlayerStatusEffectEventHandler?.Invoke(EMonsterStatusEffect.BURN, BURN_TIME_IN_SEC);
+                    PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Burn, BURN_TIME_IN_SEC);
                 }
                 break;
-            case EMonsterStatusEffect.SLOW:
+            case EAttackStatusEffect.Slow:
                 if (!IsSlowState)
                 {
                     StartCoroutine(StartSlowStateCountdownCo(mc.Stat.SlowTimeInSec));
-                    PlayerStatusEffectEventHandler?.Invoke(EMonsterStatusEffect.SLOW, mc.Stat.SlowTimeInSec);
+                    PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Slow, mc.Stat.SlowTimeInSec);
                 }
                 break;
-            case EMonsterStatusEffect.PARALLYSIS:
+            case EAttackStatusEffect.Parallysis:
                 ChangeState(EPlayerState.HITTED_STATUS_PARALLYSIS);
                 break;
         }

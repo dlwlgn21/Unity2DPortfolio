@@ -10,7 +10,7 @@ public enum EPlayerSkill
 }
 public abstract class BasePlayerSkillController : MonoBehaviour
 {
-    [SerializeField] protected UIPlayerCoolTimer _uiCoolTimerImg;
+    [SerializeField] protected UI_PlayerCoolTimer _uiCoolTimerImg;
 
     protected PlayerController _pc;
     protected EPlayerSkill _eSkillType;

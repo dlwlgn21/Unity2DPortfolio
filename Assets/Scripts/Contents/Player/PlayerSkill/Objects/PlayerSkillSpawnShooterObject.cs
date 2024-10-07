@@ -38,7 +38,7 @@ public class PlayerSkillSpawnShooterObject : MonoBehaviour
         TurnOnLights();
         transform.position = pos;
         _ePlayerLookDir = eLookDir;
-        if (eLookDir == ECharacterLookDir.LEFT)
+        if (eLookDir == ECharacterLookDir.Left)
         {
             transform.localRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
         }

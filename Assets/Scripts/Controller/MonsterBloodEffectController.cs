@@ -54,7 +54,7 @@ public class MonsterBloodEffectController : WorldSpaceEffectController
         int randTwoIdx = UnityEngine.Random.Range(0, 2);
         _fixedWorldPos = _mc.transform.position;
 
-        if (_mc.ELookDir == ECharacterLookDir.RIGHT)
+        if (_mc.ELookDir == ECharacterLookDir.Right)
         {
             _spriteRenderer.flipX = true;
         }

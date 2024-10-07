@@ -20,7 +20,7 @@ public class UI_Inventory_EquipableItemIcon : UI_Inventory_BaseItemIcon
             Debug.Assert(_pc != null);
         }
         Debug.Log("Called EqiupItem()");
-        Sprite sprite = Managers.UI.GetEquipableItemSprite(itemInfo, _eEquipableType);
+        Sprite sprite = Managers.UI.GetEquipableItemSprite(itemInfo);
         ItemInfo = itemInfo;
         Image.enabled = true;
         Image.sprite = sprite;

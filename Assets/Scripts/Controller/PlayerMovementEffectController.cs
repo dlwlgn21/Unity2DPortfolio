@@ -59,7 +59,7 @@ public class PlayerMovementEffectController : WorldSpaceEffectController
                 break;
             case EPlayerMovementEffect.NORMAL_ATTACK_LAND:
                 FlipSpriteIfLeft(eLookDir);
-                if (eLookDir == ECharacterLookDir.LEFT)
+                if (eLookDir == ECharacterLookDir.Left)
                 {
                     transform.position = new Vector2(pos.x - DASH_ATTACK_LAND_X_OFFSET, pos.y);
                 }
@@ -78,7 +78,7 @@ public class PlayerMovementEffectController : WorldSpaceEffectController
 
     private void FlipSpriteIfLeft(ECharacterLookDir eLookDir)
     {
-        if (eLookDir == ECharacterLookDir.LEFT)
+        if (eLookDir == ECharacterLookDir.Left)
         {
             _spriteRenderer.flipX = true;
         }

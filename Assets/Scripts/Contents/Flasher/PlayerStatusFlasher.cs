@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using define;
+
 
 public class PlayerStatusFlasher : MaterialFlasher
 {
@@ -21,32 +23,32 @@ public class PlayerStatusFlasher : MaterialFlasher
     {
         PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
     }
-    public void OnPlayerStatusEffect(EMonsterStatusEffect eType, float flashTime)
+    public void OnPlayerStatusEffect(EAttackStatusEffect eType, float flashTime)
     {
         Debug.Log("OnPlayerStatusEffect");
         switch (eType)
         {
-            case EMonsterStatusEffect.NONE:
+            case EAttackStatusEffect.None:
                 break;
-            case EMonsterStatusEffect.KNOCKBACK:
+            case EAttackStatusEffect.Knockback:
                 break;
-            case EMonsterStatusEffect.BLIND:
+            case EAttackStatusEffect.Blind:
                 break;
-            case EMonsterStatusEffect.BURN:
+            case EAttackStatusEffect.Burn:
                 if (_isFlashing)
                 {
                     return;
                 }
                 StartCoroutine(BurnFlashCo(flashTime / FLASH_REPEAT_COUNT));
                 break;
-            case EMonsterStatusEffect.SLOW:
+            case EAttackStatusEffect.Slow:
                 if (_isFlashing)
                 {
                     return;
                 }
                 StartCoroutine(SlowFlashCo(flashTime / FLASH_REPEAT_COUNT));
                 break;
-            case EMonsterStatusEffect.PARALLYSIS:
+            case EAttackStatusEffect.Parallysis:
                 break;
             default:
                 break;

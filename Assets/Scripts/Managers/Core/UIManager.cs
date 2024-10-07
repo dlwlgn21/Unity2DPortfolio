@@ -220,10 +220,18 @@ public class UIManager
         Debug.Assert(slotIdx < UI_Inventory.INVENTORY_SLOT_COUNT);
         _inven.GetIconAtOrNull(slotIdx).Clear();
     }
-    public Sprite GetEquipableItemSprite(ItemInfo itemInfo, EItemEquippableType eType)
+    public Sprite GetEquipableItemSprite(ItemInfo itemInfo)
     {
         Sprite sprite;
-        AssignSpriteEquipable(eType, itemInfo.ItemId, out sprite);
+        AssignSpriteEquipable(itemInfo.EEquippableType, itemInfo.ItemId, out sprite);
+        Debug.Assert(sprite != null);
+        return sprite;
+    }
+
+    public Sprite GetConsumableItemSprite(ItemInfo itemInfo)
+    {
+        Sprite sprite;
+        AssignSpriteConsumable(itemInfo.EConsumableType, itemInfo.ItemId, out sprite);
         Debug.Assert(sprite != null);
         return sprite;
     }
@@ -278,7 +286,7 @@ public class UIManager
     #endregion
     public void OnUIKeyDowned()
     {
-        if (Managers.Scene.ECurrentScene != define.ESceneType.MAIN_MENU)
+        if (Managers.Scene.ECurrentScene != define.ESceneType.MainMenu)
         {
             if (Input.GetKeyDown(KeyCode.I))
             {

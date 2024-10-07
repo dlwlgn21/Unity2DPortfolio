@@ -15,7 +15,7 @@ public class InteractBox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PlayerBody)
         {
             _detectable.OnPlayerEnter(collision);
         }
@@ -23,14 +23,14 @@ public class InteractBox : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PlayerBody)
         {
             _detectable.OnPlayerExit(collision);
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PlayerBody)
         {
             _detectable.OnPlayerStay(collision);
         }

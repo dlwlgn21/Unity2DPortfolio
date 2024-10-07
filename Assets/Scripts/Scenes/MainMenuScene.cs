@@ -6,7 +6,7 @@ using UnityEngine;
 public class MainMenuScene : BaseScene
 {
 
-    public MainMenuScene() : base(define.ESceneType.MAIN_MENU) { }
+    public MainMenuScene() : base(define.ESceneType.MainMenu) { }
     private void Awake()
     {
         Init();

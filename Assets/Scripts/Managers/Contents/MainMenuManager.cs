@@ -42,7 +42,7 @@ public class MainMenuManager
         _isNewGameBtnClicked = false;
         Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
         EventSystem.current.SetSelectedGameObject(null);
-        Managers.Scene.LoadScene(define.ESceneType.TUTORIAL);
+        Managers.Scene.LoadScene(define.ESceneType.Tutorial);
     }
     public void OnSettingBtnClicked()
     {

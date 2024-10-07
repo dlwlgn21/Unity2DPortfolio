@@ -20,7 +20,7 @@ public class PlayerSkillSpawnReaperObject : MonoBehaviour
     {
         gameObject.SetActive(true);
         transform.position = pos;
-        if (eLookDir == ECharacterLookDir.LEFT)
+        if (eLookDir == ECharacterLookDir.Left)
         {
             transform.localRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
         }

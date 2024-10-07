@@ -71,7 +71,7 @@ namespace monster_states
 
         private void AdjustKnockbackAcoddingLookDir(EPlayerNoramlAttackType eType)
         {
-            if (_entity.ELookDir == ECharacterLookDir.LEFT)
+            if (_entity.ELookDir == ECharacterLookDir.Left)
             {
                 switch (eType)
                 {
@@ -257,7 +257,7 @@ namespace monster_states
 
         private void SetVelocityAcorddingLookDir(Vector2 velo)
         {
-            if (_entity.ELookDir == ECharacterLookDir.LEFT)
+            if (_entity.ELookDir == ECharacterLookDir.Left)
             {
                 _entity.RigidBody.velocity = new Vector2(-velo.x, velo.y);
             }
@@ -532,7 +532,7 @@ namespace monster_states
         public override void FixedExcute()
         {
             Vector2 oriVelo = _entity.RigidBody.velocity;
-            if (_entity.ELookDir == ECharacterLookDir.LEFT)
+            if (_entity.ELookDir == ECharacterLookDir.Left)
             {
                 _entity.RigidBody.velocity = new Vector2(-_entity.Stat.MoveSpeed * Time.fixedDeltaTime, oriVelo.y);
             }

@@ -54,7 +54,7 @@ public class SisterController : QuestNPC, ITalkable
                 LoadSequence("Prefabs/Tutorial/BlockTutorialSequence").OnDialogEnd();
                 break;
             case ESister.LAST_MEET:
-                Managers.Scene.LoadScene(define.ESceneType.ABANDON_ROAD_SCENE);
+                Managers.Scene.LoadScene(define.ESceneType.AbandonLoadScene);
                 break;
         }
         gameObject.SetActive(false);

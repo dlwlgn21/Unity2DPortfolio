@@ -35,7 +35,7 @@ public class MonsterProjectileController : BaseProjectileController
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PlayerBody)
         {
             PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
             if (pc != null && !pc.IsValidStateToChangeHitState())
@@ -43,7 +43,7 @@ public class MonsterProjectileController : BaseProjectileController
                 return;
             }
             Debug.Assert(_currOwnerController != null);
-            PlayAnimation(EProjectileState.HIT);
+            PlayAnimation(EProjectileState.Hit);
             MonsterProjectileHitPlayerEventHandelr?.Invoke(_currOwnerController);
             _rb.velocity = Vector2.zero;
             _isHit = true;
@@ -55,19 +55,19 @@ public class MonsterProjectileController : BaseProjectileController
         // TODO : 나중에 몬스터 더 추가되면 Blind, Burn, Parallysis Projectile을 만들 수도 있을 것 같아서 switch문 이렇게 남겨둠.
         switch (mc.Stat.EStatusEffectType)
         {
-            case EMonsterStatusEffect.NONE:
+            case EAttackStatusEffect.None:
                 break;
-            case EMonsterStatusEffect.KNOCKBACK:
+            case EAttackStatusEffect.Knockback:
                 SetProjectileTypeAndAnimKeys(EMonsterProjectileType.KNOCKBACK);
                 break;
-            case EMonsterStatusEffect.BLIND:
+            case EAttackStatusEffect.Blind:
                 break;
-            case EMonsterStatusEffect.BURN:
+            case EAttackStatusEffect.Burn:
                 break;
-            case EMonsterStatusEffect.SLOW:
+            case EAttackStatusEffect.Slow:
                 SetProjectileTypeAndAnimKeys(EMonsterProjectileType.SLOW);
                 break;
-            case EMonsterStatusEffect.PARALLYSIS:
+            case EAttackStatusEffect.Parallysis:
                 break;
             default:
                 break;
@@ -75,7 +75,7 @@ public class MonsterProjectileController : BaseProjectileController
         Debug.Assert(EProjectileType != EMonsterProjectileType.COUNT && _muzzleAnimKey != null);
         transform.position = shootPos;
         _eLaunchDir = eLookDir;
-        if (_eLaunchDir == ECharacterLookDir.LEFT)
+        if (_eLaunchDir == ECharacterLookDir.Left)
         {
             _sr.flipX = true;
         }
@@ -83,7 +83,7 @@ public class MonsterProjectileController : BaseProjectileController
         {
             _sr.flipX = false;
         }
-        PlayAnimation(EProjectileState.MUZZLE);
+        PlayAnimation(EProjectileState.Muzzle);
         StartCoroutine(this.StartCountLifeTimeCo());
         _currOwnerController = mc;
     }
@@ -91,8 +91,8 @@ public class MonsterProjectileController : BaseProjectileController
     #region OVERRIDE_ABSTRACT
     private void OnMuzzleAnimFullyPlayed()
     {
-        PlayAnimation(EProjectileState.PROJECTILE);
-        if (_eLaunchDir == ECharacterLookDir.LEFT)
+        PlayAnimation(EProjectileState.Projectile);
+        if (_eLaunchDir == ECharacterLookDir.Left)
         {
             _rb.velocity = new Vector2(-_proectileSpeed, 0f);
         }
@@ -116,20 +116,20 @@ public class MonsterProjectileController : BaseProjectileController
         yield return new WaitForSeconds(LIFE_TIME_IN_SEC);
         if (!_isHit)
         {
-            PlayAnimation(EProjectileState.HIT);
+            PlayAnimation(EProjectileState.Hit);
         }
     }
     private void PlayAnimation(EProjectileState eState)
     {
         switch (eState)
         {
-            case EProjectileState.MUZZLE:
+            case EProjectileState.Muzzle:
                 _animator.Play(_muzzleAnimKey, -1, 0f);
                 break;
-            case EProjectileState.PROJECTILE:
+            case EProjectileState.Projectile:
                 _animator.Play(_ProjectileAnimKey, -1, 0f);
                 break;
-            case EProjectileState.HIT:
+            case EProjectileState.Hit:
                 _animator.Play(_HitAnimKey, -1, 0f);
                 break;
         }

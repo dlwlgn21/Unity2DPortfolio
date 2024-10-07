@@ -147,12 +147,12 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
             Vector2 dir = PlayerTransform.position - transform.position;
             if (dir.x > 0)
             {
-                ELookDir = define.ECharacterLookDir.RIGHT;
+                ELookDir = define.ECharacterLookDir.Right;
                 transform.localRotation = Quaternion.Euler(RIGHT_ROT_VECTOR);
             }
             else
             {
-                ELookDir = define.ECharacterLookDir.LEFT;
+                ELookDir = define.ECharacterLookDir.Left;
                 transform.localRotation = Quaternion.Euler(LEFT_ROT_VECTOR);
             }
         }

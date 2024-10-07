@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AbandonRoadScene : PlayScene
 {
-    public AbandonRoadScene() : base(define.ESceneType.ABANDON_ROAD_SCENE) { }
+    public AbandonRoadScene() : base(define.ESceneType.AbandonLoadScene) { }
 
     private void Awake()
     {

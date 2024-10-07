@@ -20,4 +20,10 @@ public class ConsumableItemController : ItemController
             }
         );
     }
+
+    protected override void SetItemInfo()
+    {
+        _itemInfo = new ItemInfo(_eItemType, EItemEquippableType.Count, _eConsumableName, _id);
+    }
+
 }

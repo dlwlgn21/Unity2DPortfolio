@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class SoundManager
 {
-    private AudioSource[] _audioSources = new AudioSource[(int)ESoundType.COUNT];
+    private AudioSource[] _audioSources = new AudioSource[(int)ESoundType.Count];
 
     private Dictionary<string, AudioClip> _clips = new Dictionary<string, AudioClip>();
     public void Init()
@@ -19,11 +19,11 @@ public class SoundManager
             GameObject bgmGo = new() { name = "BGM" };
             sfxGo.transform.parent = root.transform;
             bgmGo.transform.parent = root.transform;
-            _audioSources[(int)ESoundType.SFX] = sfxGo.AddComponent<AudioSource>();
-            _audioSources[(int)ESoundType.BGM] = bgmGo.AddComponent<AudioSource>();
+            _audioSources[(int)ESoundType.Sfx] = sfxGo.AddComponent<AudioSource>();
+            _audioSources[(int)ESoundType.Bgm] = bgmGo.AddComponent<AudioSource>();
             UnityEngine.Object.DontDestroyOnLoad(root);
-            _audioSources[(int)ESoundType.SFX].loop = false;
-            _audioSources[(int)ESoundType.BGM].loop = true;
+            _audioSources[(int)ESoundType.Sfx].loop = false;
+            _audioSources[(int)ESoundType.Bgm].loop = true;
             PlayerController.PlayerChangeStateEventHandler += Managers.Sound.OnPlayerChangeState;
         }
     }
@@ -86,7 +86,7 @@ public class SoundManager
         }
     }
 
-    public void Play(string path, ESoundType eType = ESoundType.SFX)
+    public void Play(string path, ESoundType eType = ESoundType.Sfx)
     {
         if (!path.Contains("Sound"))
         {
@@ -95,14 +95,14 @@ public class SoundManager
         AudioClip clip = GetOrAddAudioClip(path);
         switch (eType)
         {
-            case ESoundType.SFX:
+            case ESoundType.Sfx:
                 if (clip == null)
                 {
                     return;
                 }
                 _audioSources[(int)eType].PlayOneShot(clip);
                 break;
-            case ESoundType.BGM:
+            case ESoundType.Bgm:
                 AudioSource bgmSource = _audioSources[(int)eType];
                 if (bgmSource.isPlaying)
                 {

@@ -20,7 +20,7 @@ public class CaveEnteranceController : BaseInteractableController
         if (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E))
         {
             Debug.Log("Key Down!!");
-            Managers.Scene.LoadScene(define.ESceneType.COLOSSAL_BOSS_CAVE_SCENE);
+            Managers.Scene.LoadScene(define.ESceneType.ColossalBossCaveScene);
         }
     }
     public override void OnPlayerExit(Collider2D collision)

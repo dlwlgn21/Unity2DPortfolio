@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ColossalBossCaveScene : PlayScene
 {
-    public ColossalBossCaveScene() : base(define.ESceneType.COLOSSAL_BOSS_CAVE_SCENE) { }
+    public ColossalBossCaveScene() : base(define.ESceneType.ColossalBossCaveScene) { }
 
     private void Awake()
     {

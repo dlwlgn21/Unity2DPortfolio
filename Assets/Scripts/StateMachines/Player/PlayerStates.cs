@@ -12,7 +12,7 @@ namespace player_states
     {
         protected float _horizontalMove;
         protected float _groundCheckDistance = 0.2f;
-        public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.PLATFORM) | (1 << (int)define.EColliderLayer.LEDGE_CLIMB);
+        public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.Platform) | (1 << (int)define.EColliderLayer.LedgeClimb);
         private readonly static Vector3 S_LEFT_ROTATION_VECTOR = new Vector3(0f, 180f, 0f);
         private readonly static Vector3 S_RIGHT_ROTATION_VECTOR = new Vector3(0f, 0f, 0f);
         public BasePlayerState(PlayerController controller) : base(controller) { }
@@ -24,16 +24,16 @@ namespace player_states
         {
 
             // TODO : 이방식 그냥 horizontalMoveInput 으로 바꿔도 되는지 생각해보자.
-            if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.RIGHT)
+            if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.Right)
             {
-                _entity.ELookDir = ECharacterLookDir.LEFT;
+                _entity.ELookDir = ECharacterLookDir.Left;
                 _entity.transform.localRotation = Quaternion.Euler(S_LEFT_ROTATION_VECTOR);
                 _entity.CamFollowObject.CallTurn();
 
             }
-            else if (Input.GetKey(KeyCode.RightArrow) && _entity.ELookDir == ECharacterLookDir.LEFT)
+            else if (Input.GetKey(KeyCode.RightArrow) && _entity.ELookDir == ECharacterLookDir.Left)
             {
-                _entity.ELookDir = ECharacterLookDir.RIGHT;
+                _entity.ELookDir = ECharacterLookDir.Right;
                 _entity.transform.localRotation = Quaternion.Euler(S_RIGHT_ROTATION_VECTOR);
                 _entity.CamFollowObject.CallTurn();
             }
@@ -380,7 +380,7 @@ namespace player_states
     {
         protected Transform _ledgeHeadRayPoint;
         protected Transform _ledgeBodyRayPoint;
-        protected LayerMask _ledgeLayerMask = 1 << (int)define.EColliderLayer.LEDGE_CLIMB;
+        protected LayerMask _ledgeLayerMask = 1 << (int)define.EColliderLayer.LedgeClimb;
         protected ECharacterLookDir _eCharacterLookDir;
         protected float _extraHeight = 0.2f;
         protected const float RAY_DISTANCE = 0.4f;
@@ -419,7 +419,7 @@ namespace player_states
         {
             RaycastHit2D headRayHit = new RaycastHit2D();
             RaycastHit2D bodyRayHit = new RaycastHit2D();
-            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
+            if (_eCharacterLookDir == ECharacterLookDir.Right)
             {
                 RaycastToLedgeLayer(ref headRayHit, ref bodyRayHit, Vector2.right);
             }
@@ -571,7 +571,7 @@ namespace player_states
         public void OnYMoveTWEnd()
         {
             Vector3 pos = _entity.transform.position;
-            if (_eCharacterLookDir == ECharacterLookDir.RIGHT)
+            if (_eCharacterLookDir == ECharacterLookDir.Right)
                 _entity.transform.DOLocalMove(new Vector3(pos.x + X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME);
             else
                 _entity.transform.DOLocalMove(new Vector3(pos.x - X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME);
@@ -608,7 +608,7 @@ namespace player_states
         {
             PlayAnimation(EPlayerState.ROLL);
             SetVelocityToZero();
-            if (_entity.ELookDir == ECharacterLookDir.RIGHT)
+            if (_entity.ELookDir == ECharacterLookDir.Right)
             {
                 _entity.RigidBody.AddForce(ROLL_FORCE, ForceMode2D.Impulse);
             }
@@ -625,7 +625,7 @@ namespace player_states
         protected ECharacterLookDir _eLookDir;
         protected bool _isGoToNextAttack;
         protected Transform _attackPoint;
-        protected int _layerMask = 1 << ((int)define.EColliderLayer.MONSTERS_BODY);
+        protected int _layerMask = 1 << ((int)define.EColliderLayer.MonsterBody);
         protected EPlayerNoramlAttackType _eAttackType;
         public NormalAttackState(PlayerController controller) : base(controller) { }
 
@@ -679,12 +679,12 @@ namespace player_states
             base.Enter();
             PlayAnimation(EPlayerState.NORMAL_ATTACK_1);
 
-            if (_entity.ELookDir == ECharacterLookDir.LEFT && Input.GetKey(KeyCode.LeftArrow))
+            if (_entity.ELookDir == ECharacterLookDir.Left && Input.GetKey(KeyCode.LeftArrow))
             {
                 _entity.RigidBody.AddForce(new(-PlayerController.NORMAL_ATTACK_1_DASH_FORCE.x, PlayerController.NORMAL_ATTACK_1_DASH_FORCE.y), ForceMode2D.Impulse);
                 return;
             }
-            if (_entity.ELookDir == ECharacterLookDir.RIGHT && Input.GetKey(KeyCode.RightArrow))
+            if (_entity.ELookDir == ECharacterLookDir.Right && Input.GetKey(KeyCode.RightArrow))
             {
                 _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_1_DASH_FORCE, ForceMode2D.Impulse);
                 return;            

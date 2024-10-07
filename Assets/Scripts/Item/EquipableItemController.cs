@@ -19,4 +19,9 @@ public class EquipableItemController : ItemController
             }
         );
     }
+
+    protected override void SetItemInfo()
+    {
+        _itemInfo = new ItemInfo(_eItemType, _eEquipableName, EItemConsumableType.Count, _id);
+    }
 }

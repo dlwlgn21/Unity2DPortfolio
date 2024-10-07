@@ -24,7 +24,7 @@ public class CamFollowObject : MonoBehaviour
     }
     private Vector3 DetermineEndRotation()
     {
-        if (_pc.ELookDir == ECharacterLookDir.LEFT)
+        if (_pc.ELookDir == ECharacterLookDir.Left)
         {
             return new Vector3(0f, 180f, 0f);
         }

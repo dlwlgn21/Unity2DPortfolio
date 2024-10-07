@@ -55,13 +55,13 @@ public class Managers : MonoBehaviour
     {
         switch (sInstance._sceneManager.ECurrentScene)
         {
-            case define.ESceneType.MAIN_MENU:
+            case define.ESceneType.MainMenu:
                 {
                     break;
                 }
-            case define.ESceneType.TUTORIAL:
-            case define.ESceneType.ABANDON_ROAD_SCENE:
-            case define.ESceneType.COLOSSAL_BOSS_CAVE_SCENE:
+            case define.ESceneType.Tutorial:
+            case define.ESceneType.AbandonLoadScene:
+            case define.ESceneType.ColossalBossCaveScene:
             /* INTENTIONAL FALL THROUGH */
                 // Pause Check
                 if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))

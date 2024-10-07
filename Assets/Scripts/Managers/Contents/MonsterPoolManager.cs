@@ -116,6 +116,7 @@ public class MonsterPoolManager
                 break;
             case EMonsterNames.Shielder:
                 //DestroyOrEnque(_shielders, mc.gameObject);
+                Debug.Assert(false);
                 break;
             case EMonsterNames.Warden:
                 DestroyOrEnque(_wardens, mc.gameObject);

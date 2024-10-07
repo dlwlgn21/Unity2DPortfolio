@@ -6,7 +6,7 @@ public abstract class MonsterZoneDetection : MonoBehaviour
 {
     protected bool IsEnterPlayer(Collider2D collider)
     {
-        if (collider.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        if (collider.gameObject.layer == (int)define.EColliderLayer.PlayerBody)
         {
             return true;
         }

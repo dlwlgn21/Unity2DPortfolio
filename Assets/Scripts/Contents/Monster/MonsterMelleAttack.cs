@@ -17,7 +17,7 @@ public class MonsterMelleAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BODY)
+        if (collision.gameObject.layer == (int)define.EColliderLayer.PlayerBody)
         {
             // TODO : 왜 이곳에서 TimeManager NullPointException이 뜨는지 확인해야 한다.
             OnPlayerHittedByMonsterMelleAttackEventHandelr?.Invoke(_mc);

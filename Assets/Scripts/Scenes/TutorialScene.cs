@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TutorialScene : PlayScene
 {
-    public TutorialScene() : base(define.ESceneType.TUTORIAL) { }
+    public TutorialScene() : base(define.ESceneType.Tutorial) { }
 
     private void Awake()
     {

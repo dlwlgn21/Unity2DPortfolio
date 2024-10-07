@@ -21,23 +21,23 @@ public class SceneManagerEX
 
     define.ESceneType GetCurrentESceneType()
     {
-        define.ESceneType retType = define.ESceneType.COUNT;
+        define.ESceneType retType = define.ESceneType.Count;
         switch (SceneManager.GetActiveScene().buildIndex)
         {
-            case (int)define.ESceneType.MAIN_MENU:
-                retType = define.ESceneType.MAIN_MENU;
+            case (int)define.ESceneType.MainMenu:
+                retType = define.ESceneType.MainMenu;
                 break;
-            case (int)define.ESceneType.TUTORIAL:
-                retType = define.ESceneType.TUTORIAL;
+            case (int)define.ESceneType.Tutorial:
+                retType = define.ESceneType.Tutorial;
                 break;
-            case (int)define.ESceneType.ABANDON_ROAD_SCENE:
-                retType = define.ESceneType.ABANDON_ROAD_SCENE;
+            case (int)define.ESceneType.AbandonLoadScene:
+                retType = define.ESceneType.AbandonLoadScene;
                 break;
             default:
                 Debug.Assert(false);
                 break;
         }
-        Debug.Assert(retType != define.ESceneType.COUNT);
+        Debug.Assert(retType != define.ESceneType.Count);
         return retType;
     }
 }
