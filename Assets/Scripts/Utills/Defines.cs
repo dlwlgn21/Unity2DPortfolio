@@ -21,8 +21,8 @@ namespace define
         Roll,
         Spawn_Reaper,
         Spawn_Panda,
-        Casting_BlackFlame,
-        Casting_Grenade,
+        Cast_BlackFlame,
+        Cast_SwordStrike,
         Count
     }
     public enum EAttackStatusEffect

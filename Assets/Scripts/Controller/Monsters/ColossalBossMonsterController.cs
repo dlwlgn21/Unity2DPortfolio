@@ -268,17 +268,31 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         HittedByNormalAttackNoArgsEventHandler?.Invoke();
     }
 
-    public override void OnHittedByPlayerKnockbackBomb()
+    public override void OnHittedByPlayerSkill(data.SkillInfo skillInfo)
     {
-        // TODO : 이것도 나름 먹히도록 바꾸자.
-        HittedByNormalAttackNoArgsEventHandler?.Invoke();
+        // TODO : ColossalBoss 플레이어 스킬에 어떻게 반응할지 결정해주어야 한다.
+        ESkillType eType = (ESkillType)skillInfo.id;
+        switch (eType)
+        {
+            case ESkillType.Spawn_Reaper:
+                //ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
+                break;
+            case ESkillType.Spawn_Panda:
+                //ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
+                break;
+            case ESkillType.Cast_BlackFlame:
+                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                break;
+            case ESkillType.Cast_SwordStrike:
+                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+        }
     }
 
-    public override void OnHittedByPlayerSpawnReaper()
-    {
-        // TODO : 이거 나중에 처리해야함. 마비는 먹히도록 바꾸자.
-        HittedByNormalAttackNoArgsEventHandler?.Invoke();
-    }
+
 
     public void OnPlayerEnter(Collider2D collision)
     {

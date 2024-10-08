@@ -11,19 +11,20 @@ public class PlayerSkillSpawnPandaController : BasePlayerSkillController
         InitByESkillType(ESkillType.Spawn_Panda);
         if (_spawnPanda == null)
         {
-            _spawnPanda = Managers.Resources.Instantiate<PlayerSkillSpawnPandaObject>("Prefabs/Player/Skills/SkillSpawnPanda");
-            //_uiCoolTimerImg = GameObject.Find("UI_PlayerHUD").gameObject
+            _spawnPanda = Managers.Resources.Instantiate<PlayerSkillSpawnPandaObject>("Prefabs/Player/Skills/SkillSpawnPandaObject");
             DontDestroyOnLoad(_spawnPanda.gameObject);
         }
-        PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnShooterAnimValidTiming;
+        PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnAnimValidTiming;
+        PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnAnimValidTiming;
     }
 
     public override bool TryUseSkill()
     {
         if (IsValidStateToUseSkill())
         {
-            _pc.ChangeState(EPlayerState.CAST_LAUNCH);
-            ProcessSkillLogic();
+            _pc.ChangeState(EPlayerState.SKILL_SPAWN);
+            StartCountdownCoolTime();
+            _isUsingSkill = true;
             return true;
         }
         return false;
@@ -31,14 +32,15 @@ public class PlayerSkillSpawnPandaController : BasePlayerSkillController
 
     private void OnDestroy()
     {
-        PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnShooterAnimValidTiming;
+        PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnAnimValidTiming;
     }
 
-    private void OnPlayerSpawnShooterAnimValidTiming(ESkillType eType)
+    private void OnPlayerSpawnAnimValidTiming()
     {
-        if (eType == ESkillType.Spawn_Panda)
+        if (_isUsingSkill)
         {
-            _spawnPanda.SpawnShooter(_pc.SpawnShooterPoint.position, _pc.ELookDir);
+            _spawnPanda.SpawnShooter(_pc.SpawnPandaPoint.position, _pc.ELookDir);
+            _isUsingSkill = false;
         }
     }
 }

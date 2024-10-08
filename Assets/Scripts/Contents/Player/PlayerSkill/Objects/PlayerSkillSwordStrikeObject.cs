@@ -1,9 +1,9 @@
 using define;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
-public class PlayerSkillSpawnReaperObject : MonoBehaviour
+public class PlayerSkillSwordStrikeObject : MonoBehaviour
 {
     private Animator _animator;
     private LightController _attackLightController;
@@ -16,27 +16,23 @@ public class PlayerSkillSpawnReaperObject : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void SpawnReaper(Vector2 pos, ECharacterLookDir eLookDir)
+    public void CastSwordStrike(Vector2 pos, ECharacterLookDir eLookDir)
     {
         gameObject.SetActive(true);
         transform.position = pos;
         if (eLookDir == ECharacterLookDir.Left)
-        {
             transform.localRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
-        }
         else
-        {
             transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
-        }
         _attackLightController.TurnOnLight();
-        _animator.Play("SpawnReaper", -1, 0f);
+        _animator.Play("SwordStrike", -1, 0f);
     }
     public void OnValidAttackTiming()
     {
         _attackLightController.TurnOffLightGradually();
     }
 
-    public void OnSpawnReaperAnimFullyPlayed()
+    public void OnAnimFullyPlayed()
     {
         gameObject.SetActive(false);
     }
@@ -45,7 +41,7 @@ public class PlayerSkillSpawnReaperObject : MonoBehaviour
     {
         if (collision.CompareTag("Monster"))
         {
-            collision.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType.Spawn_Reaper]);
+            collision.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType.Cast_SwordStrike]);
         }
     }
 }

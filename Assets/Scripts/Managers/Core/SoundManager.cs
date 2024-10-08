@@ -61,9 +61,9 @@ public class SoundManager
             case EPlayerState.NORMAL_ATTACK_3:
                 Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
                 break;
-            case EPlayerState.CAST_LAUNCH:
+            case EPlayerState.SKILL_CAST:
                 break;
-            case EPlayerState.CAST_SPAWN:
+            case EPlayerState.SKILL_SPAWN:
                 break;
             case EPlayerState.HITTED_MELLE_ATTACK:
                 int randIdx = UnityEngine.Random.Range(0, 1);

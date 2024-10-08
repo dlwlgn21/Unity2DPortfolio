@@ -10,30 +10,34 @@ public class PlayerSkillSpawnRepaerController : BasePlayerSkillController
         InitByESkillType(ESkillType.Spawn_Reaper);
         if (_spawnReaper == null)
         {
-            _spawnReaper = Managers.Resources.Instantiate<PlayerSkillSpawnReaperObject>("Prefabs/Player/Skills/SkillSpawnReaper");
+            _spawnReaper = Managers.Resources.Instantiate<PlayerSkillSpawnReaperObject>("Prefabs/Player/Skills/SkillSpawnReaperObject");
             DontDestroyOnLoad(_spawnReaper.gameObject);
         }
-        PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnReaperAnimValidTiming;
+        PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnAnimValidTiming;
+        PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnAnimValidTiming;
     }
     public override bool TryUseSkill()
     {
         if (IsValidStateToUseSkill())
         {
-            _pc.ChangeState(EPlayerState.CAST_SPAWN);
-            ProcessSkillLogic();
+            _pc.ChangeState(EPlayerState.SKILL_SPAWN);
+            StartCountdownCoolTime();
+            _isUsingSkill = true;
             return true;
         }
         return false;
     }
     private void OnDestroy()
     {
-        PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnReaperAnimValidTiming;
+        PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnAnimValidTiming;
     }
-    void OnPlayerSpawnReaperAnimValidTiming(ESkillType eType)
+    void OnPlayerSpawnAnimValidTiming()
     {
-        if (eType == ESkillType.Spawn_Reaper)
+        if (_isUsingSkill)
         {
-            _spawnReaper.SpawnReaper(_pc.SpawnReaperPoint.position, _pc.ELookDir);
+             _spawnReaper.SpawnReaper(_pc.SpawnReaperPoint.position, _pc.ELookDir);
+            _isUsingSkill = false;
         }
+
     }
 }

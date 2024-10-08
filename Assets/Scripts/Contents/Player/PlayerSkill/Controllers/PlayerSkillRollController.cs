@@ -15,7 +15,7 @@ public class PlayerSkillRollController : BasePlayerSkillController
         if (IsValidStateToUseSkill())
         {
             _pc.ChangeState(EPlayerState.ROLL);
-            ProcessSkillLogic();
+            StartCountdownCoolTime();
             return true;
         }
         return false;

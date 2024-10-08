@@ -125,10 +125,29 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
     public override void OnPlayerBlockSuccess() 
     { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS); }
-    public override void OnHittedByPlayerKnockbackBomb() 
-    { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB); }
-    public override void OnHittedByPlayerSpawnReaper() 
-    { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS); }
+    public override void OnHittedByPlayerSkill(data.SkillInfo skillInfo)
+    {
+        ESkillType eType = (ESkillType)skillInfo.id;
+        switch (eType)
+        {
+            case ESkillType.Spawn_Reaper:
+                ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
+                break;
+            case ESkillType.Spawn_Panda:
+                ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
+                break;
+            case ESkillType.Cast_BlackFlame:
+                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                break;
+            case ESkillType.Cast_SwordStrike:
+                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+        }
+    }
+
 
     #endregion
     public override void OnDie()

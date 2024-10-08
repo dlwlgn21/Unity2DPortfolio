@@ -57,7 +57,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
 
         foreach (Collider2D mon in monsters)
         {
-            mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerKnockbackBomb();
+            mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType.Spawn_Panda]);
         }
     }
 

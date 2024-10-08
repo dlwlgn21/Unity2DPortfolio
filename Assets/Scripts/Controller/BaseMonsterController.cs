@@ -38,11 +38,9 @@ public abstract class BaseMonsterController : BaseCharacterController
     public abstract void InitStat();
     public abstract void OnHittedByPlayerNormalAttack(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType);
     public abstract void OnPlayerBlockSuccess();
-    public abstract void OnHittedByPlayerKnockbackBomb();
-    public abstract void OnHittedByPlayerSpawnReaper();
     public abstract void OnDie();
 
-
+    public abstract void OnHittedByPlayerSkill(data.SkillInfo skillInfo);
     protected void DecreasHpAndInvokeHitEvents(int damage, EPlayerNoramlAttackType eAttackType)
     {
         int beforeDamageHP;

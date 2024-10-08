@@ -8,10 +8,11 @@ public abstract class BasePlayerSkillController : MonoBehaviour
 {
     protected PlayerController _pc;
     protected ESkillType _eSkillType;
-
+    public ESkillSlot ECurrentSkillSlot { get; set; }
     protected float _initCoolTimeInSec;
     public float SkillCoolTimeInSec { get; private set; }
     public bool IsCanUseSkill { get; protected set; }
+    protected bool _isUsingSkill;
     public abstract void Init();
 
     private void Awake()
@@ -21,23 +22,21 @@ public abstract class BasePlayerSkillController : MonoBehaviour
         Debug.Assert(_pc != null);
     }
 
+    public abstract bool TryUseSkill();
+    protected void StartCountdownCoolTime()
+    {
+        IsCanUseSkill = false;
+        StartCoroutine(StartCountDownCoolTimeCo(SkillCoolTimeInSec));
+    }
     protected bool IsValidStateToUseSkill()
     {
-        if (IsCanUseSkill && 
+        if (IsCanUseSkill &&
             (_pc.ECurrentState == EPlayerState.IDLE || _pc.ECurrentState == EPlayerState.RUN))
         {
             return true;
         }
         return false;
     }
-
-    public abstract bool TryUseSkill();
-    protected void ProcessSkillLogic()
-    {
-        IsCanUseSkill = false;
-        StartCoroutine(StartCountDownCoolTimeCo(SkillCoolTimeInSec));
-    }
-
     protected IEnumerator StartCountDownCoolTimeCo(float coolTimeInSec)
     {
         Debug.Assert(IsCanUseSkill == false);
@@ -48,8 +47,11 @@ public abstract class BasePlayerSkillController : MonoBehaviour
     protected void InitByESkillType(ESkillType eType)
     {
         _eSkillType = eType;
+        ECurrentSkillSlot = ESkillSlot.Count;
+        _isUsingSkill = false;
         _initCoolTimeInSec = Managers.Data.SkillInfoDict[(int)eType].coolTime;
         SkillCoolTimeInSec = _initCoolTimeInSec;
         IsCanUseSkill = true;
     }
+
 }

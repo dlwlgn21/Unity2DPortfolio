@@ -96,11 +96,11 @@ namespace player_states
                 case EPlayerState.NORMAL_ATTACK_3:
                     _entity.Animator.Play("NormalAttack3", -1, 0f);
                     return;
-                case EPlayerState.CAST_LAUNCH:
-                    _entity.Animator.Play("Launch", -1, 0f);
+                case EPlayerState.SKILL_CAST:
+                    _entity.Animator.Play("SkillCast", -1, 0f);
                     return;
-                case EPlayerState.CAST_SPAWN:
-                    _entity.Animator.Play("SpawnReaper", -1, 0f);
+                case EPlayerState.SKILL_SPAWN:
+                    _entity.Animator.Play("SkillSpawn", -1, 0f);
                     return;
                 case EPlayerState.HITTED_MELLE_ATTACK:
                     _entity.Animator.Play("Hitted", -1, 0f);
@@ -753,7 +753,7 @@ namespace player_states
         }
         public override void Enter()  
         { 
-            PlayAnimation(EPlayerState.CAST_LAUNCH);
+            PlayAnimation(EPlayerState.SKILL_CAST);
             SetVelocityToZero();
         }
     }
@@ -766,7 +766,7 @@ namespace player_states
 
         public override void Enter() 
         { 
-            PlayAnimation(EPlayerState.CAST_SPAWN);
+            PlayAnimation(EPlayerState.SKILL_SPAWN);
             SetVelocityToZero();
         }
     }
