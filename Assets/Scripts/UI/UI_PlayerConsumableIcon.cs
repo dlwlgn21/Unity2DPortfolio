@@ -24,7 +24,7 @@ public sealed class UI_PlayerConsumableIcon : MonoBehaviour
         Image.enabled = true;
         Image.sprite = sprite;
         CountText.text = countText;
-        Image.transform.DOScale(DoTweenValueContainer.TWEEN_SCALE_END_VALUE, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic).OnComplete(OnScaleTWEnd);
+        Managers.Tween.StartUIScaleTW(Image.transform, OnScaleTWEnd);
     }
 
     public void ResetItemIcon()
@@ -60,6 +60,6 @@ public sealed class UI_PlayerConsumableIcon : MonoBehaviour
 
     void OnScaleTWEnd()
     {
-        Image.transform.DOScale(Vector3.one, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic);
+        Managers.Tween.EndToOneUIScaleTW(Image.transform);
     }
 }

@@ -19,5 +19,6 @@ public class TutorialScene : PlayScene
     {
         Managers.Dialog.Clear();
         Managers.CamSwitch.Clear();
+        Managers.Tween.Clear();
     }
 }

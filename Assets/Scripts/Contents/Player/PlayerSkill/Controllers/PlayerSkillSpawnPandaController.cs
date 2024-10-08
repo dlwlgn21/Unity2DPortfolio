@@ -5,23 +5,28 @@ using define;
 
 public class PlayerSkillSpawnPandaController : BasePlayerSkillController
 {
-    private const float SPAWN_SHOOTER_COOL_TIME_IN_SEC = 3f;
     private PlayerSkillSpawnPandaObject _spawnPanda;
     public override void Init()
     {
-        _eSkillType = ESkillType.Spawn_Panda;
-        _initCoolTime = SPAWN_SHOOTER_COOL_TIME_IN_SEC;
-        SkillCoolTimeInSec = SPAWN_SHOOTER_COOL_TIME_IN_SEC;
-        IsCanUseSkill = true;
-        Debug.Assert(_uiCoolTimerImg != null);
+        InitByESkillType(ESkillType.Spawn_Panda);
         if (_spawnPanda == null)
         {
-            GameObject spawnPanda = Managers.Resources.Load<GameObject>("Prefabs/Player/Skills/SkillSpawnPanda");
-            spawnPanda = Instantiate(spawnPanda);
-            _spawnPanda = spawnPanda.GetComponent<PlayerSkillSpawnPandaObject>();
-            DontDestroyOnLoad(spawnPanda);
+            _spawnPanda = Managers.Resources.Instantiate<PlayerSkillSpawnPandaObject>("Prefabs/Player/Skills/SkillSpawnPanda");
+            //_uiCoolTimerImg = GameObject.Find("UI_PlayerHUD").gameObject
+            DontDestroyOnLoad(_spawnPanda.gameObject);
         }
         PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnShooterAnimValidTiming;
+    }
+
+    public override bool TryUseSkill()
+    {
+        if (IsValidStateToUseSkill())
+        {
+            _pc.ChangeState(EPlayerState.CAST_LAUNCH);
+            ProcessSkillLogic();
+            return true;
+        }
+        return false;
     }
 
     private void OnDestroy()
@@ -29,16 +34,6 @@ public class PlayerSkillSpawnPandaController : BasePlayerSkillController
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnShooterAnimValidTiming;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(PlayerController.KeyLaunchBomb))
-        {
-            if (IsValidStateToUseSkill())
-            {
-                UseSkill(ESkillType.Spawn_Panda);
-            }
-        }
-    }
     private void OnPlayerSpawnShooterAnimValidTiming(ESkillType eType)
     {
         if (eType == ESkillType.Spawn_Panda)

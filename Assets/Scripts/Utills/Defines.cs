@@ -2,13 +2,6 @@ using UnityEngine;
 
 namespace define
 {
-    static class DoTweenValueContainer
-    {
-        const float T_VAL = 1.1f;
-        static public Vector3 TWEEN_SCALE_END_VALUE = new(T_VAL, T_VAL, T_VAL);
-        static public float TWEEN_SCALE_END_TIME_IN_SEC = 0.1f;
-        static public float TWEEN_SCALE_END_TIME_QUARTER_IN_SEC = 0.25f;
-    }
     public enum ESceneType
     {
         MainMenu,

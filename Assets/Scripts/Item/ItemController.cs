@@ -35,7 +35,7 @@ public abstract class ItemController : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             _btnSprite.SetActive(true);
-            transform.DOPunchPosition(Vector3.up * 0.1f, 1f);
+            Managers.Tween.StartDoPunchPos(transform);
         }
     }
 
@@ -48,7 +48,7 @@ public abstract class ItemController : MonoBehaviour
                 GetComponent<BoxCollider2D>().enabled = false;
                 _btnSprite.SetActive(false);
                 PushItemToInventory();
-                transform.DOScale(new Vector3(0f, 0f, transform.localScale.z), 1f).SetEase(Ease.InOutElastic).OnComplete(OnScaleZeroTweenEnded);
+                Managers.Tween.EndToZeroScaleTWNoCareCurrTweening(transform, OnScaleZeroTweenEnded, 1f);
             }
         }
     }
@@ -58,7 +58,7 @@ public abstract class ItemController : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             _btnSprite.SetActive(false);
-            transform.DOScale(Vector3.one, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic);
+            Managers.Tween.EndToOneUIScaleTW(transform);
         }
     }
 

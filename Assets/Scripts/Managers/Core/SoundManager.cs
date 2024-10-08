@@ -9,7 +9,7 @@ public class SoundManager
 {
     private AudioSource[] _audioSources = new AudioSource[(int)ESoundType.Count];
 
-    private Dictionary<string, AudioClip> _clips = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> _clips = new();
     public void Init()
     {
         if (GameObject.Find("@SoundManager") == null)
@@ -24,6 +24,7 @@ public class SoundManager
             UnityEngine.Object.DontDestroyOnLoad(root);
             _audioSources[(int)ESoundType.Sfx].loop = false;
             _audioSources[(int)ESoundType.Bgm].loop = true;
+            PlayerController.PlayerChangeStateEventHandler -= Managers.Sound.OnPlayerChangeState;
             PlayerController.PlayerChangeStateEventHandler += Managers.Sound.OnPlayerChangeState;
         }
     }

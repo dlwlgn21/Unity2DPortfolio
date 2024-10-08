@@ -21,5 +21,6 @@ public class MainMenuScene : BaseScene
     public override void Clear()
     {
         Debug.Log("MainMenuScene Clear Called");
+        Managers.Tween.Clear();
     }
 }

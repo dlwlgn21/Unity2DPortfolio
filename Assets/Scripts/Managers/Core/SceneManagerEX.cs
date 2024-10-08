@@ -40,4 +40,9 @@ public class SceneManagerEX
         Debug.Assert(retType != define.ESceneType.Count);
         return retType;
     }
+
+    public void Clear()
+    {
+        GameObject.Find("@Scene").GetComponent<BaseScene>().Clear();
+    }
 }

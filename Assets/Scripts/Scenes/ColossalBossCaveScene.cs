@@ -19,5 +19,6 @@ public class ColossalBossCaveScene : PlayScene
     public override void Clear()
     {
         Managers.CamSwitch.Clear();
+        Managers.Tween.Clear();
     }
 }

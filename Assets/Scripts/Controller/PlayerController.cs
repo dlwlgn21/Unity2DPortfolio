@@ -75,8 +75,8 @@ public class PlayerController : BaseCharacterController
     public readonly static KeyCode KeyBlock = KeyCode.X;
     public readonly static KeyCode KeyRoll = KeyCode.C;
     public readonly static KeyCode KeyJump = KeyCode.Space;
-    public readonly static KeyCode KeyLaunchBomb = KeyCode.A;
-    public readonly static KeyCode KeySpawnReaper = KeyCode.S;
+    public readonly static KeyCode KeySkillA = KeyCode.A;
+    public readonly static KeyCode KeySkillS = KeyCode.S;
 
     private const float BURN_TIME_IN_SEC = 2.0f;
 

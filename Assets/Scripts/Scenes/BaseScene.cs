@@ -21,6 +21,7 @@ public abstract class BaseScene : MonoBehaviour
             eventSys = Managers.Resources.Load<GameObject>("Prefabs/EventSystem");
             Object.Instantiate(eventSys).name = "@EventSystem";
         }
+        Managers.Tween.Init();
     }
 
     public abstract void Clear();

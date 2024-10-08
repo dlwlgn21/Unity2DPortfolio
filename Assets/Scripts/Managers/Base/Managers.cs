@@ -22,6 +22,7 @@ public class Managers : MonoBehaviour
     readonly CamSwitchManager _camSwitchManager = new();
     readonly UIDialogManager _dialogManager = new();
     readonly PlayerRespawnManager _playerRespawnManager = new();
+    readonly PlayerSkillManager _playerSkillManager = new();
     readonly FullScreenEffectManager _fullScreenEffectManager = new();
 
     // 6.5일 전투시스템에서 공격성공, 피격시에 슬로우 타임 적용하기 위해서 TimeManager 추가 
@@ -44,6 +45,7 @@ public class Managers : MonoBehaviour
     public static CamSwitchManager CamSwitch { get { return Instance._camSwitchManager; } }
     public static GameEventManager GameEvent { get { return Instance._gameEventManager; } }
     public static PlayerRespawnManager PlayerRespawn { get { return Instance._playerRespawnManager; } }
+    public static PlayerSkillManager PlayerSkill { get { return Instance._playerSkillManager; } }
     public static FullScreenEffectManager FullScreenEffect { get { return Instance._fullScreenEffectManager; } }
 
     private void Start()
@@ -111,6 +113,7 @@ public class Managers : MonoBehaviour
             sInstance._sceneManager.Init();
             sInstance._fullScreenEffectManager.Init();
             sInstance._uiManager.Init();
+            sInstance._playerSkillManager.Init();
             // TODO : 6.5일 TimeManager를 위해 추가. 꼼수사용하는 거 같아서 뭔가 찝찝. 나중에 바꾸던지 해용
             GameObject timeManager = GameObject.Find("@TimeManager");
             if (timeManager == null)
@@ -125,6 +128,8 @@ public class Managers : MonoBehaviour
     public static void Clear()          
     {
         sInstance._inputManager.Clear(); 
-        sInstance._uiManager.Clear(); 
+        sInstance._uiManager.Clear();
+        sInstance._playerSkillManager.Clear();
+        sInstance._tweenManager.Clear();
     }
 }

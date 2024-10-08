@@ -31,7 +31,7 @@ public abstract class UI_Inventory_BaseItemIcon : MonoBehaviour, IPointerEnterHa
         if (Image.enabled)
         {
             Managers.UI.ItemDesc.ShowItemDesc(ItemInfo);
-            transform.DOScale(DoTweenValueContainer.TWEEN_SCALE_END_VALUE, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic);
+            Managers.Tween.StartUIScaleTW(transform);
         }
     }
     public void OnPointerExit(PointerEventData eventData)
@@ -39,7 +39,7 @@ public abstract class UI_Inventory_BaseItemIcon : MonoBehaviour, IPointerEnterHa
         if (Image.enabled)
         {
             Managers.UI.ItemDesc.HideDescription();
-            transform.DOScale(Vector3.one, DoTweenValueContainer.TWEEN_SCALE_END_TIME_IN_SEC).SetEase(Ease.InOutElastic);
+            Managers.Tween.EndToOneUIScaleTW(transform);
         }
     }
     #endregion
