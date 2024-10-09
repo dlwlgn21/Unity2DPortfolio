@@ -14,23 +14,29 @@ public class PlayerSkillManager
 {
 
 
-    Dictionary<ESkillType, BasePlayerSkillController> _skillDict = new();
+    Dictionary<ESkillType, Skill_BaseController> _skillDict = new();
     UI_SkillCoolTimer[] skillCoolTimer = new UI_SkillCoolTimer[(int)ESkillSlot.Count];
-    BasePlayerSkillController[] _currSkill = new BasePlayerSkillController[2];
+    Skill_BaseController[] _currSkill = new Skill_BaseController[2];
     GameObject[] _skillSlots = new GameObject[2];
     public void Init()
     {
-        // TODO : 나중에는 필요할 때 메모리에 로드 하는 방식으로 바꾸긴 해야함.
+        // TODO : 나중에는 필요할 때 메모리에 로드 하는 방식으로 바꿔야함.
+        #region SkillInit
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        BasePlayerSkillController roll = Utill.GetComponentInChildrenOrNull<PlayerSkillRollController>(player, "PlayerSkillRoll");
-        BasePlayerSkillController reaper = Managers.Resources.Instantiate<PlayerSkillSpawnRepaerController>("Prefabs/Player/Skills/PlayerSkillSpawnReaper");
-        BasePlayerSkillController panda = Managers.Resources.Instantiate<PlayerSkillSpawnPandaController>("Prefabs/Player/Skills/PlayerSkillSpawnPanda");
-        BasePlayerSkillController blackFlame = Managers.Resources.Instantiate<PlayerSkillBlackFlameController>("Prefabs/Player/Skills/PlayerSkillBlackFlame");
-        BasePlayerSkillController swordStrike = Managers.Resources.Instantiate<PlayerSkillSwordStrikeController>("Prefabs/Player/Skills/PlayerSkillSwordStrike");
-        reaper.gameObject.name = "PlayerSkillSpawnReaper";
-        panda.gameObject.name = "PlayerSkillSpawnPanda";
-        blackFlame.gameObject.name = "PlayerSkillBlackFlame";
-        swordStrike.gameObject.name = "PlayerSkillSwordStrike";
+
+        Dictionary<int, data.SkillInfo> skillDict = Managers.Data.SkillInfoDict;
+
+        Skill_BaseController roll = Utill.GetComponentInChildrenOrNull<Skill_RollController>(player, GetSkillControllerObjectName(ESkillType.Roll));
+        Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(skillDict[(int)ESkillType.Spawn_Reaper].controllerPrefabPath);
+        Skill_BaseController panda = Inst<Skill_SpawnPandaController>(skillDict[(int)ESkillType.Spawn_Panda].controllerPrefabPath);
+        Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(skillDict[(int)ESkillType.Cast_BlackFlame].controllerPrefabPath);
+        Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(skillDict[(int)ESkillType.Cast_SwordStrike].controllerPrefabPath);
+
+        reaper.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Reaper);
+        panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Panda);
+        blackFlame.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_BlackFlame);
+        swordStrike.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_SwordStrike);
+
         Object.DontDestroyOnLoad(reaper.gameObject);
         Object.DontDestroyOnLoad(panda.gameObject);
         Object.DontDestroyOnLoad(blackFlame.gameObject);
@@ -40,10 +46,12 @@ public class PlayerSkillManager
         _skillDict.Add(ESkillType.Spawn_Reaper, reaper);
         _skillDict.Add(ESkillType.Spawn_Panda, panda);
         _skillDict.Add(ESkillType.Cast_BlackFlame, blackFlame); 
-        _skillDict.Add(ESkillType.Cast_SwordStrike, swordStrike); 
+        _skillDict.Add(ESkillType.Cast_SwordStrike, swordStrike);
+
+        #endregion
 
         GameObject uiPlayerHud = GameObject.Find("UI_PlayerHUD");
-        skillCoolTimer[(int)ESkillSlot.AKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "AKeySkillCoolTimer"); 
+        skillCoolTimer[(int)ESkillSlot.AKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "AKeySkillCoolTimer");
         skillCoolTimer[(int)ESkillSlot.SKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "SKeySkillCoolTimer");
         skillCoolTimer[(int)ESkillSlot.CKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "PlayerRollCoolTimer");
 
@@ -57,7 +65,7 @@ public class PlayerSkillManager
     }
 
 
-    public BasePlayerSkillController GetSkill(ESkillType eType)
+    public Skill_BaseController GetSkill(ESkillType eType)
     {
         Debug.Assert(_skillDict[eType] != null);
         return _skillDict[eType];
@@ -67,7 +75,10 @@ public class PlayerSkillManager
     {
         Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
     }
-
+    public string GetSkillObjectName(ESkillType eType)
+    {
+        return Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.LastIndexOf('/') + 1);
+    }
 
     void OnSkillKeyDowned()
     {
@@ -115,4 +126,16 @@ public class PlayerSkillManager
     {
         Managers.Tween.EndToOneUIScaleTW(_skillSlots[(int)ESkillSlot.SKey].transform);
     }
+
+    T Inst<T>(string path) where T : Object
+    {
+        return Managers.Resources.Instantiate<T>(path);
+    }
+
+    string GetSkillControllerObjectName(ESkillType eType)
+    {
+        return Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.LastIndexOf('/') + 1);
+    }
+
+
 }

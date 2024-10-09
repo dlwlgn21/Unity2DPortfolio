@@ -76,6 +76,9 @@ namespace data
         public float knockbackForceX;
         public float knockbackForceY;
         public int damage;
+        public string objectPrefabPath;
+        public string controllerPrefabPath;
+        public string animKey;
     }
 
     [Serializable]
