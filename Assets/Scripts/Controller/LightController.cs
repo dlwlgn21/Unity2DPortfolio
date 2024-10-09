@@ -32,12 +32,26 @@ public class LightController : MonoBehaviour
         _light.enabled = true;
         _light.intensity = _initialIntencity;
     }
+
+    public void TurnOffLightGraduallyAfterSecond(float second)
+    {
+        _turnOffGraduallyLightTime = second;
+        StartCoroutine(TurnOffLightGraduallyAfterSecondCo(second));
+    }
+
     public void TurnOffLightGradually()
     {
         if (_isDoingTurnOffLight)
         {
             return;
         }
+        StartCoroutine(StartTurnOffLightCo());
+    }
+
+
+    IEnumerator TurnOffLightGraduallyAfterSecondCo(float second)
+    {
+        yield return new WaitForSeconds(second);
         StartCoroutine(StartTurnOffLightCo());
     }
 

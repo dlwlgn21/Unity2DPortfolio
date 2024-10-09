@@ -22,7 +22,6 @@ public class NormalMonsterAttackLightController : LightController
 
     private void OnMonsterAttackStart()
     {
-        Debug.Log("OnMonsterAttackStart");
         if (_mc.ECurrentState == ENormalMonsterState.MELLE_ATTACK || 
             _mc.ECurrentState == ENormalMonsterState.LAUNCH_ATTACK)
         {
@@ -32,7 +31,6 @@ public class NormalMonsterAttackLightController : LightController
 
     private void OnMonsterAttackEnd()
     {
-        Debug.Log("OnMonsterAttackEnd");
         if (_mc.ECurrentState == ENormalMonsterState.MELLE_ATTACK ||
             _mc.ECurrentState == ENormalMonsterState.LAUNCH_ATTACK)
         {

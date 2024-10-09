@@ -13,7 +13,7 @@ public abstract class BaseMonsterController : BaseCharacterController
 
     protected readonly static Vector3 LEFT_ROT_VECTOR = new(0f, 180f, 0f);
     protected readonly static Vector3 RIGHT_ROT_VECTOR = new(0f, 0f, 0f);
-    public UIWSMonsterHpBar HealthBar { get; protected set; }
+    public UI_WSMonsterHpBar HealthBar { get; protected set; }
     public Transform PlayerTransform { get; protected set; }
     public EMonsterNames EMonsterType { get; protected set; }
     public MonsterStat Stat { get; protected set; }
@@ -30,7 +30,7 @@ public abstract class BaseMonsterController : BaseCharacterController
             Debug.Assert(PlayerTransform != null);
             _pc = PlayerTransform.gameObject.GetComponent<PlayerController>();
             Stat = gameObject.GetOrAddComponent<MonsterStat>();
-            HealthBar = Utill.GetComponentInChildrenOrNull<UIWSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
+            HealthBar = Utill.GetComponentInChildrenOrNull<UI_WSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
         }
         InitStat();
     }

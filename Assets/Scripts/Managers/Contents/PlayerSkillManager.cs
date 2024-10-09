@@ -16,8 +16,8 @@ public class PlayerSkillManager
 
     Dictionary<ESkillType, Skill_BaseController> _skillDict = new();
     UI_SkillCoolTimer[] skillCoolTimer = new UI_SkillCoolTimer[(int)ESkillSlot.Count];
-    Skill_BaseController[] _currSkill = new Skill_BaseController[2];
     GameObject[] _skillSlots = new GameObject[2];
+    public ESkillType[] _eCurrSkillSlotType = new ESkillType[2];
     public void Init()
     {
         // TODO : 나중에는 필요할 때 메모리에 로드 하는 방식으로 바꿔야함.
@@ -58,8 +58,17 @@ public class PlayerSkillManager
         _skillSlots[(int)ESkillSlot.AKey] = uiPlayerHud.transform.Find("AKeySkillSlot").gameObject;
         _skillSlots[(int)ESkillSlot.SKey] = uiPlayerHud.transform.Find("SKeySkillSlot").gameObject;
 
+        _eCurrSkillSlotType[(int)ESkillSlot.AKey] = ESkillType.Count;
+        _eCurrSkillSlotType[(int)ESkillSlot.SKey] = ESkillType.Count;
+
+
+        #region EventSubscribe
         Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
         Managers.Input.KeyboardHandler += OnSkillKeyDowned;
+        UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
+        UI_Skill_Slot.OnSkillIocnDropEventHandler += OnSkillIconDroped;
+
+        #endregion
         Debug.Assert(skillCoolTimer[(int)ESkillSlot.AKey] != null && skillCoolTimer[(int)ESkillSlot.SKey] != null);
         Debug.Assert(_skillSlots[0] != null && _skillSlots[1] != null);
     }
@@ -74,22 +83,41 @@ public class PlayerSkillManager
     public void Clear()
     {
         Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
+        UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
     }
     public string GetSkillObjectName(ESkillType eType)
     {
         return Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.LastIndexOf('/') + 1);
     }
 
+    public bool IsDuplicatedIcon(ESkillSlot eSlot, ESkillType eType)
+    {
+        if (eSlot == ESkillSlot.AKey)
+        {
+            if (_eCurrSkillSlotType[(int)ESkillSlot.SKey] == eType)
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            if (_eCurrSkillSlotType[(int)ESkillSlot.AKey] == eType)
+                return true;
+            else
+                return false;
+        }
+    }
+
     void OnSkillKeyDowned()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            UseSkill(ESkillSlot.AKey, ESkillType.Cast_BlackFlame);
+            UseSkill(ESkillSlot.AKey, _eCurrSkillSlotType[(int)ESkillSlot.AKey]);
             return;
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            UseSkill(ESkillSlot.SKey, ESkillType.Cast_SwordStrike);
+            UseSkill(ESkillSlot.SKey, _eCurrSkillSlotType[(int)ESkillSlot.SKey]);
             return;
         }
         if (Input.GetKeyDown(KeyCode.C))
@@ -104,7 +132,7 @@ public class PlayerSkillManager
 
     void UseSkill(ESkillSlot eSlot, ESkillType eSkillType)
     {
-        if (_skillDict[eSkillType].TryUseSkill())
+        if (eSkillType != ESkillType.Count && _skillDict[eSkillType].TryUseSkill())
         {
             skillCoolTimer[(int)eSlot].StartCoolTime(_skillDict[eSkillType].SkillCoolTimeInSec);
             if (eSlot == ESkillSlot.AKey)
@@ -118,6 +146,11 @@ public class PlayerSkillManager
         }
     }
 
+    void OnSkillIconDroped(ESkillSlot eSlot, ESkillType eType)
+    {
+        Debug.Assert(eSlot <= ESkillSlot.SKey && eType != ESkillType.Count && eType != ESkillType.Roll);
+        _eCurrSkillSlotType[(int)eSlot] = eType;
+    }
     void OnAKeyScaleTWEnd()
     {
         Managers.Tween.EndToOneUIScaleTW(_skillSlots[(int)ESkillSlot.AKey].transform);
