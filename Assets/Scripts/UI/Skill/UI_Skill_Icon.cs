@@ -11,7 +11,7 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
 
     static public UnityAction<ESkillType> OnSkillLevelUpEventHandler;
     [SerializeField] ESkillType _eSkillType;
-    int _skillLevel = 0;
+    public int SkillLevel { get; set; } = 0;
     public ESkillType ESkillType 
     { 
         get 
@@ -36,7 +36,7 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (_skillLevel == 0)
+        if (SkillLevel == 0)
         {
             UIPunchTWStart();
             return;
@@ -48,14 +48,14 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (_skillLevel == 0)
+        if (SkillLevel == 0)
             return;
         transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (_skillLevel == 0)
+        if (SkillLevel == 0)
             return;
         transform.SetParent(_cacheParent);
         transform.localPosition = _cachePos;
@@ -76,10 +76,10 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (Managers.PlayerLevel.CurrSkillPoint >= 1 && _skillLevel < PlayerLevelManager.MAX_SKILL_LEVEL)
+        if (Managers.PlayerLevel.CurrSkillPoint >= 1 && SkillLevel < PlayerLevelManager.MAX_SKILL_LEVEL)
         {
-            ++_skillLevel;
-            if (_skillLevel > 1)
+            ++SkillLevel;
+            if (SkillLevel > 1)
             {
                 _eSkillType += 1;
                 SkillInfo = Managers.Data.SkillInfoDict[(int)_eSkillType];

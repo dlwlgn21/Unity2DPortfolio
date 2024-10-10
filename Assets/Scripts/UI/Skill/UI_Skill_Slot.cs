@@ -21,7 +21,7 @@ public class UI_Skill_Slot : MonoBehaviour, IDropHandler
         UI_Skill_Icon dragedIcon = dragedObject.GetComponent<UI_Skill_Icon>();
         if (dragedIcon != null)
         {
-            if (Managers.PlayerSkill.IsDuplicatedIcon(_eSlot, dragedIcon.ESkillType))
+            if (Managers.PlayerSkill.IsDuplicatedIcon(_eSlot, dragedIcon.ESkillType) || dragedIcon.SkillLevel == 0)
             {
                 Managers.Tween.StartUIDoPunchPos(transform);
                 return;
@@ -29,7 +29,9 @@ public class UI_Skill_Slot : MonoBehaviour, IDropHandler
             if (_icon.TryDrop(dragedIcon.ESkillType, dragedIcon.Image.sprite))
             {
                 if (OnSkillIocnDropEventHandler != null)
+                {
                     OnSkillIocnDropEventHandler.Invoke(_eSlot, dragedIcon.ESkillType);
+                }
             }
             return;
         }
