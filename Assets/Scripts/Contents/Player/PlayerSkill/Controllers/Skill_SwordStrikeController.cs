@@ -8,12 +8,12 @@ public sealed class Skill_SwordStrikeController : Skill_BaseController
     private Skill_SwordStrikeObject _swordStrike;
     public override void Init()
     {
-        InitByESkillType(ESkillType.Cast_SwordStrike);
+        InitByESkillType(ESkillType.Cast_SwordStrike_LV1);
         if (_swordStrike == null)
         {
             _swordStrike = Managers.Resources.Instantiate<Skill_SwordStrikeObject>(Managers.Data.SkillInfoDict[(int)_eSkillType].objectPrefabPath);
             DontDestroyOnLoad(_swordStrike.gameObject);
-            _swordStrike.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Cast_SwordStrike);
+            _swordStrike.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Cast_SwordStrike_LV1);
 
         }
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerCastAnimValidTiming;
@@ -41,5 +41,11 @@ public sealed class Skill_SwordStrikeController : Skill_BaseController
             _swordStrike.UseSkill(_pc.CastSwordStrikePoint.position, _pc.ELookDir);
             _isUsingSkill = false;
         }
+    }
+
+    public override void LevelUpSkill(ESkillType eType)
+    {
+        base.LevelUpSkill(eType);
+        _swordStrike.ESkillType = eType;
     }
 }

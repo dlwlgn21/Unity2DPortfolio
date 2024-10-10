@@ -7,7 +7,7 @@ public sealed class Skill_BlackFlameObject : Skill_BaseObject
 {
     protected override void Init()
     {
-        _eSkillType = ESkillType.Cast_BlackFlame;
-        _animKey = Managers.Data.SkillInfoDict[(int)_eSkillType].animKey;
+        ESkillType = ESkillType.Cast_BlackFlame_LV1;
+        _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
     }
 }

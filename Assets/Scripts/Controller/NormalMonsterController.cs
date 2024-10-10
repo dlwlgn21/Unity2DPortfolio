@@ -130,16 +130,24 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         ESkillType eType = (ESkillType)skillInfo.id;
         switch (eType)
         {
-            case ESkillType.Spawn_Reaper:
+            case ESkillType.Spawn_Reaper_LV1:
+            case ESkillType.Spawn_Reaper_LV2:
+            case ESkillType.Spawn_Reaper_LV3:
                 ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
                 break;
-            case ESkillType.Spawn_Panda:
+            case ESkillType.Spawn_Panda_LV1:
+            case ESkillType.Spawn_Panda_LV2:
+            case ESkillType.Spawn_Panda_LV3:
                 ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
                 break;
-            case ESkillType.Cast_BlackFlame:
+            case ESkillType.Cast_BlackFlame_LV1:
+            case ESkillType.Cast_BlackFlame_LV2:
+            case ESkillType.Cast_BlackFlame_LV3:
                 OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
                 break;
-            case ESkillType.Cast_SwordStrike:
+            case ESkillType.Cast_SwordStrike_LV1:
+            case ESkillType.Cast_SwordStrike_LV2:
+            case ESkillType.Cast_SwordStrike_LV3:
                 OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
                 break;
             default:

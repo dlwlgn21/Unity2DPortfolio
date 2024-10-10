@@ -9,12 +9,12 @@ public sealed class Skill_BlackFlameController : Skill_BaseController
     private Skill_BlackFlameObject _blackFlame;
     public override void Init()
     {
-        InitByESkillType(ESkillType.Cast_BlackFlame);
+        InitByESkillType(ESkillType.Cast_BlackFlame_LV1);
         if (_blackFlame == null)
         {
             _blackFlame = Managers.Resources.Instantiate<Skill_BlackFlameObject>(Managers.Data.SkillInfoDict[(int)_eSkillType].objectPrefabPath);
             DontDestroyOnLoad(_blackFlame.gameObject);
-            _blackFlame.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Cast_BlackFlame);
+            _blackFlame.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Cast_BlackFlame_LV1);
 
         }
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerCastAnimValidTiming;
@@ -43,5 +43,11 @@ public sealed class Skill_BlackFlameController : Skill_BaseController
             _pc.AddOppositeForceByLookDir(new Vector2(2f, 3f));
             _isUsingSkill = false;
         }
+    }
+
+    public override void LevelUpSkill(ESkillType eType)
+    {
+        base.LevelUpSkill(eType);
+        _blackFlame.ESkillType = eType;
     }
 }

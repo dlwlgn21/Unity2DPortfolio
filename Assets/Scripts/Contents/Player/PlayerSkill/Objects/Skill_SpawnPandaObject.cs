@@ -15,7 +15,7 @@ public sealed class Skill_SpawnPandaObject : MonoBehaviour
     private Animator _spawnEffectAnimator;
     private LightController _headLight;
     private LightController _weapenLight;
-
+    public ESkillType ESkillType { get; set; }
     private const string SPAWN_SHOOTER_ANIM_KEY = "SpawnShooter";
     private const string SPAWN_SHOOTER_EFFECT_ANIM_KEY = "ShooterSpawnEffect";
     private void Awake()

@@ -2,13 +2,16 @@ using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
+
+    static public UnityAction<ESkillType> OnSkillLevelUpEventHandler;
     [SerializeField] ESkillType _eSkillType;
-    int _skillLevel;
+    int _skillLevel = 0;
     public ESkillType ESkillType 
     { 
         get 
@@ -29,8 +32,15 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
         _cachePos = transform.localPosition;
     }
 
+
+
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (_skillLevel == 0)
+        {
+            UIPunchTWStart();
+            return;
+        }
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         Image.raycastTarget = false;
@@ -38,11 +48,15 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (_skillLevel == 0)
+            return;
         transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (_skillLevel == 0)
+            return;
         transform.SetParent(_cacheParent);
         transform.localPosition = _cachePos;
         Image.raycastTarget = true;
@@ -59,4 +73,36 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
         Managers.UI.SkillDesc.HideDescription();
         Managers.Tween.EndToOneUIScaleTW(transform);
     }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (Managers.PlayerLevel.CurrSkillPoint >= 1 && _skillLevel < PlayerLevelManager.MAX_SKILL_LEVEL)
+        {
+            ++_skillLevel;
+            if (_skillLevel > 1)
+            {
+                _eSkillType += 1;
+                SkillInfo = Managers.Data.SkillInfoDict[(int)_eSkillType];
+            }
+            Managers.UI.SkillDesc.ShowSkillDesc(SkillInfo);
+            if (OnSkillLevelUpEventHandler != null)
+                OnSkillLevelUpEventHandler.Invoke(_eSkillType);
+            Managers.Tween.StartUIScaleTW(transform.parent.gameObject.transform, () => { Managers.Tween.EndToOneUIScaleTW(transform.parent.gameObject.transform); });
+        }
+        else
+        {
+            UIPunchTWStart();
+        }
+    }
+
+    void UIPunchTWStart()
+    {
+        Managers.Tween.StartUIDoPunchPos(transform.parent.gameObject.transform);
+    }
+
+    private void OnDestroy()
+    {
+        OnSkillLevelUpEventHandler = null;
+    }
+
 }

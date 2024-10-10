@@ -27,6 +27,7 @@ public sealed class PlayerStat : BaseStat
             int levelUpCount = 0;
             while (_exp >= currNeedLevelUpExp)
             {
+                Debug.Log("In While Repeat!!");
                 ++Level;
                 ++levelUpCount;
                 isLevelUp = true;

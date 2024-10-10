@@ -14,5 +14,4 @@ public sealed class UI_Skill_Description : UI_BaseDescription
         _nameText.text = skillInfo.name;
         _descText.text = skillInfo.description;
     }
-    
 }

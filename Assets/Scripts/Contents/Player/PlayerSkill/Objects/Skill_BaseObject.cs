@@ -10,7 +10,7 @@ public abstract class Skill_BaseObject : MonoBehaviour
     protected LightController _attackLightController;
     protected const float TURN_OFF_LIGHT_TIME = 0.7f;
     protected string _animKey;
-    protected ESkillType _eSkillType;
+    public ESkillType ESkillType { get; set; }
     protected abstract void Init();
 
     private void Start()
@@ -42,7 +42,7 @@ public abstract class Skill_BaseObject : MonoBehaviour
             BaseMonsterController mc = collision.gameObject.GetComponent<BaseMonsterController>();
             if (mc != null)
             {
-                mc.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)_eSkillType]);
+                mc.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType]);
             }
         }
     }

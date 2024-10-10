@@ -19,10 +19,18 @@ namespace define
     public enum ESkillType
     {
         Roll,
-        Spawn_Reaper,
-        Spawn_Panda,
-        Cast_BlackFlame,
-        Cast_SwordStrike,
+        Spawn_Reaper_LV1,
+        Spawn_Reaper_LV2,
+        Spawn_Reaper_LV3,
+        Spawn_Panda_LV1,
+        Spawn_Panda_LV2,
+        Spawn_Panda_LV3,
+        Cast_BlackFlame_LV1,
+        Cast_BlackFlame_LV2,
+        Cast_BlackFlame_LV3,
+        Cast_SwordStrike_LV1,
+        Cast_SwordStrike_LV2,
+        Cast_SwordStrike_LV3,
         Count
     }
     public enum EAttackStatusEffect

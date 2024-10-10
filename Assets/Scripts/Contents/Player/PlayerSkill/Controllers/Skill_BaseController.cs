@@ -54,4 +54,10 @@ public abstract class Skill_BaseController : MonoBehaviour
         IsCanUseSkill = true;
     }
 
+    public virtual void LevelUpSkill(ESkillType eType)
+    {
+        _eSkillType = eType;
+        _initCoolTimeInSec = Managers.Data.SkillInfoDict[(int)eType].coolTime;
+        SkillCoolTimeInSec = _initCoolTimeInSec;
+    }
 }

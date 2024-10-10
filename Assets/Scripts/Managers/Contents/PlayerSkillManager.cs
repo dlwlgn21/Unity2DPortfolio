@@ -27,15 +27,15 @@ public class PlayerSkillManager
         Dictionary<int, data.SkillInfo> skillDict = Managers.Data.SkillInfoDict;
 
         Skill_BaseController roll = Utill.GetComponentInChildrenOrNull<Skill_RollController>(player, GetSkillControllerObjectName(ESkillType.Roll));
-        Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(skillDict[(int)ESkillType.Spawn_Reaper].controllerPrefabPath);
-        Skill_BaseController panda = Inst<Skill_SpawnPandaController>(skillDict[(int)ESkillType.Spawn_Panda].controllerPrefabPath);
-        Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(skillDict[(int)ESkillType.Cast_BlackFlame].controllerPrefabPath);
-        Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(skillDict[(int)ESkillType.Cast_SwordStrike].controllerPrefabPath);
+        Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(skillDict[(int)ESkillType.Spawn_Reaper_LV1].controllerPrefabPath);
+        Skill_BaseController panda = Inst<Skill_SpawnPandaController>(skillDict[(int)ESkillType.Spawn_Panda_LV1].controllerPrefabPath);
+        Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(skillDict[(int)ESkillType.Cast_BlackFlame_LV1].controllerPrefabPath);
+        Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(skillDict[(int)ESkillType.Cast_SwordStrike_LV1].controllerPrefabPath);
 
-        reaper.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Reaper);
-        panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Panda);
-        blackFlame.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_BlackFlame);
-        swordStrike.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_SwordStrike);
+        reaper.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Reaper_LV1);
+        panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Panda_LV1);
+        blackFlame.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_BlackFlame_LV1);
+        swordStrike.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_SwordStrike_LV1);
 
         Object.DontDestroyOnLoad(reaper.gameObject);
         Object.DontDestroyOnLoad(panda.gameObject);
@@ -43,10 +43,10 @@ public class PlayerSkillManager
         Object.DontDestroyOnLoad(swordStrike.gameObject);
 
         _skillDict.Add(ESkillType.Roll, roll);
-        _skillDict.Add(ESkillType.Spawn_Reaper, reaper);
-        _skillDict.Add(ESkillType.Spawn_Panda, panda);
-        _skillDict.Add(ESkillType.Cast_BlackFlame, blackFlame); 
-        _skillDict.Add(ESkillType.Cast_SwordStrike, swordStrike);
+        _skillDict.Add(ESkillType.Spawn_Reaper_LV1, reaper);
+        _skillDict.Add(ESkillType.Spawn_Panda_LV1, panda);
+        _skillDict.Add(ESkillType.Cast_BlackFlame_LV1, blackFlame); 
+        _skillDict.Add(ESkillType.Cast_SwordStrike_LV1, swordStrike);
 
         #endregion
 
@@ -61,53 +61,21 @@ public class PlayerSkillManager
         _eCurrSkillSlotType[(int)ESkillSlot.AKey] = ESkillType.Count;
         _eCurrSkillSlotType[(int)ESkillSlot.SKey] = ESkillType.Count;
 
+        Debug.Assert(skillCoolTimer[(int)ESkillSlot.AKey] != null && skillCoolTimer[(int)ESkillSlot.SKey] != null);
+        Debug.Assert(_skillSlots[0] != null && _skillSlots[1] != null);
+
 
         #region EventSubscribe
         Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
         Managers.Input.KeyboardHandler += OnSkillKeyDowned;
         UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
         UI_Skill_Slot.OnSkillIocnDropEventHandler += OnSkillIconDroped;
-
+        UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnSkillLevelUp;
+        UI_Skill_Icon.OnSkillLevelUpEventHandler += OnSkillLevelUp;
         #endregion
-        Debug.Assert(skillCoolTimer[(int)ESkillSlot.AKey] != null && skillCoolTimer[(int)ESkillSlot.SKey] != null);
-        Debug.Assert(_skillSlots[0] != null && _skillSlots[1] != null);
     }
 
-
-    public Skill_BaseController GetSkill(ESkillType eType)
-    {
-        Debug.Assert(_skillDict[eType] != null);
-        return _skillDict[eType];
-    }
-
-    public void Clear()
-    {
-        Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
-        UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
-    }
-    public string GetSkillObjectName(ESkillType eType)
-    {
-        return Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.LastIndexOf('/') + 1);
-    }
-
-    public bool IsDuplicatedIcon(ESkillSlot eSlot, ESkillType eType)
-    {
-        if (eSlot == ESkillSlot.AKey)
-        {
-            if (_eCurrSkillSlotType[(int)ESkillSlot.SKey] == eType)
-                return true;
-            else
-                return false;
-        }
-        else
-        {
-            if (_eCurrSkillSlotType[(int)ESkillSlot.AKey] == eType)
-                return true;
-            else
-                return false;
-        }
-    }
-
+    #region Event
     void OnSkillKeyDowned()
     {
         if (Input.GetKeyDown(KeyCode.A))
@@ -132,9 +100,9 @@ public class PlayerSkillManager
 
     void UseSkill(ESkillSlot eSlot, ESkillType eSkillType)
     {
-        if (eSkillType != ESkillType.Count && _skillDict[eSkillType].TryUseSkill())
+        if (eSkillType != ESkillType.Count && GetSkillOrNull(eSkillType).TryUseSkill())
         {
-            skillCoolTimer[(int)eSlot].StartCoolTime(_skillDict[eSkillType].SkillCoolTimeInSec);
+            skillCoolTimer[(int)eSlot].StartCoolTime(GetSkillOrNull(eSkillType).SkillCoolTimeInSec);
             if (eSlot == ESkillSlot.AKey)
                 Managers.Tween.StartUIScaleTW(_skillSlots[(int)eSlot].transform, OnAKeyScaleTWEnd);
             else
@@ -150,6 +118,90 @@ public class PlayerSkillManager
     {
         Debug.Assert(eSlot <= ESkillSlot.SKey && eType != ESkillType.Count && eType != ESkillType.Roll);
         _eCurrSkillSlotType[(int)eSlot] = eType;
+    }
+
+
+    void OnSkillLevelUp(ESkillType eType)
+    {
+        switch (eType)
+        {
+            case ESkillType.Spawn_Reaper_LV1:
+            case ESkillType.Spawn_Reaper_LV2:
+            case ESkillType.Spawn_Reaper_LV3:
+                _skillDict[ESkillType.Spawn_Reaper_LV1].LevelUpSkill(eType);
+                break;
+            case ESkillType.Spawn_Panda_LV1:
+            case ESkillType.Spawn_Panda_LV2:
+            case ESkillType.Spawn_Panda_LV3:
+                _skillDict[ESkillType.Spawn_Panda_LV1].LevelUpSkill(eType);
+                break;
+            case ESkillType.Cast_BlackFlame_LV1:
+            case ESkillType.Cast_BlackFlame_LV2:
+            case ESkillType.Cast_BlackFlame_LV3:
+                _skillDict[ESkillType.Cast_BlackFlame_LV1].LevelUpSkill(eType);
+                break;
+            case ESkillType.Cast_SwordStrike_LV1:
+            case ESkillType.Cast_SwordStrike_LV2:
+            case ESkillType.Cast_SwordStrike_LV3:
+                _skillDict[ESkillType.Cast_SwordStrike_LV1].LevelUpSkill(eType);
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+        }
+    }
+    #endregion
+
+
+    #region Helpers
+
+    Skill_BaseController GetSkillOrNull(ESkillType eType)
+    {
+        switch (eType)
+        {
+            case ESkillType.Spawn_Reaper_LV1:
+            case ESkillType.Spawn_Reaper_LV2:
+            case ESkillType.Spawn_Reaper_LV3:
+                return _skillDict[ESkillType.Spawn_Reaper_LV1];
+            case ESkillType.Spawn_Panda_LV1:
+            case ESkillType.Spawn_Panda_LV2:
+            case ESkillType.Spawn_Panda_LV3:
+                return _skillDict[ESkillType.Spawn_Panda_LV1];
+            case ESkillType.Cast_BlackFlame_LV1:
+            case ESkillType.Cast_BlackFlame_LV2:
+            case ESkillType.Cast_BlackFlame_LV3:
+                return _skillDict[ESkillType.Cast_BlackFlame_LV1];
+            case ESkillType.Cast_SwordStrike_LV1:
+            case ESkillType.Cast_SwordStrike_LV2:
+            case ESkillType.Cast_SwordStrike_LV3:
+                return _skillDict[ESkillType.Cast_SwordStrike_LV1];
+            default:
+                Debug.Assert(false);
+                return null;
+        }
+    }
+
+    public string GetSkillObjectName(ESkillType eType)
+    {
+        return Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.LastIndexOf('/') + 1);
+    }
+
+    public bool IsDuplicatedIcon(ESkillSlot eSlot, ESkillType eType)
+    {
+        if (eSlot == ESkillSlot.AKey)
+        {
+            if (_eCurrSkillSlotType[(int)ESkillSlot.SKey] == eType)
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            if (_eCurrSkillSlotType[(int)ESkillSlot.AKey] == eType)
+                return true;
+            else
+                return false;
+        }
     }
     void OnAKeyScaleTWEnd()
     {
@@ -170,5 +222,12 @@ public class PlayerSkillManager
         return Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.LastIndexOf('/') + 1);
     }
 
+    #endregion
 
+
+    public void Clear()
+    {
+        //Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
+        //UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
+    }
 }

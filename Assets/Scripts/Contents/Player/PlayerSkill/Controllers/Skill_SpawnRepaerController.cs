@@ -7,12 +7,12 @@ public sealed class Skill_SpawnRepaerController : Skill_BaseController
     private Skill_SpawnReaperObject _spawnReaper;
     public override void Init()
     {
-        InitByESkillType(ESkillType.Spawn_Reaper);
+        InitByESkillType(ESkillType.Spawn_Reaper_LV1);
         if (_spawnReaper == null)
         {
             _spawnReaper = Managers.Resources.Instantiate<Skill_SpawnReaperObject>(Managers.Data.SkillInfoDict[(int)_eSkillType].objectPrefabPath);
             DontDestroyOnLoad(_spawnReaper.gameObject);
-            _spawnReaper.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Spawn_Reaper);
+            _spawnReaper.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Spawn_Reaper_LV1);
         }
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnAnimValidTiming;
         PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnAnimValidTiming;
@@ -39,6 +39,11 @@ public sealed class Skill_SpawnRepaerController : Skill_BaseController
              _spawnReaper.UseSkill(_pc.SpawnReaperPoint.position, _pc.ELookDir);
             _isUsingSkill = false;
         }
+    }
 
+    public override void LevelUpSkill(ESkillType eType)
+    {
+        base.LevelUpSkill(eType);
+        _spawnReaper.ESkillType = eType;
     }
 }
