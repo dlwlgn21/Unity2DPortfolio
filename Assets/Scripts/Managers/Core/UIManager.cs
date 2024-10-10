@@ -93,15 +93,6 @@ public class UIManager
             _inven.gameObject.SetActive(false);
         }
 
-        //{
-        //    // UI_PlayerHUD
-        //    GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/Player/UI_PlayerHUD");
-        //    Debug.Assert(go != null);
-        //    Object.DontDestroyOnLoad(go);
-        //    go.name = "UI_PlayerHUD";
-        //    _playerHud = go.GetComponent<UI_PlayerHUD>();
-        //}
-
         {
             // SkillTree
             GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/Skill/UI_SkillTree");
@@ -318,6 +309,11 @@ public class UIManager
     public void RefreshStatUI()
     {
         _stat.RefreshUI();
+    }
+
+    public void SetSkillPointText(int skillPoint)
+    {
+        _skillTree.SetSkillPoint(skillPoint);
     }
     public void Clear()
     {

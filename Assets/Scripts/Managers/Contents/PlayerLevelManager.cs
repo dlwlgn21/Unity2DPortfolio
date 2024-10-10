@@ -9,7 +9,7 @@ public class PlayerLevelManager
     PlayerStat _playerStat;
     PlayerController _pc;
     LightController _levelUpLightController;
-    int _currSkillPoint;
+    public int CurrSkillPoint { get; private set; }
 
     private const float LEVEL_UP_LIGHT_LIFE_TIME = 4f;
     public void Init()
@@ -32,11 +32,12 @@ public class PlayerLevelManager
         _playerStat.Exp += mc.Stat.Exp;
     }
 
-    void OnPlayerLevelUp()
+    void OnPlayerLevelUp(int levelUpCount)
     {
-        Debug.Log($"-----Player Level Up!!!!!-----{_playerStat.Level}");
+        CurrSkillPoint += levelUpCount;
         _levelUpLightController.TurnOnLight();
         _levelUpLightController.TurnOffLightGraduallyAfterSecond(LEVEL_UP_LIGHT_LIFE_TIME);
+        Managers.UI.SetSkillPointText(CurrSkillPoint);
     }
 
 

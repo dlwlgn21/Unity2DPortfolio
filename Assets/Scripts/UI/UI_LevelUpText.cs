@@ -16,7 +16,7 @@ public class UI_LevelUpText : MonoBehaviour
         PlayerStat.OnLevelUpEventHandler += OnLevelUp;
     }
 
-    void OnLevelUp()
+    void OnLevelUp(int levelUpCount)
     {
         _text.enabled = true;
         Managers.Tween.StartUIDoPunchPos(_text.transform);

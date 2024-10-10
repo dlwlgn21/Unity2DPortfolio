@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] ESkillType _eSkillType;
+    int _skillLevel;
     public ESkillType ESkillType 
     { 
         get 

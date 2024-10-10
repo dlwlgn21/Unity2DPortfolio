@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public sealed class PlayerStat : BaseStat
 {
-    static public UnityAction OnLevelUpEventHandler;
+    static public UnityAction<int> OnLevelUpEventHandler;
     static public UnityAction<int, int> OnAddExpEventHandler;
     [SerializeField] int _level;
     [SerializeField] int _exp;
@@ -24,9 +24,11 @@ public sealed class PlayerStat : BaseStat
             _exp = value;
             int currNeedLevelUpExp = Managers.Data.PlayerStatDict[Level].totalExp;
             bool isLevelUp = false;
+            int levelUpCount = 0;
             while (_exp >= currNeedLevelUpExp)
             {
                 ++Level;
+                ++levelUpCount;
                 isLevelUp = true;
                 _exp -= currNeedLevelUpExp;
                 if (_exp <= 0)
@@ -43,7 +45,7 @@ public sealed class PlayerStat : BaseStat
             if (isLevelUp)
             {
                 if (OnLevelUpEventHandler != null)
-                    OnLevelUpEventHandler.Invoke();
+                    OnLevelUpEventHandler.Invoke(levelUpCount);
             }
         } 
     }
