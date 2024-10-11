@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using define;
 using System.Runtime.InteropServices;
+using data;
 
 public abstract class Skill_BaseController : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public abstract class Skill_BaseController : MonoBehaviour
     public ESkillSlot ECurrentSkillSlot { get; set; }
     protected float _initCoolTimeInSec;
     public float SkillCoolTimeInSec { get; private set; }
-    public bool IsCanUseSkill { get; protected set; }
+    public bool IsCanUseSkillByCoolTime { get; protected set; }
     protected bool _isUsingSkill;
+
+    data.SkillInfo _skillInfo;
     public abstract void Init();
 
     private void Awake()
@@ -25,38 +28,45 @@ public abstract class Skill_BaseController : MonoBehaviour
     public abstract bool TryUseSkill();
     protected void StartCountdownCoolTime()
     {
-        IsCanUseSkill = false;
+        IsCanUseSkillByCoolTime = false;
         StartCoroutine(StartCountDownCoolTimeCo(SkillCoolTimeInSec));
     }
-    protected bool IsValidStateToUseSkill()
+    protected bool IsValidStateAndManaToUseSkill()
     {
-        if (IsCanUseSkill &&
-            (_pc.ECurrentState == EPlayerState.IDLE || _pc.ECurrentState == EPlayerState.RUN))
+        if (IsCanUseSkillByCoolTime &&
+            (_pc.ECurrentState == EPlayerState.IDLE || _pc.ECurrentState == EPlayerState.RUN) &&
+             _pc.Stat.Mana >= _skillInfo.manaCost)
         {
+            _pc.Stat.Mana -= _skillInfo.manaCost;
             return true;
         }
         return false;
     }
     protected IEnumerator StartCountDownCoolTimeCo(float coolTimeInSec)
     {
-        Debug.Assert(IsCanUseSkill == false);
+        Debug.Assert(IsCanUseSkillByCoolTime == false);
         yield return new WaitForSeconds(coolTimeInSec);
-        IsCanUseSkill = true;
+        IsCanUseSkillByCoolTime = true;
     }
 
     protected void InitByESkillType(ESkillType eType)
     {
-        _eSkillType = eType;
+        InitSkillInfoByTypeAndCoolTime(eType);
         ECurrentSkillSlot = ESkillSlot.Count;
         _isUsingSkill = false;
-        _initCoolTimeInSec = Managers.Data.SkillInfoDict[(int)eType].coolTime;
-        SkillCoolTimeInSec = _initCoolTimeInSec;
-        IsCanUseSkill = true;
+        IsCanUseSkillByCoolTime = true;
     }
 
     public virtual void LevelUpSkill(ESkillType eType)
     {
+        InitSkillInfoByTypeAndCoolTime(eType);
+    }
+
+    void InitSkillInfoByTypeAndCoolTime(ESkillType eType)
+    {
         _eSkillType = eType;
+        _skillInfo = Managers.Data.SkillInfoDict[(int)eType];
+
         _initCoolTimeInSec = Managers.Data.SkillInfoDict[(int)eType].coolTime;
         SkillCoolTimeInSec = _initCoolTimeInSec;
     }

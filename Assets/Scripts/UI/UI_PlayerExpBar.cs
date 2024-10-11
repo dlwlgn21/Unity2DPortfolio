@@ -5,37 +5,26 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class UI_PlayerExpBar : MonoBehaviour
+public class UI_PlayerExpBar : UI_PlayerStatBar
 {
     static public UnityAction OnExpBarFillTWEndEventHandler;
-    [SerializeField] protected Gradient _gradient;
-    private Image _expBarImg;
-    private const float FILL_SPEED = 0.2f;
-
-    private void Awake()
-    {
-        _expBarImg = Utill.GetComponentInChildrenOrNull<Image>(gameObject, "ExpBar");
-        Debug.Assert(_expBarImg != null);
-        _expBarImg.fillAmount = 0f;
-        PlayerStat.OnAddExpEventHandler -= OnAddExp;
-        PlayerStat.OnAddExpEventHandler += OnAddExp;
-    }
-
     void OnAddExp(int exp, int needLevelUpExp)
     {
         Debug.Assert(exp <= needLevelUpExp);
-        SetExpBarRatio((float)exp / needLevelUpExp);
+        SetBarRatio((float)exp / needLevelUpExp, OnFillTWEnded);
     }
-
-    void SetExpBarRatio(float ratio)
+    protected override void Init()
     {
-        _expBarImg.DOFillAmount(ratio, FILL_SPEED).OnComplete(OnFillTWEnded);
-        _expBarImg.DOColor(_gradient.Evaluate(ratio), FILL_SPEED);
+        PlayerStat.OnAddExpEventHandler -= OnAddExp;
+        PlayerStat.OnAddExpEventHandler += OnAddExp;
+        _barImg.fillAmount = 0;
     }
 
     void OnFillTWEnded()
     {
+        // 이때 경험치 들어감.
         if (OnExpBarFillTWEndEventHandler != null)
             OnExpBarFillTWEndEventHandler.Invoke();
     }
+
 }

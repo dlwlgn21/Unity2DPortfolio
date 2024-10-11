@@ -397,12 +397,14 @@ namespace monster_states
         public Die(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
         {
-            MonsterDieEventHandelr?.Invoke(_entity);
+            
         }
         public override void Enter() 
         { 
             PlayAnimation(ENormalMonsterState.DIE);
             _entity.OnDie();
+            if (MonsterDieEventHandelr != null)
+                MonsterDieEventHandelr.Invoke(_entity);
         }
         public override void Excute() { }
     }

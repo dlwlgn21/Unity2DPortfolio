@@ -33,6 +33,9 @@ public class SceneManagerEX
             case (int)define.ESceneType.AbandonLoadScene:
                 retType = define.ESceneType.AbandonLoadScene;
                 break;
+            case (int)define.ESceneType.ColossalBossCaveScene:
+                retType = define.ESceneType.ColossalBossCaveScene;
+                break;
             default:
                 Debug.Assert(false);
                 break;

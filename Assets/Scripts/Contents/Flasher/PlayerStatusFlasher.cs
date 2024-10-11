@@ -25,7 +25,6 @@ public class PlayerStatusFlasher : MaterialFlasher
     }
     public void OnPlayerStatusEffect(EAttackStatusEffect eType, float flashTime)
     {
-        Debug.Log("OnPlayerStatusEffect");
         switch (eType)
         {
             case EAttackStatusEffect.None:

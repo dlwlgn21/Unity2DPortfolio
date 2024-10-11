@@ -7,28 +7,48 @@ public sealed class PlayerStat : BaseStat
 {
     static public UnityAction<int> OnLevelUpEventHandler;
     static public UnityAction<int, int> OnAddExpEventHandler;
+    static public UnityAction<int, int> OnManaChangedEventHandler;
     [SerializeField] int _level;
     [SerializeField] int _exp;
     [SerializeField] int _gold;
+    [SerializeField] int _mana;
     // 24.10.3 Item 착용위해 추가.
     [SerializeField] int _swordPlusDamage;
     [SerializeField] int _helmetPlusDefence;
     [SerializeField] int _armorPlusDefence;
 
     public int Level { get { return _level; } set { _level = value; } }
+
+    public int Mana 
+    { 
+        get { return _mana; }
+        set 
+        {
+            _mana = Mathf.Clamp(value, 0, Managers.Data.PlayerStatDict[Level].maxMana);
+            if (OnManaChangedEventHandler != null)
+                OnManaChangedEventHandler.Invoke(_mana, Managers.Data.PlayerStatDict[Level].maxMana);
+        }
+    }
     public int Exp 
     { 
         get { return _exp; } 
         set 
-        { 
+        {
+            Debug.Log($"Exp Called beforeExp{_exp}, value {value}");
             _exp = value;
             int currNeedLevelUpExp = Managers.Data.PlayerStatDict[Level].totalExp;
             bool isLevelUp = false;
             int levelUpCount = 0;
+            int sentinelValue = 0;
             while (_exp >= currNeedLevelUpExp)
             {
-                Debug.Log("In While Repeat!!");
                 ++Level;
+                ++sentinelValue;
+                if (sentinelValue > 1)
+                {
+                    Debug.Log($"OnExp... {sentinelValue}");
+                    Debug.DebugBreak();
+                }
                 ++levelUpCount;
                 isLevelUp = true;
                 _exp -= currNeedLevelUpExp;
@@ -88,6 +108,7 @@ public sealed class PlayerStat : BaseStat
         Level = dict[1].level;
         HP = dict[1].maxHp;
         MaxHP = dict[1].maxHp;
+        Mana = dict[1].maxMana;
         Attack = dict[1].attack;
         Defence = dict[1].defence;
         MoveSpeed = dict[1].moveSpeed;
@@ -100,8 +121,8 @@ public sealed class PlayerStat : BaseStat
 
     private void OnDestroy()
     {
-        Debug.Log("PlayerStat.OnDestroy Called!");
         OnLevelUpEventHandler = null;
         OnAddExpEventHandler = null;
+        OnManaChangedEventHandler = null;
     }
 }

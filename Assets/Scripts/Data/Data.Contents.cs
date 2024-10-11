@@ -12,6 +12,7 @@ namespace data
     {
         public int level;
         public int maxHp;
+        public int maxMana;
         public int attack;
         public int defence;
         public int moveSpeed;
@@ -75,6 +76,7 @@ namespace data
         public float parallysisTime;
         public float knockbackForceX;
         public float knockbackForceY;
+        public int manaCost;
         public int damage;
         public string objectPrefabPath;
         public string controllerPrefabPath;

@@ -19,7 +19,7 @@ public sealed class Skill_SpawnRepaerController : Skill_BaseController
     }
     public override bool TryUseSkill()
     {
-        if (IsValidStateToUseSkill())
+        if (IsValidStateAndManaToUseSkill())
         {
             _pc.ChangeState(EPlayerState.SKILL_SPAWN);
             StartCountdownCoolTime();

@@ -28,7 +28,7 @@ public abstract class UI_BaseDescription : MonoBehaviour
         _backgroundImg.enabled = isEnabled;
     }
 
-    public void HideDescription()
+    public virtual void HideDescription()
     {
         SetImagesEnabled(false);
         _nameText.text = "";

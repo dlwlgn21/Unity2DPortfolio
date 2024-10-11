@@ -12,7 +12,7 @@ public sealed class Skill_RollController : Skill_BaseController
 
     public override bool TryUseSkill()
     {
-        if (IsValidStateToUseSkill())
+        if (IsValidStateAndManaToUseSkill())
         {
             _pc.ChangeState(EPlayerState.ROLL);
             StartCountdownCoolTime();

@@ -12,17 +12,17 @@ public enum ESkillSlot
 }
 public class PlayerSkillManager
 {
-
-
     Dictionary<ESkillType, Skill_BaseController> _skillDict = new();
     UI_SkillCoolTimer[] skillCoolTimer = new UI_SkillCoolTimer[(int)ESkillSlot.Count];
     GameObject[] _skillSlots = new GameObject[2];
+    PlayerStat _stat;
     public ESkillType[] _eCurrSkillSlotType = new ESkillType[2];
     public void Init()
     {
         // TODO : 나중에는 필요할 때 메모리에 로드 하는 방식으로 바꿔야함.
         #region SkillInit
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        _stat = player.GetComponent<PlayerStat>();
 
         Dictionary<int, data.SkillInfo> skillDict = Managers.Data.SkillInfoDict;
 
@@ -100,7 +100,7 @@ public class PlayerSkillManager
 
     void UseSkill(ESkillSlot eSlot, ESkillType eSkillType)
     {
-        if (eSkillType != ESkillType.Count && GetSkillOrNull(eSkillType).TryUseSkill())
+        if (eSkillType != ESkillType.Count &&  GetSkillOrNull(eSkillType).TryUseSkill())
         {
             skillCoolTimer[(int)eSlot].StartCoolTime(GetSkillOrNull(eSkillType).SkillCoolTimeInSec);
             if (eSlot == ESkillSlot.AKey)

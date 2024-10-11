@@ -19,17 +19,18 @@ public class PlayerNormalAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
         int totalDamage = _pc.Stat.Attack + _pc.Stat.SwordPlusDamage;
-
         if (collision.CompareTag("Monster"))
         {
             BaseMonsterController mc = collision.gameObject.GetComponent<BaseMonsterController>();
+
             if (mc == null)
             {
                 Debug.Assert(false);
                 return;
             }
+            // TODO : 이거 하드코딩된 매직넘버가 겁나 맘에 안들지만 일단 빠른 개발을 위해 내비둔다...
+            _pc.Stat.Mana += + 2;
             switch (EAttackType)
             {
                 case EPlayerNoramlAttackType.ATTACK_1:

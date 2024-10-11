@@ -22,7 +22,7 @@ public sealed class Skill_BlackFlameController : Skill_BaseController
     }
     public override bool TryUseSkill()
     {
-        if (IsValidStateToUseSkill())
+        if (IsValidStateAndManaToUseSkill())
         {
             _pc.ChangeState(EPlayerState.SKILL_CAST);
             StartCountdownCoolTime();
