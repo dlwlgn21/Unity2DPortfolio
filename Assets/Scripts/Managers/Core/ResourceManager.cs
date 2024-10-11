@@ -9,6 +9,10 @@ public class ResourceManager
     {
         T obj = Load<T>(path);
         Debug.Assert(obj != null);
+        if (obj == null)
+        {
+            Debug.DebugBreak();
+        }
         return Object.Instantiate(obj, null);
     }
     public T Load<T>(string path) where T : Object

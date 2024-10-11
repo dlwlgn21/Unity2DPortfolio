@@ -44,13 +44,12 @@ public class MonsterPoolManager
             _oriArcher = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonArcher");
             //_oriShielder = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonShielder");
             _oriFlamer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonFlamer");
-            monster_states.Die.MonsterDieEventHandelr += Return;
+
         }
     }
 
     public void Clear()
     {
-        monster_states.Die.MonsterDieEventHandelr -= Return;
     }
 
     public GameObject Get(EMonsterNames eMonName, Vector2 spawnPos)

@@ -1,9 +1,11 @@
 using define;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 public sealed class UI_SkillTree : MonoBehaviour
 {
     TextMeshProUGUI _skillPointText;
@@ -47,15 +49,27 @@ public sealed class UI_SkillTree : MonoBehaviour
         #endregion
 
         var dict = Managers.Data.SkillInfoDict;
-        _spawnReaperSkillNameText.text = dict[(int)_spawnReaperIcon.ESkillType].name;
-        _spawnPandaSkillNameText.text = dict[(int)_spawnPandaIcon.ESkillType].name;
-        _castBlackFlameSkillNameText.text = dict[(int)_castBlackFlameIcon.ESkillType].name;
-        _castSwordStrikeSkillNameText.text = dict[(int)_castSwordStrikeIcon.ESkillType].name;
+        _spawnReaperSkillNameText.text = dict[(int)_spawnReaperIcon.ESkillType].name.Replace('1', '0');
+        _spawnPandaSkillNameText.text = dict[(int)_spawnPandaIcon.ESkillType].name.Replace('1', '0');
+        _castBlackFlameSkillNameText.text = dict[(int)_castBlackFlameIcon.ESkillType].name.Replace('1', '0');
+        _castSwordStrikeSkillNameText.text = dict[(int)_castSwordStrikeIcon.ESkillType].name.Replace('1', '0');
 
         UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnSkillLevelUp;
         UI_Skill_Icon.OnSkillLevelUpEventHandler += OnSkillLevelUp;
     }
 
+
+    private void OnEnable()
+    {
+        if (DOTween.IsTweening(_skillPointText.transform))
+            return;
+        _skillPointText.transform.DOScale(new Vector3(2f, 2f, 2f), 0.5f).SetEase(Ease.InOutElastic);
+    }
+
+    private void OnDisable()
+    {
+        _skillPointText.transform.localScale = Vector3.one;
+    }
 
     public void SetSkillPoint(int skillPoint)
     {

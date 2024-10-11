@@ -24,8 +24,6 @@ public class PlayerLevelManager
         _playerStat.Init();
 
         #region EventSubscribe
-        monster_states.Die.MonsterDieEventHandelr -= OnMonsterDied;
-        monster_states.Die.MonsterDieEventHandelr += OnMonsterDied;
         PlayerStat.OnLevelUpEventHandler -= OnPlayerLevelUp;
         PlayerStat.OnLevelUpEventHandler += OnPlayerLevelUp;
         UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnPlayerSkillLevelUp;
@@ -34,9 +32,9 @@ public class PlayerLevelManager
     }
 
 
-    void OnMonsterDied(NormalMonsterController mc)
+    public void AddExp(int exp)
     {
-        _playerStat.Exp += mc.Stat.Exp;
+        _playerStat.Exp += exp;
     }
 
     void OnPlayerLevelUp(int levelUpCount)

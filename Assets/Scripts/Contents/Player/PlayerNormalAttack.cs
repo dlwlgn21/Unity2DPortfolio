@@ -26,7 +26,7 @@ public class PlayerNormalAttack : MonoBehaviour
 
             if (mc == null)
             {
-                Debug.Assert(false);
+                Debug.DebugBreak();
                 return;
             }
             // TODO : 이거 하드코딩된 매직넘버가 겁나 맘에 안들지만 일단 빠른 개발을 위해 내비둔다...
@@ -35,24 +35,17 @@ public class PlayerNormalAttack : MonoBehaviour
             {
                 case EPlayerNoramlAttackType.ATTACK_1:
                     if (mc.ELookDir == _pc.ELookDir)
-                    {
-                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, totalDamage * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BACK_ATTACK);
-                    }
+                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BACK_ATTACK);
                     else
-                    {
-                        mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, totalDamage, EPlayerNoramlAttackType.ATTACK_1);
-                    }
+                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage, EPlayerNoramlAttackType.ATTACK_1);
                     break;
                 case EPlayerNoramlAttackType.ATTACK_2:
-                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, (int)(totalDamage * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.ATTACK_2);
+                    mc.DamagedFromPlayer(_pc.ELookDir, (int)(totalDamage * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.ATTACK_2);
                     break;
                 case EPlayerNoramlAttackType.ATTACK_3:
-                    mc.OnHittedByPlayerNormalAttack(_pc.ELookDir, totalDamage * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.ATTACK_3);
+                    mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.ATTACK_3);
                     break;
             }
         }
     }
-
-
-
 }

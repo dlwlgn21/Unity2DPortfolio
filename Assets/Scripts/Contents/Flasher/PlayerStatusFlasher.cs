@@ -11,10 +11,7 @@ public class PlayerStatusFlasher : MaterialFlasher
     private readonly Color BURN_COLOR = Color.red;
     private readonly Color SLOW_COLOR = Color.blue;
     private const int FLASH_REPEAT_COUNT = 4;
-    private void Start()
-    {
-        base.Init();
-    }
+
     private void OnEnable()
     {
         PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusEffect;

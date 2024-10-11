@@ -175,23 +175,13 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     }
 
 
-    public override void OnHittedByPlayerNormalAttack(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
+    public override void DamagedFromPlayer(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
     {
         if (ECurrentState != EColossalBossState.DIE && 
             ECurrentState != EColossalBossState.WAKE &&
             ECurrentState != EColossalBossState.BURF)
         {
-            IsHittedByPlayerNormalAttack = true;
             DecreasHpAndInvokeHitEvents(damage, eAttackType);
-            #region PROCESS_BACK_ATTACK_OR_THIRD_ATTACK
-            if (eAttackType == EPlayerNoramlAttackType.BACK_ATTACK || eAttackType == EPlayerNoramlAttackType.ATTACK_3)
-            {
-                BigAttackEventHandler?.Invoke();
-                Managers.TimeManager.OnMonsterHittedByPlayerNormalAttack();
-            }
-            #endregion
-            IsHittedByPlayerNormalAttack = false;
-
             if (Stat.HP <= 0)
             {
                 ChangeState(EColossalBossState.DIE);
@@ -257,10 +247,6 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         Stat.InitBasicStat(define.EMonsterNames.BossColossal);
     }
 
-    public override void OnDie()
-    {
-
-    }
 
     #region OVERRIDE_ABSTRACT_HITTED_PLAYER_SPECIAL_ATTACK
     public override void OnPlayerBlockSuccess()
@@ -281,10 +267,10 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
                 //ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
                 break;
             case ESkillType.Cast_BlackFlame_LV1:
-                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
                 break;
             case ESkillType.Cast_SwordStrike_LV1:
-                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
                 break;
             default:
                 Debug.Assert(false);

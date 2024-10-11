@@ -2,14 +2,13 @@ using define;
 using monster_states;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.UI;
 
 public abstract class BaseMonsterController : BaseCharacterController
 {
     public static UnityAction BigAttackEventHandler;
-    public static UnityAction HittedByNormalAttackNoArgsEventHandler; // DamageFlash, CamShake
+    public static UnityAction HittedByNormalAttackNoArgsEventHandler; // CamShake
     public static UnityAction<EPlayerNoramlAttackType> HittedByNormalAttackEffectEventHandler;
-    public static UnityAction<int, int, int> HittedByNormalAttackWSUIEventHandler;
-
 
     protected readonly static Vector3 LEFT_ROT_VECTOR = new(0f, 180f, 0f);
     protected readonly static Vector3 RIGHT_ROT_VECTOR = new(0f, 0f, 0f);
@@ -19,7 +18,11 @@ public abstract class BaseMonsterController : BaseCharacterController
     public MonsterStat Stat { get; protected set; }
 
     protected PlayerController _pc;
-    public bool IsHittedByPlayerNormalAttack { get; protected set; } = false;
+
+    UIMonsterDamageTextController _damageTextController;
+    MonsterHitFlasher _hitFlasher;
+    HitParticleController _hitParticle;
+    MonsterHitEffectController _hitEffect;
 
     public override void Init()
     {
@@ -27,18 +30,21 @@ public abstract class BaseMonsterController : BaseCharacterController
         {
             base.Init();
             PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-            Debug.Assert(PlayerTransform != null);
             _pc = PlayerTransform.gameObject.GetComponent<PlayerController>();
             Stat = gameObject.GetOrAddComponent<MonsterStat>();
             HealthBar = Utill.GetComponentInChildrenOrNull<UI_WSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
+
+            _hitFlasher = Utill.GetFirstComponentInChildrenOrNull<MonsterHitFlasher>(gameObject);
+            _damageTextController = Utill.GetFirstComponentInChildrenOrNull<UIMonsterDamageTextController>(gameObject);
+            _hitParticle = Utill.GetFirstComponentInChildrenOrNull<HitParticleController>(gameObject);
+            _hitEffect = Utill.GetFirstComponentInChildrenOrNull<MonsterHitEffectController>(gameObject);
         }
         InitStat();
     }
 
     public abstract void InitStat();
-    public abstract void OnHittedByPlayerNormalAttack(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType);
+    public abstract void DamagedFromPlayer(ECharacterLookDir attackerDir, int damage, EPlayerNoramlAttackType eAttackType);
     public abstract void OnPlayerBlockSuccess();
-    public abstract void OnDie();
 
     public abstract void OnHittedByPlayerSkill(data.SkillInfo skillInfo);
     protected void DecreasHpAndInvokeHitEvents(int damage, EPlayerNoramlAttackType eAttackType)
@@ -46,8 +52,20 @@ public abstract class BaseMonsterController : BaseCharacterController
         int beforeDamageHP;
         int AfterDamageHP;
         int actualDamage = Stat.DecreaseHpAndGetActualDamageAmount(damage, out beforeDamageHP, out AfterDamageHP);
+
+        #region Visual
+        HealthBar.DecraseHP(beforeDamageHP, AfterDamageHP);
+        _damageTextController.ShowPopup(actualDamage);
+        _hitFlasher.StartDamageFlash();
+        _hitEffect.PlayHitEffect(transform.position, eAttackType);
+        if (eAttackType == EPlayerNoramlAttackType.ATTACK_3 || eAttackType == EPlayerNoramlAttackType.BACK_ATTACK)
+        {
+            if (BigAttackEventHandler != null)
+                BigAttackEventHandler.Invoke();
+            _hitParticle.PlayBigAttackParticle();
+        }
         HittedByNormalAttackNoArgsEventHandler?.Invoke();
         HittedByNormalAttackEffectEventHandler?.Invoke(eAttackType);
-        HittedByNormalAttackWSUIEventHandler?.Invoke(actualDamage, beforeDamageHP, AfterDamageHP);
+        #endregion
     }
 }

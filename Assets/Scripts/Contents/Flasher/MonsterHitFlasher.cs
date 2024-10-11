@@ -7,28 +7,10 @@ public class MonsterHitFlasher : MaterialFlasher
 {
     [SerializeField] private Color _flashColor = Color.red;
     [SerializeField] private float _flashTime = 0.2f;
-    private BaseMonsterController _mc;
-    private void Start()
-    {
-        base.Init();
-        _mc = GetComponent<BaseMonsterController>();
-    }
 
-    private void OnEnable()
+    public void StartDamageFlash()
     {
-        BaseMonsterController.HittedByNormalAttackNoArgsEventHandler += OnHittedMonsterByPlayerNormalAttack;
-    }
-
-    private void OnDisable()
-    {
-        BaseMonsterController.HittedByNormalAttackNoArgsEventHandler -= OnHittedMonsterByPlayerNormalAttack;
-    }
-    public void OnHittedMonsterByPlayerNormalAttack()
-    {
-        if (_mc.IsHittedByPlayerNormalAttack)
-        {
-            StartCoroutine(DamageFlashCo());
-        }
+        StartCoroutine(DamageFlashCo());
     }
     private IEnumerator DamageFlashCo()
     {

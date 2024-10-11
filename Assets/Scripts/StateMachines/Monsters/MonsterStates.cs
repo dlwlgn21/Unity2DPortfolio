@@ -13,23 +13,18 @@ namespace monster_states
     {
         protected float _distanceFromPlayer;
         protected Vector2 _dirToPlayer;
-        protected readonly static string IDLE_ANIM_KEY = "Idle";
-        protected readonly static string RUN_ANIM_KEY = "Run";
-        protected readonly static string MELLE_ATTACK_ANIM_KEY = "MelleAttack";
-        protected readonly static string LAUNCH_ATTACK_ANIM_KEY = "LaunchAttack";
-        protected readonly static string HIT_ANIM_KEY = "Hitted";
-        protected readonly static string HIT_PARALYSIS_KEY = "HittedParalysis";
-        protected readonly static string DIE_ANIM_KEY = "Die";
+        protected const string IDLE_ANIM_KEY = "Idle";
+        protected const string RUN_ANIM_KEY = "Run";
+        protected const string MELLE_ATTACK_ANIM_KEY = "MelleAttack";
+        protected const string LAUNCH_ATTACK_ANIM_KEY = "LaunchAttack";
+        protected const string HIT_ANIM_KEY = "Hitted";
+        protected const string HIT_PARALYSIS_KEY = "HittedParalysis";
+        protected const string DIE_ANIM_KEY = "Die";
         public BaseMonsterState(NormalMonsterController controller) : base(controller) {}
         public override void Excute() {  _entity.SetLookDir(); }
 
         public virtual void OnHittedByPlayerNormalAttack(ECharacterLookDir ePlayerLookDir, int damage, EPlayerNoramlAttackType eType)
         {
-            AdjustKnockbackAcoddingLookDir(eType);
-            if (_entity.Stat.HP <= 0)
-            {
-                _entity.ChangeState(ENormalMonsterState.DIE);
-            }
         }
 
         public abstract void OnAnimFullyPlayed();
@@ -51,10 +46,8 @@ namespace monster_states
                     return;
                 case ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
                 case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
-                    _entity.Animator.Play(HIT_ANIM_KEY, -1, 0f);
-                    return;
                 case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
-                    _entity.Animator.Play(HIT_PARALYSIS_KEY, -1, 0f);
+                    _entity.Animator.Play(HIT_ANIM_KEY, -1, 0f);
                     return;
                 case ENormalMonsterState.DIE:
                     _entity.Animator.Play(DIE_ANIM_KEY, -1, 0f);
@@ -68,46 +61,7 @@ namespace monster_states
             _distanceFromPlayer = _dirToPlayer.magnitude;
         }
 
-
-        private void AdjustKnockbackAcoddingLookDir(EPlayerNoramlAttackType eType)
-        {
-            if (_entity.ELookDir == ECharacterLookDir.Left)
-            {
-                switch (eType)
-                {
-                    case EPlayerNoramlAttackType.ATTACK_1:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE, ForceMode2D.Impulse);
-                        break;
-                    case EPlayerNoramlAttackType.ATTACK_2:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_2_FORCE_COEFF, ForceMode2D.Impulse);
-                        break;
-                    case EPlayerNoramlAttackType.ATTACK_3:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_3_FORCE_COEFF, ForceMode2D.Impulse);
-                        break;
-                    case EPlayerNoramlAttackType.BACK_ATTACK:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE * PlayerController.BACK_ATTACK_FORCE_COEFF, ForceMode2D.Impulse);
-                        break;
-                }
-            }
-            else
-            {
-                switch (eType)
-                {
-                    case EPlayerNoramlAttackType.ATTACK_1:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE, ForceMode2D.Impulse);
-                        break;
-                    case EPlayerNoramlAttackType.ATTACK_2:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_2_FORCE_COEFF, ForceMode2D.Impulse);
-                        break;
-                    case EPlayerNoramlAttackType.ATTACK_3:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_3_FORCE_COEFF, ForceMode2D.Impulse);
-                        break;
-                    case EPlayerNoramlAttackType.BACK_ATTACK:
-                        _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * PlayerController.BACK_ATTACK_FORCE_COEFF, ForceMode2D.Impulse);
-                        break;
-                }
-            }
-        }
+        public virtual void MakeSlow() { }
 
         protected void ChangeAttackStateAcordingAttackType()
         {
@@ -149,14 +103,12 @@ namespace monster_states
                 _entity.ChangeState(ENormalMonsterState.TRACE);
             }
         }
-
-
     }
 
     public abstract class CanSlowState : BaseMonsterState
     {
-        public readonly static float ANIM_SLOW_TIME = 0.5f;
-        public readonly static float ANIM_SLOW_SPEED = 0.5f;
+        const float ANIM_SLOW_TIME = 0.5f;
+        const float ANIM_SLOW_SPEED = 0.5f;
 
         protected bool _isHiitedByPlayerNormalAttack = false;
         protected float _animReturnOriginalSpeedTimer = ANIM_SLOW_TIME;
@@ -171,9 +123,8 @@ namespace monster_states
         {
             _entity.Animator.speed = 1f;
         }
-        public override void OnHittedByPlayerNormalAttack(ECharacterLookDir ePlayerLookDir, int damage, EPlayerNoramlAttackType eType)
+        public override void MakeSlow()
         {
-            base.OnHittedByPlayerNormalAttack(ePlayerLookDir, damage, eType);
             _isHiitedByPlayerNormalAttack = true;
             _animReturnOriginalSpeedTimer = ANIM_SLOW_TIME;
             DecreaseAnimSpeed();
@@ -316,10 +267,7 @@ namespace monster_states
     {
         public BaseHittedState(NormalMonsterController controller) : base(controller) { }
         public override void Excute()  { base.Excute(); }
-        public override void OnAnimFullyPlayed()
-        {
-            _entity.ChangeState(ENormalMonsterState.IDLE);
-        }
+
         protected void SetVelocityZero()
         {
             Vector2 velo = _entity.RigidBody.velocity;
@@ -328,39 +276,12 @@ namespace monster_states
 
     }
 
-    public abstract class CanKnockback : BaseHittedState
+    public class HittedKnockbackByBlockSuccess : BaseHittedState
     {
-        protected float _knockbackForce;
-
-        public CanKnockback(NormalMonsterController controller) : base(controller) { }
-
-
-        public override void Enter()
+        public HittedKnockbackByBlockSuccess(NormalMonsterController controller) : base(controller)  { }
+        public override void OnAnimFullyPlayed()
         {
-            SetVelocityZero();
-            KnockbackMonster();
-        }
-
-        protected void KnockbackMonster()
-        {
-            CalculateDistanceFromPlayer();
-            if (_dirToPlayer.x < 0f)
-            {
-                _entity.RigidBody.AddForce(Vector2.right * _knockbackForce, ForceMode2D.Impulse);
-            }
-            else
-            {
-                _entity.RigidBody.AddForce(Vector2.left * _knockbackForce, ForceMode2D.Impulse);
-            }
-        }
-
-    }
-
-    public class HittedKnockbackByBlockSuccess : CanKnockback
-    {
-        public HittedKnockbackByBlockSuccess(NormalMonsterController controller) : base(controller) 
-        {
-            _knockbackForce = PlayerController.BLOCK_SUCCESS_KNOCKBACK_X_FORCE;
+            _entity.ChangeState(ENormalMonsterState.IDLE);
         }
         public override void Enter()
         {
@@ -368,62 +289,46 @@ namespace monster_states
             PlayAnimation(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS);
         }
     }
-    public class HittedKnockbackByBomb : CanKnockback
-    {
-        public HittedKnockbackByBomb(NormalMonsterController controller) : base(controller) 
-        {
-            _knockbackForce = PlayerController.KNOCKBACK_BOMB_FORCE;
-        }
-        public override void Enter()
-        {
-            base.Enter();
-            PlayAnimation(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
-        }
-    }
+
     public class HittedParalysis : BaseHittedState
     {
         public HittedParalysis(NormalMonsterController controller) : base(controller) { }
+        public override void OnAnimFullyPlayed() { }
         public override void Enter()
         {
             PlayAnimation(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
             SetVelocityZero();
         }
-
-
     }
     public class Die : BaseMonsterState
     {
-        static public UnityAction<NormalMonsterController> MonsterDieEventHandelr;
         public Die(NormalMonsterController controller) : base(controller) { }
-        public override void OnAnimFullyPlayed()
+        public override void OnAnimFullyPlayed() 
         {
-            
+            Managers.MonsterPool.Return(_entity);
         }
         public override void Enter() 
-        { 
+        {
             PlayAnimation(ENormalMonsterState.DIE);
-            _entity.OnDie();
-            if (MonsterDieEventHandelr != null)
-                MonsterDieEventHandelr.Invoke(_entity);
+            _entity.HealthBar.StartZeroScaleTW();
+            Managers.PlayerLevel.AddExp(_entity.Stat.Exp);
         }
-        public override void Excute() { }
+        public override void Excute()  { }
     }
-
-
 
     #region BOSS_MONSTER
 
     public abstract class BaseBossMonsterState : State<ColossalBossMonsterController>
     {
-        protected readonly static string WAKE_ANIM_KEY = "Wake";
-        protected readonly static string IDLE_ANIM_KEY = "Idle";
-        protected readonly static string RUN_ANIM_KEY = "Run";
-        protected readonly static string FIST_MELLE_ATTACK_ANIM_KEY = "FistAttack";
-        protected readonly static string SPIN_MELLE_ATTACK_ANIM_KEY = "SpinAttack";
-        protected readonly static string RANGE_MELLE_ATTACK_ANIM_KEY = "BurstAttack";
-        protected readonly static string BURFED_RANGE_MELLE_ATTACK_ANIM_KEY = "BurfedBurstAttack";
-        protected readonly static string BURF_ANIM_KEY = "Burf";
-        protected readonly static string DIE_ANIM_KEY = "Die";
+        protected const string WAKE_ANIM_KEY = "Wake";
+        protected const string IDLE_ANIM_KEY = "Idle";
+        protected const string RUN_ANIM_KEY = "Run";
+        protected const string FIST_MELLE_ATTACK_ANIM_KEY = "FistAttack";
+        protected const string SPIN_MELLE_ATTACK_ANIM_KEY = "SpinAttack";
+        protected const string RANGE_MELLE_ATTACK_ANIM_KEY = "BurstAttack";
+        protected const string BURFED_RANGE_MELLE_ATTACK_ANIM_KEY = "BurfedBurstAttack";
+        protected const string BURF_ANIM_KEY = "Burf";
+        protected const string DIE_ANIM_KEY = "Die";
 
         public BaseBossMonsterState(ColossalBossMonsterController entity) : base(entity) {}
 

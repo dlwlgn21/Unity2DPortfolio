@@ -28,8 +28,8 @@ public class Managers : MonoBehaviour
     readonly FullScreenEffectManager _fullScreenEffectManager = new();
 
     // 6.5일 전투시스템에서 공격성공, 피격시에 슬로우 타임 적용하기 위해서 TimeManager 추가 
-    TimeManager _timeManager = null;
-    public static TimeManager TimeManager { get { return Instance._timeManager; } }
+    TimeScaleManager _timeManager = null;
+    public static TimeScaleManager TimeManager { get { return Instance._timeManager; } }
     public static InputManager Input { get { return Instance._inputManager; } }
     public static DataManager Data { get { return Instance._dataManager; } }
     public static ResourceManager Resources { get { return Instance._resourceManager; } }
@@ -123,8 +123,9 @@ public class Managers : MonoBehaviour
             if (timeManager == null)
             {
                 timeManager = new GameObject { name = "@TimeManager" };
-                sInstance._timeManager = timeManager.AddComponent<TimeManager>();
+                sInstance._timeManager = timeManager.AddComponent<TimeScaleManager>();
                 sInstance._timeManager.Init();
+                Debug.Log("TimeManager Init!");
                 DontDestroyOnLoad(timeManager);
             }
         }

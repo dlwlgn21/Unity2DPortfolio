@@ -10,7 +10,7 @@ public abstract class MaterialFlasher : MonoBehaviour
     protected const string FLASH_AMOUNT_KEY = "_FlashAmount";
     protected SpriteRenderer _spriteRenderer;
 
-    protected void Init()
+    private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         Debug.Assert(_normalMat != null && _damageFlashMat != null);

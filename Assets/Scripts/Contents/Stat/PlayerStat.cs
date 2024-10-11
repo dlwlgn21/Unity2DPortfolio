@@ -8,6 +8,7 @@ public sealed class PlayerStat : BaseStat
     static public UnityAction<int> OnLevelUpEventHandler;
     static public UnityAction<int, int> OnAddExpEventHandler;
     static public UnityAction<int, int> OnManaChangedEventHandler;
+    static public UnityAction OnPlayerDieHandler;
     [SerializeField] int _level;
     [SerializeField] int _exp;
     [SerializeField] int _gold;
@@ -34,19 +35,17 @@ public sealed class PlayerStat : BaseStat
         get { return _exp; } 
         set 
         {
-            Debug.Log($"Exp Called beforeExp{_exp}, value {value}");
             _exp = value;
             int currNeedLevelUpExp = Managers.Data.PlayerStatDict[Level].totalExp;
             bool isLevelUp = false;
             int levelUpCount = 0;
-            int sentinelValue = 0;
+            int sentinelValue = 0; // ForDebuging
             while (_exp >= currNeedLevelUpExp)
             {
                 ++Level;
                 ++sentinelValue;
                 if (sentinelValue > 1)
                 {
-                    Debug.Log($"OnExp... {sentinelValue}");
                     Debug.DebugBreak();
                 }
                 ++levelUpCount;
@@ -93,6 +92,8 @@ public sealed class PlayerStat : BaseStat
         if (HP <= 0)
         {
             HP = 0;
+            if (OnPlayerDieHandler != null)
+                OnPlayerDieHandler.Invoke();
         }
         return actualDamage;
     }
@@ -124,5 +125,6 @@ public sealed class PlayerStat : BaseStat
         OnLevelUpEventHandler = null;
         OnAddExpEventHandler = null;
         OnManaChangedEventHandler = null;
+        OnPlayerDieHandler = null;
     }
 }

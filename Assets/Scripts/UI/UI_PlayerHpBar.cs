@@ -10,6 +10,8 @@ public class UI_PlayerHpBar : UI_HealthBar
     }
     public override void Init()
     {
+        _stat = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStat>();
+        Debug.Assert(_stat != null);
         //SetFullHpBarRatio();
         PlayerController.HitUIEventHandler += OnPlayerHittedByMonsterNormalAttack;
         PlayerController.PlayerIncreaseHpEventHandler += OnPlayerHpItemUsed;

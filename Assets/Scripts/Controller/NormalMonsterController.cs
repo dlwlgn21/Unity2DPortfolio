@@ -1,3 +1,4 @@
+using data;
 using define;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,24 +29,33 @@ public enum ENormalMonsterAttackType
 public abstract class NormalMonsterController : BaseMonsterController, IAttackZoneDetectable, ITraceZoneDetectable
 {
     public static UnityAction<ENormalMonsterState> MonsterChangeStateEventHandler;
-    public static UnityAction MonsterAttackStartEventHandler;
-    public static UnityAction MonsterAttackEndEventHandler;
     public ENormalMonsterAttackType EMonsterAttackType { get; protected set; }
     public ENormalMonsterState ECurrentState { get; private set; }
-
     protected StateMachine<NormalMonsterController> _stateMachine;
     protected State<NormalMonsterController>[] _states;
     public bool IsPlayerInAttackZone { get; private set; } = false;
     public bool IsPlayerInTraceZone { get; private set; } = false;
+
+    Coroutine _parallysisCoroutine = null;
+    UINormalMonsterStatusTextController _statusTextController;
+    LightController _attackLightController;
+    MonsterBloodAnimController _bloodAnimationController;
+
     public override void Init()
     {
         base.Init();
+        if (_statusTextController == null)
+        {
+            _statusTextController = Utill.GetFirstComponentInChildrenOrNull<UINormalMonsterStatusTextController>(gameObject);
+            _attackLightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "AttackLight");
+            _bloodAnimationController = Utill.GetFirstComponentInChildrenOrNull<MonsterBloodAnimController>(gameObject);
+        }
     }
     public void InitForRespawn()
     {
         InitStat();
         Init();
-        HealthBar.OnMonsterInit();
+        HealthBar.InitForRespawn();
         RigidBody.WakeUp();
         ChangeState(ENormalMonsterState.IDLE);
     }
@@ -60,8 +70,16 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
     public void ChangeState(ENormalMonsterState eChangingState)
     {
+        if (_parallysisCoroutine != null)
+        {
+            StopCoroutine(_parallysisCoroutine);
+            _parallysisCoroutine = null;
+        }
+
+
         ECurrentState = eChangingState;
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
+        _statusTextController.ShowMonsterStatus(eChangingState);
         MonsterChangeStateEventHandler?.Invoke(eChangingState);
     }
 
@@ -99,32 +117,43 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         _states[(uint)ENormalMonsterState.TRACE] = new monster_states.Trace(this);
         _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS] = new monster_states.HittedKnockbackByBlockSuccess(this);
         _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS] = new monster_states.HittedParalysis(this);
-        _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB] = new monster_states.HittedKnockbackByBomb(this);
         _states[(uint)ENormalMonsterState.DIE] = new monster_states.Die(this);
         _stateMachine.Init(this, _states[(uint)ENormalMonsterState.IDLE]);
     }
 
     #region HittedByPlayer
-    public override void OnHittedByPlayerNormalAttack(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
+    public override void DamagedFromPlayer(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
     {
         if (ECurrentState != ENormalMonsterState.DIE)
         {
-            IsHittedByPlayerNormalAttack = true;
             DecreasHpAndInvokeHitEvents(damage, eAttackType);
-            #region PROCESS_BACK_ATTACK_OR_THIRD_ATTACK
-            if (eAttackType == EPlayerNoramlAttackType.BACK_ATTACK || eAttackType == EPlayerNoramlAttackType.ATTACK_3)
+            _bloodAnimationController.PlayerBloodAnimation(transform.position, ELookDir, eAttackType);
+            ((monster_states.BaseMonsterState)_states[(int)ECurrentState]).MakeSlow();
+            switch (eAttackType)
             {
-                BigAttackEventHandler?.Invoke();
-                Managers.TimeManager.OnMonsterHittedByPlayerNormalAttack();
+                case EPlayerNoramlAttackType.ATTACK_1:
+                    AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
+                    break;
+                case EPlayerNoramlAttackType.ATTACK_2:
+                    AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
+                    break;
+                case EPlayerNoramlAttackType.ATTACK_3:
+                case EPlayerNoramlAttackType.BACK_ATTACK:
+                    AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_3_FORCE_COEFF);
+                    break;
+                default:
+                    break;
             }
-            #endregion
-            ((monster_states.BaseMonsterState)_states[(int)ECurrentState]).OnHittedByPlayerNormalAttack(eLookDir, damage, eAttackType);
-            IsHittedByPlayerNormalAttack = false;
+            if (Stat.HP <= 0)
+                ChangeState(ENormalMonsterState.DIE);
+
         }
     }
-
     public override void OnPlayerBlockSuccess() 
-    { ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS); }
+    { 
+        ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS);
+        AddKnockbackForce(new Vector2(5f, 3f));
+    }
     public override void OnHittedByPlayerSkill(data.SkillInfo skillInfo)
     {
         ESkillType eType = (ESkillType)skillInfo.id;
@@ -134,21 +163,23 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             case ESkillType.Spawn_Reaper_LV2:
             case ESkillType.Spawn_Reaper_LV3:
                 ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
+                _parallysisCoroutine = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime));
                 break;
             case ESkillType.Spawn_Panda_LV1:
             case ESkillType.Spawn_Panda_LV2:
             case ESkillType.Spawn_Panda_LV3:
-                ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
+                RigidBody.velocity = Vector3.zero;
+                AddKnockbackForce(new Vector2(skillInfo.knockbackForceX, skillInfo.knockbackForceY));
                 break;
             case ESkillType.Cast_BlackFlame_LV1:
             case ESkillType.Cast_BlackFlame_LV2:
             case ESkillType.Cast_BlackFlame_LV3:
-                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
                 break;
             case ESkillType.Cast_SwordStrike_LV1:
             case ESkillType.Cast_SwordStrike_LV2:
             case ESkillType.Cast_SwordStrike_LV3:
-                OnHittedByPlayerNormalAttack(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
                 break;
             default:
                 Debug.Assert(false);
@@ -158,16 +189,21 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
 
     #endregion
-    public override void OnDie()
-    {
-        Animator.speed = 1f;
-    }
+
 
     #region ANIM_CALLBACK
-    private void OnMonsterFootStep() 
+    void OnAttackAnimTurnOnLightTiming()
+    {
+        _attackLightController.TurnOnLight();
+    }
+    void OnAttackAnimTurnOffLightTiming()
+    {
+        _attackLightController.TurnOffLightGradually();
+    }
+    void OnMonsterFootStep() 
     { FootDustParticle.Play(); }
 
-    private void OnAnimFullyPlayed()
+    void OnAnimFullyPlayed()
     { ((monster_states.BaseMonsterState)_states[(uint)ECurrentState]).OnAnimFullyPlayed(); }
     #endregion
 
@@ -185,14 +221,26 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     public void OnTraceZoneExit()
     { IsPlayerInTraceZone = false; }
 
-    private void OnAttackAnimTurnOnLightTiming()
+
+    void AddKnockbackForce(Vector2 force)
     {
-        MonsterAttackStartEventHandler?.Invoke();
-    }
-    private void OnAttackAnimTurnOffLightTiming()
-    {
-        MonsterAttackEndEventHandler?.Invoke();
+        if (_pc == null)
+        {
+            _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            PlayerTransform = _pc.transform;
+        }
+        Vector2 dir = PlayerTransform.position - transform.position;
+        if (dir.x > 0)
+            RigidBody.AddForce(new Vector2(-force.x, force.y), ForceMode2D.Impulse);
+        else
+            RigidBody.AddForce(force, ForceMode2D.Impulse);
     }
 
+
+    IEnumerator PlayHitAnimForSeconds(float timeInSec)
+    {
+        yield return new WaitForSeconds(timeInSec);
+        ChangeState(ENormalMonsterState.IDLE);
+    }
 
 }

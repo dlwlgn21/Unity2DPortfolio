@@ -30,6 +30,9 @@ public class CamShakeManager
             _playerImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "PlayerImpulseSource");
             _monsterImpulseSource = Utill.GetComponentInChildrenOrNull<CinemachineImpulseSource>(_camShakeManager, "MonsterImpulseSource");
             Object.DontDestroyOnLoad(_camShakeManager);
+            PlayerController.HitEffectEventHandler -= Managers.CamShake.OnPlayerHittedByMonsterNormalAttack;
+            BaseMonsterController.HittedByNormalAttackNoArgsEventHandler -= Managers.CamShake.OnMonsterHittedByPlayerNormalAttack;
+            NormalMonsterController.MonsterChangeStateEventHandler -= Managers.CamShake.OnMonsterHittedByPlayerSkill;
             PlayerController.HitEffectEventHandler += Managers.CamShake.OnPlayerHittedByMonsterNormalAttack;
             BaseMonsterController.HittedByNormalAttackNoArgsEventHandler += Managers.CamShake.OnMonsterHittedByPlayerNormalAttack;
             NormalMonsterController.MonsterChangeStateEventHandler += Managers.CamShake.OnMonsterHittedByPlayerSkill;

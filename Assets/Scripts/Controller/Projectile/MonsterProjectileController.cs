@@ -44,7 +44,8 @@ public class MonsterProjectileController : BaseProjectileController
             }
             Debug.Assert(_currOwnerController != null);
             PlayAnimation(EProjectileState.Hit);
-            MonsterProjectileHitPlayerEventHandelr?.Invoke(_currOwnerController);
+            if (MonsterProjectileHitPlayerEventHandelr != null)
+                MonsterProjectileHitPlayerEventHandelr.Invoke(_currOwnerController);
             _rb.velocity = Vector2.zero;
             _isHit = true;
         }
@@ -84,7 +85,7 @@ public class MonsterProjectileController : BaseProjectileController
             _sr.flipX = false;
         }
         PlayAnimation(EProjectileState.Muzzle);
-        StartCoroutine(this.StartCountLifeTimeCo());
+        StartCoroutine(StartCountdownLifeTimeCo());
         _currOwnerController = mc;
     }
 
@@ -111,7 +112,7 @@ public class MonsterProjectileController : BaseProjectileController
         Managers.ProjectilePool.ReturnMonsterProjectile(gameObject, EProjectileType);
     }
     #endregion
-    private IEnumerator StartCountLifeTimeCo()
+    private IEnumerator StartCountdownLifeTimeCo()
     {
         yield return new WaitForSeconds(LIFE_TIME_IN_SEC);
         if (!_isHit)

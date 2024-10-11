@@ -56,27 +56,26 @@ public class PlayerController : BaseCharacterController
     public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
     public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new(3f, 2f);
 
-    public readonly static float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
-    public readonly static float NORMAL_ATTACK_3_FORCE_COEFF = 1.2f;
+    public const float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
+    public const float NORMAL_ATTACK_3_FORCE_COEFF = 1.2f;
+    public const float NORMAL_ATTACK_2_DAMAGE_COEFF = 1.5f;
+    public const int  NORMAL_ATTACK_3_DAMAGE_COEFF = 2;
+    public const int  BACK_ATTACK_DAMAGE_COEFF = 3;
 
-    public readonly static float NORMAL_ATTACK_2_DAMAGE_COEFF = 1.5f;
-    public readonly static int  NORMAL_ATTACK_3_DAMAGE_COEFF = 2;
-    public readonly static int  BACK_ATTACK_DAMAGE_COEFF = 3;
+    public const float BACK_ATTACK_FORCE_COEFF = 1.5f;
+    public const float BLOCK_SUCCESS_KNOCKBACK_X_FORCE = 5f;
+    public const float KNOCKBACK_BOMB_FORCE = 12f;
 
-    public readonly static float BACK_ATTACK_FORCE_COEFF = 1.5f;
-    public readonly static float BLOCK_SUCCESS_KNOCKBACK_X_FORCE = 5f;
-    public readonly static float KNOCKBACK_BOMB_FORCE = 12f;
-
-    public readonly static KeyCode KeyUp = KeyCode.UpArrow;
-    public readonly static KeyCode KeyDown = KeyCode.DownArrow;
-    public readonly static KeyCode KeyRight = KeyCode.RightArrow;
-    public readonly static KeyCode KeyLeft = KeyCode.LeftArrow;
-    public readonly static KeyCode KeyAttack = KeyCode.Z;
-    public readonly static KeyCode KeyBlock = KeyCode.X;
-    public readonly static KeyCode KeyRoll = KeyCode.C;
-    public readonly static KeyCode KeyJump = KeyCode.Space;
-    public readonly static KeyCode KeySkillA = KeyCode.A;
-    public readonly static KeyCode KeySkillS = KeyCode.S;
+    public const KeyCode KeyUp = KeyCode.UpArrow;
+    public const KeyCode KeyDown = KeyCode.DownArrow;
+    public const KeyCode KeyRight = KeyCode.RightArrow;
+    public const KeyCode KeyLeft = KeyCode.LeftArrow;
+    public const KeyCode KeyAttack = KeyCode.Z;
+    public const KeyCode KeyBlock = KeyCode.X;
+    public const KeyCode KeyRoll = KeyCode.C;
+    public const KeyCode KeyJump = KeyCode.Space;
+    public const KeyCode KeySkillA = KeyCode.A;
+    public const KeyCode KeySkillS = KeyCode.S;
 
     private const float BURN_TIME_IN_SEC = 2.0f;
 

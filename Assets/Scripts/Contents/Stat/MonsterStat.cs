@@ -4,12 +4,11 @@ using TMPro.EditorUtilities;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using define;
-
+using UnityEngine.Events;
 
 public class MonsterStat : BaseStat
 {
     public const int TUTIRIAL_HP = 50;
-
     [SerializeField]
     protected int _monsterType;
 
@@ -21,6 +20,26 @@ public class MonsterStat : BaseStat
     public EAttackStatusEffect  EStatusEffectType { get; private set; }
     public Vector2 KnockbackForce { get; set; } = new Vector2(1.5f, 1.5f);
     public float SlowTimeInSec { get; set; }
+
+    public override int DecreaseHpAndGetActualDamageAmount(int damage, out int beforeDamageHp, out int afterDamageHp)
+    {
+        //if (HP <= 0)
+        //{
+        //    beforeDamageHp = 0;
+        //    afterDamageHp = 0;
+        //    return 0;
+        //}
+        int actualDamage = Mathf.Max(1, damage - Defence);
+        beforeDamageHp = HP;
+        HP -= actualDamage;
+        afterDamageHp = HP;
+        if (HP <= 0)
+        {
+            HP = 0;
+        }
+        return actualDamage;
+    }
+
     public void InitBasicStat(define.EMonsterNames eMonster)
     {
         if (HP == 0)

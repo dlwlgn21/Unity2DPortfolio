@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public abstract class UI_HealthBar : MonoBehaviour
 {
     [SerializeField] protected Gradient _gradient;
-    [SerializeField] protected BaseStat _stat;
+    protected BaseStat _stat;
     private Image _healthBarImg;
     private Image _damagedBarImg;
     private TextMeshProUGUI _currHpText;
@@ -20,7 +20,7 @@ public abstract class UI_HealthBar : MonoBehaviour
     public abstract void Init();
     private void Awake()
     {
-        Debug.Assert(_stat != null);
+        Init();
         _healthBarImg = Utill.GetComponentInChildrenOrNull<Image>(gameObject, "HealthBar");
         Debug.Assert(_healthBarImg != null);
 
@@ -34,11 +34,10 @@ public abstract class UI_HealthBar : MonoBehaviour
         _damagedColor.a = 0f;
         _damagedBarImg.color = _damagedColor;
         Debug.Assert(_damagedBarImg != null);
-        Init();
     }
 
 
-    protected void DecraseHP(int beforeDamageHp, int afterDamgeHp)
+    public void DecraseHP(int beforeDamageHp, int afterDamgeHp)
     {
         float ratio = (float)afterDamgeHp / _stat.MaxHP;
         _damagedBarImg.fillAmount = _healthBarImg.fillAmount;

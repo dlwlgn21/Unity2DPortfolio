@@ -7,7 +7,6 @@ public class UI_WSMonsterHpBar : UI_HealthBar
     private Vector3 _originalLocalScale;
     private RectTransform _rectTransform;
     private Vector3 _originalRectTransformScale;
-    private BaseMonsterController _mc;
 
     private void Start()
     {
@@ -18,19 +17,7 @@ public class UI_WSMonsterHpBar : UI_HealthBar
         }
     }
 
-    private void OnEnable()
-    {
-        BaseMonsterController.HittedByNormalAttackWSUIEventHandler += OnMonsterHittedByPlayerNormalAttack;
-        monster_states.Die.MonsterDieEventHandelr += OnMonsterDie;
-    }
-
-
-    private void OnDestroy()
-    {
-        BaseMonsterController.HittedByNormalAttackWSUIEventHandler -= OnMonsterHittedByPlayerNormalAttack;
-        monster_states.Die.MonsterDieEventHandelr -= OnMonsterDie;
-    }
-    public void OnMonsterInit()
+    public void InitForRespawn()
     {
         Init();
         InitScale();
@@ -42,7 +29,6 @@ public class UI_WSMonsterHpBar : UI_HealthBar
         {
             AssginComponentsAndInitVariables();
         }
-        SetFullHpBarRatio();
     }
 
     private void Update()
@@ -57,28 +43,18 @@ public class UI_WSMonsterHpBar : UI_HealthBar
         }
     }
 
-    public void OnMonsterDie(BaseMonsterController mc)
+    public void StartZeroScaleTW()
     {
-        if (mc == _mc)
-        {
-            _rectTransform.DOScale(0f, SCALE_TW_DURATION).SetEase(Ease.OutElastic);
-        }
+        Managers.Tween.EndToZeroScaleTW(_rectTransform, SCALE_TW_DURATION);
     }
-    public void OnMonsterHittedByPlayerNormalAttack(int damage, int beforeDamageHP, int afterDamageHP)
-    {
-        if (_mc.IsHittedByPlayerNormalAttack)
-        {
-            DecraseHP(beforeDamageHP, afterDamageHP);
-        }
-    }
-
     private void AssginComponentsAndInitVariables()
     {
+        _stat = transform.parent.gameObject.GetComponent<MonsterStat>();
+        Debug.Assert(_stat != null);
         _rectTransform = GetComponent<RectTransform>();
         _originalLocalScale = transform.localScale;
         _originalRectTransformScale = _rectTransform.localScale;
         _rectTransform.localScale = _originalRectTransformScale;
-        _mc = transform.parent.gameObject.GetComponent<BaseMonsterController>();
     }
 
     private void InitScale()
