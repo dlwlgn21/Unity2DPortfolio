@@ -30,9 +30,9 @@ public sealed class UI_Skill_Description : UI_BaseDescription
             case ESkillType.Spawn_Reaper_LV3:
                 _animator.Play(SPAWN_REAPER_ANIM_KEY, -1, 0f);
                 break;
-            case ESkillType.Spawn_Panda_LV1:
-            case ESkillType.Spawn_Panda_LV2:
-            case ESkillType.Spawn_Panda_LV3:
+            case ESkillType.Spawn_Shooter_LV1:
+            case ESkillType.Spawn_Shooter_LV2:
+            case ESkillType.Spawn_Shooter_LV3:
                 _animator.Play(SPAWN_PANDA_ANIM_KEY, -1, 0f);
                 break;
             case ESkillType.Cast_BlackFlame_LV1:

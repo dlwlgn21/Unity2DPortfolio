@@ -49,7 +49,6 @@ public class FullScreenEffectManager
             case EFullScreenEffectType.MONSTER_BLIND_EFFECT:
                 if (_isStartBlindEffect == false)
                 {
-                    Debug.Log("Hitted Player By Blind Monster!");
                     _isStartBlindEffect = true;
                     _blindEffectImg.enabled = true;
                     _fadeout.SetActive(true);

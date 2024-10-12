@@ -8,13 +8,12 @@ public class UI_WSMonsterHpBar : UI_HealthBar
     private RectTransform _rectTransform;
     private Vector3 _originalRectTransformScale;
 
+    bool _isDieState = false;
     private void Start()
     {
         SetFullHpBarRatio();
         if (_rectTransform == null)
-        {
             AssginComponentsAndInitVariables();
-        }
     }
 
     public void InitForRespawn()
@@ -26,26 +25,29 @@ public class UI_WSMonsterHpBar : UI_HealthBar
     public override void Init()
     {
         if (_rectTransform == null)
-        {
             AssginComponentsAndInitVariables();
-        }
+        _isDieState = false;
     }
 
     private void Update()
     {
-        if (transform.parent.localRotation.eulerAngles.y > 0f)
+        if (!_isDieState)
         {
-            transform.localScale = new Vector3(-1f, _originalLocalScale.y, _originalLocalScale.z);
-        }
-        else
-        {
-            transform.localScale = new Vector3(1f, _originalLocalScale.y, _originalLocalScale.z);
+            if (transform.parent.localRotation.eulerAngles.y > 0f)
+            {
+                transform.localScale = new Vector3(-1f, _originalLocalScale.y, _originalLocalScale.z);
+            }
+            else
+            {
+                transform.localScale = new Vector3(1f, _originalLocalScale.y, _originalLocalScale.z);
+            }
         }
     }
 
     public void StartZeroScaleTW()
     {
         Managers.Tween.EndToZeroScaleTW(_rectTransform, SCALE_TW_DURATION);
+        _isDieState = true;
     }
     private void AssginComponentsAndInitVariables()
     {

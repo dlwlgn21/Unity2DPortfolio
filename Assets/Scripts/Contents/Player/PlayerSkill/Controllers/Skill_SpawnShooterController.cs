@@ -2,24 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using define;
-
-public sealed class Skill_SpawnShooterController : Skill_BaseController
+public sealed class Skill_SpawnRepaerController : Skill_BaseController
 {
-    private Skill_SpawnShooterObject _spawnShooter;
+    private Skill_SpawnReaperObject _spawnReaper;
     public override void Init()
     {
-        InitByESkillType(ESkillType.Spawn_Shooter_LV1);
-        if (_spawnShooter == null)
+        InitByESkillType(ESkillType.Spawn_Reaper_LV1);
+        if (_spawnReaper == null)
         {
-            _spawnShooter = Managers.Resources.Instantiate<Skill_SpawnShooterObject>(Managers.Data.SkillInfoDict[(int)_eSkillType].objectPrefabPath);
-            DontDestroyOnLoad(_spawnShooter.gameObject);
-            _spawnShooter.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Spawn_Shooter_LV1);
-
+            _spawnReaper = Managers.Resources.Instantiate<Skill_SpawnReaperObject>(Managers.Data.SkillInfoDict[(int)_eSkillType].objectPrefabPath);
+            DontDestroyOnLoad(_spawnReaper.gameObject);
+            _spawnReaper.gameObject.name = Managers.PlayerSkill.GetSkillObjectName(ESkillType.Spawn_Reaper_LV1);
         }
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnAnimValidTiming;
         PlayerController.PlayerSkillValidAnimTimingEventHandler += OnPlayerSpawnAnimValidTiming;
     }
-
     public override bool TryUseSkill()
     {
         if (IsValidStateAndManaToUseSkill())
@@ -31,17 +28,15 @@ public sealed class Skill_SpawnShooterController : Skill_BaseController
         }
         return false;
     }
-
     private void OnDestroy()
     {
         PlayerController.PlayerSkillValidAnimTimingEventHandler -= OnPlayerSpawnAnimValidTiming;
     }
-
-    private void OnPlayerSpawnAnimValidTiming()
+    void OnPlayerSpawnAnimValidTiming()
     {
         if (_isUsingSkill)
         {
-            _spawnShooter.SpawnShooter(_pc.SpawnShooterPoint.position, _pc.ELookDir);
+             _spawnReaper.UseSkill(_pc.SpawnReaperPoint.position, _pc.ELookDir);
             _isUsingSkill = false;
         }
     }
@@ -49,6 +44,6 @@ public sealed class Skill_SpawnShooterController : Skill_BaseController
     public override void LevelUpSkill(ESkillType eType)
     {
         base.LevelUpSkill(eType);
-        _spawnShooter.ESkillType = eType;
+        _spawnReaper.ESkillType = eType;
     }
 }

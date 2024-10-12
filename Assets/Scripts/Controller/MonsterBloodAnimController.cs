@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class MonsterBloodAnimController : WorldSpaceEffectController
+public class MonsterBloodAnimController : WorldSpaceAnimController
 {
     private readonly static string BLOOD_BY_NORMAL_ATTACK_1_1 = "b3";
     //private static string BLOOD_BY_NORMAL_ATTACK_1_2 = "b8";

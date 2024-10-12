@@ -17,8 +17,9 @@ public class TimeScaleManager : MonoBehaviour
     {
         _isTimeScaling = false;
         gameObject.SetActive(true);
-        BaseMonsterController.BigAttackEventHandler -= OnSuccessBigAttack;
-        BaseMonsterController.BigAttackEventHandler += OnSuccessBigAttack;
+        // TODO : 수월한 테스트 위해서 일단 이거 꺼놓음
+        //BaseMonsterController.BigAttackEventHandler -= OnSuccessBigAttack;
+        //BaseMonsterController.BigAttackEventHandler += OnSuccessBigAttack;
     }
 
 
@@ -34,12 +35,13 @@ public class TimeScaleManager : MonoBehaviour
 
     public void OnPlayerHittedByMonster()
     {
-        if (_isTimeScaling)
-        {
-            return;
-        }
-        Debug.Assert(this != null);
-        StartCoroutine(StartTimeScaleOnPlayerHittedByMonsterCo());
+        // TODO : 수월한 테스트 위해서 일단 이거 꺼놓음
+        //if (_isTimeScaling)
+        //{
+        //    return;
+        //}
+        //Debug.Assert(this != null);
+        //StartCoroutine(StartTimeScaleOnPlayerHittedByMonsterCo());
     }
 
     private IEnumerator StartTimeScaleOnPlayerNormalAttackSuccessCo()

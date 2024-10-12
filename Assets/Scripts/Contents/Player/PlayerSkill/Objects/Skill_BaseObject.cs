@@ -8,7 +8,6 @@ public abstract class Skill_BaseObject : MonoBehaviour
 {
     protected Animator _animator;
     protected LightController _attackLightController;
-    protected const float TURN_OFF_LIGHT_TIME = 0.7f;
     protected string _animKey;
     public ESkillType ESkillType { get; set; }
     protected abstract void Init();
@@ -17,7 +16,6 @@ public abstract class Skill_BaseObject : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _attackLightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "AttackLight");
-        _attackLightController.SetTurnOffLightTime(TURN_OFF_LIGHT_TIME);
         gameObject.SetActive(false);
         Init();
     }
@@ -47,7 +45,7 @@ public abstract class Skill_BaseObject : MonoBehaviour
         }
     }
 
-    void OnValidAttackTiming()
+    void OnAttackLightOffTiming()
     {
         _attackLightController.TurnOffLightGradually();
     }

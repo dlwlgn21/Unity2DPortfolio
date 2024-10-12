@@ -28,12 +28,12 @@ public class PlayerSkillManager
 
         Skill_BaseController roll = Utill.GetComponentInChildrenOrNull<Skill_RollController>(player, GetSkillControllerObjectName(ESkillType.Roll));
         Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(skillDict[(int)ESkillType.Spawn_Reaper_LV1].controllerPrefabPath);
-        Skill_BaseController panda = Inst<Skill_SpawnPandaController>(skillDict[(int)ESkillType.Spawn_Panda_LV1].controllerPrefabPath);
+        Skill_BaseController panda = Inst<Skill_SpawnShooterController>(skillDict[(int)ESkillType.Spawn_Shooter_LV1].controllerPrefabPath);
         Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(skillDict[(int)ESkillType.Cast_BlackFlame_LV1].controllerPrefabPath);
         Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(skillDict[(int)ESkillType.Cast_SwordStrike_LV1].controllerPrefabPath);
 
         reaper.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Reaper_LV1);
-        panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Panda_LV1);
+        panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Shooter_LV1);
         blackFlame.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_BlackFlame_LV1);
         swordStrike.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_SwordStrike_LV1);
 
@@ -44,7 +44,7 @@ public class PlayerSkillManager
 
         _skillDict.Add(ESkillType.Roll, roll);
         _skillDict.Add(ESkillType.Spawn_Reaper_LV1, reaper);
-        _skillDict.Add(ESkillType.Spawn_Panda_LV1, panda);
+        _skillDict.Add(ESkillType.Spawn_Shooter_LV1, panda);
         _skillDict.Add(ESkillType.Cast_BlackFlame_LV1, blackFlame); 
         _skillDict.Add(ESkillType.Cast_SwordStrike_LV1, swordStrike);
 
@@ -130,10 +130,10 @@ public class PlayerSkillManager
             case ESkillType.Spawn_Reaper_LV3:
                 _skillDict[ESkillType.Spawn_Reaper_LV1].LevelUpSkill(eType);
                 break;
-            case ESkillType.Spawn_Panda_LV1:
-            case ESkillType.Spawn_Panda_LV2:
-            case ESkillType.Spawn_Panda_LV3:
-                _skillDict[ESkillType.Spawn_Panda_LV1].LevelUpSkill(eType);
+            case ESkillType.Spawn_Shooter_LV1:
+            case ESkillType.Spawn_Shooter_LV2:
+            case ESkillType.Spawn_Shooter_LV3:
+                _skillDict[ESkillType.Spawn_Shooter_LV1].LevelUpSkill(eType);
                 break;
             case ESkillType.Cast_BlackFlame_LV1:
             case ESkillType.Cast_BlackFlame_LV2:
@@ -163,10 +163,10 @@ public class PlayerSkillManager
             case ESkillType.Spawn_Reaper_LV2:
             case ESkillType.Spawn_Reaper_LV3:
                 return _skillDict[ESkillType.Spawn_Reaper_LV1];
-            case ESkillType.Spawn_Panda_LV1:
-            case ESkillType.Spawn_Panda_LV2:
-            case ESkillType.Spawn_Panda_LV3:
-                return _skillDict[ESkillType.Spawn_Panda_LV1];
+            case ESkillType.Spawn_Shooter_LV1:
+            case ESkillType.Spawn_Shooter_LV2:
+            case ESkillType.Spawn_Shooter_LV3:
+                return _skillDict[ESkillType.Spawn_Shooter_LV1];
             case ESkillType.Cast_BlackFlame_LV1:
             case ESkillType.Cast_BlackFlame_LV2:
             case ESkillType.Cast_BlackFlame_LV3:

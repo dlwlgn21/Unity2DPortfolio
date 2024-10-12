@@ -125,7 +125,6 @@ public class Managers : MonoBehaviour
                 timeManager = new GameObject { name = "@TimeManager" };
                 sInstance._timeManager = timeManager.AddComponent<TimeScaleManager>();
                 sInstance._timeManager.Init();
-                Debug.Log("TimeManager Init!");
                 DontDestroyOnLoad(timeManager);
             }
         }

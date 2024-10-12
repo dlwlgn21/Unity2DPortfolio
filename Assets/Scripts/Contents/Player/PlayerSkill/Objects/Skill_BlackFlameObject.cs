@@ -2,7 +2,6 @@ using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public sealed class Skill_BlackFlameObject : Skill_BaseObject
 {
     protected override void Init()

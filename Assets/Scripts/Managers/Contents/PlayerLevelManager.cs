@@ -40,8 +40,6 @@ public class PlayerLevelManager
     void OnPlayerLevelUp(int levelUpCount)
     {
         CurrSkillPoint += levelUpCount;
-        _levelUpLightController.TurnOnLight();
-        _levelUpLightController.TurnOffLightGraduallyAfterSecond(LEVEL_UP_LIGHT_LIFE_TIME);
         Managers.UI.SetSkillPointText(CurrSkillPoint);
     }
 

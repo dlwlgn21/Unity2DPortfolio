@@ -22,13 +22,9 @@ public class LightController : MonoBehaviour
         _light.intensity = 0f;
     }
 
-    public void SetTurnOffLightTime(float time)
-    {
-        _turnOffGraduallyLightTime = time;
-    }
-
     public void TurnOnLight()
     {
+        SetActiveTrue();
         _light.enabled = true;
         _light.intensity = _initialIntencity;
     }
@@ -45,6 +41,7 @@ public class LightController : MonoBehaviour
         {
             return;
         }
+        SetActiveTrue();
         StartCoroutine(StartTurnOffLightCo());
     }
 
@@ -54,7 +51,11 @@ public class LightController : MonoBehaviour
         yield return new WaitForSeconds(second);
         StartCoroutine(StartTurnOffLightCo());
     }
-
+    public void SetActiveTrue()
+    {
+        if (gameObject.activeSelf == false)
+            gameObject.SetActive(true);
+    }
     IEnumerator StartTurnOffLightCo()
     {
         // TODO : 이거 나중에 손보자. 바꿔야함. 끄는중에 켜면, 끄는 값을 덮어 씌어버리는 문제가 생김. 이거 고쳐야함.
@@ -69,11 +70,12 @@ public class LightController : MonoBehaviour
         _isDoingTurnOffLight = false;
     }
 
-    private void AssignComponents()
+    void AssignComponents()
     {
         if (_light == null)
         {
             _light = GetComponent<Light2D>();
         }
     }
+
 }

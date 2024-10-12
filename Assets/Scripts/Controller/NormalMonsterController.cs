@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
 
 public enum ENormalMonsterState
 {
@@ -39,26 +40,15 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     Coroutine _parallysisCoroutine = null;
     UINormalMonsterStatusTextController _statusTextController;
     LightController _attackLightController;
+    LightController _dieController;
+
+    Light2D _headLight;
+    Light2D _weaponLightOrNull;
+    Light2D _backLightOrNull;
+
     MonsterBloodAnimController _bloodAnimationController;
 
-    public override void Init()
-    {
-        base.Init();
-        if (_statusTextController == null)
-        {
-            _statusTextController = Utill.GetFirstComponentInChildrenOrNull<UINormalMonsterStatusTextController>(gameObject);
-            _attackLightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "AttackLight");
-            _bloodAnimationController = Utill.GetFirstComponentInChildrenOrNull<MonsterBloodAnimController>(gameObject);
-        }
-    }
-    public void InitForRespawn()
-    {
-        InitStat();
-        Init();
-        HealthBar.InitForRespawn();
-        RigidBody.WakeUp();
-        ChangeState(ENormalMonsterState.IDLE);
-    }
+
     private void FixedUpdate()
     {
         _stateMachine.FixedExcute();
@@ -68,6 +58,35 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         _stateMachine.Excute();
     }
 
+    #region Public
+    public override void Init()
+    {
+        base.Init();
+        if (_statusTextController == null)
+        {
+            _statusTextController = Utill.GetFirstComponentInChildrenOrNull<UINormalMonsterStatusTextController>(gameObject);
+            _attackLightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "AttackLight");
+            _dieController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "DieLight");
+            _bloodAnimationController = Utill.GetFirstComponentInChildrenOrNull<MonsterBloodAnimController>(gameObject);
+
+            _headLight = transform.Find("HeadLight").gameObject?.GetComponent<Light2D>();
+            Transform trnasformOrNull = transform.Find("WeaponLight");
+            if (trnasformOrNull != null)
+                _weaponLightOrNull = trnasformOrNull.gameObject.GetComponent<Light2D>(); ;
+            trnasformOrNull = transform.Find("BackLight");
+            if (trnasformOrNull != null)
+                _backLightOrNull = trnasformOrNull.gameObject.GetComponent<Light2D>(); ;
+        }
+    }
+    public void InitForRespawn()
+    {
+        InitStat();
+        Init();
+        SetEnableTrueAllLightsWithoutDieLight();
+        HealthBar.InitForRespawn();
+        RigidBody.WakeUp();
+        ChangeState(ENormalMonsterState.IDLE);
+    }
     public void ChangeState(ENormalMonsterState eChangingState)
     {
         if (_parallysisCoroutine != null)
@@ -109,17 +128,16 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             transform.localRotation = Quaternion.Euler(LEFT_ROT_VECTOR);
         }
     }
-    protected override void InitStates()
-    {
-        _stateMachine = new StateMachine<NormalMonsterController>();
-        _states = new State<NormalMonsterController>[(uint)ENormalMonsterState.COUNT];
-        _states[(uint)ENormalMonsterState.IDLE] = new monster_states.Idle(this);
-        _states[(uint)ENormalMonsterState.TRACE] = new monster_states.Trace(this);
-        _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS] = new monster_states.HittedKnockbackByBlockSuccess(this);
-        _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS] = new monster_states.HittedParalysis(this);
-        _states[(uint)ENormalMonsterState.DIE] = new monster_states.Die(this);
-        _stateMachine.Init(this, _states[(uint)ENormalMonsterState.IDLE]);
-    }
+    #region TraceOrAttackZone
+    public void OnEnterAttackZone()
+    { IsPlayerInAttackZone = true; }
+    public void OnExitAttackZone()
+    { IsPlayerInAttackZone = false; }
+    public void OnTraceZoneEnter()
+    { IsPlayerInTraceZone = true; }
+    public void OnTraceZoneExit()
+    { IsPlayerInTraceZone = false; }
+    #endregion
 
     #region HittedByPlayer
     public override void DamagedFromPlayer(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
@@ -145,12 +163,15 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
                     break;
             }
             if (Stat.HP <= 0)
+            {
+                SetEnableFalseAllLightsWithoutDieLight();
                 ChangeState(ENormalMonsterState.DIE);
+            }
 
         }
     }
-    public override void OnPlayerBlockSuccess() 
-    { 
+    public override void OnPlayerBlockSuccess()
+    {
         ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS);
         AddKnockbackForce(new Vector2(5f, 3f));
     }
@@ -165,9 +186,9 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
                 ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
                 _parallysisCoroutine = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime));
                 break;
-            case ESkillType.Spawn_Panda_LV1:
-            case ESkillType.Spawn_Panda_LV2:
-            case ESkillType.Spawn_Panda_LV3:
+            case ESkillType.Spawn_Shooter_LV1:
+            case ESkillType.Spawn_Shooter_LV2:
+            case ESkillType.Spawn_Shooter_LV3:
                 RigidBody.velocity = Vector3.zero;
                 AddKnockbackForce(new Vector2(skillInfo.knockbackForceX, skillInfo.knockbackForceY));
                 break;
@@ -189,9 +210,31 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
 
     #endregion
-
-
+    #endregion
+    #region Protected
+    protected override void InitStates()
+    {
+        _stateMachine = new StateMachine<NormalMonsterController>();
+        _states = new State<NormalMonsterController>[(uint)ENormalMonsterState.COUNT];
+        _states[(uint)ENormalMonsterState.IDLE] = new monster_states.Idle(this);
+        _states[(uint)ENormalMonsterState.TRACE] = new monster_states.Trace(this);
+        _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS] = new monster_states.HittedKnockbackByBlockSuccess(this);
+        _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS] = new monster_states.HittedParalysis(this);
+        _states[(uint)ENormalMonsterState.DIE] = new monster_states.Die(this);
+        _stateMachine.Init(this, _states[(uint)ENormalMonsterState.IDLE]);
+    }
+    #endregion
+    #region Private
     #region ANIM_CALLBACK
+
+    void OnTurnOnDieLightTiming()
+    {
+        _dieController.TurnOnLight();
+    }
+    void OnTurnOffDieLightTiming()
+    {
+        _dieController.TurnOffLightGradually();
+    }
     void OnAttackAnimTurnOnLightTiming()
     {
         _attackLightController.TurnOnLight();
@@ -211,17 +254,6 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     {
 
     }
-
-    public void OnEnterAttackZone()
-    { IsPlayerInAttackZone = true; }
-    public void OnExitAttackZone()
-    { IsPlayerInAttackZone = false; }
-    public void OnTraceZoneEnter()
-    { IsPlayerInTraceZone = true; }
-    public void OnTraceZoneExit()
-    { IsPlayerInTraceZone = false; }
-
-
     void AddKnockbackForce(Vector2 force)
     {
         if (_pc == null)
@@ -236,11 +268,31 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             RigidBody.AddForce(force, ForceMode2D.Impulse);
     }
 
-
     IEnumerator PlayHitAnimForSeconds(float timeInSec)
     {
         yield return new WaitForSeconds(timeInSec);
         ChangeState(ENormalMonsterState.IDLE);
     }
+
+    void SetEnableFalseAllLightsWithoutDieLight()
+    {
+        _headLight.enabled = false;
+        if (_weaponLightOrNull != null)
+            _weaponLightOrNull.enabled = false;
+        if (_backLightOrNull != null)
+            _weaponLightOrNull.enabled = false;
+        _attackLightController.Init();
+    }
+
+    void SetEnableTrueAllLightsWithoutDieLight()
+    {
+        _headLight.enabled = true;
+        if (_weaponLightOrNull != null)
+            _weaponLightOrNull.enabled = true;
+        if (_backLightOrNull != null)
+            _weaponLightOrNull.enabled = true;
+    }
+    #endregion
+
 
 }

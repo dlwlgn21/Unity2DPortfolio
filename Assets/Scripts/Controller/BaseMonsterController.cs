@@ -21,8 +21,8 @@ public abstract class BaseMonsterController : BaseCharacterController
 
     UIMonsterDamageTextController _damageTextController;
     MonsterHitFlasher _hitFlasher;
-    HitParticleController _hitParticle;
-    MonsterHitEffectController _hitEffect;
+    HitParticleController _hitParticleController;
+    MonsterHitAnimController _hitAnimController;
 
     public override void Init()
     {
@@ -36,8 +36,8 @@ public abstract class BaseMonsterController : BaseCharacterController
 
             _hitFlasher = Utill.GetFirstComponentInChildrenOrNull<MonsterHitFlasher>(gameObject);
             _damageTextController = Utill.GetFirstComponentInChildrenOrNull<UIMonsterDamageTextController>(gameObject);
-            _hitParticle = Utill.GetFirstComponentInChildrenOrNull<HitParticleController>(gameObject);
-            _hitEffect = Utill.GetFirstComponentInChildrenOrNull<MonsterHitEffectController>(gameObject);
+            _hitParticleController = Utill.GetFirstComponentInChildrenOrNull<HitParticleController>(gameObject);
+            _hitAnimController = Utill.GetFirstComponentInChildrenOrNull<MonsterHitAnimController>(gameObject);
         }
         InitStat();
     }
@@ -57,12 +57,12 @@ public abstract class BaseMonsterController : BaseCharacterController
         HealthBar.DecraseHP(beforeDamageHP, AfterDamageHP);
         _damageTextController.ShowPopup(actualDamage);
         _hitFlasher.StartDamageFlash();
-        _hitEffect.PlayHitEffect(transform.position, eAttackType);
+        _hitAnimController.PlayHitEffect(transform.position, eAttackType);
         if (eAttackType == EPlayerNoramlAttackType.ATTACK_3 || eAttackType == EPlayerNoramlAttackType.BACK_ATTACK)
         {
             if (BigAttackEventHandler != null)
                 BigAttackEventHandler.Invoke();
-            _hitParticle.PlayBigAttackParticle();
+            _hitParticleController.PlayBigAttackParticle();
         }
         HittedByNormalAttackNoArgsEventHandler?.Invoke();
         HittedByNormalAttackEffectEventHandler?.Invoke(eAttackType);

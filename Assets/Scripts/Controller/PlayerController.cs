@@ -86,7 +86,7 @@ public class PlayerController : BaseCharacterController
     public Transform LedgeHeadRayPoint { get; private set; }
     public Transform LedgeBodyRayPoint { get; private set; }
     public Transform SpawnReaperPoint { get; private set; }
-    public Transform SpawnPandaPoint { get; private set; }
+    public Transform SpawnShooterPoint { get; private set; }
     public Transform CastBlackFlamePoint { get; private set; }
     public Transform CastSwordStrikePoint { get; private set; }
 
@@ -108,7 +108,7 @@ public class PlayerController : BaseCharacterController
         LedgeHeadRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeHeadRayPoint");
         LedgeBodyRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeBodyRayPoint");
         SpawnReaperPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnReaperPoint");
-        SpawnPandaPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");        
+        SpawnShooterPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");        
         CastBlackFlamePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillBlackFlamePoint");
         CastSwordStrikePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSwordStrikePoint");
 

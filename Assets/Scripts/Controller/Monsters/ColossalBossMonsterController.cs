@@ -263,7 +263,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
             case ESkillType.Spawn_Reaper_LV1:
                 //ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
                 break;
-            case ESkillType.Spawn_Panda_LV1:
+            case ESkillType.Spawn_Shooter_LV1:
                 //ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB);
                 break;
             case ESkillType.Cast_BlackFlame_LV1:

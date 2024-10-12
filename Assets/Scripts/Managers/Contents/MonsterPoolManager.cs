@@ -140,7 +140,8 @@ public class MonsterPoolManager
         go.SetActive(true);
         NormalMonsterController mc = go.GetComponent<NormalMonsterController>();
         mc.InitForRespawn();
-        MonsterSpawnEventHandler?.Invoke(mc, spawnPos);
+        if (MonsterSpawnEventHandler != null)
+            MonsterSpawnEventHandler.Invoke(mc, spawnPos);
     }
 
     private void DestroyOrEnque(Queue<GameObject> q, GameObject go)

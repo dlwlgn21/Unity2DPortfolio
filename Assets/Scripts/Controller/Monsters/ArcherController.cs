@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArcherController : NormalMonsterController, ILaunchAttackable
+public sealed class ArcherController : NormalMonsterController, ILaunchAttackable
 {
     private Transform _launchPoint;
     private readonly Vector2 PROJECTILE_KNOCKBACK_FORCE = new Vector2(4f, 4f);
@@ -20,7 +20,6 @@ public class ArcherController : NormalMonsterController, ILaunchAttackable
         Stat.InitBasicStat(EMonsterNames.Archer);
         Stat.KnockbackForce = PROJECTILE_KNOCKBACK_FORCE;
     }
-
     protected override void InitStates()
     {
         base.InitStates();
