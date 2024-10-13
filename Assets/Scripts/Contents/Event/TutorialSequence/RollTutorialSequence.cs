@@ -8,7 +8,8 @@ public class RollTutorialSequence : TutorialSequence
     public override void OnDialogEnd()
     {
         base.Init();
-        _tutorialManager.ActiveRollKeyTutorial();
+        SpawnMonster();
+        _tutorialManager.ActiveRollTutorialUIObjects();
         SetPlayerAttackToZero();
         _isTutorialStart = true;
     }
@@ -16,13 +17,13 @@ public class RollTutorialSequence : TutorialSequence
     {
         if (_isTutorialStart)
         {
-            if (_pc.ECurrentState == EPlayerState.ROLL && _isPlayerChangeStateToRoll == false)
+            if (_pc.ECurrentState == EPlayerState.Roll && _isPlayerChangeStateToRoll == false)
             {
                 ++_playerRollCount;
-                _tutorialManager.IncreaseCountText(ETutorialCountText.ROLL, _playerRollCount);
+                _tutorialManager.IncreaseCountText(ETutorialCountText.Roll, _playerRollCount);
                 _isPlayerChangeStateToRoll = true;
             }
-            if (_pc.ECurrentState != EPlayerState.ROLL)
+            if (_pc.ECurrentState != EPlayerState.Roll)
             {
                 _isPlayerChangeStateToRoll = false;
             }
@@ -30,9 +31,9 @@ public class RollTutorialSequence : TutorialSequence
             if (_playerRollCount >= ROLL_TRANING_PASS_COUNT)
             {
                 RollBackPlayerAttack();
-                _spawnendMonsterController.ChangeState(ENormalMonsterState.DIE);
-                _tutorialManager.UnactiveRollKeyTutorial();
-                _tutorialManager.ActiveSuccessText(ETutorialTraning.ROLL_TRAINING);
+                _spawnendMonsterController.ChangeState(ENormalMonsterState.Die);
+                _tutorialManager.UnactiveRollTutorialUIObjects();
+                _tutorialManager.ActiveSuccessText(ETutorialTraning.RollTraning);
                 SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;

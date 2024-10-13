@@ -33,17 +33,17 @@ public class PlayerNormalAttack : MonoBehaviour
             _pc.Stat.Mana += + 2;
             switch (EAttackType)
             {
-                case EPlayerNoramlAttackType.ATTACK_1:
+                case EPlayerNoramlAttackType.Attack_1:
                     if (mc.ELookDir == _pc.ELookDir)
-                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BACK_ATTACK);
+                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BackAttack);
                     else
-                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage, EPlayerNoramlAttackType.ATTACK_1);
+                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage, EPlayerNoramlAttackType.Attack_1);
                     break;
-                case EPlayerNoramlAttackType.ATTACK_2:
-                    mc.DamagedFromPlayer(_pc.ELookDir, (int)(totalDamage * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.ATTACK_2);
+                case EPlayerNoramlAttackType.Attack_2:
+                    mc.DamagedFromPlayer(_pc.ELookDir, (int)(totalDamage * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.Attack_2);
                     break;
-                case EPlayerNoramlAttackType.ATTACK_3:
-                    mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.ATTACK_3);
+                case EPlayerNoramlAttackType.Attack_3:
+                    mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.Attack_3);
                     break;
             }
         }

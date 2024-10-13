@@ -11,7 +11,7 @@ public class HSlicerController : NormalMonsterController, IMelleAttackable
         base.Init();
         InitStat();
         EMonsterType = EMonsterNames.HeabySlicer;
-        EMonsterAttackType = ENormalMonsterAttackType.MELLE_ATTACK;
+        EMonsterAttackType = ENormalMonsterAttackType.MelleAttack;
     }
     public override void InitStat()
     {
@@ -25,6 +25,6 @@ public class HSlicerController : NormalMonsterController, IMelleAttackable
     }
     public void AllocateMelleAttackState()
     {
-        _states[(uint)ENormalMonsterState.MELLE_ATTACK] = new monster_states.MelleAttack(this);
+        _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);
     }
 }

@@ -15,5 +15,9 @@ public class MonsterSpawnManager
                Managers.MonsterPool.Get(eType, spawnPoints.transform.GetChild(i).transform.position);
             }
         }
+        else
+        {
+            Debug.DebugBreak();
+        }
     }
 }

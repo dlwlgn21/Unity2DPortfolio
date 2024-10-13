@@ -18,7 +18,7 @@ public class PlayerRespawnManager
     public void SpawnPlayer(PlayerController pc)
     {
         pc.Stat.InitHP();
-        pc.ChangeState(EPlayerState.IDLE);
+        pc.ChangeState(EPlayerState.Idle);
         pc.transform.position = _spawnPos;
     }
 }

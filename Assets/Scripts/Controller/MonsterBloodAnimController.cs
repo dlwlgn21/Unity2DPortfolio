@@ -48,12 +48,12 @@ public class MonsterBloodAnimController : WorldSpaceAnimController
 
         switch (eType)
         {
-            case EPlayerNoramlAttackType.ATTACK_1:
+            case EPlayerNoramlAttackType.Attack_1:
                 {
                     _animator.Play(BLOOD_BY_NORMAL_ATTACK_1_1, -1, 0f);
                     break;
                 }
-            case EPlayerNoramlAttackType.ATTACK_2:
+            case EPlayerNoramlAttackType.Attack_2:
                 {
                     if (randTwoIdx == 0)
                     {
@@ -65,7 +65,7 @@ public class MonsterBloodAnimController : WorldSpaceAnimController
                     }
                 }
                 break;
-            case EPlayerNoramlAttackType.ATTACK_3:
+            case EPlayerNoramlAttackType.Attack_3:
                 {
                     int rand = UnityEngine.Random.Range(0, 3);
                     if (rand == 0)
@@ -82,7 +82,7 @@ public class MonsterBloodAnimController : WorldSpaceAnimController
                     }
                     break;
                 }
-            case EPlayerNoramlAttackType.BACK_ATTACK:
+            case EPlayerNoramlAttackType.BackAttack:
                 {
                     int rand = UnityEngine.Random.Range(0, 3);
                     _spriteRenderer.flipX = !_spriteRenderer.flipX;

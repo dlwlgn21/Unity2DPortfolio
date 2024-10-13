@@ -2,13 +2,13 @@ using UnityEngine;
 
 enum EDoorState
 { 
-    IDLE,
-    OPENING,
-    OPEN,
-    CLOSING,
+    Idle,
+    Opnening,
+    Open,
+    Closing,
 }
 
-public class DoorController : BaseInteractableController
+public sealed class DoorController : BaseInteractableController
 {
     private Animator _animator;
     private EDoorState _eDoorState;
@@ -18,7 +18,7 @@ public class DoorController : BaseInteractableController
     {
         base.Init();
         _animator = GetComponent<Animator>();
-        _eDoorState = EDoorState.IDLE;
+        _eDoorState = EDoorState.Idle;
     }
 
     private void ChangeState(EDoorState eState)
@@ -26,22 +26,20 @@ public class DoorController : BaseInteractableController
         _eDoorState = eState;
         switch (_eDoorState)
         {
-            case EDoorState.IDLE:
+            case EDoorState.Idle:
                 _animator.Play("DoorIdle");
                 break;
-            case EDoorState.OPENING:
+            case EDoorState.Opnening:
                 _animator.Play("DoorOpening");
                 break;
-            case EDoorState.OPEN:
+            case EDoorState.Open:
                 _animator.Play("DoorOpen");
                 break;
-            case EDoorState.CLOSING:
+            case EDoorState.Closing:
                 _animator.Play("DoorClosing");
                 break;
         }
     }
-
-
 
     public override void OnPlayerEnter(Collider2D collision)
     {
@@ -61,7 +59,7 @@ public class DoorController : BaseInteractableController
             {
                 return;
             }
-            ChangeState(EDoorState.CLOSING);
+            ChangeState(EDoorState.Closing);
             _isDoorClosed = true;
         }
     }
@@ -78,7 +76,7 @@ public class DoorController : BaseInteractableController
             if (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E))
             {
                 _interactKey.UnactiveInteractKey();
-                ChangeState(EDoorState.OPENING);
+                ChangeState(EDoorState.Opnening);
                 _isDoorOpenOnce = true;
             }
         }
@@ -106,10 +104,10 @@ public class DoorController : BaseInteractableController
         return false;
     }
     private void OnDoorOpeningAnimEnd()
-    { ChangeState(EDoorState.OPEN); }
+    { ChangeState(EDoorState.Open); }
     private void OnDoorClosingAnimEnd()
     {
-        ChangeState(EDoorState.IDLE);
+        ChangeState(EDoorState.Idle);
         _isDoorOpenOnce = true;
     }
 }

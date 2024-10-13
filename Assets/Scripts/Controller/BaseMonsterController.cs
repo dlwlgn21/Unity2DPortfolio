@@ -58,7 +58,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         _damageTextController.ShowPopup(actualDamage);
         _hitFlasher.StartDamageFlash();
         _hitAnimController.PlayHitEffect(transform.position, eAttackType);
-        if (eAttackType == EPlayerNoramlAttackType.ATTACK_3 || eAttackType == EPlayerNoramlAttackType.BACK_ATTACK)
+        if (eAttackType == EPlayerNoramlAttackType.Attack_3 || eAttackType == EPlayerNoramlAttackType.BackAttack)
         {
             if (BigAttackEventHandler != null)
                 BigAttackEventHandler.Invoke();

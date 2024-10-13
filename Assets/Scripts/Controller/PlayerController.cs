@@ -8,37 +8,35 @@ using UnityEngine.UIElements;
 
 public enum EPlayerState
 {
-    IDLE,
-    RUN,
-    ROLL,
-    JUMP,
-    CLIMB,
-    FALL,
-    FALL_TO_TWICE_JUMP,
-    TWICE_JUMP_TO_FALL,
-    LAND,
-    NORMAL_ATTACK_1,
-    NORMAL_ATTACK_2,
-    NORMAL_ATTACK_3,
-    SKILL_CAST,
-    SKILL_SPAWN,
-    HITTED_MELLE_ATTACK,
-    HITTED_STATUS_PARALLYSIS,
-    HITTED_PROJECTILE_DAMAGE,
-    HITTED_PROJECTILE_KONCKBACK,
-    HITTED_PROJECTILE_STUN,
-    BLOCKING,
-    BLOCK_SUCESS,
-    DIE,
-    COUNT
+    Idle,
+    Run,
+    Roll,
+    Jump,
+    Climb,
+    Fall,
+    FallToTwiceJump,
+    TwiceJumpToFall,
+    Land,
+    NormalAttack_1,
+    NormalAttack_2,
+    NormalAttack_3,
+    SkillCast,
+    SkillSpawn,
+    HitByMelleAttack,
+    HitByStatusParallysis,
+    HitByProjectileKnockback,
+    Block,
+    BlockSucces,
+    Die,
+    Count
 }
 
 public enum EPlayerNoramlAttackType
 {
-    ATTACK_1,
-    ATTACK_2,
-    ATTACK_3,
-    BACK_ATTACK,
+    Attack_1,
+    Attack_2,
+    Attack_3,
+    BackAttack,
 }
 public class PlayerController : BaseCharacterController
 {
@@ -158,15 +156,15 @@ public class PlayerController : BaseCharacterController
         #region PAUSE
         if (IsSkipThisFrame())
         {
-            if (ECurrentState != EPlayerState.IDLE)
+            if (ECurrentState != EPlayerState.Idle)
             {
-                if (ECurrentState == EPlayerState.JUMP)
+                if (ECurrentState == EPlayerState.Jump)
                 {
-                    ChangeState(EPlayerState.FALL);
+                    ChangeState(EPlayerState.Fall);
                 }
                 else
                 {
-                    ChangeState(EPlayerState.IDLE);
+                    ChangeState(EPlayerState.Idle);
                 }
             }
             return;
@@ -178,10 +176,10 @@ public class PlayerController : BaseCharacterController
     #region Public
     public bool IsValidStateToChangeHitState()
     {
-        if (ECurrentState == EPlayerState.BLOCK_SUCESS ||
-            ECurrentState == EPlayerState.CLIMB ||
-            ECurrentState == EPlayerState.ROLL ||
-            ECurrentState == EPlayerState.SKILL_SPAWN)
+        if (ECurrentState == EPlayerState.BlockSucces ||
+            ECurrentState == EPlayerState.Climb ||
+            ECurrentState == EPlayerState.Roll ||
+            ECurrentState == EPlayerState.SkillSpawn)
         {
             return false;
         }
@@ -194,48 +192,48 @@ public class PlayerController : BaseCharacterController
         PlayerChangeStateEventHandler?.Invoke(eChangingState);
         switch (eChangingState)
         {
-            case EPlayerState.IDLE:
+            case EPlayerState.Idle:
                 break;
-            case EPlayerState.RUN:
+            case EPlayerState.Run:
                 break;
-            case EPlayerState.ROLL:
+            case EPlayerState.Roll:
                 FootDustParticle.Play();
                 break;
-            case EPlayerState.JUMP:
-                PlayMovementEffectAnimation(EPlayerMovementEffect.JUMP, ELookDir, transform.position);
+            case EPlayerState.Jump:
+                PlayMovementEffectAnimation(EPlayerMovementEffect.Jump, ELookDir, transform.position);
                 break;
-            case EPlayerState.CLIMB:
+            case EPlayerState.Climb:
                 break;
-            case EPlayerState.FALL:
+            case EPlayerState.Fall:
                 break;
-            case EPlayerState.FALL_TO_TWICE_JUMP:
+            case EPlayerState.FallToTwiceJump:
                 break;
-            case EPlayerState.TWICE_JUMP_TO_FALL:
+            case EPlayerState.TwiceJumpToFall:
                 break;
-            case EPlayerState.LAND:
-                PlayMovementEffectAnimation(EPlayerMovementEffect.LAND, ELookDir, transform.position);
+            case EPlayerState.Land:
+                PlayMovementEffectAnimation(EPlayerMovementEffect.Land, ELookDir, transform.position);
                 FootDustParticle.Play();
                 break;
-            case EPlayerState.NORMAL_ATTACK_1:
-                PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_1, ELookDir, transform.position);
+            case EPlayerState.NormalAttack_1:
+                PlayMovementEffectAnimation(EPlayerMovementEffect.NormalAttack_1, ELookDir, transform.position);
                 break;
-            case EPlayerState.NORMAL_ATTACK_2:
+            case EPlayerState.NormalAttack_2:
                 break;
-            case EPlayerState.NORMAL_ATTACK_3:
+            case EPlayerState.NormalAttack_3:
                 break;
-            case EPlayerState.SKILL_CAST:
+            case EPlayerState.SkillCast:
                 break;
-            case EPlayerState.SKILL_SPAWN:
+            case EPlayerState.SkillSpawn:
                 break;
-            case EPlayerState.HITTED_MELLE_ATTACK:
+            case EPlayerState.HitByMelleAttack:
                 break;
-            case EPlayerState.BLOCKING:
+            case EPlayerState.Block:
                 break;
-            case EPlayerState.BLOCK_SUCESS:
+            case EPlayerState.BlockSucces:
                 break;
-            case EPlayerState.DIE:
+            case EPlayerState.Die:
                 break;
-            case EPlayerState.COUNT:
+            case EPlayerState.Count:
                 break;
             default:
                 break;
@@ -328,31 +326,31 @@ public class PlayerController : BaseCharacterController
     protected override void InitStates()
     {
         _stateMachine = new StateMachine<PlayerController>();
-        _states = new State<PlayerController>[(uint)EPlayerState.COUNT];
-        _states[(uint)EPlayerState.IDLE] = new player_states.Idle(this);
-        _states[(uint)EPlayerState.RUN] = new player_states.Run(this);
-        _states[(uint)EPlayerState.ROLL] = new player_states.Roll(this);
-        _states[(uint)EPlayerState.JUMP] = new player_states.Jump(this);
-        _states[(uint)EPlayerState.CLIMB] = new player_states.Climb(this);
-        _states[(uint)EPlayerState.FALL] = new player_states.FallCanTwiceJump(this);
-        _states[(uint)EPlayerState.FALL_TO_TWICE_JUMP] = new player_states.FallToTwiceJump(this);
-        _states[(uint)EPlayerState.TWICE_JUMP_TO_FALL] = new player_states.TwiceJumpToFall(this);
-        _states[(uint)EPlayerState.LAND] = new player_states.Land(this);
-        _states[(uint)EPlayerState.NORMAL_ATTACK_1] = new player_states.NormalAttack1(this);
-        _states[(uint)EPlayerState.NORMAL_ATTACK_2] = new player_states.NormalAttack2(this);
-        _states[(uint)EPlayerState.NORMAL_ATTACK_3] = new player_states.NormalAttack3(this);
-        _states[(uint)EPlayerState.SKILL_CAST] = new player_states.CastLaunch(this);
-        _states[(uint)EPlayerState.SKILL_SPAWN] = new player_states.CastSpawn(this);
-        _states[(uint)EPlayerState.BLOCKING] = new player_states.Blocking(this);
-        _states[(uint)EPlayerState.BLOCK_SUCESS] = new player_states.BlockSuccess(this);
-        _states[(uint)EPlayerState.HITTED_MELLE_ATTACK] = new player_states.HittedMelleAttack(this);
-        _states[(uint)EPlayerState.HITTED_STATUS_PARALLYSIS] = new player_states.HittedParallysis(this);
-        _states[(uint)EPlayerState.HITTED_PROJECTILE_KONCKBACK] = new player_states.HittedProjectileKnockback(this);
-        _states[(uint)EPlayerState.DIE] = new player_states.Die(this);
-        _stateMachine.Init(this, _states[(uint)EPlayerState.IDLE]);
+        _states = new State<PlayerController>[(uint)EPlayerState.Count];
+        _states[(uint)EPlayerState.Idle] = new player_states.Idle(this);
+        _states[(uint)EPlayerState.Run] = new player_states.Run(this);
+        _states[(uint)EPlayerState.Roll] = new player_states.Roll(this);
+        _states[(uint)EPlayerState.Jump] = new player_states.Jump(this);
+        _states[(uint)EPlayerState.Climb] = new player_states.Climb(this);
+        _states[(uint)EPlayerState.Fall] = new player_states.FallCanTwiceJump(this);
+        _states[(uint)EPlayerState.FallToTwiceJump] = new player_states.FallToTwiceJump(this);
+        _states[(uint)EPlayerState.TwiceJumpToFall] = new player_states.TwiceJumpToFall(this);
+        _states[(uint)EPlayerState.Land] = new player_states.Land(this);
+        _states[(uint)EPlayerState.NormalAttack_1] = new player_states.NormalAttack1(this);
+        _states[(uint)EPlayerState.NormalAttack_2] = new player_states.NormalAttack2(this);
+        _states[(uint)EPlayerState.NormalAttack_3] = new player_states.NormalAttack3(this);
+        _states[(uint)EPlayerState.SkillCast] = new player_states.CastLaunch(this);
+        _states[(uint)EPlayerState.SkillSpawn] = new player_states.CastSpawn(this);
+        _states[(uint)EPlayerState.Block] = new player_states.Blocking(this);
+        _states[(uint)EPlayerState.BlockSucces] = new player_states.BlockSuccess(this);
+        _states[(uint)EPlayerState.HitByMelleAttack] = new player_states.HittedMelleAttack(this);
+        _states[(uint)EPlayerState.HitByStatusParallysis] = new player_states.HittedParallysis(this);
+        _states[(uint)EPlayerState.HitByProjectileKnockback] = new player_states.HittedProjectileKnockback(this);
+        _states[(uint)EPlayerState.Die] = new player_states.Die(this);
+        _stateMachine.Init(this, _states[(uint)EPlayerState.Idle]);
 
         // 6.10 FallState에서도 이단점프 할 수 있도록 하기 위해 추가.
-        ((player_states.FallCanTwiceJump)_states[(uint)EPlayerState.FALL]).SubscribeTwiceJumpEventHandler((player_states.Jump)_states[(uint)EPlayerState.JUMP]);
+        ((player_states.FallCanTwiceJump)_states[(uint)EPlayerState.Fall]).SubscribeTwiceJumpEventHandler((player_states.Jump)_states[(uint)EPlayerState.Jump]);
     }
     #endregion
 
@@ -367,15 +365,15 @@ public class PlayerController : BaseCharacterController
     #region SkillEvents
     private void OnValidSkillCastTypeTiming() 
     { 
-        Debug.Assert(ECurrentState == EPlayerState.SKILL_CAST);
-        if (ECurrentState == EPlayerState.SKILL_CAST)
+        Debug.Assert(ECurrentState == EPlayerState.SkillCast);
+        if (ECurrentState == EPlayerState.SkillCast)
         {
             PlayerSkillValidAnimTimingEventHandler?.Invoke();
         }
     }
     private void OnValidSkillSpawnTypeTiming()
     {
-        if (ECurrentState == EPlayerState.SKILL_SPAWN)
+        if (ECurrentState == EPlayerState.SkillSpawn)
         {
             PlayerSkillValidAnimTimingEventHandler?.Invoke();
         }
@@ -383,12 +381,12 @@ public class PlayerController : BaseCharacterController
     #endregion
     private void OnValidRollEffectTiming()
     {
-        PlayMovementEffectAnimation(EPlayerMovementEffect.ROLL, ELookDir, transform.position);
+        PlayMovementEffectAnimation(EPlayerMovementEffect.Roll, ELookDir, transform.position);
     }
 
     private void OnPlayerNormalAttack1ValidStopEffectTiming()
     {
-        PlayMovementEffectAnimation(EPlayerMovementEffect.NORMAL_ATTACK_LAND, ELookDir, transform.position);
+        PlayMovementEffectAnimation(EPlayerMovementEffect.NormalAttackLand, ELookDir, transform.position);
     }
     private void OnPlayerFootStep()
     {
@@ -408,10 +406,10 @@ public class PlayerController : BaseCharacterController
         {
             return;
         }
-        if (ECurrentState == EPlayerState.BLOCKING && ELookDir != mc.ELookDir)
+        if (ECurrentState == EPlayerState.Block && ELookDir != mc.ELookDir)
         {
-            HitEffectEventHandler?.Invoke(EPlayerState.BLOCK_SUCESS);
-            ChangeState(EPlayerState.BLOCK_SUCESS);
+            HitEffectEventHandler?.Invoke(EPlayerState.BlockSucces);
+            ChangeState(EPlayerState.BlockSucces);
             mc.OnPlayerBlockSuccess();
             return;
         }
@@ -448,18 +446,18 @@ public class PlayerController : BaseCharacterController
     private void InvokePlayerHitEvent(int damge, int beforeDamageHP, int afterDamageHP)
     {
         HitUIEventHandler?.Invoke(damge, beforeDamageHP, afterDamageHP);
-        HitEffectEventHandler?.Invoke(EPlayerState.HITTED_MELLE_ATTACK);
+        HitEffectEventHandler?.Invoke(EPlayerState.HitByMelleAttack);
         Managers.TimeManager.OnPlayerHittedByMonster();
     }
     private void ChangeHitOrDieState()
     {
         if (Stat.HP <= 0)
         {
-            ChangeState(EPlayerState.DIE);
+            ChangeState(EPlayerState.Die);
         }
         else
         {
-            ChangeState(EPlayerState.HITTED_MELLE_ATTACK);
+            ChangeState(EPlayerState.HitByMelleAttack);
         }
     }
 
@@ -469,7 +467,7 @@ public class PlayerController : BaseCharacterController
         {
             case EAttackStatusEffect.None:
             case EAttackStatusEffect.Knockback:
-                player_states.BaseHitted state = (player_states.BaseHitted)_states[(uint)EPlayerState.HITTED_MELLE_ATTACK];
+                player_states.BaseHitted state = (player_states.BaseHitted)_states[(uint)EPlayerState.HitByMelleAttack];
                 Debug.Assert(state != null);
                 Vector2 knockbackForce = mc.Stat.KnockbackForce;
                 if (mc.ELookDir == ECharacterLookDir.Left)
@@ -500,13 +498,13 @@ public class PlayerController : BaseCharacterController
                 }
                 break;
             case EAttackStatusEffect.Parallysis:
-                ChangeState(EPlayerState.HITTED_STATUS_PARALLYSIS);
+                ChangeState(EPlayerState.HitByStatusParallysis);
                 break;
         }
     }
     private void OnPlayerFallToDeadZone()
     {
-        ChangeState(EPlayerState.DIE);
+        ChangeState(EPlayerState.Die);
     }
     private IEnumerator StartSlowStateCountdownCo(float slowTimeInSec)
     {

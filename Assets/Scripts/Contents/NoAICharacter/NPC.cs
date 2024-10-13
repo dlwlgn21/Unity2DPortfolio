@@ -13,6 +13,7 @@ public abstract class NPC : MonoBehaviour
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         _animator = GetComponent<Animator>();
+        Managers.Dialog.OnConversationEndHandler -= OnNPCDialogEnd;
         Managers.Dialog.OnConversationEndHandler += OnNPCDialogEnd;
     }
 

@@ -29,6 +29,13 @@ public class MonsterStat : BaseStat
         //    afterDamageHp = 0;
         //    return 0;
         //}
+        // TutorialScene에서의 0 데미지 처리를 위해서 추가함.
+        if (damage == 0)
+        {
+            beforeDamageHp = HP;
+            afterDamageHp = HP;
+            return 0;
+        }
         int actualDamage = Mathf.Max(1, damage - Defence);
         beforeDamageHp = HP;
         HP -= actualDamage;
@@ -55,10 +62,11 @@ public class MonsterStat : BaseStat
             Exp = dict[(int)eMonster].exp;
         }
     }
-    public void SetHPForTutorialAndAttackToZero()
+    public void InitStatForTutorial()
     {
         HP = TUTIRIAL_HP;
         MaxHP = TUTIRIAL_HP;
         Attack = 0;
+        Exp = 0;
     }
 }

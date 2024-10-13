@@ -37,10 +37,10 @@ public class PlayerHitAnimController : WorldSpaceAnimController
         SetFixedFos(_pc.transform.position);
         switch (eState)
         {
-            case EPlayerState.HITTED_MELLE_ATTACK:
+            case EPlayerState.HitByMelleAttack:
                 _animator.Play(HIT_ANIM_2_KEY, -1, 0f);
                 break;
-            case EPlayerState.BLOCK_SUCESS:
+            case EPlayerState.BlockSucces:
                 _animator.Play(HIT_ANIM_3_KEY, -1, 0f);
                 break;
             default:

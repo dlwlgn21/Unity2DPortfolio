@@ -14,7 +14,7 @@ public sealed class Skill_RollController : Skill_BaseController
     {
         if (IsValidStateAndManaToUseSkill())
         {
-            _pc.ChangeState(EPlayerState.ROLL);
+            _pc.ChangeState(EPlayerState.Roll);
             StartCountdownCoolTime();
             return true;
         }

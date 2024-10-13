@@ -3,192 +3,198 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public enum ETutorialCountText
 { 
-    ROLL,
-    BACK_ATTACK,
-    BLOCK,
+    Roll,
+    BackAttack,
+    Block,
 }
 
 public enum ETutorialTraning
 {
-    ATTACK_TRAINING,
-    ROLL_TRAINING,
-    BACK_ATTACK_TRAINING,
-    BLOCK_TRAINING,
+    AttackTraning,
+    RollTraning,
+    BackAttackTraning,
+    BlockTraning,
+    SkillTraning,
 }
 
 public class TutorialManager : MonoBehaviour
 {
-
-    [SerializeField] private GameObject _rollOpenInteractBox;
-    [SerializeField] private GameObject _backAttackOpenInteractBox;
-    [SerializeField] private GameObject _blockOpenInteractBox;
-    public GameObject KeyZ { get; private set; }
-    public GameObject KeyX { get; private set; }
-    public GameObject KeyC { get; private set; }
-
-    private GameObject _UIKeys;
-    private GameObject _moveKeys;
-    private GameObject _battleKeys;
-    private GameObject _attackKeyText;
-    private GameObject _blockKeyText;
-    private GameObject _rollKeyText;
-    private GameObject _rollCountTexts;
-    private GameObject _backAttackTexts;
-    private TextMeshProUGUI _rollCountText;
-    private TextMeshProUGUI _blockCountText;
-    private TextMeshProUGUI _backAttackCountText;
-    private TextMeshProUGUI _successText;
+    [SerializeField] GameObject _rollOpenInteractBox;
+    [SerializeField] GameObject _backAttackOpenInteractBox;
+    [SerializeField] GameObject _blockOpenInteractBox;
+    [SerializeField] GameObject _skillOpenInteractBox;
     
-    private const float ACTIVE_OBJECTS_TW_SCALE_END_VALUE = 1f; 
-    private const float ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE = 0.5f;
-    private const float COUNT_TEXT_TW_SCALE_END_VALUE = 2f;
-    private const float COUNT_TEXT_TW_SCALE_DURATION_VALUE = 0.5f;
+    
+    GameObject _UIKeys;
+    GameObject _moveKeys;
+    GameObject _attackTitleText;
+    GameObject _attackExplainText;
+    GameObject _blockTitleText;
+    GameObject _blockExplainText;
+    GameObject _rollTitleText;
+    GameObject _rollCountTexts;
+    GameObject _rollExplainText;
+    GameObject _backAttackTitleTexts;
+
+
+    TextMeshProUGUI _rollCountText;
+    TextMeshProUGUI _blockCountText;
+    TextMeshProUGUI _backAttackCountText;
+    TextMeshProUGUI _successText;
+    TextMeshProUGUI _skillTutorialExplainText;
+    
+    const float TW_SCALE_END_VALUE = 1f; 
+    const float TW_SCALE_DURATION_VALUE = 0.5f;
+    const float COUNT_TEXT_TW_SCALE_END_VALUE = 2f;
+    const float COUNT_TEXT_TW_SCALE_DURATION_VALUE = 0.5f;
 
     private void Awake()
     {
-        _UIKeys = transform.GetChild(0).gameObject;
-        _moveKeys = _UIKeys.transform.GetChild(0).gameObject;
-        _battleKeys = _UIKeys.transform.GetChild(1).gameObject;
-        KeyZ = _battleKeys.transform.GetChild(0).gameObject;
-        KeyX = _battleKeys.transform.GetChild(1).gameObject;
-        KeyC = _battleKeys.transform.GetChild(2).gameObject;
+        #region Assign
+        _UIKeys = transform.Find("UIKeys").gameObject;
+        _moveKeys = _UIKeys.transform.Find("MoveKeys").gameObject;
         _moveKeys.transform.localScale = Vector3.zero;
-
-        UnactiveMoveKeys();
-        UnactiveBattleKeys();
-
-        _attackKeyText = _UIKeys.transform.GetChild(2).gameObject;
-        _blockKeyText = _UIKeys.transform.GetChild(3).gameObject;
-        _blockCountText = _blockKeyText.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-        _rollKeyText = _UIKeys.transform.GetChild(4).gameObject;
-        _rollCountTexts = _UIKeys.transform.GetChild(5).gameObject;
-        _rollCountText = _rollCountTexts.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-        _backAttackTexts = _UIKeys.transform.GetChild(6).gameObject;
-        _backAttackCountText = _backAttackTexts.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-        _successText = _UIKeys.transform.GetChild(7).gameObject.GetComponent<TextMeshProUGUI>();
-        
-        _attackKeyText.transform.localScale = Vector3.zero;
-        _blockKeyText.transform.localScale = Vector3.zero;
-        _rollKeyText.transform.localScale = Vector3.zero;
+        _attackTitleText = _UIKeys.transform.Find("AttackTutorialTitleText").gameObject;
+        _attackExplainText = _attackTitleText.transform.Find("AttackTutorialExplainText").gameObject;
+        _blockTitleText = _UIKeys.transform.Find("BlockTutorialTitleText").gameObject;
+        _blockExplainText = _blockTitleText.transform.Find("BlockTutorialExplainText ").gameObject;
+        _blockCountText = _blockTitleText.transform.Find("BlockCountText").gameObject.GetComponent<TextMeshProUGUI>();
+        _rollTitleText = _UIKeys.transform.Find("RollTutorialTitleText").gameObject;
+        _rollExplainText = _rollTitleText.transform.Find("RollTutorialExplainText ").gameObject;
+        _rollCountTexts = _rollTitleText.transform.Find("RollCountTexts").gameObject;
+        _rollCountText = _rollCountTexts.transform.Find("RollCountText").gameObject.GetComponent<TextMeshProUGUI>();
+        _backAttackTitleTexts = _UIKeys.transform.Find("BackAttackTutorialTitleText").gameObject;
+        _backAttackCountText = _backAttackTitleTexts.transform.Find("BackAttackCountText").gameObject.GetComponent<TextMeshProUGUI>();
+        _successText = _UIKeys.transform.Find("SuccessText").gameObject.GetComponent<TextMeshProUGUI>();
+        _skillTutorialExplainText = _UIKeys.transform.Find("SkillTutorialExplainText").GetComponent<TextMeshProUGUI>();
+        #endregion
+        #region SetToZero
+        _attackTitleText.transform.localScale = Vector3.zero;
+        _attackExplainText.transform.localScale = Vector3.zero;
+        _blockTitleText.transform.localScale = Vector3.zero;
+        _blockExplainText.transform.localScale = Vector3.zero;
+        _rollTitleText.transform.localScale = Vector3.zero;
         _rollCountTexts.transform.localScale = Vector3.zero;
-        _backAttackTexts.transform.localScale = Vector3.zero;
+        _rollExplainText.transform.localScale = Vector3.zero;
+        _backAttackTitleTexts.transform.localScale = Vector3.zero;
+        _skillTutorialExplainText.transform.localScale = Vector3.zero;
         _successText.transform.localScale = Vector3.zero;
+        #endregion
+        UnactiveMoveKeys();
     }
-    public void Clear()
-    {
-        _UIKeys.SetActive(false);
-    }
+
     public void ActiveMoveKeys()        
     { 
         _moveKeys.SetActive(true);
-        _moveKeys.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
+        _moveKeys.transform.DOScale(TW_SCALE_END_VALUE, TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
     }
     public void UnactiveMoveKeys()     { _moveKeys.SetActive(false); }
-    public void ActiveBattleKeys()      
-    { 
-        _battleKeys.SetActive(true);
-        KeyZ.SetActive(true);
-        KeyX.SetActive(true);
-        KeyC.SetActive(true);
-    }
-    public void UnactiveBattleKeys()   { _battleKeys.SetActive(false); }
 
-    public void ActiveAttackKeyTutorial()
+
+    public void ActiveAttackTutorialUIObjects()
     {
-        ActiveAttackKey();
-        ActiveAttackKeyText();
+        ActiveAttackKeyTexts();
         _rollOpenInteractBox.SetActive(false);
     }
-    public void UnactiveAttackKeyTutorial()
+    public void UnactiveAttackTutorialUIObjects()
     {
-        UnactiveAttackKey();
-        UnactiveAttackKeyText();
+        UnactiveAttackKeyTexts();
         _rollOpenInteractBox.SetActive(true);
     }
-    public void ActiveRollKeyTutorial()
+    public void ActiveRollTutorialUIObjects()
     {
-        ActiveRollKey();
-        ActiveRollKeyText();
+        ActiveRollTexts();
         _backAttackOpenInteractBox.SetActive(false);
     }
-    public void UnactiveRollKeyTutorial()
+    public void UnactiveRollTutorialUIObjects()
     {
-        UnactiveRollKey();
-        UnactiveRollKeyText();
+        UnactiveRollTexts();
         _backAttackOpenInteractBox.SetActive(true);
     }
 
-    public void ActiveBackAttackTutorial()
+    public void ActiveBackAttackTutorialUIObjects()
     {
-        _backAttackTexts.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
+        _backAttackTitleTexts.transform.DOScale(TW_SCALE_END_VALUE, TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
         _blockOpenInteractBox.SetActive(false);
     }
 
-    public void UnactiveBackAttackTutorial()
+    public void UnctiveBackAttackTutorialUIObjects()
     {
-        _backAttackTexts.SetActive(false);
+        _backAttackTitleTexts.SetActive(false);
         _blockOpenInteractBox.SetActive(true);
+    }
+
+    public void ActiveBlockTutorialUIObjects()
+    {
+        ActiveBlockTexts();
+        _skillOpenInteractBox.SetActive(false);
+    }
+
+    public void UnactiveBlockTutorialUIObjects()
+    {
+        UnactiveBlockTexts();
+        _skillOpenInteractBox.SetActive(true);
+    }
+
+    public void ActiveSkillTutorialUIObjects()
+    {
+        ActiveSkillText();
+    }
+
+    public void UnactiveSkillTutorialUIObjects()
+    {
+        UnactiveSkillText();
     }
 
     public void ActiveSuccessText(ETutorialTraning eType)
     {
         switch (eType)
         {
-            case ETutorialTraning.ATTACK_TRAINING:
+            case ETutorialTraning.AttackTraning:
                 _successText.text = "기본공격 트레이닝 성공!";
                 break;
-            case ETutorialTraning.ROLL_TRAINING:
+            case ETutorialTraning.RollTraning:
                 _successText.text = "구르기 트레이닝 성공!";
                 break;
-            case ETutorialTraning.BACK_ATTACK_TRAINING:
+            case ETutorialTraning.BackAttackTraning:
                 _successText.text = "백어택 트레이닝 성공!";
                 break;
-            case ETutorialTraning.BLOCK_TRAINING:
+            case ETutorialTraning.BlockTraning:
                 _successText.text = "막기 트레이닝 성공!";
                 break;
+            case ETutorialTraning.SkillTraning:
+                _successText.text = "스킬 트레이닝 성공!\n3초 후에 현실로 점프합니다!";
+                break;
         }
-        _successText.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, 1.5f).SetEase(Ease.OutElastic).OnComplete(OnSuccessTextScaleTWEnd);
-
+        _successText.transform.DOScale(TW_SCALE_END_VALUE, 1.5f).SetEase(Ease.OutElastic).OnComplete(OnSuccessTextScaleTWEnd);
     }
 
-    public void OnSuccessTextScaleTWEnd()
-    {
-        _successText.transform.DOScale(0f, 0.2f);
-    }
+
 
     public void IncreaseCountText(ETutorialCountText eType, int count)
     {
         switch (eType)
         {
-            case ETutorialCountText.ROLL:
+            case ETutorialCountText.Roll:
                 _rollCountText.text = count.ToString();
                 _rollCountText.gameObject.transform.DOScale(COUNT_TEXT_TW_SCALE_END_VALUE, COUNT_TEXT_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic).OnComplete(OnRollCountTextScaleTWEnd);
                 break;
-            case ETutorialCountText.BACK_ATTACK:
+            case ETutorialCountText.BackAttack:
                 _backAttackCountText.text = count.ToString();
                 _backAttackCountText.gameObject.transform.DOScale(COUNT_TEXT_TW_SCALE_END_VALUE, COUNT_TEXT_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic).OnComplete(OnBackAttackCountTextScaleTWEnd);
                 break;
-            case ETutorialCountText.BLOCK:
+            case ETutorialCountText.Block:
                 _blockCountText.text = count.ToString();
                 _blockCountText.gameObject.transform.DOScale(COUNT_TEXT_TW_SCALE_END_VALUE, COUNT_TEXT_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic).OnComplete(OnBlockCountTextScaleTWEnd);
                 break;
         }
     }
 
-    public void ActiveBlockKeyTutorial()
-    {
-        ActiveBlockKey();
-        ActiveBlockKeyText();
-    }
 
-    public void UnactiveBlockKeyTutorial()
-    {
-        UnactiveBlockKey();
-        UnactiveBlockKeyText();
-    }
 
     public void OnRollCountTextScaleTWEnd()
     {
@@ -203,70 +209,58 @@ public class TutorialManager : MonoBehaviour
         _blockCountText.transform.localScale = Vector3.one;
     }
 
-    #region PRIVATE_SECTION
-    private void ActiveAttackKey()
-    {
-        ActiveBattleKeys();
-        KeyX.SetActive(false);
-        KeyC.SetActive(false);
-    }
-    private void UnactiveAttackKey()
-    {
-        KeyZ.SetActive(false);
-        UnactiveBattleKeys();
-    }
-    private void ActiveBlockKey()
-    {
-        ActiveBattleKeys();
-        KeyZ.SetActive(false);
-        KeyC.SetActive(false);
-    }
-    private void UnactiveBlockKey()
-    {
-        KeyX.SetActive(false);
-        UnactiveBattleKeys();
-    }
-    private void ActiveRollKey()
-    {
-        ActiveBattleKeys();
-        KeyZ.SetActive(false);
-        KeyX.SetActive(false);
-    }
+    #region Private
 
-    private void UnactiveRollKey()
+    void ActiveAttackKeyTexts()
     {
-        KeyC.SetActive(false);
-        UnactiveBattleKeys();
+        StartScaleTW(_attackTitleText.transform);
+        StartScaleTW(_attackExplainText.transform);
     }
-
-
-    private void ActiveAttackKeyText()
+    void UnactiveAttackKeyTexts()
     {
-        _attackKeyText.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
+        _attackTitleText.SetActive(false);
+        _attackExplainText.SetActive(false);
     }
-    private void UnactiveAttackKeyText()
+    void ActiveRollTexts()
     {
-        _attackKeyText.SetActive(false);
+        StartScaleTW(_rollTitleText.transform);
+        StartScaleTW(_rollCountTexts.transform);
+        StartScaleTW(_rollExplainText.transform);
     }
-    private void ActiveRollKeyText()
+    void UnactiveRollTexts()
     {
-        _rollKeyText.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
-        _rollCountTexts.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
-    }
-    private void UnactiveRollKeyText()
-    {
-        _rollKeyText.SetActive(false);
+        _rollTitleText.SetActive(false);
         _rollCountTexts.SetActive(false);
+        _rollExplainText.SetActive(false);
     }
 
-    private void ActiveBlockKeyText()
+    void ActiveBlockTexts()
     {
-        _blockKeyText.transform.DOScale(ACTIVE_OBJECTS_TW_SCALE_END_VALUE, ACTIVE_OBJECTS_TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
+        StartScaleTW(_blockTitleText.transform);
+        StartScaleTW(_blockExplainText.transform);
     }
-    private void UnactiveBlockKeyText()
+    void UnactiveBlockTexts()
     {
-        _blockKeyText.SetActive(false);
+        _blockExplainText.SetActive(false);
+        _blockTitleText.SetActive(false);
     }
 
+    void ActiveSkillText()
+    {
+        _skillTutorialExplainText.DOScale(1f, 1f).SetEase(Ease.InOutElastic);
+    }
+    void UnactiveSkillText()
+    {
+        _skillTutorialExplainText.DOScale(0f, 1f).SetEase(Ease.InOutElastic);
+    }
+    void OnSuccessTextScaleTWEnd()
+    {
+        _successText.transform.DOScale(0f, 0.2f);
+    }
+
+    void StartScaleTW(Transform transform)
+    {
+        Managers.Tween.StartUIScaleTW(transform, TW_SCALE_END_VALUE, TW_SCALE_DURATION_VALUE);
+    }
     #endregion
 }

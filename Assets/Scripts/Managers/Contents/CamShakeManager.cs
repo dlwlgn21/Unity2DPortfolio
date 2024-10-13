@@ -55,10 +55,10 @@ public class CamShakeManager
     {
         switch (eState)
         {
-            case EPlayerState.HITTED_MELLE_ATTACK:
+            case EPlayerState.HitByMelleAttack:
                 CamShake(ECamShakeType.PLAYER_HITTED_BY_MONSTER);
                 break;
-            case EPlayerState.BLOCK_SUCESS:
+            case EPlayerState.BlockSucces:
                 CamShake(ECamShakeType.PLAYER_BLOCK_SUCCES);
                 break;
         }
@@ -69,11 +69,11 @@ public class CamShakeManager
     {
         switch (eState)
         {
-            case ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
-            case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
+            case ENormalMonsterState.HitByPlayerBlockSucces:
+            case ENormalMonsterState.HitByPlayerSkillKnockbackBoom:
                 Managers.CamShake.CamShake(ECamShakeType.MONSTER_HITTED_BY_KNOCKBACK_BOMB);
                 break;
-            case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
+            case ENormalMonsterState.HitByPlayerSkillParallysis:
                 CamShake(ECamShakeType.MONSTER_HITTED_BY_REAPER_ATTACK);
                 break;
         }

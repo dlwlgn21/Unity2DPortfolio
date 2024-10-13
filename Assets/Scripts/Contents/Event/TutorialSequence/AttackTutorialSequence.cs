@@ -4,19 +4,16 @@ public class AttackTutorialSequence : TutorialSequence
     public override void OnDialogEnd()
     {
         base.Init();
-        _tutorialManager.ActiveAttackKeyTutorial();
+        SpawnMonster();
+        _tutorialManager.ActiveAttackTutorialUIObjects();
         _isTutorialStart = true;
     }
     private void Update()
     {
-        if (!_isTutorialStart)
+        if (_isTutorialStart && _spawnendMonsterController.Stat.HP <= 0)
         {
-            return;
-        }
-        if (_spawnendMonsterController.Stat.HP <= 0)
-        {
-            _tutorialManager.UnactiveAttackKeyTutorial();
-            _tutorialManager.ActiveSuccessText(ETutorialTraning.ATTACK_TRAINING);
+            _tutorialManager.UnactiveAttackTutorialUIObjects();
+            _tutorialManager.ActiveSuccessText(ETutorialTraning.AttackTraning);
             SwitchCamToMain();
             gameObject.SetActive(false);
         }

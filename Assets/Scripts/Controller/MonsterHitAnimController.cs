@@ -26,16 +26,16 @@ public class MonsterHitAnimController : WorldSpaceAnimController
         SetFixedFos(pos);
         switch (eType)
         {
-            case EPlayerNoramlAttackType.ATTACK_1:
+            case EPlayerNoramlAttackType.Attack_1:
                 _animator.Play(HIT_EFFECT_1_KEY, -1, 0f);
                 break;
-            case EPlayerNoramlAttackType.ATTACK_2:
+            case EPlayerNoramlAttackType.Attack_2:
                 _animator.Play(HIT_EFFECT_2_KEY, -1, 0f);
                 break;
-            case EPlayerNoramlAttackType.ATTACK_3:
+            case EPlayerNoramlAttackType.Attack_3:
                 _animator.Play(HIT_EFFECT_3_KEY, -1, 0f);
                 break;
-            case EPlayerNoramlAttackType.BACK_ATTACK:
+            case EPlayerNoramlAttackType.BackAttack:
                 _animator.Play(HIT_EFFECT_3_KEY, -1, 0f);
                 break;
             default:

@@ -9,23 +9,23 @@ using UnityEngine.Rendering.Universal;
 
 public enum ENormalMonsterState
 {
-    IDLE,
-    TRACE,
-    MELLE_ATTACK,
-    LAUNCH_ATTACK,
-    HITTED_BY_PLAYER_BLOCK_SUCCESS,
-    HITTED_BY_PLAYER_SKILL_PARALYSIS,
-    HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB,
-    DIE,
-    COUNT
+    Idle,
+    Trace,
+    MelleAttack,
+    LaunchAttack,
+    HitByPlayerBlockSucces,
+    HitByPlayerSkillParallysis,
+    HitByPlayerSkillKnockbackBoom,
+    Die,
+    Count
 }
 
 public enum ENormalMonsterAttackType
 {
-    MELLE_ATTACK,
-    LAUNCH_ATTACK,
-    BOTH_ATTACK,
-    COUNT
+    MelleAttack,
+    LaunchAttack,
+    BothAttack,
+    Count
 }
 public abstract class NormalMonsterController : BaseMonsterController, IAttackZoneDetectable, ITraceZoneDetectable
 {
@@ -85,7 +85,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         SetEnableTrueAllLightsWithoutDieLight();
         HealthBar.InitForRespawn();
         RigidBody.WakeUp();
-        ChangeState(ENormalMonsterState.IDLE);
+        ChangeState(ENormalMonsterState.Idle);
     }
     public void ChangeState(ENormalMonsterState eChangingState)
     {
@@ -104,10 +104,10 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
     public void SetLookDir()
     {
-        if (ECurrentState == ENormalMonsterState.MELLE_ATTACK ||
-            ECurrentState == ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS ||
-            ECurrentState == ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS ||
-            ECurrentState == ENormalMonsterState.DIE)
+        if (ECurrentState == ENormalMonsterState.MelleAttack ||
+            ECurrentState == ENormalMonsterState.HitByPlayerBlockSucces ||
+            ECurrentState == ENormalMonsterState.HitByPlayerSkillParallysis ||
+            ECurrentState == ENormalMonsterState.Die)
         {
             return;
         }
@@ -142,21 +142,21 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     #region HittedByPlayer
     public override void DamagedFromPlayer(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
     {
-        if (ECurrentState != ENormalMonsterState.DIE)
+        if (ECurrentState != ENormalMonsterState.Die)
         {
             DecreasHpAndInvokeHitEvents(damage, eAttackType);
             _bloodAnimationController.PlayerBloodAnimation(transform.position, ELookDir, eAttackType);
             ((monster_states.BaseMonsterState)_states[(int)ECurrentState]).MakeSlow();
             switch (eAttackType)
             {
-                case EPlayerNoramlAttackType.ATTACK_1:
+                case EPlayerNoramlAttackType.Attack_1:
                     AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
                     break;
-                case EPlayerNoramlAttackType.ATTACK_2:
+                case EPlayerNoramlAttackType.Attack_2:
                     AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
                     break;
-                case EPlayerNoramlAttackType.ATTACK_3:
-                case EPlayerNoramlAttackType.BACK_ATTACK:
+                case EPlayerNoramlAttackType.Attack_3:
+                case EPlayerNoramlAttackType.BackAttack:
                     AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_3_FORCE_COEFF);
                     break;
                 default:
@@ -165,14 +165,14 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             if (Stat.HP <= 0)
             {
                 SetEnableFalseAllLightsWithoutDieLight();
-                ChangeState(ENormalMonsterState.DIE);
+                ChangeState(ENormalMonsterState.Die);
             }
 
         }
     }
     public override void OnPlayerBlockSuccess()
     {
-        ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS);
+        ChangeState(ENormalMonsterState.HitByPlayerBlockSucces);
         AddKnockbackForce(new Vector2(5f, 3f));
     }
     public override void OnHittedByPlayerSkill(data.SkillInfo skillInfo)
@@ -183,7 +183,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             case ESkillType.Spawn_Reaper_LV1:
             case ESkillType.Spawn_Reaper_LV2:
             case ESkillType.Spawn_Reaper_LV3:
-                ChangeState(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
+                ChangeState(ENormalMonsterState.HitByPlayerSkillParallysis);
                 _parallysisCoroutine = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime));
                 break;
             case ESkillType.Spawn_Shooter_LV1:
@@ -195,12 +195,12 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             case ESkillType.Cast_BlackFlame_LV1:
             case ESkillType.Cast_BlackFlame_LV2:
             case ESkillType.Cast_BlackFlame_LV3:
-                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.Attack_3);
                 break;
             case ESkillType.Cast_SwordStrike_LV1:
             case ESkillType.Cast_SwordStrike_LV2:
             case ESkillType.Cast_SwordStrike_LV3:
-                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.ATTACK_3);
+                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.Attack_3);
                 break;
             default:
                 Debug.Assert(false);
@@ -215,13 +215,13 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     protected override void InitStates()
     {
         _stateMachine = new StateMachine<NormalMonsterController>();
-        _states = new State<NormalMonsterController>[(uint)ENormalMonsterState.COUNT];
-        _states[(uint)ENormalMonsterState.IDLE] = new monster_states.Idle(this);
-        _states[(uint)ENormalMonsterState.TRACE] = new monster_states.Trace(this);
-        _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS] = new monster_states.HittedKnockbackByBlockSuccess(this);
-        _states[(uint)ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS] = new monster_states.HittedParalysis(this);
-        _states[(uint)ENormalMonsterState.DIE] = new monster_states.Die(this);
-        _stateMachine.Init(this, _states[(uint)ENormalMonsterState.IDLE]);
+        _states = new State<NormalMonsterController>[(uint)ENormalMonsterState.Count];
+        _states[(uint)ENormalMonsterState.Idle] = new monster_states.Idle(this);
+        _states[(uint)ENormalMonsterState.Trace] = new monster_states.Trace(this);
+        _states[(uint)ENormalMonsterState.HitByPlayerBlockSucces] = new monster_states.HittedKnockbackByBlockSuccess(this);
+        _states[(uint)ENormalMonsterState.HitByPlayerSkillParallysis] = new monster_states.HittedParalysis(this);
+        _states[(uint)ENormalMonsterState.Die] = new monster_states.Die(this);
+        _stateMachine.Init(this, _states[(uint)ENormalMonsterState.Idle]);
     }
     #endregion
     #region Private
@@ -271,7 +271,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     IEnumerator PlayHitAnimForSeconds(float timeInSec)
     {
         yield return new WaitForSeconds(timeInSec);
-        ChangeState(ENormalMonsterState.IDLE);
+        ChangeState(ENormalMonsterState.Idle);
     }
 
     void SetEnableFalseAllLightsWithoutDieLight()

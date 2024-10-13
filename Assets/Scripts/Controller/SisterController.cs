@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using JetBrains.Annotations;
-public enum ESister
+public enum ESisterType
 {
-    FIRST_MEET,
-    ATTACK_TUTORUAL,
-    ROLL_TUTORIAL,
-    BACK_ATTACK_TUTORIAL,
-    BLOCK_TUTORIAL,
-    LAST_MEET,
+    FirstMeet,
+    AttackTutorial,
+    RollTutorial,
+    BackAttackTutorial,
+    BlockTutorial,
+    SkillTutorial,
 }
 
 public class SisterController : QuestNPC, ITalkable
 {
-    [SerializeField] private ESister _eSisterType;
+    [SerializeField] private ESisterType _eSisterType;
     [SerializeField] private DialogText _dialogText;
     public override void Interact()
     {
@@ -23,7 +23,6 @@ public class SisterController : QuestNPC, ITalkable
     }
     public void Talk(DialogText dText)
     {
-        Debug.Log("Talk!!!");
         Managers.Dialog.DisplayNextParagraph(dText);
     }
 
@@ -35,47 +34,49 @@ public class SisterController : QuestNPC, ITalkable
             _animator.Play("Teleport");
         }
     }
-    public void OnTeleportAnimFullyPlayed()
+    void OnTeleportAnimFullyPlayed()
     {
         switch (_eSisterType)
         {
-            case ESister.FIRST_MEET:
+            case ESisterType.FirstMeet:
                 break;
-            case ESister.ATTACK_TUTORUAL:
+            case ESisterType.AttackTutorial:
                 LoadSequence("Prefabs/Tutorial/AttackTutorialSequence").OnDialogEnd();
                 break;
-            case ESister.ROLL_TUTORIAL:
+            case ESisterType.RollTutorial:
                 LoadSequence("Prefabs/Tutorial/RollTutorialSequence").OnDialogEnd();
                 break;
-            case ESister.BACK_ATTACK_TUTORIAL:
+            case ESisterType.BackAttackTutorial:
                 LoadSequence("Prefabs/Tutorial/BackAttackTutorialSequence").OnDialogEnd();
                 break;
-            case ESister.BLOCK_TUTORIAL:
+            case ESisterType.BlockTutorial:
                 LoadSequence("Prefabs/Tutorial/BlockTutorialSequence").OnDialogEnd();
                 break;
-            case ESister.LAST_MEET:
-                Managers.Scene.LoadScene(define.ESceneType.AbandonLoadScene);
+            case ESisterType.SkillTutorial:
+                LoadSequence("Prefabs/Tutorial/SkillTutorialSequence").OnDialogEnd();
                 break;
         }
         gameObject.SetActive(false);
     }
 
-    private TutorialSequence LoadSequence(string path)
+    TutorialSequence LoadSequence(string path)
     {
         GameObject go = Managers.Resources.Load<GameObject>(path);
         Debug.Assert(go != null);
         switch (_eSisterType)
         {
-            case ESister.ATTACK_TUTORUAL:
+            case ESisterType.AttackTutorial:
                 return Instantiate(go).GetComponent<AttackTutorialSequence>();
-            case ESister.ROLL_TUTORIAL:
+            case ESisterType.RollTutorial:
                 return Instantiate(go).GetComponent<RollTutorialSequence>();
-            case ESister.BACK_ATTACK_TUTORIAL:
+            case ESisterType.BackAttackTutorial:
                 return Instantiate(go).GetComponent<BackAttackTutorialSequence>();
-            case ESister.BLOCK_TUTORIAL:
+            case ESisterType.BlockTutorial:
                 return Instantiate(go).GetComponent<BlockTutorialSequence>();
+            case ESisterType.SkillTutorial:
+                return Instantiate(go).GetComponent<SkillTutorialSequence>();
             default:
-                Debug.Assert(false);
+                Debug.DebugBreak();
                 return null;
         }
     }

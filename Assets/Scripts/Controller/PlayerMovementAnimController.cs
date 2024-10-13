@@ -4,11 +4,11 @@ using UnityEngine;
 
 public enum EPlayerMovementEffect
 { 
-    JUMP,
-    ROLL,
-    NORMAL_ATTACK_1,
-    NORMAL_ATTACK_LAND,
-    LAND,
+    Jump,
+    Roll,
+    NormalAttack_1,
+    NormalAttackLand,
+    Land,
 }
 
 public class PlayerMovementAnimController : WorldSpaceAnimController
@@ -49,15 +49,15 @@ public class PlayerMovementAnimController : WorldSpaceAnimController
         SetForPlayAnimation(pos);
         switch (eType)
         {
-            case EPlayerMovementEffect.ROLL:
+            case EPlayerMovementEffect.Roll:
                 FlipSpriteIfLeft(eLookDir);
                 _animator.Play(ROLL_KEY, -1, 0f);
                 break;
-            case EPlayerMovementEffect.NORMAL_ATTACK_1:
+            case EPlayerMovementEffect.NormalAttack_1:
                 FlipSpriteIfLeft(eLookDir);
                 _animator.Play(DASH_ATTACK_KEY, -1, 0f);
                 break;
-            case EPlayerMovementEffect.NORMAL_ATTACK_LAND:
+            case EPlayerMovementEffect.NormalAttackLand:
                 FlipSpriteIfLeft(eLookDir);
                 if (eLookDir == ECharacterLookDir.Left)
                 {
@@ -69,7 +69,7 @@ public class PlayerMovementAnimController : WorldSpaceAnimController
                 }
                 _animator.Play(DASH_ATTACK_LAND_KEY, -1, 0f);
                 break;
-            case EPlayerMovementEffect.LAND:
+            case EPlayerMovementEffect.Land:
                 transform.position = new Vector2(pos.x, pos.y - LAND_Y_OFFSET);
                 _animator.Play(JUMP_AND_LAND_KEY, -1, 0f);
                 break;

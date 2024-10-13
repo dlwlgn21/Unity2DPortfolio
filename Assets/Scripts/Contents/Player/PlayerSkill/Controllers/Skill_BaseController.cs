@@ -34,7 +34,7 @@ public abstract class Skill_BaseController : MonoBehaviour
     protected bool IsValidStateAndManaToUseSkill()
     {
         if (IsCanUseSkillByCoolTime &&
-            (_pc.ECurrentState == EPlayerState.IDLE || _pc.ECurrentState == EPlayerState.RUN) &&
+            (_pc.ECurrentState == EPlayerState.Idle || _pc.ECurrentState == EPlayerState.Run) &&
              _pc.Stat.Mana >= _skillInfo.manaCost)
         {
             _pc.Stat.Mana -= _skillInfo.manaCost;

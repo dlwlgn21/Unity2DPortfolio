@@ -85,6 +85,17 @@ public sealed class PlayerStat : BaseStat
             afterDamageHp = 0;
             return 0;
         }
+
+        if (damage == 0)
+        {
+            if (damage == 0)
+            {
+                beforeDamageHp = HP;
+                afterDamageHp = HP;
+                return 0;
+            }
+        }
+
         int actualDamage = Mathf.Max(1, damage - (Defence + HelmetPlusDefence + ArmorPlusDefence));
         beforeDamageHp = HP;
         HP -= actualDamage;
@@ -109,10 +120,10 @@ public sealed class PlayerStat : BaseStat
         Level = dict[1].level;
         HP = dict[1].maxHp;
         MaxHP = dict[1].maxHp;
-        Mana = dict[1].maxMana;
         Attack = dict[1].attack;
         Defence = dict[1].defence;
         MoveSpeed = dict[1].moveSpeed;
+        Mana = 0;
         Exp = 0;
         Gold = 0;
         SwordPlusDamage = 0;

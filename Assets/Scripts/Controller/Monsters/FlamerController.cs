@@ -10,7 +10,7 @@ public class FlamerController : NormalMonsterController, IMelleAttackable
         base.Init();
         InitStat();
         EMonsterType = EMonsterNames.Flamer;
-        EMonsterAttackType = ENormalMonsterAttackType.MELLE_ATTACK;
+        EMonsterAttackType = ENormalMonsterAttackType.MelleAttack;
     }
     public override void InitStat()
     {
@@ -24,6 +24,6 @@ public class FlamerController : NormalMonsterController, IMelleAttackable
     }
     public void AllocateMelleAttackState()
     {
-        _states[(uint)ENormalMonsterState.MELLE_ATTACK] = new monster_states.MelleAttack(this);
+        _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);
     }
 }

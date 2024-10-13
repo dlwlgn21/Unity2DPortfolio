@@ -10,17 +10,16 @@ using UnityEngine.Rendering;
 
 public class MonsterPoolManager
 {
-    public static UnityAction<BaseMonsterController, Vector2> MonsterSpawnEventHandler;
     public const int MAX_MONSTER_COUNT = 5;
-    private Queue<GameObject> _archers      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _wardens      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _gunners      = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _cagedShokers = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _redGhouls    = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _blasters     = new Queue<GameObject>(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _hSlicers     = new Queue<GameObject>(MAX_MONSTER_COUNT);
+    private Queue<GameObject> _archers      = new(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _wardens      = new(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _gunners      = new(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _cagedShokers = new(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _redGhouls    = new(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _blasters     = new(MAX_MONSTER_COUNT); 
+    private Queue<GameObject> _hSlicers     = new(MAX_MONSTER_COUNT);
     //private Queue<GameObject> _shielders    = new Queue<GameObject>(MAX_MONSTER_COUNT);
-    private Queue<GameObject> _flamers      = new Queue<GameObject>(MAX_MONSTER_COUNT);
+    private Queue<GameObject> _flamers      = new(MAX_MONSTER_COUNT);
 
     private GameObject _oriArcher;
     private GameObject _oriWarden;
@@ -140,8 +139,6 @@ public class MonsterPoolManager
         go.SetActive(true);
         NormalMonsterController mc = go.GetComponent<NormalMonsterController>();
         mc.InitForRespawn();
-        if (MonsterSpawnEventHandler != null)
-            MonsterSpawnEventHandler.Invoke(mc, spawnPos);
     }
 
     private void DestroyOrEnque(Queue<GameObject> q, GameObject go)

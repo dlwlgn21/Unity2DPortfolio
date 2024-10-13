@@ -12,7 +12,7 @@ public class WardenController : NormalMonsterController, IMelleAttackable
         base.Init();
         InitStat();
         EMonsterType = EMonsterNames.Warden;
-        EMonsterAttackType = ENormalMonsterAttackType.MELLE_ATTACK;
+        EMonsterAttackType = ENormalMonsterAttackType.MelleAttack;
     }
     public override void InitStat()
     {
@@ -26,6 +26,6 @@ public class WardenController : NormalMonsterController, IMelleAttackable
     }
     public void AllocateMelleAttackState()
     {
-        _states[(uint)ENormalMonsterState.MELLE_ATTACK] = new monster_states.MelleAttack(this);
+        _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);
     }
 }

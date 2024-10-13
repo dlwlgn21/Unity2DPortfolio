@@ -11,7 +11,8 @@ public class BackAttackTutorialSequence : TutorialSequence
     public override void OnDialogEnd()
     {
         base.Init();
-        _tutorialManager.ActiveBackAttackTutorial();
+        SpawnMonster();
+        _tutorialManager.ActiveBackAttackTutorialUIObjects();
         SetPlayerAttackToZero();
         _isTutorialStart = true;
     }
@@ -28,7 +29,7 @@ public class BackAttackTutorialSequence : TutorialSequence
                     _isSucessBackAttack = false;
                 }
             }
-            if (!_isSucessBackAttack && _pc.ELookDir == _spawnendMonsterController.ELookDir && _pc.ECurrentState == EPlayerState.NORMAL_ATTACK_1)
+            if (!_isSucessBackAttack && _pc.ELookDir == _spawnendMonsterController.ELookDir && _pc.ECurrentState == EPlayerState.NormalAttack_1)
             {
                 // TODO : 이곳 고쳐야 함. 여러가지 방법이 있을 것.
                 //if (_pc.StatusText.Text.text == BACK_ATTACK_STATUS_STRING)
@@ -38,7 +39,7 @@ public class BackAttackTutorialSequence : TutorialSequence
                 //    _isSucessBackAttack = true;
                 //}
                 ++_playerBackAttackCount;
-                _tutorialManager.IncreaseCountText(ETutorialCountText.BACK_ATTACK, _playerBackAttackCount);
+                _tutorialManager.IncreaseCountText(ETutorialCountText.BackAttack, _playerBackAttackCount);
                 _isSucessBackAttack = true;
             }
 
@@ -46,9 +47,9 @@ public class BackAttackTutorialSequence : TutorialSequence
             if (_playerBackAttackCount >= BACK_ATTACK_TRANING_PASS_COUNT)
             {
                 RollBackPlayerAttack();
-                _spawnendMonsterController.ChangeState(ENormalMonsterState.DIE);
-                _tutorialManager.UnactiveBackAttackTutorial();
-                _tutorialManager.ActiveSuccessText(ETutorialTraning.BACK_ATTACK_TRAINING);
+                _spawnendMonsterController.ChangeState(ENormalMonsterState.Die);
+                _tutorialManager.UnctiveBackAttackTutorialUIObjects();
+                _tutorialManager.ActiveSuccessText(ETutorialTraning.BackAttackTraning);
                 SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;

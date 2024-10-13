@@ -110,8 +110,8 @@ public class UIManager
     #region PushIventoryItem
     public bool TryPushItemToInventory(ItemInfo itemInfo)
     {
-        Sprite sprite = null;
-        UI_Inventory_ItemIcon emptyIcon = null;
+        Sprite sprite;
+        UI_Inventory_ItemIcon emptyIcon;
         switch (itemInfo.EItemType)
         {
             case EItemType.Equippable:
@@ -149,7 +149,7 @@ public class UIManager
     {
         if (!IsEmptySlotAt(slotIdx))
             return false;
-        Sprite sprite = null;
+        Sprite sprite;
         UI_Inventory_ItemIcon icon = _inven.GetIconAtOrNull(slotIdx);
         if (icon == null)
         {
@@ -184,8 +184,8 @@ public class UIManager
         if (!IsEmptySlotAt(slotIdx))
             return false;
 
-        Sprite sprite = null;
-        UI_Inventory_ItemIcon emptyIcon = null;
+        Sprite sprite;
+        UI_Inventory_ItemIcon emptyIcon;
         switch (itemInfo.EItemType)
         {
             case EItemType.Equippable:
@@ -294,15 +294,12 @@ public class UIManager
         {
             if (Input.GetKeyDown(KeyCode.I))
             {
-                ShowIvenUI();
+                ShowOrHideIvenUI();
+                ShowOrHideStatUI();
             }
-            else if (Input.GetKeyDown(KeyCode.U))
+            else if (Input.GetKeyDown(KeyCode.T))
             {
-                ShowStatUI();
-            }
-            else if (Input.GetKeyDown(KeyCode.O))
-            {
-                ShowSkillUI();
+                ShowOrHideSkillUI();
             }
         }
     }
@@ -317,10 +314,10 @@ public class UIManager
     }
     public void Clear()
     {
-        Managers.Input.KeyboardHandler -= OnUIKeyDowned;
+        
     }
     #region ShowUI
-    void ShowStatUI()
+    void ShowOrHideStatUI()
     {
         if (!_stat.gameObject.activeSelf)
         {
@@ -333,8 +330,7 @@ public class UIManager
             _stat.gameObject.SetActive(false);
         }
     }
-
-    void ShowIvenUI()
+    void ShowOrHideIvenUI()
     {
         if (!_inven.gameObject.activeSelf)
         {
@@ -347,7 +343,7 @@ public class UIManager
             _inven.gameObject.SetActive(false);
         }
     }
-    void ShowSkillUI()
+    void ShowOrHideSkillUI()
     {
         if (!_skillTree.gameObject.activeSelf)
         {

@@ -15,12 +15,12 @@ public class MonsterWeaponLightController : LightController
 
     private void OnMonsterAttackStart(ENormalMonsterState eType)
     {
-        if (_mc.ECurrentState == ENormalMonsterState.MELLE_ATTACK || 
-            _mc.ECurrentState == ENormalMonsterState.LAUNCH_ATTACK ||
-            _mc.ECurrentState == ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS ||
-            _mc.ECurrentState == ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS ||
-            _mc.ECurrentState == ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB ||
-            _mc.ECurrentState == ENormalMonsterState.DIE)
+        if (_mc.ECurrentState == ENormalMonsterState.MelleAttack || 
+            _mc.ECurrentState == ENormalMonsterState.LaunchAttack ||
+            _mc.ECurrentState == ENormalMonsterState.HitByPlayerBlockSucces ||
+            _mc.ECurrentState == ENormalMonsterState.HitByPlayerSkillParallysis ||
+            _mc.ECurrentState == ENormalMonsterState.HitByPlayerSkillKnockbackBoom ||
+            _mc.ECurrentState == ENormalMonsterState.Die)
         {
             TurnOffLightGradually();
         }
@@ -28,7 +28,7 @@ public class MonsterWeaponLightController : LightController
 
     private void OnMonsterAttackEnd(ENormalMonsterState eType)
     {
-        if (_mc.ECurrentState == ENormalMonsterState.MELLE_ATTACK || _mc.ECurrentState == ENormalMonsterState.LAUNCH_ATTACK)
+        if (_mc.ECurrentState == ENormalMonsterState.MelleAttack || _mc.ECurrentState == ENormalMonsterState.LaunchAttack)
         {
             TurnOnLight();
         }

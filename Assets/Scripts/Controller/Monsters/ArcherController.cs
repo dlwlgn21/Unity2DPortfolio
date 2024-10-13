@@ -12,7 +12,7 @@ public sealed class ArcherController : NormalMonsterController, ILaunchAttackabl
         base.Init();
         InitStat();
         EMonsterType = EMonsterNames.Archer;
-        EMonsterAttackType = ENormalMonsterAttackType.LAUNCH_ATTACK;
+        EMonsterAttackType = ENormalMonsterAttackType.LaunchAttack;
         _launchPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LaunchPoint");
     }
     public override void InitStat()
@@ -27,7 +27,7 @@ public sealed class ArcherController : NormalMonsterController, ILaunchAttackabl
     }
     public void AllocateLaunchAttackState()
     {
-        _states[(uint)ENormalMonsterState.LAUNCH_ATTACK] = new monster_states.LaunchAttack(this);
+        _states[(uint)ENormalMonsterState.LaunchAttack] = new monster_states.LaunchAttack(this);
     }
 
     public void OnValidLaunchAnimTiming()

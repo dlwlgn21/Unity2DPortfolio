@@ -24,7 +24,7 @@ public sealed class Skill_BlackFlameController : Skill_BaseController
     {
         if (IsValidStateAndManaToUseSkill())
         {
-            _pc.ChangeState(EPlayerState.SKILL_CAST);
+            _pc.ChangeState(EPlayerState.SkillCast);
             StartCountdownCoolTime();
             _isUsingSkill = true;
             return true;

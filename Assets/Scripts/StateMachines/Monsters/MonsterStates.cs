@@ -32,24 +32,24 @@ namespace monster_states
         {
             switch (eState)
             {
-                case ENormalMonsterState.IDLE:
+                case ENormalMonsterState.Idle:
                     _entity.Animator.Play(IDLE_ANIM_KEY, -1, 0f);
                     return;
-                case ENormalMonsterState.TRACE:
+                case ENormalMonsterState.Trace:
                     _entity.Animator.Play(RUN_ANIM_KEY, -1, 0f);
                     return;
-                case ENormalMonsterState.MELLE_ATTACK:
+                case ENormalMonsterState.MelleAttack:
                     _entity.Animator.Play(MELLE_ATTACK_ANIM_KEY, -1, 0f);
                     return;
-                case ENormalMonsterState.LAUNCH_ATTACK:
+                case ENormalMonsterState.LaunchAttack:
                     _entity.Animator.Play(LAUNCH_ATTACK_ANIM_KEY, -1, 0f);
                     return;
-                case ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
-                case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
-                case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
+                case ENormalMonsterState.HitByPlayerBlockSucces:
+                case ENormalMonsterState.HitByPlayerSkillKnockbackBoom:
+                case ENormalMonsterState.HitByPlayerSkillParallysis:
                     _entity.Animator.Play(HIT_ANIM_KEY, -1, 0f);
                     return;
-                case ENormalMonsterState.DIE:
+                case ENormalMonsterState.Die:
                     _entity.Animator.Play(DIE_ANIM_KEY, -1, 0f);
                     return;
             }
@@ -67,13 +67,13 @@ namespace monster_states
         {
             switch (_entity.EMonsterAttackType)
             {
-                case ENormalMonsterAttackType.MELLE_ATTACK:
-                    _entity.ChangeState(ENormalMonsterState.MELLE_ATTACK);
+                case ENormalMonsterAttackType.MelleAttack:
+                    _entity.ChangeState(ENormalMonsterState.MelleAttack);
                     break;
-                case ENormalMonsterAttackType.LAUNCH_ATTACK:
-                    _entity.ChangeState(ENormalMonsterState.LAUNCH_ATTACK);
+                case ENormalMonsterAttackType.LaunchAttack:
+                    _entity.ChangeState(ENormalMonsterState.LaunchAttack);
                     break;
-                case ENormalMonsterAttackType.BOTH_ATTACK:
+                case ENormalMonsterAttackType.BothAttack:
                     break;
             }
         }
@@ -84,7 +84,7 @@ namespace monster_states
         public Idle(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
         { }
-        public override void Enter() { PlayAnimation(ENormalMonsterState.IDLE); }
+        public override void Enter() { PlayAnimation(ENormalMonsterState.Idle); }
         public override void Excute()
         {
             // Monster가 추락중일 때에는 상태변환 하지 않음.
@@ -100,7 +100,7 @@ namespace monster_states
             }
             if (_entity.IsPlayerInTraceZone)
             {
-                _entity.ChangeState(ENormalMonsterState.TRACE);
+                _entity.ChangeState(ENormalMonsterState.Trace);
             }
         }
     }
@@ -169,7 +169,7 @@ namespace monster_states
         public override void Enter()  
         {
             base.Enter();
-            PlayAnimation(ENormalMonsterState.TRACE);  
+            PlayAnimation(ENormalMonsterState.Trace);  
         }
         public override void FixedExcute()
         {
@@ -226,12 +226,12 @@ namespace monster_states
         public MelleAttack(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() 
         {
-            _entity.ChangeState(ENormalMonsterState.IDLE);
+            _entity.ChangeState(ENormalMonsterState.Idle);
         }
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(ENormalMonsterState.MELLE_ATTACK);
+            PlayAnimation(ENormalMonsterState.MelleAttack);
         }
         public override void Excute()
         {
@@ -245,12 +245,12 @@ namespace monster_states
 
         public override void OnAnimFullyPlayed()
         {
-            _entity.ChangeState(ENormalMonsterState.IDLE);
+            _entity.ChangeState(ENormalMonsterState.Idle);
         }
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(ENormalMonsterState.LAUNCH_ATTACK);
+            PlayAnimation(ENormalMonsterState.LaunchAttack);
         }
         public override void Excute()
         {
@@ -281,12 +281,12 @@ namespace monster_states
         public HittedKnockbackByBlockSuccess(NormalMonsterController controller) : base(controller)  { }
         public override void OnAnimFullyPlayed()
         {
-            _entity.ChangeState(ENormalMonsterState.IDLE);
+            _entity.ChangeState(ENormalMonsterState.Idle);
         }
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS);
+            PlayAnimation(ENormalMonsterState.HitByPlayerBlockSucces);
         }
     }
 
@@ -296,7 +296,7 @@ namespace monster_states
         public override void OnAnimFullyPlayed() { }
         public override void Enter()
         {
-            PlayAnimation(ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS);
+            PlayAnimation(ENormalMonsterState.HitByPlayerSkillParallysis);
             SetVelocityZero();
         }
     }
@@ -309,7 +309,7 @@ namespace monster_states
         }
         public override void Enter() 
         {
-            PlayAnimation(ENormalMonsterState.DIE);
+            PlayAnimation(ENormalMonsterState.Die);
             _entity.HealthBar.StartZeroScaleTW();
             Managers.PlayerLevel.AddExp(_entity.Stat.Exp);
         }

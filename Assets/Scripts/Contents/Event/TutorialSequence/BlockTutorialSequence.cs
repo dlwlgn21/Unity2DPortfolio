@@ -11,7 +11,8 @@ public class BlockTutorialSequence : TutorialSequence
     public override void OnDialogEnd()
     {
         base.Init();
-        _tutorialManager.ActiveBlockKeyTutorial();
+        SpawnMonster();
+        _tutorialManager.ActiveBlockTutorialUIObjects();
         SetPlayerAttackToZero();
         _isTutorialStart = true;
     }
@@ -19,13 +20,13 @@ public class BlockTutorialSequence : TutorialSequence
     {
         if (_isTutorialStart)
         {
-            if (_pc.ECurrentState == EPlayerState.BLOCK_SUCESS && _isPlayerChangeStateToBlockSuccess == false)
+            if (_pc.ECurrentState == EPlayerState.BlockSucces && _isPlayerChangeStateToBlockSuccess == false)
             {
                 ++_playerBlockCount;
-                _tutorialManager.IncreaseCountText(ETutorialCountText.BLOCK, _playerBlockCount);
+                _tutorialManager.IncreaseCountText(ETutorialCountText.Block, _playerBlockCount);
                 _isPlayerChangeStateToBlockSuccess = true;
             }
-            if (_pc.ECurrentState != EPlayerState.BLOCK_SUCESS)
+            if (_pc.ECurrentState != EPlayerState.BlockSucces)
             {
                 _isPlayerChangeStateToBlockSuccess = false;
             }
@@ -33,9 +34,9 @@ public class BlockTutorialSequence : TutorialSequence
             if (_playerBlockCount >= BLOCK_TRANING_PASS_COUNT)
             {
                 RollBackPlayerAttack();
-                _spawnendMonsterController.ChangeState(ENormalMonsterState.DIE);
-                _tutorialManager.UnactiveBlockKeyTutorial();
-                _tutorialManager.ActiveSuccessText(ETutorialTraning.BLOCK_TRAINING);
+                _spawnendMonsterController.ChangeState(ENormalMonsterState.Die);
+                _tutorialManager.UnactiveBlockTutorialUIObjects();
+                _tutorialManager.ActiveSuccessText(ETutorialTraning.BlockTraning);
                 SwitchCamToMain();
                 gameObject.SetActive(false);
                 return;

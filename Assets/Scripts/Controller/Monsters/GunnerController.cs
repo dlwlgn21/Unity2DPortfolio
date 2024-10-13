@@ -13,7 +13,7 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
         base.Init();
         InitStat();
         EMonsterType = EMonsterNames.Gunner;
-        EMonsterAttackType = ENormalMonsterAttackType.LAUNCH_ATTACK;
+        EMonsterAttackType = ENormalMonsterAttackType.LaunchAttack;
         _launchPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LaunchPoint");
     }
     public override void InitStat()
@@ -29,7 +29,7 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
     }
     public void AllocateLaunchAttackState()
     {
-        _states[(uint)ENormalMonsterState.LAUNCH_ATTACK] = new monster_states.LaunchAttack(this);
+        _states[(uint)ENormalMonsterState.LaunchAttack] = new monster_states.LaunchAttack(this);
     }
 
     public void OnValidLaunchAnimTiming()

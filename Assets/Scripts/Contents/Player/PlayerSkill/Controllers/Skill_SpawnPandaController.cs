@@ -24,7 +24,7 @@ public sealed class Skill_SpawnShooterController : Skill_BaseController
     {
         if (IsValidStateAndManaToUseSkill())
         {
-            _pc.ChangeState(EPlayerState.SKILL_SPAWN);
+            _pc.ChangeState(EPlayerState.SkillSpawn);
             StartCountdownCoolTime();
             _isUsingSkill = true;
             return true;

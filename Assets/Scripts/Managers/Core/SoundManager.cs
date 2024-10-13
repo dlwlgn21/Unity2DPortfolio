@@ -33,39 +33,39 @@ public class SoundManager
     {
         switch (eState)
         {
-            case EPlayerState.IDLE:
+            case EPlayerState.Idle:
                 break;
-            case EPlayerState.RUN:
+            case EPlayerState.Run:
                 break;
-            case EPlayerState.ROLL:
+            case EPlayerState.Roll:
                 Managers.Sound.Play(DataManager.SFX_PLAYER_ROLLING_PATH);
                 break;
-            case EPlayerState.JUMP:
+            case EPlayerState.Jump:
                 break;
-            case EPlayerState.CLIMB:
+            case EPlayerState.Climb:
                 break;
-            case EPlayerState.FALL:
+            case EPlayerState.Fall:
                 break;
-            case EPlayerState.FALL_TO_TWICE_JUMP:
+            case EPlayerState.FallToTwiceJump:
                 break;
-            case EPlayerState.TWICE_JUMP_TO_FALL:
+            case EPlayerState.TwiceJumpToFall:
                 break;
-            case EPlayerState.LAND:
+            case EPlayerState.Land:
                 break;
-            case EPlayerState.NORMAL_ATTACK_1:
+            case EPlayerState.NormalAttack_1:
                 Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
                 break;
-            case EPlayerState.NORMAL_ATTACK_2:
+            case EPlayerState.NormalAttack_2:
                 Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_2_PATH);
                 break;
-            case EPlayerState.NORMAL_ATTACK_3:
+            case EPlayerState.NormalAttack_3:
                 Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
                 break;
-            case EPlayerState.SKILL_CAST:
+            case EPlayerState.SkillCast:
                 break;
-            case EPlayerState.SKILL_SPAWN:
+            case EPlayerState.SkillSpawn:
                 break;
-            case EPlayerState.HITTED_MELLE_ATTACK:
+            case EPlayerState.HitByMelleAttack:
                 int randIdx = UnityEngine.Random.Range(0, 1);
                 if (randIdx % 2 == 0)
                 {
@@ -76,13 +76,13 @@ public class SoundManager
                     Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
                 }
                 break;
-            case EPlayerState.BLOCKING:
+            case EPlayerState.Block:
                 break;
-            case EPlayerState.BLOCK_SUCESS:
+            case EPlayerState.BlockSucces:
                 break;
-            case EPlayerState.DIE:
+            case EPlayerState.Die:
                 break;
-            case EPlayerState.COUNT:
+            case EPlayerState.Count:
                 break;
         }
     }

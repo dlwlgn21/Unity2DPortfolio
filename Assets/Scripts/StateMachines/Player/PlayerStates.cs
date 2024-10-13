@@ -12,46 +12,45 @@ namespace player_states
     {
         protected float _horizontalMove;
         protected float _groundCheckDistance = 0.2f;
-        public static LayerMask sGroundLayerMask = (1 << (int)define.EColliderLayer.Platform) | (1 << (int)define.EColliderLayer.LedgeClimb);
-        private readonly static Vector3 S_LEFT_ROTATION_VECTOR = new Vector3(0f, 180f, 0f);
-        private readonly static Vector3 S_RIGHT_ROTATION_VECTOR = new Vector3(0f, 0f, 0f);
+        public const int GROUND_LAYER_MASK = (1 << (int)define.EColliderLayer.Platform) | (1 << (int)define.EColliderLayer.LedgeClimb);
         public BasePlayerState(PlayerController controller) : base(controller) { }
+        #region Public
         public abstract void OnAnimFullyPlayed();
-        
         public override void Excute() { }
-        public virtual void ProcessKeyboardInput() { }
-        public void FlipSpriteAccodingPlayerInput()
-        {
+        #endregion
 
-            // TODO : 이방식 그냥 horizontalMoveInput 으로 바꿔도 되는지 생각해보자.
-            if (Input.GetKey(KeyCode.LeftArrow) && _entity.ELookDir == ECharacterLookDir.Right)
+        #region Protected
+        protected virtual void ProcessKeyboardInput() { }
+        protected void SetHorizontalMove()  { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
+        protected void RotateTransformAccodingHorizontalMove()
+        {
+            //동시 키입력시에 Rotate하지 않음!
+            if (_horizontalMove == 0)
+                return;
+            if (_horizontalMove < 0 && _entity.ELookDir == ECharacterLookDir.Right)
             {
                 _entity.ELookDir = ECharacterLookDir.Left;
-                _entity.transform.localRotation = Quaternion.Euler(S_LEFT_ROTATION_VECTOR);
+                _entity.transform.localRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
                 _entity.CamFollowObject.CallTurn();
-
             }
-            else if (Input.GetKey(KeyCode.RightArrow) && _entity.ELookDir == ECharacterLookDir.Left)
+            else if (_horizontalMove > 0 && _entity.ELookDir == ECharacterLookDir.Left)
             {
                 _entity.ELookDir = ECharacterLookDir.Right;
-                _entity.transform.localRotation = Quaternion.Euler(S_RIGHT_ROTATION_VECTOR);
+                _entity.transform.localRotation = Quaternion.Euler(Vector3.zero);
                 _entity.CamFollowObject.CallTurn();
             }
         }
-        protected void SetHorizontalMove()  { _horizontalMove = Input.GetAxisRaw("Horizontal"); }
         protected void SetVelocityToZero() { _entity.RigidBody.velocity = Vector2.zero; }
-
-
         protected bool IsStandGround()
         {
             // TODO : 이곳 나중에 코드 정리해야 함.
             Bounds bound = _entity.CapsuleCollider.bounds;
             float dist = bound.extents.y + 0.1f;
             float xDiff = 0.15f;
-            Vector3 rightDiff = new Vector3(xDiff, 0f, 0f);
-            Vector3 leftDiff = new Vector3(-xDiff, 0f, 0f);
-            var rightHit = Physics2D.Raycast(bound.center + rightDiff, Vector2.down, dist, sGroundLayerMask);
-            var leftHit = Physics2D.Raycast(bound.center + leftDiff, Vector2.down, dist, sGroundLayerMask);
+            Vector3 rightDiff = new(xDiff, 0f, 0f);
+            Vector3 leftDiff = new(-xDiff, 0f, 0f);
+            var rightHit = Physics2D.Raycast(bound.center + rightDiff, Vector2.down, dist, GROUND_LAYER_MASK);
+            var leftHit = Physics2D.Raycast(bound.center + leftDiff, Vector2.down, dist, GROUND_LAYER_MASK);
             if (leftHit.collider == null && rightHit.collider == null)
             {
                 Debug.DrawRay(bound.center + rightDiff, Vector2.down * dist, Color.green);
@@ -66,144 +65,145 @@ namespace player_states
         {
             switch (eState) 
             {
-                case EPlayerState.IDLE:
+                case EPlayerState.Idle:
                     _entity.Animator.Play("Idle", -1, 0f);
                     return;
-                case EPlayerState.RUN:
+                case EPlayerState.Run:
                     _entity.Animator.Play("Run", -1, 0f);
                     return;
-                case EPlayerState.ROLL:
+                case EPlayerState.Roll:
                     _entity.Animator.Play("Roll", -1, 0f);
                     return;
-                case EPlayerState.JUMP:
+                case EPlayerState.Jump:
                     _entity.Animator.Play("Jump", -1, 0f);
                     return;
-                case EPlayerState.CLIMB:
+                case EPlayerState.Climb:
                     _entity.Animator.Play("Climb", -1, 0f);
                     return;
-                case EPlayerState.FALL:
+                case EPlayerState.Fall:
                     _entity.Animator.Play("Fall", -1, 0f);
                     return;
-                case EPlayerState.LAND:
+                case EPlayerState.Land:
                     _entity.Animator.Play("Land", -1, 0f);
                     return;
-                case EPlayerState.NORMAL_ATTACK_1:
+                case EPlayerState.NormalAttack_1:
                     _entity.Animator.Play("NormalAttack1", -1, 0f);
                     return;
-                case EPlayerState.NORMAL_ATTACK_2:
+                case EPlayerState.NormalAttack_2:
                     _entity.Animator.Play("NormalAttack2", -1, 0f);
                     return;
-                case EPlayerState.NORMAL_ATTACK_3:
+                case EPlayerState.NormalAttack_3:
                     _entity.Animator.Play("NormalAttack3", -1, 0f);
                     return;
-                case EPlayerState.SKILL_CAST:
+                case EPlayerState.SkillCast:
                     _entity.Animator.Play("SkillCast", -1, 0f);
                     return;
-                case EPlayerState.SKILL_SPAWN:
+                case EPlayerState.SkillSpawn:
                     _entity.Animator.Play("SkillSpawn", -1, 0f);
                     return;
-                case EPlayerState.HITTED_MELLE_ATTACK:
+                case EPlayerState.HitByMelleAttack:
                     _entity.Animator.Play("Hitted", -1, 0f);
                     return;
-                case EPlayerState.HITTED_STATUS_PARALLYSIS:
+                case EPlayerState.HitByStatusParallysis:
                     _entity.Animator.Play("HittedStatusParallysis", -1, 0f);
                     return;
-                case EPlayerState.HITTED_PROJECTILE_KONCKBACK:
+                case EPlayerState.HitByProjectileKnockback:
                     _entity.Animator.Play("HittedProjectileKnockback", -1, 0f);
                     return;
-                case EPlayerState.BLOCKING:
+                case EPlayerState.Block:
                     _entity.Animator.Play("Blocking", -1, 0f);
                     return;
-                case EPlayerState.BLOCK_SUCESS:
+                case EPlayerState.BlockSucces:
                     _entity.Animator.Play("BlockSuccess", -1, 0f);
                     return;
-                case EPlayerState.DIE:
+                case EPlayerState.Die:
                     _entity.Animator.Play("Die", -1, 0f);
                     return;
             }
             Debug.Assert(false);
             return;
         }
+        #endregion
 
-        static public void BoxCast2DDebugDraw(Vector2 origin, Vector2 size, float distasnce, RaycastHit2D hit)
-        {
-            Vector2 p1, p2, p3, p4, p5, p6, p7, p8;
-            float w = size.x * 0.5f;
-            float h = size.y * 0.5f;
-            p1 = new Vector2(-w, h);
-            p2 = new Vector2(w, h);
-            p3 = new Vector2(w, -h);
-            p4 = new Vector2(-w, -h);
+        //static public void BoxCast2DDebugDraw(Vector2 origin, Vector2 size, float distasnce, RaycastHit2D hit)
+        //{
+        //    Vector2 p1, p2, p3, p4, p5, p6, p7, p8;
+        //    float w = size.x * 0.5f;
+        //    float h = size.y * 0.5f;
+        //    p1 = new Vector2(-w, h);
+        //    p2 = new Vector2(w, h);
+        //    p3 = new Vector2(w, -h);
+        //    p4 = new Vector2(-w, -h);
 
-            Quaternion q = Quaternion.AngleAxis(0, new Vector3(0, 0, 1));
-            p1 = q * p1;
-            p2 = q * p2;
-            p3 = q * p3;
-            p4 = q * p4;
+        //    Quaternion q = Quaternion.AngleAxis(0, new Vector3(0, 0, 1));
+        //    p1 = q * p1;
+        //    p2 = q * p2;
+        //    p3 = q * p3;
+        //    p4 = q * p4;
 
-            p1 += origin;
-            p2 += origin;
-            p3 += origin;
-            p4 += origin;
+        //    p1 += origin;
+        //    p2 += origin;
+        //    p3 += origin;
+        //    p4 += origin;
 
-            Vector2 realDistance = Vector2.down * distasnce;
-            p5 = p1 + realDistance;
-            p6 = p2 + realDistance;
-            p7 = p3 + realDistance;
-            p8 = p4 + realDistance;
+        //    Vector2 realDistance = Vector2.down * distasnce;
+        //    p5 = p1 + realDistance;
+        //    p6 = p2 + realDistance;
+        //    p7 = p3 + realDistance;
+        //    p8 = p4 + realDistance;
 
-            //Drawing the cast
-            UnityEngine.Color castColor = hit ? UnityEngine.Color.red : UnityEngine.Color.white;
-            Debug.DrawLine(p1, p2, castColor);
-            Debug.DrawLine(p2, p3, castColor);
-            Debug.DrawLine(p3, p4, castColor);
-            Debug.DrawLine(p4, p1, castColor);
+        //    //Drawing the cast
+        //    UnityEngine.Color castColor = hit ? UnityEngine.Color.red : UnityEngine.Color.white;
+        //    Debug.DrawLine(p1, p2, castColor);
+        //    Debug.DrawLine(p2, p3, castColor);
+        //    Debug.DrawLine(p3, p4, castColor);
+        //    Debug.DrawLine(p4, p1, castColor);
 
-            Debug.DrawLine(p5, p6, castColor);
-            Debug.DrawLine(p6, p7, castColor);
-            Debug.DrawLine(p7, p8, castColor);
-            Debug.DrawLine(p8, p5, castColor);
+        //    Debug.DrawLine(p5, p6, castColor);
+        //    Debug.DrawLine(p6, p7, castColor);
+        //    Debug.DrawLine(p7, p8, castColor);
+        //    Debug.DrawLine(p8, p5, castColor);
 
-            Debug.DrawLine(p1, p5, castColor);
-            Debug.DrawLine(p2, p6, castColor);
-            Debug.DrawLine(p3, p7, castColor);
-            Debug.DrawLine(p4, p8, castColor);
-            if (hit)
-            {
-                Debug.DrawLine(hit.point, hit.point + hit.normal.normalized * 0.2f, UnityEngine.Color.yellow);
-            }
-        }
+        //    Debug.DrawLine(p1, p5, castColor);
+        //    Debug.DrawLine(p2, p6, castColor);
+        //    Debug.DrawLine(p3, p7, castColor);
+        //    Debug.DrawLine(p4, p8, castColor);
+        //    if (hit)
+        //    {
+        //        Debug.DrawLine(hit.point, hit.point + hit.normal.normalized * 0.2f, UnityEngine.Color.yellow);
+        //    }
+        //}
     }
 
     public class Idle : BasePlayerState
     {
         public Idle(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() { }
-        public override void ProcessKeyboardInput()
+        protected override void ProcessKeyboardInput()
         {
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
             {
-                _entity.ChangeState(EPlayerState.RUN);
+                _entity.ChangeState(EPlayerState.Run);
                 return;
             }
             if (Input.GetKeyDown(PlayerController.KeyAttack))
             {
-                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_1);
+                _entity.ChangeState(EPlayerState.NormalAttack_1);
                 return;
             }
             if (Input.GetKeyDown(PlayerController.KeyBlock))
             {
-                _entity.ChangeState(EPlayerState.BLOCKING);
+                _entity.ChangeState(EPlayerState.Block);
                 return;
             }
             if (Input.GetKeyDown(PlayerController.KeyJump))
             {
-                _entity.ChangeState(EPlayerState.JUMP);
+                _entity.ChangeState(EPlayerState.Jump);
                 return;
             }
         }
         public override void Enter()       
-        { PlayAnimation(EPlayerState.IDLE); }
+        { PlayAnimation(EPlayerState.Idle); }
 
         public override void FixedExcute() 
         { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
@@ -212,10 +212,10 @@ namespace player_states
             SetHorizontalMove();
             if (!IsStandGround())
             {
-                _entity.ChangeState(EPlayerState.FALL);
+                _entity.ChangeState(EPlayerState.Fall);
                 return;
             }
-            FlipSpriteAccodingPlayerInput();
+            RotateTransformAccodingHorizontalMove();
             ProcessKeyboardInput();
         }
 
@@ -226,33 +226,33 @@ namespace player_states
         public Run(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() { }
 
-        public override void ProcessKeyboardInput()
+        protected override void ProcessKeyboardInput()
         {
             // ChangeState
             if (!Input.anyKey)
             {
-                _entity.ChangeState(EPlayerState.IDLE);
+                _entity.ChangeState(EPlayerState.Idle);
                 return;
             }
             if (Input.GetKeyDown(PlayerController.KeyBlock))
             {
-                _entity.ChangeState(EPlayerState.BLOCKING);
+                _entity.ChangeState(EPlayerState.Block);
                 return;
             }
             if (Input.GetKeyDown(PlayerController.KeyJump))
             {
-                _entity.ChangeState(EPlayerState.JUMP);
+                _entity.ChangeState(EPlayerState.Jump);
                 return;
             }
             if (Input.GetKeyDown(PlayerController.KeyAttack))
             {
-                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_1);
+                _entity.ChangeState(EPlayerState.NormalAttack_1);
                 return;
             }
         }
 
         public override void Enter() 
-        { PlayAnimation(EPlayerState.RUN); }
+        { PlayAnimation(EPlayerState.Run); }
 
         public override void FixedExcute()
         {
@@ -273,10 +273,10 @@ namespace player_states
             if (!IsStandGround())
             {
                 // 5.13에 return 추가함.
-                _entity.ChangeState(EPlayerState.FALL);
+                _entity.ChangeState(EPlayerState.Fall);
                 return;
             }
-            FlipSpriteAccodingPlayerInput();
+            RotateTransformAccodingHorizontalMove();
             ProcessKeyboardInput();
         }
 
@@ -318,7 +318,7 @@ namespace player_states
 
         ~Jump() { TwiceJumpEventHandler = null; }
 
-        public override void ProcessKeyboardInput()
+        protected override void ProcessKeyboardInput()
         {
             if (_isJumpKeyDownTwice)
                 return;
@@ -330,7 +330,7 @@ namespace player_states
         }
         public override void Enter()
         {
-            PlayAnimation(EPlayerState.JUMP);
+            PlayAnimation(EPlayerState.Jump);
             _isInAir = false;
             _isTwiceJump = false;
             _isJumpKeyDownTwice = false;
@@ -359,7 +359,7 @@ namespace player_states
                 ChangeVelocityAcordingHorizontalInput();
                 if (_entity.RigidBody.velocity.y <= 0f)
                 {
-                    _entity.ChangeState(EPlayerState.FALL);
+                    _entity.ChangeState(EPlayerState.Fall);
                 }
             }
         }
@@ -372,7 +372,7 @@ namespace player_states
         private void ProcessHorizontalInputAndFlip()
         {
             ProcessKeyboardInput();
-            FlipSpriteAccodingPlayerInput();
+            RotateTransformAccodingHorizontalMove();
         }
     }
 
@@ -387,7 +387,7 @@ namespace player_states
         protected BaseFall(PlayerController controller) : base(controller) { }
         public override void Enter()
         {
-            PlayAnimation(EPlayerState.FALL);
+            PlayAnimation(EPlayerState.Fall);
             if (_ledgeHeadRayPoint == null)
             {
                 _ledgeHeadRayPoint = _entity.LedgeHeadRayPoint;
@@ -403,22 +403,22 @@ namespace player_states
         {
             if (IsStandGround())
             {
-                _entity.ChangeState(EPlayerState.LAND);
+                _entity.ChangeState(EPlayerState.Land);
                 return;
             }
 
             if (IsGrabLedge())
             {
-                _entity.ChangeState(EPlayerState.CLIMB);
+                _entity.ChangeState(EPlayerState.Climb);
             }
             SetHorizontalMove();
-            FlipSpriteAccodingPlayerInput();
+            RotateTransformAccodingHorizontalMove();
         }
 
         public bool IsGrabLedge()
         {
-            RaycastHit2D headRayHit = new RaycastHit2D();
-            RaycastHit2D bodyRayHit = new RaycastHit2D();
+            RaycastHit2D headRayHit = new();
+            RaycastHit2D bodyRayHit = new();
             if (_eCharacterLookDir == ECharacterLookDir.Right)
             {
                 RaycastToLedgeLayer(ref headRayHit, ref bodyRayHit, Vector2.right);
@@ -471,7 +471,7 @@ namespace player_states
             base.Enter();
             _isHaveToTwiceJump = false;
         }
-        public override void ProcessKeyboardInput()
+        protected override void ProcessKeyboardInput()
         {
             if (_isAlreadyTwiceJump && !_isHaveToTwiceJump)
             {
@@ -491,22 +491,22 @@ namespace player_states
             //FlipSpriteAccodingPlayerInput();
             if (_isHaveToTwiceJump)
             {
-                _entity.ChangeState(EPlayerState.FALL_TO_TWICE_JUMP);
+                _entity.ChangeState(EPlayerState.FallToTwiceJump);
                 return;
             }
             ProcessKeyboardInput();
             if (IsStandGround())
             {
-                _entity.ChangeState(EPlayerState.LAND);
+                _entity.ChangeState(EPlayerState.Land);
                 return;
             }
 
             if (IsGrabLedge())
             {
-                _entity.ChangeState(EPlayerState.CLIMB);
+                _entity.ChangeState(EPlayerState.Climb);
             }
             SetHorizontalMove();
-            FlipSpriteAccodingPlayerInput();
+            RotateTransformAccodingHorizontalMove();
         }
 
         public override void Exit()
@@ -523,14 +523,14 @@ namespace player_states
 
         public override void Enter()
         {
-            PlayAnimation(EPlayerState.JUMP);
+            PlayAnimation(EPlayerState.Jump);
         }
 
         public override void FixedExcute()
         {
             if (_entity.RigidBody.velocity.y < 0f)
             {
-                _entity.ChangeState(EPlayerState.TWICE_JUMP_TO_FALL);
+                _entity.ChangeState(EPlayerState.TwiceJumpToFall);
             }
         }
     }
@@ -549,12 +549,12 @@ namespace player_states
         private const float Y_OFFSET = 1.4f;
         private const float ANIM_DURATION_HALF_TIME = 0.3f;
 
-        public override void OnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.IDLE); }
+        public override void OnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.Idle); }
 
         public override void Enter()
         {
             _eCharacterLookDir = _entity.ELookDir;
-            PlayAnimation(EPlayerState.CLIMB);
+            PlayAnimation(EPlayerState.Climb);
             Vector3 pos = _entity.transform.position;
             _entity.transform.DOLocalMove(new Vector3(pos.x, pos.y + Y_OFFSET, pos.z), ANIM_DURATION_HALF_TIME).OnComplete(OnYMoveTWEnd);
         }
@@ -586,27 +586,27 @@ namespace player_states
         {
             if (Input.anyKey)
             {
-                _entity.ChangeState(EPlayerState.RUN);
+                _entity.ChangeState(EPlayerState.Run);
             }
             else
             {
-                _entity.ChangeState(EPlayerState.IDLE);
+                _entity.ChangeState(EPlayerState.Idle);
             }
         }
 
         public override void Enter()
         {
-            PlayAnimation(EPlayerState.LAND);
+            PlayAnimation(EPlayerState.Land);
         }
     }
     public class Roll : BasePlayerState
     {
-        private readonly Vector2 ROLL_FORCE = new Vector2(7.5f, 2f);
+        private readonly Vector2 ROLL_FORCE = new(7.5f, 2f);
         public Roll(PlayerController controller) : base(controller) { }
-        public override void OnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.RUN); }
+        public override void OnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.Run); }
         public override void Enter()
         {
-            PlayAnimation(EPlayerState.ROLL);
+            PlayAnimation(EPlayerState.Roll);
             SetVelocityToZero();
             if (_entity.ELookDir == ECharacterLookDir.Right)
             {
@@ -644,7 +644,7 @@ namespace player_states
             }
         }
 
-        public override void ProcessKeyboardInput()
+        protected override void ProcessKeyboardInput()
         {
             float currAnimTime = _entity.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             if (currAnimTime >= 0.3f && currAnimTime <= 1f)
@@ -661,23 +661,23 @@ namespace player_states
     {
         public NormalAttack1(PlayerController controller) : base(controller) 
         {
-            _eAttackType = EPlayerNoramlAttackType.ATTACK_1;
+            _eAttackType = EPlayerNoramlAttackType.Attack_1;
         }
         public override void OnAnimFullyPlayed()
         {
             if (_isGoToNextAttack)
             {
-                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_2);
+                _entity.ChangeState(EPlayerState.NormalAttack_2);
             }
             else
             {
-                _entity.ChangeState(EPlayerState.IDLE);
+                _entity.ChangeState(EPlayerState.Idle);
             }
         }
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(EPlayerState.NORMAL_ATTACK_1);
+            PlayAnimation(EPlayerState.NormalAttack_1);
 
             if (_entity.ELookDir == ECharacterLookDir.Left && Input.GetKey(KeyCode.LeftArrow))
             {
@@ -699,23 +699,23 @@ namespace player_states
     {
         public NormalAttack2(PlayerController controller) : base(controller) 
         {
-            _eAttackType = EPlayerNoramlAttackType.ATTACK_2;
+            _eAttackType = EPlayerNoramlAttackType.Attack_2;
         }
         public override void OnAnimFullyPlayed()
         {
             if (_isGoToNextAttack)
             {
-                _entity.ChangeState(EPlayerState.NORMAL_ATTACK_3);
+                _entity.ChangeState(EPlayerState.NormalAttack_3);
             }
             else
             {
-                _entity.ChangeState(EPlayerState.IDLE);
+                _entity.ChangeState(EPlayerState.Idle);
             }
         }
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(EPlayerState.NORMAL_ATTACK_2);
+            PlayAnimation(EPlayerState.NormalAttack_2);
         }
         public override void Excute() 
         { ProcessKeyboardInput(); }
@@ -726,14 +726,14 @@ namespace player_states
     public class NormalAttack3 : NormalAttackState
     {
         public NormalAttack3(PlayerController controller) : base(controller) 
-        { _eAttackType = EPlayerNoramlAttackType.ATTACK_3; }
+        { _eAttackType = EPlayerNoramlAttackType.Attack_3; }
 
         public override void OnAnimFullyPlayed()
-        { _entity.ChangeState(EPlayerState.IDLE); }
+        { _entity.ChangeState(EPlayerState.Idle); }
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation(EPlayerState.NORMAL_ATTACK_3);
+            PlayAnimation(EPlayerState.NormalAttack_3);
         }
 
         public override void Exit()
@@ -748,12 +748,12 @@ namespace player_states
         public override void OnAnimFullyPlayed()
         {
             // Because of Poped 1 frame.
-            PlayAnimation(EPlayerState.IDLE);
-            _entity.ChangeState(EPlayerState.IDLE);
+            PlayAnimation(EPlayerState.Idle);
+            _entity.ChangeState(EPlayerState.Idle);
         }
         public override void Enter()  
         { 
-            PlayAnimation(EPlayerState.SKILL_CAST);
+            PlayAnimation(EPlayerState.SkillCast);
             SetVelocityToZero();
         }
     }
@@ -762,11 +762,11 @@ namespace player_states
     {
         public CastSpawn(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
-        { _entity.ChangeState(EPlayerState.IDLE); }
+        { _entity.ChangeState(EPlayerState.Idle); }
 
         public override void Enter() 
         { 
-            PlayAnimation(EPlayerState.SKILL_SPAWN);
+            PlayAnimation(EPlayerState.SkillSpawn);
             SetVelocityToZero();
         }
     }
@@ -775,9 +775,9 @@ namespace player_states
     {
         public Blocking(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
-        { _entity.ChangeState(EPlayerState.IDLE); }
+        { _entity.ChangeState(EPlayerState.Idle); }
         public override void Enter()        
-        { PlayAnimation(EPlayerState.BLOCKING); }
+        { PlayAnimation(EPlayerState.Block); }
 
         public override void FixedExcute()  
         { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
@@ -787,10 +787,10 @@ namespace player_states
     {
         public BlockSuccess(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
-        { _entity.ChangeState(EPlayerState.IDLE); }
+        { _entity.ChangeState(EPlayerState.Idle); }
         public override void Enter()
         {
-            PlayAnimation(EPlayerState.BLOCK_SUCESS);
+            PlayAnimation(EPlayerState.BlockSucces);
         }
     }
 
@@ -798,7 +798,7 @@ namespace player_states
     {
         protected BaseHitted(PlayerController controller) : base(controller)  { }
         public override void OnAnimFullyPlayed()
-        { _entity.ChangeState(EPlayerState.IDLE); }
+        { _entity.ChangeState(EPlayerState.Idle); }
         public void AdjustKnockbackForce(Vector2 force)
         {
             _entity.RigidBody.velocity = Vector2.zero;
@@ -812,7 +812,7 @@ namespace player_states
         public HittedMelleAttack(PlayerController controller) : base(controller) { }
 
         public override void Enter()
-        { PlayAnimation(EPlayerState.HITTED_MELLE_ATTACK); }
+        { PlayAnimation(EPlayerState.HitByMelleAttack); }
     }
     public class HittedParallysis : BaseHitted
     {
@@ -821,7 +821,7 @@ namespace player_states
         public override void Enter()
         {
             SetVelocityToZero();
-            PlayAnimation(EPlayerState.HITTED_STATUS_PARALLYSIS); 
+            PlayAnimation(EPlayerState.HitByStatusParallysis); 
         }
     }
     public class HittedProjectileKnockback : BaseHitted
@@ -829,7 +829,7 @@ namespace player_states
         public HittedProjectileKnockback(PlayerController controller) : base(controller) { }
 
         public override void Enter()
-        { PlayAnimation(EPlayerState.HITTED_PROJECTILE_KONCKBACK); }
+        { PlayAnimation(EPlayerState.HitByProjectileKnockback); }
 
     }
 
@@ -843,7 +843,7 @@ namespace player_states
         }
         public override void Enter()
         {
-            PlayAnimation(EPlayerState.DIE);
+            PlayAnimation(EPlayerState.Die);
         }
     }
 }

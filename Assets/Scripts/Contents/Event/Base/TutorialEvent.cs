@@ -10,25 +10,22 @@ public abstract class TutorialSequence : MonoBehaviour
     protected int _playerOriginalAttackDamage;
     protected TutorialCameraManager _camManager;
     protected TutorialManager _tutorialManager;
+    public abstract void OnDialogEnd();
     protected void Init()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         _pc = player.GetComponent<PlayerController>();
-        Vector2 playerPos = player.GetComponent<Transform>().position;
-
-        #region SPAWN_MONSTER
-        _spawnendMonsterController = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<NormalMonsterController>();
-        _spawnendMonsterController.gameObject.GetComponent<MonsterStat>().SetHPForTutorialAndAttackToZero();
-        _spawnendMonsterController.HealthBar.SetFullHpBarRatio();
-        _spawnendMonsterController.ChangeState(ENormalMonsterState.IDLE);
-        #endregion
-
-        #region MANAGER
         _tutorialManager = GameObject.Find("TutorialManager").GetComponent<TutorialManager>();
-        #endregion
     }
-    public abstract void OnDialogEnd();
 
+    protected void SpawnMonster()
+    {
+        Vector2 playerPos = _pc.gameObject.transform.position;
+        _spawnendMonsterController = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<NormalMonsterController>();
+        _spawnendMonsterController.Stat.InitStatForTutorial();
+        _spawnendMonsterController.HealthBar.SetFullHpBarRatio();
+        _spawnendMonsterController.ChangeState(ENormalMonsterState.Idle);
+    }
     protected void SetPlayerAttackToZero()
     {
         _playerOriginalAttackDamage = _pc.Stat.Attack;

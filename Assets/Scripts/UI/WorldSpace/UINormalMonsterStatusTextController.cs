@@ -14,15 +14,15 @@ public class UINormalMonsterStatusTextController : UITextPopup
     {
         switch (eState)
         {
-            case ENormalMonsterState.MELLE_ATTACK:
-            case ENormalMonsterState.LAUNCH_ATTACK:
+            case ENormalMonsterState.MelleAttack:
+            case ENormalMonsterState.LaunchAttack:
                 ShowPopup(ATTACK_TEXT);
                 break;
-            case ENormalMonsterState.HITTED_BY_PLAYER_BLOCK_SUCCESS:
-            case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_KNOCKBACK_BOMB:
+            case ENormalMonsterState.HitByPlayerBlockSucces:
+            case ENormalMonsterState.HitByPlayerSkillKnockbackBoom:
                 ShowPopup(HITTED_KNOCKBACK_TEXT);
                 break;
-            case ENormalMonsterState.HITTED_BY_PLAYER_SKILL_PARALYSIS:
+            case ENormalMonsterState.HitByPlayerSkillParallysis:
                 ShowPopup(HITTED_PARALYSIS);
                 break;
         }

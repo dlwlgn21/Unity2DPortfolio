@@ -21,7 +21,7 @@ public class PlayerAttackLightController : LightController
     {
         switch (eState)
         {
-            case EPlayerState.NORMAL_ATTACK_1:
+            case EPlayerState.NormalAttack_1:
                 StartCoroutine(TurnOnLightDelayed());
                 break;
         }

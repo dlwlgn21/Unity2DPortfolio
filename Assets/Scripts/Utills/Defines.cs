@@ -74,12 +74,6 @@ namespace define
         BossColossal,
     }
 
-    public enum EProjectileState
-    {
-        Muzzle,
-        Projectile,
-        Hit
-    }
     public enum ESoundType
     {
         Sfx,
