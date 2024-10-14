@@ -8,6 +8,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 public sealed class UI_SkillTree : MonoBehaviour
 {
+    public Canvas Canvas { get; set; }
+
     TextMeshProUGUI _skillPointText;
     Sprite[] _skillLevelSprties = new Sprite[3];
     Image _spawnReaperSkillLevelImg;
@@ -25,8 +27,10 @@ public sealed class UI_SkillTree : MonoBehaviour
     UI_Skill_Icon _castBlackFlameIcon;
     UI_Skill_Icon _castSwordStrikeIcon;
 
+
     private void Awake()
     {
+        Canvas = GetComponent<Canvas>();
         #region Init
         _skillPointText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(gameObject, "SkillPointText");
         #region LevelSprties

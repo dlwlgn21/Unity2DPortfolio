@@ -1,6 +1,7 @@
 using define;
 using DG.Tweening;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum ESkillSlot
@@ -14,7 +15,7 @@ public class PlayerSkillManager
 {
     Dictionary<ESkillType, Skill_BaseController> _skillDict = new();
     UI_SkillCoolTimer[] skillCoolTimer = new UI_SkillCoolTimer[(int)ESkillSlot.Count];
-    GameObject[] _skillSlots = new GameObject[2];
+    UI_Skill_Slot[] _skillSlots = new UI_Skill_Slot[2];
     PlayerStat _stat;
     public ESkillType[] _eCurrSkillSlotType = new ESkillType[2];
     public void Init()
@@ -55,9 +56,8 @@ public class PlayerSkillManager
         skillCoolTimer[(int)ESkillSlot.SKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "SKeySkillCoolTimer");
         skillCoolTimer[(int)ESkillSlot.CKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "PlayerRollCoolTimer");
 
-        _skillSlots[(int)ESkillSlot.AKey] = uiPlayerHud.transform.Find("AKeySkillSlot").gameObject;
-        _skillSlots[(int)ESkillSlot.SKey] = uiPlayerHud.transform.Find("SKeySkillSlot").gameObject;
-
+        _skillSlots[(int)ESkillSlot.AKey] = uiPlayerHud.transform.Find("AKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
+        _skillSlots[(int)ESkillSlot.SKey] = uiPlayerHud.transform.Find("SKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
         _eCurrSkillSlotType[(int)ESkillSlot.AKey] = ESkillType.Count;
         _eCurrSkillSlotType[(int)ESkillSlot.SKey] = ESkillType.Count;
 
@@ -186,19 +186,42 @@ public class PlayerSkillManager
         return Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.LastIndexOf('/') + 1);
     }
 
-    public bool IsDuplicatedIcon(ESkillSlot eSlot, ESkillType eType)
+    public bool IsAandSSlotUsingAnySkill()
+    {
+        bool isASlotUsingSkill = false;
+        bool isSSlotUsingSkill = false;
+        if (_eCurrSkillSlotType[0] != ESkillType.Count)
+            isASlotUsingSkill = !_skillDict[_eCurrSkillSlotType[(int)ESkillSlot.AKey]].IsCanUseSkillByCoolTime;
+        if (_eCurrSkillSlotType[1] != ESkillType.Count)
+            isSSlotUsingSkill = !_skillDict[_eCurrSkillSlotType[(int)ESkillSlot.SKey]].IsCanUseSkillByCoolTime;
+        Debug.Log($"A Slot using skill? {isASlotUsingSkill},\nS Slot using skill? {isSSlotUsingSkill}");
+        if (isASlotUsingSkill == false && isSSlotUsingSkill == false)
+            return false;
+        else
+            return true;
+    }
+
+    public bool SwapIfSameNextToSlot(ESkillSlot eSlot, ESkillType eSkillType)
     {
         if (eSlot == ESkillSlot.AKey)
         {
-            if (_eCurrSkillSlotType[(int)ESkillSlot.SKey] == eType)
+            if (_eCurrSkillSlotType[(int)ESkillSlot.SKey] == eSkillType)
+            {
+                SwapSlotSkillType();
+                _skillSlots[(int)ESkillSlot.AKey].SwapIcon(_skillSlots[(int)ESkillSlot.SKey]);
                 return true;
+            }
             else
                 return false;
         }
         else
         {
-            if (_eCurrSkillSlotType[(int)ESkillSlot.AKey] == eType)
+            if (_eCurrSkillSlotType[(int)ESkillSlot.AKey] == eSkillType)
+            {
+                SwapSlotSkillType();
+                _skillSlots[(int)ESkillSlot.SKey].SwapIcon(_skillSlots[(int)ESkillSlot.AKey]);
                 return true;
+            }
             else
                 return false;
         }
@@ -220,6 +243,15 @@ public class PlayerSkillManager
     string GetSkillControllerObjectName(ESkillType eType)
     {
         return Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.LastIndexOf('/') + 1);
+    }
+
+    void SwapSlotSkillType()
+    {
+        ESkillType tmpSkillType = _eCurrSkillSlotType[(int)ESkillSlot.AKey];
+        _eCurrSkillSlotType[(int)ESkillSlot.AKey] = _eCurrSkillSlotType[(int)ESkillSlot.SKey];
+        _eCurrSkillSlotType[(int)ESkillSlot.SKey] = tmpSkillType;
+
+        //Debug.Log($"A:{_eCurrSkillSlotType[(int)ESkillSlot.AKey]}, S:{_eCurrSkillSlotType[(int)ESkillSlot.SKey]}");
     }
 
     #endregion

@@ -71,6 +71,9 @@ public class UIManager
     public UI_Skill_Description SkillDesc { get; private set; }
 
     Dictionary<string, Sprite> _spriteMap = new();
+
+    int _sortOrder;
+
     public void Init()
     {
         {
@@ -294,8 +297,7 @@ public class UIManager
         {
             if (Input.GetKeyDown(KeyCode.I))
             {
-                ShowOrHideIvenUI();
-                ShowOrHideStatUI();
+                ShowOrHideStatInvenUI();
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
@@ -312,35 +314,23 @@ public class UIManager
     {
         _skillTree.SetSkillPoint(skillPoint);
     }
-    public void Clear()
-    {
-        
-    }
     #region ShowUI
-    void ShowOrHideStatUI()
+    void ShowOrHideStatInvenUI()
     {
         if (!_stat.gameObject.activeSelf)
         {
             _stat.gameObject.SetActive(true);
             _stat.RefreshUI();
-
-        }
-        else
-        {
-            _stat.gameObject.SetActive(false);
-        }
-    }
-    void ShowOrHideIvenUI()
-    {
-        if (!_inven.gameObject.activeSelf)
-        {
             _inven.gameObject.SetActive(true);
             _inven.RefreshUI();
-
+            ++_sortOrder;
+            SetStatAndInvenSortOrder(_sortOrder);
         }
         else
         {
             _inven.gameObject.SetActive(false);
+            _stat.gameObject.SetActive(false);
+            --_sortOrder;
         }
     }
     void ShowOrHideSkillUI()
@@ -348,10 +338,13 @@ public class UIManager
         if (!_skillTree.gameObject.activeSelf)
         {
             _skillTree.gameObject.SetActive(true);
+            ++_sortOrder;
+            SetSkillTreeSortOrder(_sortOrder);
         }
         else
         {
             _skillTree.gameObject.SetActive(false);
+            --_sortOrder;
         }
     }
 
@@ -442,11 +435,29 @@ public class UIManager
         }
         Debug.Assert(sprite != null);
     }
-
     void CallConsumablePushedEvent()
     {
         if (UI_IventroyConsumablePushedEventHandler != null)
             UI_IventroyConsumablePushedEventHandler.Invoke();
     }
+
+    void SetStatAndInvenSortOrder(int order)
+    {
+        Debug.Assert(order >= 0);
+        //Debug.Log($"StatInven SortOrder : {_sortOrder}");
+        _stat.Canvas.sortingOrder = order;
+        _inven.Canvas.sortingOrder = order + 1;
+    }
+    void SetSkillTreeSortOrder(int order)
+    {
+        Debug.Assert(order >= 0);
+        //Debug.Log($"SkillTree SortOrder : {_sortOrder}");
+        _skillTree.Canvas.sortingOrder = order + 1;
+    }
     #endregion
+
+    public void Clear()
+    {
+
+    }
 }

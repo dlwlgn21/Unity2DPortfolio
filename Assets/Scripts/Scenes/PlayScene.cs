@@ -21,11 +21,11 @@ public abstract class PlayScene : BaseScene
         Managers.PlayerRespawn.Init();
         Managers.MonsterSpawn.Init();
 
-        if (GameObject.Find("PlayerMovementEffect") == null)
+        if (GameObject.Find("PlayerMovementAnimator") == null)
         {
-            GameObject go = Managers.Resources.Load<GameObject>("Prefabs/Player/PlayerMovementEffect");
+            GameObject go = Managers.Resources.Load<GameObject>("Prefabs/Player/PlayerMovementAnimator");
             GameObject movementEffect = Instantiate(go);
-            movementEffect.name = "PlayerMovementEffect";
+            movementEffect.name = "PlayerMovementAnimator";
             DontDestroyOnLoad(movementEffect);
         }
     }

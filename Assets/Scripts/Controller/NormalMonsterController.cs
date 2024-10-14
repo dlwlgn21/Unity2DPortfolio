@@ -280,7 +280,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         if (_weaponLightOrNull != null)
             _weaponLightOrNull.enabled = false;
         if (_backLightOrNull != null)
-            _weaponLightOrNull.enabled = false;
+            _backLightOrNull.enabled = false;
         _attackLightController.Init();
     }
 
@@ -290,7 +290,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         if (_weaponLightOrNull != null)
             _weaponLightOrNull.enabled = true;
         if (_backLightOrNull != null)
-            _weaponLightOrNull.enabled = true;
+            _backLightOrNull.enabled = true;
     }
     #endregion
 

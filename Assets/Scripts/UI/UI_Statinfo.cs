@@ -6,11 +6,13 @@ using UnityEngine.UI;
 
 public sealed class UI_Statinfo : MonoBehaviour
 {
+    public Canvas Canvas { get; set; }
     TextMeshProUGUI _damageValueText;
     TextMeshProUGUI _defenceValueText;
     PlayerController _pc;
     private void Awake()
     {
+        Canvas = GetComponent<Canvas>();
         _damageValueText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(gameObject, "DamageValueText");
         _defenceValueText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(gameObject, "DefenceValueText");
     }

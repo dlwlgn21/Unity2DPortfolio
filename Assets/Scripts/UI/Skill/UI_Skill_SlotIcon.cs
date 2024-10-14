@@ -24,4 +24,17 @@ public class UI_Skill_SlotIcon : MonoBehaviour
         _image.sprite = sprite;
         return true;
     }
+
+    public void Swap(UI_Skill_SlotIcon icon)
+    {
+        Sprite tmpSprite = icon._image.sprite;
+        bool tmpIsEnabled = icon._image.enabled;
+        ESkillType tmpESkillType = icon._eCurrSkillType;
+        icon._image.sprite = this._image.sprite;
+        icon._image.enabled = this._image.enabled;
+        icon._eCurrSkillType = this._eCurrSkillType;
+        this._image.sprite = tmpSprite;
+        this._image.enabled = tmpIsEnabled;
+        this._eCurrSkillType = tmpESkillType;
+    }
 }

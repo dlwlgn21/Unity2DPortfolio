@@ -6,9 +6,11 @@ using UnityEngine.UI;
 using define;
 public sealed class UI_Inventory : MonoBehaviour
 {
-    static public readonly int INVENTORY_SLOT_COUNT = 20;
-    static public readonly int MAX_ROW_COUNT = 4;
-    static public readonly int MAX_COL_COUNT = 5;
+    public Canvas Canvas { get; set; }
+
+    public const int INVENTORY_SLOT_COUNT = 20;
+    public const int MAX_ROW_COUNT = 4;
+    public const int MAX_COL_COUNT = 5;
     //public List<Image> EquippableSlots { get; private set; } = new((int)define.EItemEquippableType.Count);
     List<UI_Inventory_ItemIcon> _invenItemIcons = new(INVENTORY_SLOT_COUNT);
     private void Awake()
@@ -20,6 +22,7 @@ public sealed class UI_Inventory : MonoBehaviour
         //{
         //    EquippableSlots[i].enabled = false;
         //}
+        Canvas = GetComponent<Canvas>();
         for (int i = 1; i <= INVENTORY_SLOT_COUNT; ++i)
         {
             _invenItemIcons.Add(Utill.GetComponentInChildrenOrNull<UI_Inventory_ItemIcon>(gameObject, $"UI_ItemIcon{i:00}"));

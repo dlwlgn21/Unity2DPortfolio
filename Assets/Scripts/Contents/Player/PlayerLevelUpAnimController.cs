@@ -1,20 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
-public sealed class PlayerForceFieldAnimController : PlayerEffectAnimController
+public sealed class PlayerLevelUpAnimController : PlayerEffectAnimController
 {
     protected override void Init()
     {
-        PlayerController.HitEffectEventHandler -= OnPlayerHittedByMonsterNormalAttack;
-        PlayerController.HitEffectEventHandler += OnPlayerHittedByMonsterNormalAttack;
+        PlayerStat.OnLevelUpEventHandler -= OnPlayerLevelUp;
+        PlayerStat.OnLevelUpEventHandler += OnPlayerLevelUp;
     }
-    void OnPlayerHittedByMonsterNormalAttack(EPlayerState eState)
+    void OnPlayerLevelUp(int levelUpCount)
     {
         SetComponentEnable(true);
-        _animator.Play("ForceFieldEffect", -1, 0f);
+        _animator.Play("LevelUp", -1, 0f);
     }
     protected override void OnAnimStart()
     {
@@ -26,6 +24,4 @@ public sealed class PlayerForceFieldAnimController : PlayerEffectAnimController
         _pc.IsInvincible = false;
         SetComponentEnable(false);
     }
-
-
 }

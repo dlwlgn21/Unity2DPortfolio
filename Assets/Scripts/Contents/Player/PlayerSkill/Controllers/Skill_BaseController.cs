@@ -26,6 +26,10 @@ public abstract class Skill_BaseController : MonoBehaviour
     }
 
     public abstract bool TryUseSkill();
+    public virtual void LevelUpSkill(ESkillType eType)
+    {
+        InitSkillInfoByTypeAndCoolTime(eType);
+    }
     protected void StartCountdownCoolTime()
     {
         IsCanUseSkillByCoolTime = false;
@@ -57,10 +61,7 @@ public abstract class Skill_BaseController : MonoBehaviour
         IsCanUseSkillByCoolTime = true;
     }
 
-    public virtual void LevelUpSkill(ESkillType eType)
-    {
-        InitSkillInfoByTypeAndCoolTime(eType);
-    }
+
 
     void InitSkillInfoByTypeAndCoolTime(ESkillType eType)
     {
