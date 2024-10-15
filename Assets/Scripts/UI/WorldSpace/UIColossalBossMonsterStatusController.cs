@@ -14,20 +14,20 @@ public class UIColossalBossMonsterStatusController : UITextPopup
     {
         switch (eState)
         {
-            case EColossalBossState.FIST_MELLE_ATTACK:
+            case EColossalBossState.FistMelleAttack:
                 ShowPopup("주먹공격!");
                 break;
-            case EColossalBossState.SPIN_MELLE_ATTACK:
+            case EColossalBossState.SpinMelleAttack:
                 ShowPopup("스핀!");
                 break;
-            case EColossalBossState.BURST_MEELE_ATTACK:
-            case EColossalBossState.BURFED_BURST_ATTACK:
+            case EColossalBossState.BurstMelleAttack:
+            case EColossalBossState.BurfedBurstMelleAttack:
                 ShowPopup("분출!");
                 break;
-            case EColossalBossState.BURF:
+            case EColossalBossState.Burf:
                 ShowPopup("2페이즈 돌입!");
                 break;
-            case EColossalBossState.DIE:
+            case EColossalBossState.Die:
                 break;
         }
     }

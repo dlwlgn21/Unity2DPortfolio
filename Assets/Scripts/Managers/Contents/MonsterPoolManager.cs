@@ -30,6 +30,7 @@ public class MonsterPoolManager
     private GameObject _oriHSlicer;
     //private GameObject _oriShielder;
     private GameObject _oriFlamer;
+    private int monCount = 0;
     public void Init()
     {
         if (_oriWarden == null)
@@ -49,6 +50,7 @@ public class MonsterPoolManager
 
     public void Clear()
     {
+        monCount = 0;
     }
 
     public GameObject Get(EMonsterNames eMonName, Vector2 spawnPos)
@@ -164,6 +166,7 @@ public class MonsterPoolManager
         else
         {
             retGo = MakeMonsters(oriGo, spawnPos);
+            retGo.name = $"{retGo.name.Substring(0, retGo.name.Length - 7)}{monCount++}";
         }
         Debug.Assert(retGo != null);
         return retGo;

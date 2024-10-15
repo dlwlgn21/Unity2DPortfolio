@@ -15,6 +15,7 @@ public class CamSwitchManager
     {
         _mainCam = GameObject.Find("MainVCAM").GetComponent<CinemachineVirtualCamera>();
         _roomCam = GameObject.Find("RoomVCAM")?.GetComponent<CinemachineVirtualCamera>();
+        _mainCam.Follow = Managers.Cam.CamFollow.transform;
         Debug.Assert(_mainCam != null);
     }
 

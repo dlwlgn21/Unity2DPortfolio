@@ -65,7 +65,7 @@ public class UIManager
     UI_Statinfo _stat;
     UI_Inventory _inven;
     UI_SkillTree _skillTree;
-    //UI_PlayerHUD _playerHud;
+    UI_PlayerHUD _playerHud;
     public UnityAction UI_IventroyConsumablePushedEventHandler; 
     public UI_Inventory_ItemDescription ItemDesc { get; private set; }
     public UI_Skill_Description SkillDesc { get; private set; }
@@ -76,38 +76,48 @@ public class UIManager
 
     public void Init()
     {
+        if (_stat == null)
         {
-            // Stat
-            GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/UI_Statinfo");
-            Debug.Assert(go != null);
-            Object.DontDestroyOnLoad(go);
-            go.name = "UI_Statinfo";
-            _stat = go.GetComponent<UI_Statinfo>();
-            _stat.gameObject.SetActive(false);
+            {
+                // Stat
+                GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/UI_Statinfo");
+                Debug.Assert(go != null);
+                Object.DontDestroyOnLoad(go);
+                go.name = "UI_Statinfo";
+                _stat = go.GetComponent<UI_Statinfo>();
+                _stat.gameObject.SetActive(false);
+            }
+            {
+                // Inven
+                GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/UI_Inventory");
+                Debug.Assert(go != null);
+                Object.DontDestroyOnLoad(go);
+                go.name = "UI_Inventory";
+                _inven = go.GetComponent<UI_Inventory>();
+                ItemDesc = Utill.GetComponentInChildrenOrNull<UI_Inventory_ItemDescription>(go, "UI_ItemDescription");
+                _inven.gameObject.SetActive(false);
+            }
+            {
+                // SkillTree
+                GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/Skill/UI_SkillTree");
+                Debug.Assert(go != null);
+                Object.DontDestroyOnLoad(go);
+                go.name = "UI_SkillTree";
+                _skillTree = go.GetComponent<UI_SkillTree>();
+                SkillDesc = Utill.GetComponentInChildrenOrNull<UI_Skill_Description>(go, "UI_SkillDescription");
+                _skillTree.gameObject.SetActive(false);
+            }
+            {
+                // PlayerHUD
+                GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/Player/UI_PlayerHUD");
+                Debug.Assert(go != null);
+                Object.DontDestroyOnLoad(go);
+                go.name = "UI_PlayerHUD";
+                _playerHud = go.GetComponent<UI_PlayerHUD>();
+            }
+            Managers.Input.KeyboardHandler -= OnUIKeyDowned;
+            Managers.Input.KeyboardHandler += OnUIKeyDowned;
         }
-        {
-            // Inven
-            GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/UI_Inventory");
-            Debug.Assert(go != null);
-            Object.DontDestroyOnLoad(go);
-            go.name = "UI_Inventory";
-            _inven = go.GetComponent<UI_Inventory>();
-            ItemDesc = Utill.GetComponentInChildrenOrNull<UI_Inventory_ItemDescription>(go, "UI_ItemDescription");
-            _inven.gameObject.SetActive(false);
-        }
-
-        {
-            // SkillTree
-            GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/UI/Skill/UI_SkillTree");
-            Debug.Assert(go != null);
-            Object.DontDestroyOnLoad(go);
-            go.name = "UI_SkillTree";
-            _skillTree = go.GetComponent<UI_SkillTree>();
-            SkillDesc = Utill.GetComponentInChildrenOrNull<UI_Skill_Description>(go, "UI_SkillDescription");
-            _skillTree.gameObject.SetActive(false);
-        }
-        Managers.Input.KeyboardHandler -= OnUIKeyDowned;
-        Managers.Input.KeyboardHandler += OnUIKeyDowned;
     }
 
     #region PushIventoryItem
@@ -130,7 +140,8 @@ public class UIManager
                     emptyIcon = _inven.GetEmptyIconOrNull();
                 emptyIcon.ItemInfo = itemInfo;
                 emptyIcon.IncreaseConsuambleText();
-                CallConsumablePushedEvent();
+                if (UI_IventroyConsumablePushedEventHandler != null)
+                    UI_IventroyConsumablePushedEventHandler.Invoke();
                 break;
             default:
                 Debug.Assert(false);
@@ -434,11 +445,6 @@ public class UIManager
                 break;
         }
         Debug.Assert(sprite != null);
-    }
-    void CallConsumablePushedEvent()
-    {
-        if (UI_IventroyConsumablePushedEventHandler != null)
-            UI_IventroyConsumablePushedEventHandler.Invoke();
     }
 
     void SetStatAndInvenSortOrder(int order)

@@ -60,7 +60,12 @@ public sealed class PlayerStat : BaseStat
             }
 
             if (OnAddExpEventHandler != null)
-                OnAddExpEventHandler.Invoke(Exp, currNeedLevelUpExp);
+            {
+                if (isLevelUp)
+                    OnAddExpEventHandler.Invoke(currNeedLevelUpExp, currNeedLevelUpExp);
+                else
+                    OnAddExpEventHandler.Invoke(Exp, currNeedLevelUpExp);
+            }
 
             if (isLevelUp)
             {

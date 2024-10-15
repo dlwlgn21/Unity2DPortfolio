@@ -18,18 +18,14 @@ public class Managers : MonoBehaviour
     readonly MonsterPoolManager _monsterPoolManager = new();
     readonly MonsterSpawnManager _monsterSpawnManager = new();
     readonly ProjectilePoolManager _projectilePoolManager = new();
-    readonly CamShakeManager _camShakeManager = new();
+    readonly CamManager _camManager = new();
     readonly CamSwitchManager _camSwitchManager = new();
     readonly UIDialogManager _dialogManager = new();
     readonly PlayerRespawnManager _playerRespawnManager = new();
     readonly PlayerSkillManager _playerSkillManager = new();
     readonly PlayerLevelManager _playerLevelManager = new();
-
     readonly FullScreenEffectManager _fullScreenEffectManager = new();
 
-    // 6.5일 전투시스템에서 공격성공, 피격시에 슬로우 타임 적용하기 위해서 TimeManager 추가 
-    TimeScaleManager _timeManager = null;
-    public static TimeScaleManager TimeManager { get { return Instance._timeManager; } }
     public static InputManager Input { get { return Instance._inputManager; } }
     public static DataManager Data { get { return Instance._dataManager; } }
     public static ResourceManager Resources { get { return Instance._resourceManager; } }
@@ -43,7 +39,7 @@ public class Managers : MonoBehaviour
     public static MonsterSpawnManager MonsterSpawn { get { return Instance._monsterSpawnManager; } }
     public static ProjectilePoolManager ProjectilePool { get { return Instance._projectilePoolManager; } }
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
-    public static CamShakeManager CamShake { get { return Instance._camShakeManager; } }
+    public static CamManager Cam { get { return Instance._camManager; } }
     public static CamSwitchManager CamSwitch { get { return Instance._camSwitchManager; } }
     public static GameEventManager GameEvent { get { return Instance._gameEventManager; } }
     public static PlayerRespawnManager PlayerRespawn { get { return Instance._playerRespawnManager; } }
@@ -62,6 +58,7 @@ public class Managers : MonoBehaviour
         {
             case define.ESceneType.MainMenu:
                 {
+                    sInstance._inputManager.OnUpdate();
                     break;
                 }
             case define.ESceneType.Tutorial:
@@ -85,14 +82,14 @@ public class Managers : MonoBehaviour
                     return;
                 }
                 // FOR TEST
-                if (UnityEngine.Input.GetKeyUp(KeyCode.P))
-                {
-                    Time.timeScale = 0.2f;
-                }
-                if (UnityEngine.Input.GetKeyUp(KeyCode.L))
-                {
-                    Time.timeScale = 1f;
-                }
+                //if (UnityEngine.Input.GetKeyUp(KeyCode.P))
+                //{
+                //    Time.timeScale = 0.2f;
+                //}
+                //if (UnityEngine.Input.GetKeyUp(KeyCode.L))
+                //{
+                //    Time.timeScale = 1f;
+                //}
                 sInstance._inputManager.OnUpdate();
                 break;
         }
@@ -115,18 +112,6 @@ public class Managers : MonoBehaviour
             sInstance._dataManager.Init();
             sInstance._sceneManager.Init();
             sInstance._fullScreenEffectManager.Init();
-            sInstance._uiManager.Init();
-            sInstance._playerSkillManager.Init();
-            sInstance._playerLevelManager.Init();
-            // TODO : 6.5일 TimeManager를 위해 추가. 꼼수사용하는 거 같아서 뭔가 찝찝. 나중에 바꾸던지 해용
-            GameObject timeManager = GameObject.Find("@TimeManager");
-            if (timeManager == null)
-            {
-                timeManager = new GameObject { name = "@TimeManager" };
-                sInstance._timeManager = timeManager.AddComponent<TimeScaleManager>();
-                sInstance._timeManager.Init();
-                DontDestroyOnLoad(timeManager);
-            }
         }
     }
     public static void Clear()          

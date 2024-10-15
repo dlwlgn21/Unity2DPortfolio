@@ -37,7 +37,6 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     public bool IsPlayerInAttackZone { get; private set; } = false;
     public bool IsPlayerInTraceZone { get; private set; } = false;
 
-    Coroutine _parallysisCoroutine = null;
     UINormalMonsterStatusTextController _statusTextController;
     LightController _attackLightController;
     LightController _dieController;
@@ -89,10 +88,10 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     }
     public void ChangeState(ENormalMonsterState eChangingState)
     {
-        if (_parallysisCoroutine != null)
+        if (_parallysisCoroutineOrNull != null)
         {
-            StopCoroutine(_parallysisCoroutine);
-            _parallysisCoroutine = null;
+            StopCoroutine(_parallysisCoroutineOrNull);
+            _parallysisCoroutineOrNull = null;
         }
 
 
@@ -184,7 +183,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             case ESkillType.Spawn_Reaper_LV2:
             case ESkillType.Spawn_Reaper_LV3:
                 ChangeState(ENormalMonsterState.HitByPlayerSkillParallysis);
-                _parallysisCoroutine = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime));
+                _parallysisCoroutineOrNull = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime));
                 break;
             case ESkillType.Spawn_Shooter_LV1:
             case ESkillType.Spawn_Shooter_LV2:
@@ -254,19 +253,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     {
 
     }
-    void AddKnockbackForce(Vector2 force)
-    {
-        if (_pc == null)
-        {
-            _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-            PlayerTransform = _pc.transform;
-        }
-        Vector2 dir = PlayerTransform.position - transform.position;
-        if (dir.x > 0)
-            RigidBody.AddForce(new Vector2(-force.x, force.y), ForceMode2D.Impulse);
-        else
-            RigidBody.AddForce(force, ForceMode2D.Impulse);
-    }
+
 
     IEnumerator PlayHitAnimForSeconds(float timeInSec)
     {

@@ -20,6 +20,7 @@ public class UI_WSMonsterHpBar : UI_HealthBar
     {
         Init();
         InitScale();
+        SetFullHpBarRatio();
     }
 
     public override void Init()

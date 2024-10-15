@@ -10,9 +10,7 @@ public class UI_SkillCoolTimer : MonoBehaviour
     private Color _showColor;
     private Color _hideColor;
     private TextMeshProUGUI _coolTimeText;
-    private float _coolTimer;
-    //private bool _isStartCoolTime = false;
-    private void Start()
+    private void Awake()
     {
         _coolTimeImg = GetComponent<Image>();
         _showColor = _coolTimeImg.color;
@@ -21,29 +19,20 @@ public class UI_SkillCoolTimer : MonoBehaviour
         _coolTimeText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(gameObject, "CoolTimeText");
     }
 
-
-    private void Update()
+    public void InitForNextSceneLoad()
     {
-        //if (_isStartCoolTime)
-        //{
-        //    _coolTimer -= Time.deltaTime;
-        //    _coolTimeText.text = (((int)_coolTimer) + 1).ToString();
-        //}
+        OnFillAmountTWEnd();
     }
 
     public void StartCoolTime(float coolTime)
     {
-        _coolTimer = coolTime;
-        //_isStartCoolTime = true;
-        _coolTimeText.DOCounter((int)coolTime, 1, (int)coolTime);
+        _coolTimeText.DOCounter((int)coolTime, 0, (int)coolTime);
         _coolTimeImg.color = _showColor;
         _coolTimeImg.DOFillAmount(0f, coolTime).OnComplete(OnFillAmountTWEnd);
     }
 
     private void OnFillAmountTWEnd()
     {
-        _coolTimer = 0f;
-        //_isStartCoolTime = false;
         _coolTimeText.text = "";
         _coolTimeImg.color = _hideColor;
         _coolTimeImg.fillAmount = 1f;

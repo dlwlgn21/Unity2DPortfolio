@@ -8,12 +8,15 @@ public class ColossalBossCaveScene : PlayScene
 
     private void Awake()
     {
+        Debug.Log($"ColossalBossCaveScene Awake Called!");
         Init();
+
     }
 
     protected override void Init()
     {
         base.Init();
+        Managers.PlayerRespawn.SpawnPlayer(false);
     }
 
     public override void Clear()

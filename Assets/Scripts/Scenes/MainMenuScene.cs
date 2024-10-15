@@ -9,6 +9,7 @@ public class MainMenuScene : BaseScene
     public MainMenuScene() : base(define.ESceneType.MainMenu) { }
     private void Awake()
     {
+        Debug.Log($"MainMenuScene Awake Called");
         Init();
     }
 
@@ -20,7 +21,7 @@ public class MainMenuScene : BaseScene
 
     public override void Clear()
     {
-        Debug.Log("MainMenuScene Clear Called");
         Managers.Tween.Clear();
+        Managers.MainMenu.Clear();
     }
 }

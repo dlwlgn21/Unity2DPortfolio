@@ -5,7 +5,7 @@ using UnityEditor.AssetImporters;
 using UnityEngine;
 public class CamFollowObject : MonoBehaviour
 {
-    [SerializeField] private Transform _playerTransform;
+    private Transform _playerTransform;
     private PlayerController _pc;
     private const float FLIP_Y_ROTATION_TIME_IN_SEC = 0.15f;
     //private const float LOOK_UP_OR_DOWN_Y_DIST = 3f;
@@ -16,9 +16,13 @@ public class CamFollowObject : MonoBehaviour
     {
         transform.DORotate(DetermineEndRotation(), FLIP_Y_ROTATION_TIME_IN_SEC).SetEase(Ease.InOutSine);
     }
-    private void Awake()
+    private void Start()
     {
-        _pc = _playerTransform.gameObject.GetComponent<PlayerController>();
+        if (_pc == null)
+        {
+            _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            _playerTransform = _pc.gameObject.transform;
+        }
     }
 
     private void Update()

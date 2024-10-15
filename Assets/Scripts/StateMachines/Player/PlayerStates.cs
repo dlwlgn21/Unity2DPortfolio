@@ -31,13 +31,13 @@ namespace player_states
             {
                 _entity.ELookDir = ECharacterLookDir.Left;
                 _entity.transform.localRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
-                _entity.CamFollowObject.CallTurn();
+                Managers.Cam.CamFollow.CallTurn();
             }
             else if (_horizontalMove > 0 && _entity.ELookDir == ECharacterLookDir.Left)
             {
                 _entity.ELookDir = ECharacterLookDir.Right;
                 _entity.transform.localRotation = Quaternion.Euler(Vector3.zero);
-                _entity.CamFollowObject.CallTurn();
+                Managers.Cam.CamFollow.CallTurn();
             }
         }
         protected void SetVelocityToZero() { _entity.RigidBody.velocity = Vector2.zero; }
@@ -124,7 +124,10 @@ namespace player_states
             return;
         }
         #endregion
+        void RotateAcordingELookDir()
+        {
 
+        }
         //static public void BoxCast2DDebugDraw(Vector2 origin, Vector2 size, float distasnce, RaycastHit2D hit)
         //{
         //    Vector2 p1, p2, p3, p4, p5, p6, p7, p8;
@@ -838,7 +841,7 @@ namespace player_states
         public Die(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
         { 
-            Managers.PlayerRespawn.SpawnPlayer(_entity);
+            Managers.PlayerRespawn.SpawnPlayer(true);
             Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.SCENE_TRANSITION);
         }
         public override void Enter()

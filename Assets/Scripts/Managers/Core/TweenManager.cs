@@ -31,7 +31,7 @@ public class TweenManager
     {
         if (IsTweening(transform))
             return;
-        transform.DOScale(TWEEN_SCALE_END_VALUE, timeInSec).SetEase(Ease.InOutElastic);
+        transform.DOScale(endValue, timeInSec).SetEase(Ease.InOutElastic);
     }
     public void StartUIScaleTW(Transform transform, TweenCallback callback, float timeInSec = BASIC_UI_TW_TIME_IN_SEC)
     {
@@ -40,6 +40,12 @@ public class TweenManager
         transform.DOScale(TWEEN_SCALE_END_VALUE, timeInSec).SetEase(Ease.InOutElastic).OnComplete(callback);
     }
 
+    public void StartUIScaleTW(Transform transform, float endValue, TweenCallback callback, float timeInSec = BASIC_UI_TW_TIME_IN_SEC)
+    {
+        if (IsTweening(transform))
+            return;
+        transform.DOScale(endValue, timeInSec).SetEase(Ease.InOutElastic).OnComplete(callback);
+    }
     public void StartUIDoPunchPos(Transform transform, float coefficient = 5f)
     {
         if (IsTweening(transform))

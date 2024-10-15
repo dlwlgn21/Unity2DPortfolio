@@ -18,9 +18,10 @@ public abstract class BaseMonsterController : BaseCharacterController
     public MonsterStat Stat { get; protected set; }
 
     protected PlayerController _pc;
+    protected Coroutine _parallysisCoroutineOrNull = null;
+    protected MonsterHitFlasher _hitFlasher;
 
     UIMonsterDamageTextController _damageTextController;
-    MonsterHitFlasher _hitFlasher;
     HitParticleController _hitParticleController;
     MonsterHitAnimController _hitAnimController;
 
@@ -68,4 +69,19 @@ public abstract class BaseMonsterController : BaseCharacterController
         HittedByNormalAttackEffectEventHandler?.Invoke(eAttackType);
         #endregion
     }
+
+    protected void AddKnockbackForce(Vector2 force)
+    {
+        if (_pc == null)
+        {
+            _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            PlayerTransform = _pc.transform;
+        }
+        Vector2 dir = PlayerTransform.position - transform.position;
+        if (dir.x > 0)
+            RigidBody.AddForce(new Vector2(-force.x, force.y), ForceMode2D.Impulse);
+        else
+            RigidBody.AddForce(force, ForceMode2D.Impulse);
+    }
+
 }

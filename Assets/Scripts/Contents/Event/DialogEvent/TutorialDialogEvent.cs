@@ -6,7 +6,6 @@ public class TutorialDialogEvent : DialogEventBoxCollider, ITalkable
 {
     [SerializeField] private DialogText _dialogText;
     [SerializeField] private TutorialSequence _currTutorialEvent;
-    [SerializeField] private TutorialPillar _pillar;
 
     private bool _isDialogStart = false;
     void Start()
@@ -31,7 +30,6 @@ public class TutorialDialogEvent : DialogEventBoxCollider, ITalkable
         if (!_isDialogStart)
             RegisterOnDialogEnd();
         Talk(_dialogText);
-        _pillar.PlayAnimation(EPillarState.ACTIVATING);
     }
     protected override void OnDialogEnd()
     {
@@ -39,6 +37,5 @@ public class TutorialDialogEvent : DialogEventBoxCollider, ITalkable
         Debug.Assert(_currTutorialEvent != null);
         _currTutorialEvent.OnDialogEnd();
         _boxCollider.enabled = false;
-        _pillar.PlayAnimation(EPillarState.UNACTIVATING);
     }
 }

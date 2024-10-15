@@ -53,8 +53,20 @@ public class PlayerConsumableSlotManager : MonoBehaviour
             UI_PlayerConsumableSlot.SameConsumableDropEventHandelr += DisacrdIfSameItemDroped;
             UI_Inventory_ItemDiscardSlot.ItemDiscardEventHandler -= OnDiscardBtnClicked;
             UI_Inventory_ItemDiscardSlot.ItemDiscardEventHandler += OnDiscardBtnClicked;
+            PlayScene.OnSceneInitEventHandelr -= InitForNextSceneLoad;
+            PlayScene.OnSceneInitEventHandelr += InitForNextSceneLoad;
+
         }
     }
+
+    void InitForNextSceneLoad()
+    {
+        for (int i = 0; i < 2; ++i)
+        {
+            _slots[i].InitForNextSceneLoad();
+        }
+    }
+
     //private void OnDestroy()
     //{
     //    UI_PlayerConsumableSlot.SameConsumableDropEventHandelr -= SwapIfSameItemMoving;

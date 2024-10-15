@@ -12,7 +12,7 @@ public class MonsterHitFlasher : MaterialFlasher
     {
         StartCoroutine(DamageFlashCo());
     }
-    private IEnumerator DamageFlashCo()
+    IEnumerator DamageFlashCo()
     {
         float currentFlashAmount = 0f;
         float elapsedTime = 0f;

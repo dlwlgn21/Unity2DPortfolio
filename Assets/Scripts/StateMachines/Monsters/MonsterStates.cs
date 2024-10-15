@@ -321,7 +321,7 @@ namespace monster_states
     public abstract class BaseBossMonsterState : State<ColossalBossMonsterController>
     {
         protected const string WAKE_ANIM_KEY = "Wake";
-        protected const string IDLE_ANIM_KEY = "Idle";
+        protected const string HIT_ANIM_KEY = "Idle";
         protected const string RUN_ANIM_KEY = "Run";
         protected const string FIST_MELLE_ATTACK_ANIM_KEY = "FistAttack";
         protected const string SPIN_MELLE_ATTACK_ANIM_KEY = "SpinAttack";
@@ -344,30 +344,36 @@ namespace monster_states
         {
             switch (eState)
             {
-                case EColossalBossState.WAKE:
+                case EColossalBossState.Wake:
                     _entity.Animator.Play(WAKE_ANIM_KEY, -1, 0f);
                     return;
-                case EColossalBossState.RUN:
+                case EColossalBossState.Run:
                     _entity.Animator.Play(RUN_ANIM_KEY, -1, 0f);
                     return;
-                case EColossalBossState.FIST_MELLE_ATTACK:
+                case EColossalBossState.FistMelleAttack:
                     _entity.Animator.Play(FIST_MELLE_ATTACK_ANIM_KEY, -1, 0f);
                     return;
-                case EColossalBossState.SPIN_MELLE_ATTACK:
+                case EColossalBossState.SpinMelleAttack:
                     _entity.Animator.Play(SPIN_MELLE_ATTACK_ANIM_KEY, -1, 0f);
                     return;
-                case EColossalBossState.BURST_MEELE_ATTACK:
+                case EColossalBossState.BurstMelleAttack:
                     _entity.Animator.Play(RANGE_MELLE_ATTACK_ANIM_KEY, -1, 0f);
                     return;
-                case EColossalBossState.BURFED_BURST_ATTACK:
+                case EColossalBossState.BurfedBurstMelleAttack:
                     _entity.Animator.Play(BURFED_RANGE_MELLE_ATTACK_ANIM_KEY, -1, 0f);
                     return;
-                case EColossalBossState.BURF:
+                case EColossalBossState.Burf:
                     _entity.Animator.Play(BURF_ANIM_KEY, -1, 0f);
                     return;
-                case EColossalBossState.DIE:
+                case EColossalBossState.Hit:
+                    _entity.Animator.Play(HIT_ANIM_KEY, -1, 0f);
+                    return;
+                case EColossalBossState.Die:
                     _entity.Animator.Play(DIE_ANIM_KEY, -1, 0f);
                     return;
+                default:
+                    Debug.DebugBreak();
+                    break;
             }
         }
     }
@@ -379,7 +385,7 @@ namespace monster_states
 
         public override void OnAnimFullyPlayed()
         {
-            _entity.ChangeState(EColossalBossState.RUN);
+            _entity.ChangeState(EColossalBossState.Run);
         }
     }
 
@@ -391,43 +397,43 @@ namespace monster_states
         public override void OnAnimFullyPlayed() {  }
         public override void Enter()
         {
-            PlayAnimation(EColossalBossState.RUN);
+            PlayAnimation(EColossalBossState.Run);
         }
         public override void Excute()
         {
             switch (_entity.EColossalPhase)
             {
-                case EColossalBossPhase.FIRST_PHASE:
+                case EColossalBossPhase.FirstPhase:
                     if (_entity.IsPlayerInBurstAttackZone)
                     {
-                        _entity.ChangeState(EColossalBossState.BURST_MEELE_ATTACK);
+                        _entity.ChangeState(EColossalBossState.BurstMelleAttack);
                         return;
                     }
                     if (_entity.IsPlayerInSpinAttackZone)
                     {
-                        _entity.ChangeState(EColossalBossState.SPIN_MELLE_ATTACK);
+                        _entity.ChangeState(EColossalBossState.SpinMelleAttack);
                         return;
                     }
                     if (_entity.IsPlayerInFistAttackZone)
                     {
-                        _entity.ChangeState(EColossalBossState.FIST_MELLE_ATTACK);
+                        _entity.ChangeState(EColossalBossState.FistMelleAttack);
                         return;
                     }
                     break;
-                case EColossalBossPhase.SECOND_UNDER_50_PERCENT_HP_PHASE:
+                case EColossalBossPhase.SecondUnder50PercentHpPhase:
                     if (_entity.IsPlayerInBurstAttackZone)
                     {
-                        _entity.ChangeState(EColossalBossState.BURFED_BURST_ATTACK);
+                        _entity.ChangeState(EColossalBossState.BurfedBurstMelleAttack);
                         return;
                     }
                     if (_entity.IsPlayerInSpinAttackZone)
                     {
-                        _entity.ChangeState(EColossalBossState.SPIN_MELLE_ATTACK);
+                        _entity.ChangeState(EColossalBossState.SpinMelleAttack);
                         return;
                     }
                     if (_entity.IsPlayerInFistAttackZone)
                     {
-                        _entity.ChangeState(EColossalBossState.FIST_MELLE_ATTACK);
+                        _entity.ChangeState(EColossalBossState.FistMelleAttack);
                         return;
                     }
                     break;
@@ -460,7 +466,7 @@ namespace monster_states
         protected BossAttackState(ColossalBossMonsterController entity) : base(entity)  { }
         public override void OnAnimFullyPlayed()
         {
-            _entity.ChangeState(EColossalBossState.RUN);
+            _entity.ChangeState(EColossalBossState.Run);
         }
     }
 
@@ -470,7 +476,7 @@ namespace monster_states
 
         public override void Enter()
         {
-            PlayAnimation(EColossalBossState.SPIN_MELLE_ATTACK);
+            PlayAnimation(EColossalBossState.SpinMelleAttack);
         }
     }
 
@@ -479,7 +485,7 @@ namespace monster_states
         public BossColossalFistAttack(ColossalBossMonsterController entity) : base(entity) { }
         public override void Enter()
         {
-            PlayAnimation(EColossalBossState.FIST_MELLE_ATTACK);
+            PlayAnimation(EColossalBossState.FistMelleAttack);
         }
     }
 
@@ -489,7 +495,7 @@ namespace monster_states
 
         public override void Enter()
         {
-            PlayAnimation(EColossalBossState.BURST_MEELE_ATTACK);
+            PlayAnimation(EColossalBossState.BurstMelleAttack);
         }
     }
 
@@ -499,7 +505,7 @@ namespace monster_states
 
         public override void Enter()
         {
-            PlayAnimation(EColossalBossState.BURFED_BURST_ATTACK);
+            PlayAnimation(EColossalBossState.BurfedBurstMelleAttack);
         }
     }
 
@@ -509,12 +515,23 @@ namespace monster_states
 
         public override void OnAnimFullyPlayed()
         {
-            _entity.ChangeState(EColossalBossState.RUN);
+            _entity.ChangeState(EColossalBossState.Run);
         }
         public override void Enter()
         {
-            PlayAnimation(EColossalBossState.BURF);
+            PlayAnimation(EColossalBossState.Burf);
         }
+    }
+
+    public class BossColossalHit : BaseBossMonsterState
+    {
+        public BossColossalHit(ColossalBossMonsterController entity) : base(entity) { }
+        public override void Enter()
+        {
+            PlayAnimation(EColossalBossState.Hit);
+        }
+        public override void OnAnimFullyPlayed()
+        { }
     }
 
     public class BossColossalDie : BaseBossMonsterState
@@ -527,7 +544,7 @@ namespace monster_states
         }
         public override void Enter()
         {
-            PlayAnimation(EColossalBossState.DIE);
+            PlayAnimation(EColossalBossState.Die);
         }
     }
 

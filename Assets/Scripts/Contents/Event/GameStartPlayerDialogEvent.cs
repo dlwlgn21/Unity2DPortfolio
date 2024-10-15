@@ -12,9 +12,11 @@ public class GameStartPlayerDialogEvent : DialogEventBoxCollider, ITalkable
     {
         Init();
         _tutorialManager = GameObject.FindGameObjectWithTag("TutorialManager").GetComponent<TutorialManager>();
+        Managers.Input.KeyboardHandler -= OnEKeyDown;
+        Managers.Input.KeyboardHandler += OnEKeyDown;
     }
     
-    private void Update()
+    void OnEKeyDown()
     {
         if (Input.GetKeyDown(KeyCode.E) && _isDialogStart && _boxCollider.enabled)
             Talk(_dialogText);

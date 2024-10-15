@@ -1,12 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerRespawnManager
 {
-    private Vector2 _spawnPos;
+    PlayerController _pc;
+    Vector2 _spawnPos;
     public void Init()
     {
+        if (_pc == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+                _pc = player.GetComponent<PlayerController>();
+            else
+                _pc = Managers.Resources.Instantiate<PlayerController>("Prefabs/Player/Player");
+        }
         GameObject go = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
         if (go != null)
         {
@@ -15,10 +25,11 @@ public class PlayerRespawnManager
         }
     }
 
-    public void SpawnPlayer(PlayerController pc)
+    public void SpawnPlayer(bool isRespawn)
     {
-        pc.Stat.InitHP();
-        pc.ChangeState(EPlayerState.Idle);
-        pc.transform.position = _spawnPos;
+        if (isRespawn)
+            _pc.Stat.InitHP();
+        _pc.ChangeState(EPlayerState.Idle);
+        _pc.transform.position = _spawnPos;
     }
 }

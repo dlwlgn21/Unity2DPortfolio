@@ -20,59 +20,68 @@ public class PlayerSkillManager
     public ESkillType[] _eCurrSkillSlotType = new ESkillType[2];
     public void Init()
     {
+        if (_skillDict.Count == 0)
+        {
+            #region SkillInit
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            _stat = player.GetComponent<PlayerStat>();
+
+            Dictionary<int, data.SkillInfo> skillDict = Managers.Data.SkillInfoDict;
+
+            Skill_BaseController roll = Utill.GetComponentInChildrenOrNull<Skill_RollController>(player, GetSkillControllerObjectName(ESkillType.Roll));
+            Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(skillDict[(int)ESkillType.Spawn_Reaper_LV1].controllerPrefabPath);
+            Skill_BaseController panda = Inst<Skill_SpawnShooterController>(skillDict[(int)ESkillType.Spawn_Shooter_LV1].controllerPrefabPath);
+            Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(skillDict[(int)ESkillType.Cast_BlackFlame_LV1].controllerPrefabPath);
+            Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(skillDict[(int)ESkillType.Cast_SwordStrike_LV1].controllerPrefabPath);
+
+            reaper.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Reaper_LV1);
+            panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Shooter_LV1);
+            blackFlame.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_BlackFlame_LV1);
+            swordStrike.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_SwordStrike_LV1);
+
+            Object.DontDestroyOnLoad(reaper.gameObject);
+            Object.DontDestroyOnLoad(panda.gameObject);
+            Object.DontDestroyOnLoad(blackFlame.gameObject);
+            Object.DontDestroyOnLoad(swordStrike.gameObject);
+
+            _skillDict.Add(ESkillType.Roll, roll);
+            _skillDict.Add(ESkillType.Spawn_Reaper_LV1, reaper);
+            _skillDict.Add(ESkillType.Spawn_Shooter_LV1, panda);
+            _skillDict.Add(ESkillType.Cast_BlackFlame_LV1, blackFlame);
+            _skillDict.Add(ESkillType.Cast_SwordStrike_LV1, swordStrike);
+
+            #endregion
+
+            GameObject uiPlayerHud = GameObject.Find("UI_PlayerHUD");
+            skillCoolTimer[(int)ESkillSlot.AKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "AKeySkillCoolTimer");
+            skillCoolTimer[(int)ESkillSlot.SKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "SKeySkillCoolTimer");
+            skillCoolTimer[(int)ESkillSlot.CKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "PlayerRollCoolTimer");
+
+            _skillSlots[(int)ESkillSlot.AKey] = uiPlayerHud.transform.Find("AKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
+            _skillSlots[(int)ESkillSlot.SKey] = uiPlayerHud.transform.Find("SKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
+            _eCurrSkillSlotType[(int)ESkillSlot.AKey] = ESkillType.Count;
+            _eCurrSkillSlotType[(int)ESkillSlot.SKey] = ESkillType.Count;
+
+            Debug.Assert(skillCoolTimer[(int)ESkillSlot.AKey] != null && skillCoolTimer[(int)ESkillSlot.SKey] != null);
+            Debug.Assert(_skillSlots[0] != null && _skillSlots[1] != null);
+
+
+            #region EventSubscribe
+            Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
+            Managers.Input.KeyboardHandler += OnSkillKeyDowned;
+            UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
+            UI_Skill_Slot.OnSkillIocnDropEventHandler += OnSkillIconDroped;
+            UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnSkillLevelUp;
+            UI_Skill_Icon.OnSkillLevelUpEventHandler += OnSkillLevelUp;
+            #endregion
+        }
         // TODO : 나중에는 필요할 때 메모리에 로드 하는 방식으로 바꿔야함.
-        #region SkillInit
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        _stat = player.GetComponent<PlayerStat>();
-
-        Dictionary<int, data.SkillInfo> skillDict = Managers.Data.SkillInfoDict;
-
-        Skill_BaseController roll = Utill.GetComponentInChildrenOrNull<Skill_RollController>(player, GetSkillControllerObjectName(ESkillType.Roll));
-        Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(skillDict[(int)ESkillType.Spawn_Reaper_LV1].controllerPrefabPath);
-        Skill_BaseController panda = Inst<Skill_SpawnShooterController>(skillDict[(int)ESkillType.Spawn_Shooter_LV1].controllerPrefabPath);
-        Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(skillDict[(int)ESkillType.Cast_BlackFlame_LV1].controllerPrefabPath);
-        Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(skillDict[(int)ESkillType.Cast_SwordStrike_LV1].controllerPrefabPath);
-
-        reaper.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Reaper_LV1);
-        panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Shooter_LV1);
-        blackFlame.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_BlackFlame_LV1);
-        swordStrike.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_SwordStrike_LV1);
-
-        Object.DontDestroyOnLoad(reaper.gameObject);
-        Object.DontDestroyOnLoad(panda.gameObject);
-        Object.DontDestroyOnLoad(blackFlame.gameObject);
-        Object.DontDestroyOnLoad(swordStrike.gameObject);
-
-        _skillDict.Add(ESkillType.Roll, roll);
-        _skillDict.Add(ESkillType.Spawn_Reaper_LV1, reaper);
-        _skillDict.Add(ESkillType.Spawn_Shooter_LV1, panda);
-        _skillDict.Add(ESkillType.Cast_BlackFlame_LV1, blackFlame); 
-        _skillDict.Add(ESkillType.Cast_SwordStrike_LV1, swordStrike);
-
-        #endregion
-
-        GameObject uiPlayerHud = GameObject.Find("UI_PlayerHUD");
-        skillCoolTimer[(int)ESkillSlot.AKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "AKeySkillCoolTimer");
-        skillCoolTimer[(int)ESkillSlot.SKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "SKeySkillCoolTimer");
-        skillCoolTimer[(int)ESkillSlot.CKey] = Utill.GetComponentInChildrenOrNull<UI_SkillCoolTimer>(uiPlayerHud, "PlayerRollCoolTimer");
-
-        _skillSlots[(int)ESkillSlot.AKey] = uiPlayerHud.transform.Find("AKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
-        _skillSlots[(int)ESkillSlot.SKey] = uiPlayerHud.transform.Find("SKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
-        _eCurrSkillSlotType[(int)ESkillSlot.AKey] = ESkillType.Count;
-        _eCurrSkillSlotType[(int)ESkillSlot.SKey] = ESkillType.Count;
-
-        Debug.Assert(skillCoolTimer[(int)ESkillSlot.AKey] != null && skillCoolTimer[(int)ESkillSlot.SKey] != null);
-        Debug.Assert(_skillSlots[0] != null && _skillSlots[1] != null);
-
-
-        #region EventSubscribe
-        Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
-        Managers.Input.KeyboardHandler += OnSkillKeyDowned;
-        UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
-        UI_Skill_Slot.OnSkillIocnDropEventHandler += OnSkillIconDroped;
-        UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnSkillLevelUp;
-        UI_Skill_Icon.OnSkillLevelUpEventHandler += OnSkillLevelUp;
-        #endregion
+        for (int i = 0; i < 2; ++i)
+        {
+            if (_eCurrSkillSlotType[i] != ESkillType.Count)
+                _skillDict[_eCurrSkillSlotType[i]].InitForNextSceneLoad();
+            skillCoolTimer[i].InitForNextSceneLoad();
+        }
     }
 
     #region Event
@@ -259,7 +268,6 @@ public class PlayerSkillManager
 
     public void Clear()
     {
-        //Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
-        //UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
+
     }
 }

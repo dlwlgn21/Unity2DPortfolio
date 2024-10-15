@@ -15,9 +15,9 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
     PlayerController _pc;
     UI_PlayerConsumableIcon _icon;
     UI_SkillCoolTimer _coolTimer;
+    Coroutine _countdownCoOrNull;
     public ItemInfo Info { get; private set; }
     public int SlotIdx { get; private set; }
-
     public bool IsCanUseConsumable { get; private set; } = true;
     private void Awake()
     {
@@ -29,6 +29,14 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
         Init();
         _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         Debug.Assert(_pc != null);
+    }
+    public void InitForNextSceneLoad()
+    {
+        _coolTimer.InitForNextSceneLoad();
+        if (_countdownCoOrNull != null)
+            StopCoroutine(_countdownCoOrNull);
+        _countdownCoOrNull = null;
+        IsCanUseConsumable = true;
     }
     public void OnDrop(PointerEventData eventData)
     {
@@ -81,7 +89,11 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
     bool TryUseConsumableItem()
     {
         // TODO : 여기 ItemId 매직넘버 고쳐야 함.
-        if (IsCanUseConsumable && _icon.IsPossibleConsum() && _pc.Stat.HP < _pc.Stat.MaxHP)
+        if (!Managers.Dialog.IsTalking &&
+            !Managers.Pause.IsPaused &&
+            IsCanUseConsumable && 
+            _icon.IsPossibleConsum() && 
+            _pc.Stat.HP < _pc.Stat.MaxHP)
         {
             UI_Inventory_ItemIcon itemIcon = Managers.UI.GetSpecifiedConsumableOrNull(EItemConsumableType.Hp, 1);
             if (itemIcon != null)
@@ -95,7 +107,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
 
                     _pc.OnCousumableItemUsed(EItemConsumableType.Hp, info.healAmount);
                     _coolTimer.StartCoolTime(CONSUMABLE_COOL_TIME_IN_SEC);
-                    StartCoroutine(StartCountdownCoolTimeCo(CONSUMABLE_COOL_TIME_IN_SEC));
+                    _countdownCoOrNull = StartCoroutine(StartCountdownCoolTimeCo(CONSUMABLE_COOL_TIME_IN_SEC));
 
                     if (UseConsumableHandler != null)
                         UseConsumableHandler.Invoke();
@@ -129,6 +141,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
         IsCanUseConsumable = false;
         yield return new WaitForSeconds(coolTimeInSec);
         IsCanUseConsumable = true;
+        _countdownCoOrNull = null;
     }
 
     void StartPunchPosTW()

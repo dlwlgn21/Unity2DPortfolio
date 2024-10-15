@@ -77,7 +77,6 @@ public class PlayerController : BaseCharacterController
 
     private const float BURN_TIME_IN_SEC = 2.0f;
 
-    public CamFollowObject CamFollowObject;
     public CapsuleCollider2D CapsuleCollider { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
@@ -90,32 +89,32 @@ public class PlayerController : BaseCharacterController
 
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
-
     public bool IsInvincible { get; set; } = false;
     public bool IsSlowState { get; set; } = false;
-
     public bool IsBurned { get; set; } = false;
 
     private int _lastBurnedDamage;
     public override void Init()
     {
         base.Init();
-        Stat = gameObject.GetOrAddComponent<PlayerStat>();
-        CapsuleCollider = gameObject.GetComponent<CapsuleCollider2D>();
-        ELookDir = ECharacterLookDir.Right;
-        LedgeHeadRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeHeadRayPoint");
-        LedgeBodyRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeBodyRayPoint");
-        SpawnReaperPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnReaperPoint");
-        SpawnShooterPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");        
-        CastBlackFlamePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillBlackFlamePoint");
-        CastSwordStrikePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSwordStrikePoint");
-
-
-        #region SUBSCRIBE_EVENT
-        MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
-        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;
-        PlayerFallDeadZone.PlayerFallDeadZoneEventHandler += OnPlayerFallToDeadZone;
-        #endregion
+        if (Stat == null)
+        {
+            Stat = gameObject.GetOrAddComponent<PlayerStat>();
+            CapsuleCollider = gameObject.GetComponent<CapsuleCollider2D>();
+            ELookDir = ECharacterLookDir.Right;
+            LedgeHeadRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeHeadRayPoint");
+            LedgeBodyRayPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "LedgeBodyRayPoint");
+            SpawnReaperPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnReaperPoint");
+            SpawnShooterPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");
+            CastBlackFlamePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillBlackFlamePoint");
+            CastSwordStrikePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSwordStrikePoint");
+            #region SUBSCRIBE_EVENT
+            MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
+            MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;
+            PlayerFallDeadZone.PlayerFallDeadZoneEventHandler += OnPlayerFallToDeadZone;
+            #endregion
+            DontDestroyOnLoad(this);
+        }
     }
 
 
@@ -141,10 +140,8 @@ public class PlayerController : BaseCharacterController
     void FixedUpdate()
     {
         #region PAUSE
-        if (IsSkipThisFrame())
+        if (Managers.Pause.IsPaused)
         {
-            Vector2 velo = RigidBody.velocity;
-            RigidBody.velocity = new Vector2(0f, velo.y);
             return;
         }
         #endregion
@@ -154,22 +151,17 @@ public class PlayerController : BaseCharacterController
     void Update()
     {
         #region PAUSE
-        if (IsSkipThisFrame())
+        if (Managers.Pause.IsPaused)
         {
-            if (ECurrentState != EPlayerState.Idle)
-            {
-                if (ECurrentState == EPlayerState.Jump)
-                {
-                    ChangeState(EPlayerState.Fall);
-                }
-                else
-                {
-                    ChangeState(EPlayerState.Idle);
-                }
-            }
             return;
         }
         #endregion
+        if (Managers.Dialog.IsTalking)
+        {
+            if (ECurrentState != EPlayerState.Idle)
+                ChangeState(EPlayerState.Idle);
+            return;
+        }
         _stateMachine.Excute();
     }
 
@@ -426,13 +418,6 @@ public class PlayerController : BaseCharacterController
         MovementEffectEventHandler?.Invoke(eEffectType, eLookDir, pos);
     }
 
-    private bool IsSkipThisFrame()
-    {
-        if (Managers.Pause.IsPaused || Managers.Dialog.IsTalking)
-            return true;
-        return false;
-    }
-
     private void ActualDamgedFromMonsterAttack(int damge)
     {
         #region ACTUAL_DAMAGE
@@ -447,7 +432,6 @@ public class PlayerController : BaseCharacterController
     {
         HitUIEventHandler?.Invoke(damge, beforeDamageHP, afterDamageHP);
         HitEffectEventHandler?.Invoke(EPlayerState.HitByMelleAttack);
-        Managers.TimeManager.OnPlayerHittedByMonster();
     }
     private void ChangeHitOrDieState()
     {

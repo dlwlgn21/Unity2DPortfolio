@@ -8,9 +8,8 @@ public class PauseManager
     // TODO : MainMenu로 간 다음 다시 GameScene 로드했을 때에, PauseManager가 작동안하는 것 수정해야 함!
     public bool IsPaused { get; private set; } = false;
     GameObject _pauseMenu;
-    RectTransform _pauseMenuTransform;
-    Vector3 _originalScale;
     Button _resumeBtn;
+    Button _goMainMenuBtn;
     public void Init()
     {
         if (GameObject.Find("UIPauseMenu") == null)
@@ -22,28 +21,28 @@ public class PauseManager
             _pauseMenu.name = "UIPauseMenu";
             _resumeBtn = Utill.GetComponentInChildrenOrNull<Button>(_pauseMenu, "UIPauseResumeBtn");
             _resumeBtn.onClick.AddListener(OnResumeBtnClicked);
-            Button mainMenuBtn = Utill.GetComponentInChildrenOrNull<Button>(_pauseMenu, "UIPasueMainMenuBtn");
-            mainMenuBtn.onClick.AddListener(OnMainMenuBtnClicked);
-            _pauseMenuTransform = Utill.GetComponentInChildrenOrNull<RectTransform>(_pauseMenu.gameObject, "VerticalLayout");
-            _originalScale = _pauseMenuTransform.localScale;
+            _goMainMenuBtn = Utill.GetComponentInChildrenOrNull<Button>(_pauseMenu, "UIPasueMainMenuBtn");
+            _goMainMenuBtn.onClick.AddListener(OnMainMenuBtnClicked);
             _pauseMenu.SetActive(false);
             Object.DontDestroyOnLoad(_pauseMenu);
         }
     }
     public void Pause()
     {
-        Debug.Log("Pause");
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
         IsPaused = true;
         _pauseMenu.SetActive(true);
-        _pauseMenuTransform
-            .DOScale(_originalScale.x + 0.3f, 0.2f)
-            .SetEase(Ease.OutElastic);
         EventSystem.current.SetSelectedGameObject(_resumeBtn.gameObject);
     }
-    public void Unpause()               { onUnpause(); }
+    public void Unpause()               
+    { 
+        onUnpause(); 
+    }
 
-    public void OnResumeBtnClicked()    { onUnpause(); }
+    public void OnResumeBtnClicked()    
+    { 
+        onUnpause();
+    }
     public void OnMainMenuBtnClicked()
     {
         onUnpause();
@@ -55,7 +54,6 @@ public class PauseManager
         Time.timeScale = 1f;
         IsPaused = false;
         _pauseMenu.SetActive(false);
-        _pauseMenuTransform.localScale = _originalScale;
         EventSystem.current.SetSelectedGameObject(null);
     }
 }

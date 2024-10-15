@@ -7,15 +7,22 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+public enum EMainMenuButtonType
+{
+    NewGame,
+    Setting,
+    Exit,
+    None
+}
+
+
 public class MainMenuManager
 {
-    bool _isNewGameBtnClicked = false;
-
     GameObject _mainMenu;
     Button _newGameBtn;
     Button _settingBtn;
     Button _exitBtn;
-
+    public EMainMenuButtonType ECurrentSelectedButtonType { get; set; } = EMainMenuButtonType.NewGame;
     public void Init()
     {
         if (_mainMenu == null)
@@ -31,30 +38,52 @@ public class MainMenuManager
             _settingBtn.onClick.AddListener(OnSettingBtnClicked);
             _exitBtn.onClick.AddListener(OnExitBtnClicked);
             Object.DontDestroyOnLoad(_mainMenu);
+            Managers.Input.KeyboardHandler -= OnEnterDown;
+            Managers.Input.KeyboardHandler += OnEnterDown;
+            _mainMenu.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(_newGameBtn.gameObject);
         }
-        _mainMenu.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(_newGameBtn.gameObject);
     }
-    public void OnNewGameBtnClicked()
+    void OnEnterDown()
     {
-        _isNewGameBtnClicked = true;
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            switch (ECurrentSelectedButtonType)
+            {
+                case EMainMenuButtonType.NewGame:
+                    OnNewGameBtnClicked();
+                    break;
+                case EMainMenuButtonType.Setting:
+                    OnSettingBtnClicked();
+                    break;
+                case EMainMenuButtonType.Exit:
+                    OnExitBtnClicked();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    void OnNewGameBtnClicked()
+    {
         _mainMenu.SetActive(false);
-        _isNewGameBtnClicked = false;
         Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
         EventSystem.current.SetSelectedGameObject(null);
         Managers.Scene.LoadScene(define.ESceneType.Tutorial);
     }
-    public void OnSettingBtnClicked()
+    void OnSettingBtnClicked()
     {
-        if (_isNewGameBtnClicked)
-            return;
+        Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
     }
-    public void OnExitBtnClicked()
+    void OnExitBtnClicked()
     {
-        if (_isNewGameBtnClicked)
-            return;
+        Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
         Application.Quit();
     }
 
-
+    public void Clear()
+    {
+        Managers.Input.KeyboardHandler -= OnEnterDown;
+    }
 }

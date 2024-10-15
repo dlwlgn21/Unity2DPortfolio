@@ -16,7 +16,16 @@ public abstract class Skill_BaseController : MonoBehaviour
     protected bool _isUsingSkill;
 
     data.SkillInfo _skillInfo;
+    Coroutine _countDownCo;
     public abstract void Init();
+
+    public void InitForNextSceneLoad()
+    {
+        if (_countDownCo != null)
+            StopCoroutine(_countDownCo);
+        _countDownCo = null;
+        IsCanUseSkillByCoolTime = true;
+    }
 
     private void Awake()
     {
@@ -33,11 +42,13 @@ public abstract class Skill_BaseController : MonoBehaviour
     protected void StartCountdownCoolTime()
     {
         IsCanUseSkillByCoolTime = false;
-        StartCoroutine(StartCountDownCoolTimeCo(SkillCoolTimeInSec));
+        _countDownCo = StartCoroutine(StartCountDownCoolTimeCo(SkillCoolTimeInSec));
     }
     protected bool IsValidStateAndManaToUseSkill()
     {
-        if (IsCanUseSkillByCoolTime &&
+        if (!Managers.Dialog.IsTalking &&
+             !Managers.Pause.IsPaused &&
+            IsCanUseSkillByCoolTime &&
             (_pc.ECurrentState == EPlayerState.Idle || _pc.ECurrentState == EPlayerState.Run) &&
              _pc.Stat.Mana >= _skillInfo.manaCost)
         {
@@ -51,6 +62,7 @@ public abstract class Skill_BaseController : MonoBehaviour
         Debug.Assert(IsCanUseSkillByCoolTime == false);
         yield return new WaitForSeconds(coolTimeInSec);
         IsCanUseSkillByCoolTime = true;
+        _countDownCo = null;
     }
 
     protected void InitByESkillType(ESkillType eType)
@@ -61,13 +73,10 @@ public abstract class Skill_BaseController : MonoBehaviour
         IsCanUseSkillByCoolTime = true;
     }
 
-
-
     void InitSkillInfoByTypeAndCoolTime(ESkillType eType)
     {
         _eSkillType = eType;
         _skillInfo = Managers.Data.SkillInfoDict[(int)eType];
-
         _initCoolTimeInSec = Managers.Data.SkillInfoDict[(int)eType].coolTime;
         SkillCoolTimeInSec = _initCoolTimeInSec;
     }

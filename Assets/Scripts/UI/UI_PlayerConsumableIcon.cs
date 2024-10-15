@@ -14,6 +14,7 @@ public sealed class UI_PlayerConsumableIcon : MonoBehaviour
     private void Awake()
     {
         Init();
+        Debug.Log($"UI_PlayerConsumableIcon Awake Called");
         Managers.UI.UI_IventroyConsumablePushedEventHandler -= OnConsumablePushed;
         Managers.UI.UI_IventroyConsumablePushedEventHandler += OnConsumablePushed;
     }
@@ -36,6 +37,7 @@ public sealed class UI_PlayerConsumableIcon : MonoBehaviour
     }
     public bool IsPossibleConsum()
     {
+        Debug.Assert(Image != null && CountText != null);
         return Image.enabled;
     }
 

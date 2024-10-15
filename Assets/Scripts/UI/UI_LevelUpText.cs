@@ -7,7 +7,7 @@ public class UI_LevelUpText : MonoBehaviour
 {
     TextMeshProUGUI _text;
 
-    private const float WAIT_TIME_IN_SEC = 2f; 
+    private const float WAIT_TIME_IN_SEC = 3f; 
     private void Awake()
     {
         _text = GetComponent<TextMeshProUGUI>();
@@ -19,6 +19,7 @@ public class UI_LevelUpText : MonoBehaviour
     void OnLevelUp(int levelUpCount)
     {
         _text.enabled = true;
+        _text.transform.localScale = new Vector3(1f, 1f, 1f);
         Managers.Tween.StartUIDoPunchPos(_text.transform);
         StartCoroutine(SetEnabledToFalseAfterSeconds());
     }
@@ -26,6 +27,6 @@ public class UI_LevelUpText : MonoBehaviour
     IEnumerator SetEnabledToFalseAfterSeconds()
     {
         yield return new WaitForSeconds(WAIT_TIME_IN_SEC);
-        _text.enabled = false;
+        Managers.Tween.StartUIScaleTW(_text.transform, 0f, () => { _text.enabled = false; }, 0.5f);
     }
 }

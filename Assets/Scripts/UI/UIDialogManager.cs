@@ -6,12 +6,13 @@ using Unity.VisualScripting;
 using DG.Tweening;
 using UnityEditor.Rendering;
 using System;
+using UnityEngine.Events;
 
 public class UIDialogManager
 {
 
     public bool IsTalking { get; private set; }
-    public Action OnConversationEndHandler = null;
+    public UnityAction OnConversationEndHandler = null;
 
     GameObject _UIDialog;
     GameObject _dialogBoxImg;

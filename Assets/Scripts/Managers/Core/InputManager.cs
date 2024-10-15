@@ -12,12 +12,13 @@ public class InputManager
     {
         if (Input.anyKeyDown)
         {
-            KeyboardHandler?.Invoke();
+            if (KeyboardHandler != null)
+                KeyboardHandler.Invoke();
         }
     }
 
     public void Clear()
     {
-        KeyboardHandler = null;
+        //KeyboardHandler = null;
     }
 }
