@@ -27,6 +27,12 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
         base.InitStates();
         AllocateLaunchAttackState();
     }
+    protected override void SetLightControllersTurnOffTimeInSec()
+    {
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.3f;
+        _dieController.TurnOffGraduallyLightTimeInSec = 1f;
+    }
+
     public void AllocateLaunchAttackState()
     {
         _states[(uint)ENormalMonsterState.LaunchAttack] = new monster_states.LaunchAttack(this);

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class ArcherController : NormalMonsterController, ILaunchAttackable
+public sealed class ArcherController : NormalMonsterController, ILaunchAttackable, IDeadBodyReamainable
 {
     private Transform _launchPoint;
     private readonly Vector2 PROJECTILE_KNOCKBACK_FORCE = new Vector2(4f, 4f);
@@ -29,11 +29,20 @@ public sealed class ArcherController : NormalMonsterController, ILaunchAttackabl
     {
         _states[(uint)ENormalMonsterState.LaunchAttack] = new monster_states.LaunchAttack(this);
     }
-
+    protected override void SetLightControllersTurnOffTimeInSec()
+    {
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.4f;
+        _dieController.TurnOffGraduallyLightTimeInSec = 1f;
+    }
     public void OnValidLaunchAnimTiming()
     {
         Managers.ProjectilePool
             .GetMonsterProjectile()
             .OnValidShootAnimTiming(ELookDir, _launchPoint.position, this);
+    }
+
+    public void SpawnDeadBody()
+    {
+        InstantiateDeadBody("Prefabs/Monsters/DeadBody/ArcherDeadBody");
     }
 }

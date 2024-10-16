@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShielderController : NormalMonsterController
+public sealed class ShielderController : NormalMonsterController
 {
     public override void Init()
     {
@@ -14,5 +14,9 @@ public class ShielderController : NormalMonsterController
     public override void InitStat()
     {
         Stat.InitBasicStat(EMonsterNames.Shielder);
+    }
+    protected override void SetLightControllersTurnOffTimeInSec()
+    {
+        Debug.DebugBreak();
     }
 }

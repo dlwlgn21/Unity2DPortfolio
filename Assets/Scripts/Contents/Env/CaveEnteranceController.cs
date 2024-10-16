@@ -17,9 +17,8 @@ public class CaveEnteranceController : BaseInteractableController
 
     public override void OnPlayerStay(Collider2D collision)
     {
-        if (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("Key Down!!");
             Managers.Scene.LoadScene(define.ESceneType.ColossalBossCaveScene);
         }
     }

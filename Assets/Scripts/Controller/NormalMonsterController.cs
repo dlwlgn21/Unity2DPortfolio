@@ -38,8 +38,8 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     public bool IsPlayerInTraceZone { get; private set; } = false;
 
     UINormalMonsterStatusTextController _statusTextController;
-    LightController _attackLightController;
-    LightController _dieController;
+    protected LightController _attackLightController;
+    protected LightController _dieController;
 
     Light2D _headLight;
     Light2D _weaponLightOrNull;
@@ -71,16 +71,17 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             _headLight = transform.Find("HeadLight").gameObject?.GetComponent<Light2D>();
             Transform trnasformOrNull = transform.Find("WeaponLight");
             if (trnasformOrNull != null)
-                _weaponLightOrNull = trnasformOrNull.gameObject.GetComponent<Light2D>(); ;
+                _weaponLightOrNull = trnasformOrNull.gameObject.GetComponent<Light2D>();
             trnasformOrNull = transform.Find("BackLight");
             if (trnasformOrNull != null)
-                _backLightOrNull = trnasformOrNull.gameObject.GetComponent<Light2D>(); ;
+                _backLightOrNull = trnasformOrNull.gameObject.GetComponent<Light2D>();
+            SetLightControllersTurnOffTimeInSec();
         }
     }
     public void InitForRespawn()
     {
         InitStat();
-        Init();
+        //Init();
         SetEnableTrueAllLightsWithoutDieLight();
         HealthBar.InitForRespawn();
         RigidBody.WakeUp();
@@ -93,9 +94,9 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             StopCoroutine(_parallysisCoroutineOrNull);
             _parallysisCoroutineOrNull = null;
         }
-
-
         ECurrentState = eChangingState;
+        if (ECurrentState == ENormalMonsterState.Die)
+            SetEnableFalseAllLightsWithoutDieLight();
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
         _statusTextController.ShowMonsterStatus(eChangingState);
         MonsterChangeStateEventHandler?.Invoke(eChangingState);
@@ -162,11 +163,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
                     break;
             }
             if (Stat.HP <= 0)
-            {
-                SetEnableFalseAllLightsWithoutDieLight();
                 ChangeState(ENormalMonsterState.Die);
-            }
-
         }
     }
     public override void OnPlayerBlockSuccess()
@@ -210,6 +207,8 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
     #endregion
     #endregion
+
+
     #region Protected
     protected override void InitStates()
     {
@@ -222,12 +221,24 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         _states[(uint)ENormalMonsterState.Die] = new monster_states.Die(this);
         _stateMachine.Init(this, _states[(uint)ENormalMonsterState.Idle]);
     }
+
+    protected void InstantiateDeadBody(string prefabPath)
+    {
+        GameObject go = Managers.Resources.Instantiate<GameObject>(prefabPath);
+        go.transform.SetParent(transform);
+        if (ELookDir == ECharacterLookDir.Left)
+            go.GetComponent<SpriteRenderer>().flipX = true;
+        go.transform.localPosition = Vector3.zero;
+        go.transform.SetParent(null);
+    }
+
     #endregion
     #region Private
     #region ANIM_CALLBACK
 
     void OnTurnOnDieLightTiming()
     {
+        _headLight.enabled = false;
         _dieController.TurnOnLight();
     }
     void OnTurnOffDieLightTiming()
@@ -264,20 +275,29 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     void SetEnableFalseAllLightsWithoutDieLight()
     {
         _headLight.enabled = false;
+        _attackLightController.ForceToStopCoroutineAndTurnOffLight();
         if (_weaponLightOrNull != null)
             _weaponLightOrNull.enabled = false;
         if (_backLightOrNull != null)
             _backLightOrNull.enabled = false;
-        _attackLightController.Init();
     }
 
     void SetEnableTrueAllLightsWithoutDieLight()
     {
+        Debug.Log($"{gameObject.name}'s SetEnableTrueAllLightsWithoutDieLight Called!");
+        _headLight.gameObject.SetActive(true);
         _headLight.enabled = true;
         if (_weaponLightOrNull != null)
+        {
+            _weaponLightOrNull.gameObject.SetActive(true);
             _weaponLightOrNull.enabled = true;
+        }
         if (_backLightOrNull != null)
+        {
+            _backLightOrNull.gameObject.SetActive(true);
             _backLightOrNull.enabled = true;
+        }
+        _attackLightController.gameObject.SetActive(true);
     }
     #endregion
 

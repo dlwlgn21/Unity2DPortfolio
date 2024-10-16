@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WardenController : NormalMonsterController, IMelleAttackable
+public sealed class WardenController : NormalMonsterController, IMelleAttackable
 {
 
     public override void Init()
@@ -14,6 +14,7 @@ public class WardenController : NormalMonsterController, IMelleAttackable
         EMonsterType = EMonsterNames.Warden;
         EMonsterAttackType = ENormalMonsterAttackType.MelleAttack;
     }
+
     public override void InitStat()
     {
         Stat.InitBasicStat(EMonsterNames.Warden);
@@ -24,6 +25,13 @@ public class WardenController : NormalMonsterController, IMelleAttackable
         base.InitStates();
         AllocateMelleAttackState();
     }
+
+    protected override void SetLightControllersTurnOffTimeInSec()
+    {
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.4f;
+        _dieController.TurnOffGraduallyLightTimeInSec = 1f;
+    }
+
     public void AllocateMelleAttackState()
     {
         _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);

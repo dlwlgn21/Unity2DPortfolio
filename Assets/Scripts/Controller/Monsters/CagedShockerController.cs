@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CagedShockerController : NormalMonsterController, IMelleAttackable
+public sealed class CagedShockerController : NormalMonsterController, IMelleAttackable, IDeadBodyReamainable
 {
     public override void Init()
     {
@@ -16,7 +16,7 @@ public class CagedShockerController : NormalMonsterController, IMelleAttackable
     public override void InitStat()
     {
         Stat.InitBasicStat(EMonsterNames.CagedShoker);
-        Stat.KnockbackForce = new Vector2(6f, 6f);
+        Stat.KnockbackForce = new Vector2(9f, 9f);
     }
 
     protected override void InitStates()
@@ -24,9 +24,19 @@ public class CagedShockerController : NormalMonsterController, IMelleAttackable
         base.InitStates();
         AllocateMelleAttackState();
     }
+    protected override void SetLightControllersTurnOffTimeInSec()
+    {
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.4f;
+        _dieController.TurnOffGraduallyLightTimeInSec = 1f;
+    }
     public void AllocateMelleAttackState()
     {
         _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);
+    }
+
+    public void SpawnDeadBody()
+    {
+        InstantiateDeadBody("Prefabs/Monsters/DeadBody/CagedShockerDeadBody");
     }
 }
 

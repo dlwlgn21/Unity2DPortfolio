@@ -9,5 +9,6 @@ public sealed class Skill_SwordStrikeObject : Skill_BaseObject
     {
         ESkillType = ESkillType.Cast_SwordStrike_LV1;
         _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.8f;
     }
 }

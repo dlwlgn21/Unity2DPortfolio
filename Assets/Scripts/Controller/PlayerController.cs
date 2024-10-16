@@ -86,6 +86,7 @@ public class PlayerController : BaseCharacterController
     public Transform SpawnShooterPoint { get; private set; }
     public Transform CastBlackFlamePoint { get; private set; }
     public Transform CastSwordStrikePoint { get; private set; }
+    public GameObject HeadLight { get; private set; }
 
     private StateMachine<PlayerController> _stateMachine;
     private State<PlayerController>[] _states;
@@ -108,6 +109,7 @@ public class PlayerController : BaseCharacterController
             SpawnShooterPoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSpawnShooterPoint");
             CastBlackFlamePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillBlackFlamePoint");
             CastSwordStrikePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSwordStrikePoint");
+            HeadLight = transform.Find("HeadLight").gameObject;
             #region SUBSCRIBE_EVENT
             MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
             MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;

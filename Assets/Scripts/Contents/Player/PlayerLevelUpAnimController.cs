@@ -8,6 +8,7 @@ public sealed class PlayerLevelUpAnimController : PlayerEffectAnimController
     {
         PlayerStat.OnLevelUpEventHandler -= OnPlayerLevelUp;
         PlayerStat.OnLevelUpEventHandler += OnPlayerLevelUp;
+        _lightController.TurnOffGraduallyLightTimeInSec = 0.4f;
     }
     void OnPlayerLevelUp(int levelUpCount)
     {

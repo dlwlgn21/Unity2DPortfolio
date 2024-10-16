@@ -305,6 +305,15 @@ namespace monster_states
         public Die(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() 
         {
+            if (_entity.EMonsterType == EMonsterNames.CagedShoker || 
+                _entity.EMonsterType == EMonsterNames.HeabySlicer ||
+                _entity.EMonsterType == EMonsterNames.Archer ||
+                _entity.EMonsterType == EMonsterNames.Blaster)
+            {
+                IDeadBodyReamainable deadBody = (IDeadBodyReamainable)_entity;
+                Debug.Assert(deadBody != null);
+                deadBody.SpawnDeadBody();
+            }
             Managers.MonsterPool.Return(_entity);
         }
         public override void Enter() 
@@ -385,6 +394,8 @@ namespace monster_states
 
         public override void OnAnimFullyPlayed()
         {
+            _entity.HealthBar.gameObject.SetActive(true);
+            _entity.SetActiveBodyLights(true);
             _entity.ChangeState(EColossalBossState.Run);
         }
     }
@@ -544,6 +555,7 @@ namespace monster_states
         }
         public override void Enter()
         {
+            _entity.HealthBar.StartZeroScaleTW();
             PlayAnimation(EColossalBossState.Die);
         }
     }

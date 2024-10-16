@@ -8,7 +8,6 @@ public class TutorialScene : PlayScene
 
     private void Awake()
     {
-        Debug.Log($"TutorialScene Awake Called");
         Init();   
     }
 

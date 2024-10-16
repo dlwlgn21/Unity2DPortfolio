@@ -9,6 +9,7 @@ public sealed class PlayerStat : BaseStat
     static public UnityAction<int, int> OnAddExpEventHandler;
     static public UnityAction<int, int> OnManaChangedEventHandler;
     static public UnityAction OnPlayerDieHandler;
+    static public UnityAction<int, int> OnPlayerHpIncreaseEventHandler;
     [SerializeField] int _level;
     [SerializeField] int _exp;
     [SerializeField] int _gold;
@@ -134,6 +135,20 @@ public sealed class PlayerStat : BaseStat
         SwordPlusDamage = 0;
         HelmetPlusDefence = 0;
         ArmorPlusDefence = 0;
+    }
+
+    public void IncreaseHp(int amount)
+    {
+        if (HP >= MaxHP)
+            return;
+        HP = Mathf.Clamp(HP + amount, 1, MaxHP);
+        OnPlayerHpIncreaseEventHandler.Invoke(HP, MaxHP);
+    }
+
+    public void InitHP()
+    {
+        HP = MaxHP;
+        OnPlayerHpIncreaseEventHandler.Invoke(HP, MaxHP);
     }
 
     private void OnDestroy()

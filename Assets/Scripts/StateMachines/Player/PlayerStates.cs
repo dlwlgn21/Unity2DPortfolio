@@ -206,7 +206,10 @@ namespace player_states
             }
         }
         public override void Enter()       
-        { PlayAnimation(EPlayerState.Idle); }
+        {
+            _entity.HeadLight.SetActive(true);
+            PlayAnimation(EPlayerState.Idle); 
+        }
 
         public override void FixedExcute() 
         { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
@@ -255,7 +258,10 @@ namespace player_states
         }
 
         public override void Enter() 
-        { PlayAnimation(EPlayerState.Run); }
+        {
+            _entity.HeadLight.SetActive(true);
+            PlayAnimation(EPlayerState.Run); 
+        }
 
         public override void FixedExcute()
         {
@@ -619,6 +625,12 @@ namespace player_states
             {
                 _entity.RigidBody.AddForce(new(-ROLL_FORCE.x, ROLL_FORCE.y), ForceMode2D.Impulse);
             }
+            _entity.HeadLight.SetActive(false);
+        }
+
+        public override void Exit()
+        {
+            _entity.HeadLight.SetActive(true);
         }
     }
     public abstract class NormalAttackState : BasePlayerState
@@ -637,6 +649,7 @@ namespace player_states
             _eLookDir = _entity.ELookDir;
             _isGoToNextAttack = false;
             SetVelocityToZero();
+            _entity.HeadLight.SetActive(false);
         }
 
         public override void Exit()
@@ -644,6 +657,7 @@ namespace player_states
             if (!_isGoToNextAttack)
             {
                 NormalAttackExitEventHandler?.Invoke();
+                _entity.HeadLight.SetActive(true);
             }
         }
 
@@ -755,9 +769,15 @@ namespace player_states
             _entity.ChangeState(EPlayerState.Idle);
         }
         public override void Enter()  
-        { 
+        {
+            _entity.HeadLight.SetActive(false);
             PlayAnimation(EPlayerState.SkillCast);
             SetVelocityToZero();
+        }
+
+        public override void Exit()
+        {
+            _entity.HeadLight.SetActive(true);
         }
     }
 
@@ -768,9 +788,15 @@ namespace player_states
         { _entity.ChangeState(EPlayerState.Idle); }
 
         public override void Enter() 
-        { 
+        {
+            _entity.HeadLight.SetActive(false);
             PlayAnimation(EPlayerState.SkillSpawn);
             SetVelocityToZero();
+        }
+
+        public override void Exit()
+        {
+            _entity.HeadLight.SetActive(true);
         }
     }
 
@@ -780,10 +806,18 @@ namespace player_states
         public override void OnAnimFullyPlayed()
         { _entity.ChangeState(EPlayerState.Idle); }
         public override void Enter()        
-        { PlayAnimation(EPlayerState.Block); }
+        {
+            _entity.HeadLight.SetActive(false);
+            PlayAnimation(EPlayerState.Block); 
+        }
 
         public override void FixedExcute()  
         { _entity.RigidBody.velocity = new Vector2(0f, _entity.RigidBody.velocity.y); }
+
+        public override void Exit()
+        {
+            _entity.HeadLight.SetActive(true);
+        }
     }
 
     public class BlockSuccess : BasePlayerState

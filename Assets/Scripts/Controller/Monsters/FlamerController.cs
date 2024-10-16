@@ -22,6 +22,12 @@ public class FlamerController : NormalMonsterController, IMelleAttackable
         base.InitStates();
         AllocateMelleAttackState();
     }
+    protected override void SetLightControllersTurnOffTimeInSec()
+    {
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.2f;
+        _dieController.TurnOffGraduallyLightTimeInSec = 1f;
+    }
+
     public void AllocateMelleAttackState()
     {
         _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);

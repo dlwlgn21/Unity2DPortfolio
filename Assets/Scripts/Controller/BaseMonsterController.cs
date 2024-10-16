@@ -34,7 +34,6 @@ public abstract class BaseMonsterController : BaseCharacterController
             _pc = PlayerTransform.gameObject.GetComponent<PlayerController>();
             Stat = gameObject.GetOrAddComponent<MonsterStat>();
             HealthBar = Utill.GetComponentInChildrenOrNull<UI_WSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
-
             _hitFlasher = Utill.GetFirstComponentInChildrenOrNull<MonsterHitFlasher>(gameObject);
             _damageTextController = Utill.GetFirstComponentInChildrenOrNull<UIMonsterDamageTextController>(gameObject);
             _hitParticleController = Utill.GetFirstComponentInChildrenOrNull<HitParticleController>(gameObject);
@@ -46,8 +45,9 @@ public abstract class BaseMonsterController : BaseCharacterController
     public abstract void InitStat();
     public abstract void DamagedFromPlayer(ECharacterLookDir attackerDir, int damage, EPlayerNoramlAttackType eAttackType);
     public abstract void OnPlayerBlockSuccess();
-
     public abstract void OnHittedByPlayerSkill(data.SkillInfo skillInfo);
+
+    protected abstract void SetLightControllersTurnOffTimeInSec();
     protected void DecreasHpAndInvokeHitEvents(int damage, EPlayerNoramlAttackType eAttackType)
     {
         int beforeDamageHP;
@@ -69,7 +69,6 @@ public abstract class BaseMonsterController : BaseCharacterController
         HittedByNormalAttackEffectEventHandler?.Invoke(eAttackType);
         #endregion
     }
-
     protected void AddKnockbackForce(Vector2 force)
     {
         if (_pc == null)

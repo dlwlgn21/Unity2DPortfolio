@@ -8,5 +8,6 @@ public sealed class Skill_BlackFlameObject : Skill_BaseObject
     {
         ESkillType = ESkillType.Cast_BlackFlame_LV1;
         _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.3f;
     }
 }

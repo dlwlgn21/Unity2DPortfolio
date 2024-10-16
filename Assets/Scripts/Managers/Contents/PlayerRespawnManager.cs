@@ -29,6 +29,7 @@ public class PlayerRespawnManager
     {
         if (isRespawn)
             _pc.Stat.InitHP();
+        _pc.Stat.IncreaseHp(Managers.Data.PlayerStatDict[_pc.Stat.Level].maxHp);
         _pc.ChangeState(EPlayerState.Idle);
         _pc.transform.position = _spawnPos;
     }

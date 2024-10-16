@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
-
     static public UnityAction<ESkillType> OnSkillLevelUpEventHandler;
     [SerializeField] ESkillType _eSkillType;
     public int SkillLevel { get; set; } = 0;
@@ -31,8 +30,6 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
         _cacheParent = transform.parent;
         _cachePos = transform.localPosition;
     }
-
-
 
     public void OnBeginDrag(PointerEventData eventData)
     {

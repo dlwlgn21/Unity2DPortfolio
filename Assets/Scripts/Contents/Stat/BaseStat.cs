@@ -22,15 +22,5 @@ public abstract class BaseStat : MonoBehaviour
 
     public abstract int DecreaseHpAndGetActualDamageAmount(int damage, out int beforeDamageHp, out int afterDamageHp);
 
-    public void IncreaseHp(int amount)
-    {
-        if (HP >= MaxHP)
-            return;
-        HP = Mathf.Clamp(HP + amount, 1, MaxHP); 
-    }
 
-    public void InitHP()
-    {
-        HP = MaxHP;
-    }
 }

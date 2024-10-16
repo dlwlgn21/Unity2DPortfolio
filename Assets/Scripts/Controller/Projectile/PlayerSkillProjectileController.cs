@@ -8,7 +8,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
     [SerializeField] float _speed;
     [SerializeField] float _bombRange;
 
-    private Light2D _light;
+    private LightController _lightController;
     private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MonsterBody);
 
     private const string MUZZLE_ANIM_KEY = "Muzzle";
@@ -18,8 +18,9 @@ public class PlayerSkillProjectileController : BaseProjectileController
     private void Awake()
     {
         AssginCommonComponents();
-        _light = Utill.GetComponentInChildrenOrNull<Light2D>(gameObject, "Light");
-        _light.gameObject.SetActive(false);
+        _lightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "Light");
+        _lightController.TurnOffGraduallyLightTimeInSec = 0.3f;
+        _lightController.gameObject.SetActive(false);
     }
 
     public void Launch(define.ECharacterLookDir eLookDir)
@@ -59,11 +60,12 @@ public class PlayerSkillProjectileController : BaseProjectileController
         {
             mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType.Spawn_Shooter_LV1]);
         }
+        _lightController.TurnOffLightGradually();
     }
 
     private void OnBombAnimFullyPlayed()
     {
-        _light.gameObject.SetActive(false);
+        _lightController.ForceToStopCoroutineAndTurnOffLight();
         ReturnToPool();
     }
 
@@ -85,7 +87,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
     {
         if (_isHit)
         {
-            _light.gameObject.SetActive(true);
+            _lightController.TurnOnLight();
             _animator.Play(BOOM_ANIM_KEY, -1, 0f);
             _rb.velocity = Vector2.zero;
             _rb.gravityScale = 1f;

@@ -43,13 +43,18 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     Coroutine _hitFlashCoOrNull;
 
+    #region Lights
+    [SerializeField] GameObject headLight;
+    [SerializeField] GameObject fistLight;
+    [SerializeField] GameObject bodyLight;
+    #endregion
 
-    #region ATTACK_LIGHTS
-    [SerializeField] private ColossalBossAttackLightController _fistAttackLight;
-    [SerializeField] private ColossalBossAttackLightController _spinAttackLight;
-    [SerializeField] private ColossalBossAttackLightController _burstAttackLight;
-    [SerializeField] private ColossalBossAttackLightController _burfedBurstLight;
-    [SerializeField] private ColossalBossAttackLightController _burfLight;
+    #region AttackLights
+    [SerializeField] LightController _fistAttackLightController;
+    [SerializeField] LightController _spinAttackLightController;
+    [SerializeField] LightController _burstAttackLightController;
+    [SerializeField] LightController _burfedBurstLightController;
+    [SerializeField] LightController _burfLightController;
     #endregion
     public override void Init()
     {
@@ -58,15 +63,27 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         //AllocateMelleAttackState();
         EMonsterType = EMonsterNames.BossColossal;
         Animator.enabled = false;
-        #region ATTACK_ZONE_DETECTION_EVENT
+        #region AttackZoneDetectionEvent
         ColossalAttackZoneDetection.ColossalAttackZoneEnterEvnetHandler += OnPlayerEnterAttackZone;
         ColossalAttackZoneDetection.ColossalAttackZoneExitEvnetHandler += OnPlayerExitAttackZone;
         #endregion
         Stat.KnockbackForce = COLOSSAL_KNOCKBACK_FORCE;
+        SetLightControllersTurnOffTimeInSec();
+        HealthBar.gameObject.SetActive(false);
+        SetActiveBodyLights(false);
     }
 
+    protected override void SetLightControllersTurnOffTimeInSec()
+    {
+        _fistAttackLightController.TurnOffGraduallyLightTimeInSec = 0.4f;
+        _spinAttackLightController.TurnOffGraduallyLightTimeInSec = 0.4f;
+        _burfedBurstLightController.TurnOffGraduallyLightTimeInSec = 0.4f;
+        _burstAttackLightController.TurnOffGraduallyLightTimeInSec = 0.4f;
+        _burfLightController.TurnOffGraduallyLightTimeInSec = 1f;
+    }
     private void OnDestroy()
     {
+        ColossalChangeStateEventHandler = null;
         ColossalAttackZoneDetection.ColossalAttackZoneEnterEvnetHandler -= OnPlayerEnterAttackZone;
         ColossalAttackZoneDetection.ColossalAttackZoneExitEvnetHandler -= OnPlayerExitAttackZone;
     }
@@ -88,10 +105,19 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         _stateMachine.Excute();
     }
 
+    public void SetActiveBodyLights(bool isActive)
+    {
+        headLight.SetActive(isActive);
+        fistLight.SetActive(isActive);
+        bodyLight.SetActive(isActive);
+    }
+
     public void ChangeState(EColossalBossState eChangingState)
     {
         if (ECurrentState == EColossalBossState.Die)
+        {
             return;
+        }
         if (_parallysisCoroutineOrNull != null)
         {
             StopCoroutine(_parallysisCoroutineOrNull);
@@ -99,8 +125,11 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
             StopCoroutine(_hitFlashCoOrNull);
             _hitFlashCoOrNull = null;
         }
-
         ECurrentState = eChangingState;
+        if (ECurrentState == EColossalBossState.Die)
+        {
+            TurnOffAllLights();
+        }
         _stateMachine.ChangeState(_states[(uint)eChangingState]);
         ColossalChangeStateEventHandler?.Invoke(eChangingState);
     }
@@ -120,16 +149,16 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         switch (ECurrentState)
         {
             case EColossalBossState.FistMelleAttack:
-                _fistAttackLight.OnMonsterAttackStart();
+                _fistAttackLightController.TurnOnLight();
                 break;
             case EColossalBossState.SpinMelleAttack:
-                _spinAttackLight.OnMonsterAttackStart();
+                _spinAttackLightController.TurnOnLight();
                 break;
             case EColossalBossState.BurstMelleAttack:
-                _burstAttackLight.OnMonsterAttackStart();
+                _burstAttackLightController.TurnOnLight();
                 break;
             case EColossalBossState.BurfedBurstMelleAttack:
-                _burfedBurstLight.OnMonsterAttackStart();
+                _burfedBurstLightController.TurnOnLight();
                 break;
         }
     }
@@ -138,16 +167,16 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         switch (ECurrentState)
         {
             case EColossalBossState.FistMelleAttack:
-                _fistAttackLight.OnMonsterAttackEnd();
+                _fistAttackLightController.TurnOffLightGradually();
                 break;
             case EColossalBossState.SpinMelleAttack:
-                _spinAttackLight.OnMonsterAttackEnd();
+                _spinAttackLightController.TurnOffLightGradually();
                 break;
             case EColossalBossState.BurstMelleAttack:
-                _burstAttackLight.OnMonsterAttackEnd();
+                _burstAttackLightController.TurnOffLightGradually();
                 break;
             case EColossalBossState.BurfedBurstMelleAttack:
-                _burfedBurstLight.OnMonsterAttackEnd();
+                _burfedBurstLightController.TurnOffLightGradually();
                 break;
         }
     }
@@ -216,12 +245,12 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     private void OnBurfAnimTurnOnLightTiming()
     {
-        _burfLight.OnMonsterAttackStart();
+        _burfLightController.TurnOnLight();
     }
 
     private void OnBurfAnimTurnOffLightTiming()
     {
-        _burfLight.OnMonsterAttackEnd();
+        _burfLightController.TurnOffLightGradually();
     }
 
     #region ATTACK_DETECTION_ZONE_EVENT
@@ -280,8 +309,8 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
             case ESkillType.Spawn_Reaper_LV3:
                 ChangeState(EColossalBossState.Hit);
                 Debug.Log("Hit By SpawnReaper");
-                _parallysisCoroutineOrNull = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime * 0.5f));
-                _hitFlashCoOrNull = StartCoroutine(PlayHitFlashForSeconds(skillInfo.parallysisTime * 0.5f));
+                _parallysisCoroutineOrNull = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime));
+                _hitFlashCoOrNull = StartCoroutine(PlayHitFlashForSeconds(skillInfo.parallysisTime));
                 break;
             case ESkillType.Spawn_Shooter_LV1:
             case ESkillType.Spawn_Shooter_LV2:
@@ -323,6 +352,18 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     }
 
     #endregion
+    
+    void TurnOffAllLights()
+    {
+        headLight.SetActive(false);
+        fistLight.SetActive(false);
+        bodyLight.SetActive(false);
+        _fistAttackLightController.ForceToStopCoroutineAndTurnOffLight();
+        _spinAttackLightController.ForceToStopCoroutineAndTurnOffLight();
+        _burstAttackLightController.ForceToStopCoroutineAndTurnOffLight();
+        _burfedBurstLightController.ForceToStopCoroutineAndTurnOffLight();
+        _burfLightController.ForceToStopCoroutineAndTurnOffLight();
+    }
     IEnumerator PlayHitAnimForSeconds(float timeInSec)
     {
         yield return new WaitForSeconds(timeInSec);
@@ -331,6 +372,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     IEnumerator PlayHitFlashForSeconds(float flashTotalTimeInSec)
     {
+        _hitFlasher.StartDamageFlash();
         float timer = 0f;
         while (timer < flashTotalTimeInSec)
         {

@@ -10,6 +10,7 @@ public sealed class PlayerForceFieldAnimController : PlayerEffectAnimController
     {
         PlayerController.HitEffectEventHandler -= OnPlayerHittedByMonsterNormalAttack;
         PlayerController.HitEffectEventHandler += OnPlayerHittedByMonsterNormalAttack;
+        _lightController.TurnOffGraduallyLightTimeInSec = 0.25f;
     }
     void OnPlayerHittedByMonsterNormalAttack(EPlayerState eState)
     {

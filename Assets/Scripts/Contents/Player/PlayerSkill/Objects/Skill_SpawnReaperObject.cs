@@ -9,5 +9,6 @@ public sealed class Skill_SpawnReaperObject : Skill_BaseObject
     {
         ESkillType = ESkillType.Spawn_Reaper_LV1;
         _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
+        _attackLightController.TurnOffGraduallyLightTimeInSec = 0.7f;
     }
 }
