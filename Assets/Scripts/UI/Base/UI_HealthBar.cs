@@ -10,12 +10,12 @@ public abstract class UI_HealthBar : MonoBehaviour
 {
     [SerializeField] protected Gradient _gradient;
     protected BaseStat _stat;
-    private Image _healthBarImg;
-    private Image _damagedBarImg;
-    private TextMeshProUGUI _currHpText;
-    private TextMeshProUGUI _maxHpText;
-    private float _fillSpeed = 0.5f;
-    private Color _damagedColor;
+    protected Image _healthBarImg;
+    protected Image _damagedBarImg;
+    protected TextMeshProUGUI _currHpText;
+    protected TextMeshProUGUI _maxHpText;
+    protected float _fillSpeed = 0.5f;
+    protected Color _damagedColor;
 
     public abstract void Init();
     private void Awake()

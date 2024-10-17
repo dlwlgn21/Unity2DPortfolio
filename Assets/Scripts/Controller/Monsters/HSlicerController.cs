@@ -38,4 +38,24 @@ public sealed class HSlicerController : NormalMonsterController, IMelleAttackabl
     {
         InstantiateDeadBody("Prefabs/Monsters/DeadBody/HSlicerDeadBody");
     }
+
+
+    void OnAttackSwing1Timing()
+    {
+        AddForceByLookDir();
+        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
+    }
+    void OnAttackSwing2Timing()
+    {
+        AddForceByLookDir();
+        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
+    }
+
+    void AddForceByLookDir()
+    {
+        if (ELookDir == ECharacterLookDir.Left)
+            AddKnockbackForce(new Vector2(-5f, 1f));
+        else
+            AddKnockbackForce(new Vector2(5f, 1f));
+    }
 }

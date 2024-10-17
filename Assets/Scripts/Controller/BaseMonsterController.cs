@@ -21,7 +21,7 @@ public abstract class BaseMonsterController : BaseCharacterController
     protected Coroutine _parallysisCoroutineOrNull = null;
     protected MonsterHitFlasher _hitFlasher;
 
-    UIMonsterDamageTextController _damageTextController;
+    UI_WSMonsterPopupDamageController _damageTextController;
     HitParticleController _hitParticleController;
     MonsterHitAnimController _hitAnimController;
 
@@ -35,7 +35,7 @@ public abstract class BaseMonsterController : BaseCharacterController
             Stat = gameObject.GetOrAddComponent<MonsterStat>();
             HealthBar = Utill.GetComponentInChildrenOrNull<UI_WSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
             _hitFlasher = Utill.GetFirstComponentInChildrenOrNull<MonsterHitFlasher>(gameObject);
-            _damageTextController = Utill.GetFirstComponentInChildrenOrNull<UIMonsterDamageTextController>(gameObject);
+            _damageTextController = Utill.GetFirstComponentInChildrenOrNull<UI_WSMonsterPopupDamageController>(gameObject);
             _hitParticleController = Utill.GetFirstComponentInChildrenOrNull<HitParticleController>(gameObject);
             _hitAnimController = Utill.GetFirstComponentInChildrenOrNull<MonsterHitAnimController>(gameObject);
         }

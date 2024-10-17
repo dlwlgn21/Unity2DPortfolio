@@ -48,7 +48,6 @@ public class PlayerController : BaseCharacterController
     public static UnityAction PlayerSkillValidAnimTimingEventHandler;
     public static UnityAction<EAttackStatusEffect, float> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
-    public static UnityAction<int, int> PlayerIncreaseHpEventHandler; // UIPlayerHPBar
 
     public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new(2f, 1f);
     public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
@@ -60,9 +59,6 @@ public class PlayerController : BaseCharacterController
     public const int  NORMAL_ATTACK_3_DAMAGE_COEFF = 2;
     public const int  BACK_ATTACK_DAMAGE_COEFF = 3;
 
-    public const float BACK_ATTACK_FORCE_COEFF = 1.5f;
-    public const float BLOCK_SUCCESS_KNOCKBACK_X_FORCE = 5f;
-    public const float KNOCKBACK_BOMB_FORCE = 12f;
 
     public const KeyCode KeyUp = KeyCode.UpArrow;
     public const KeyCode KeyDown = KeyCode.DownArrow;
@@ -75,7 +71,7 @@ public class PlayerController : BaseCharacterController
     public const KeyCode KeySkillA = KeyCode.A;
     public const KeyCode KeySkillS = KeyCode.S;
 
-    private const float BURN_TIME_IN_SEC = 2.0f;
+    private const float BURN_TIME_IN_SEC = 3.0f;
 
     public CapsuleCollider2D CapsuleCollider { get; set; }
     public PlayerStat Stat { get; private set; }
@@ -136,7 +132,6 @@ public class PlayerController : BaseCharacterController
         PlayerSkillValidAnimTimingEventHandler = null;
         PlayerStatusEffectEventHandler = null;
         PlayerDieEventHandelr = null;
-        PlayerIncreaseHpEventHandler = null;
     }
 
     void FixedUpdate()
@@ -249,7 +244,6 @@ public class PlayerController : BaseCharacterController
         {
             case EItemConsumableType.Hp:
                 {
-                    PlayerIncreaseHpEventHandler?.Invoke(Stat.HP, Mathf.Clamp(Stat.HP + amount, 1, Stat.MaxHP));
                     Stat.IncreaseHp(amount);
                     break;
                 }
@@ -380,11 +374,17 @@ public class PlayerController : BaseCharacterController
 
     private void OnPlayerNormalAttack1ValidStopEffectTiming()
     {
+        Managers.Sound.Play(DataManager.SFX_PLAYER_LAND_PATH);
         PlayMovementEffectAnimation(EPlayerMovementEffect.NormalAttackLand, ELookDir, transform.position);
     }
     private void OnPlayerFootStep()
     {
         FootDustParticle.Play();
+        int rand = Random.Range(0, 2);
+        if (rand == 0)
+            Managers.Sound.Play(DataManager.SFX_PLAYER_FOOT_STEP_1_PATH);
+        else
+            Managers.Sound.Play(DataManager.SFX_PLAYER_FOOT_STEP_2_PATH);
     }
 
     private void OnAttackLightTurnOnTiming()
@@ -452,18 +452,14 @@ public class PlayerController : BaseCharacterController
         switch (mc.Stat.EStatusEffectType)
         {
             case EAttackStatusEffect.None:
+                break;
             case EAttackStatusEffect.Knockback:
-                player_states.BaseHitted state = (player_states.BaseHitted)_states[(uint)EPlayerState.HitByMelleAttack];
-                Debug.Assert(state != null);
                 Vector2 knockbackForce = mc.Stat.KnockbackForce;
-                if (mc.ELookDir == ECharacterLookDir.Left)
-                {
-                    state.AdjustKnockbackForce(new(-knockbackForce.x, knockbackForce.y));
-                }
+                Vector2 dir = mc.transform.position - transform.position;
+                if (dir.x > 0)
+                    RigidBody.AddForce(new Vector2(-knockbackForce.x, knockbackForce.y), ForceMode2D.Impulse);
                 else
-                {
-                    state.AdjustKnockbackForce(knockbackForce);
-                }
+                    RigidBody.AddForce(knockbackForce, ForceMode2D.Impulse);
                 break;
             case EAttackStatusEffect.Blind:
                 Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.MONSTER_BLIND_EFFECT);
@@ -486,6 +482,9 @@ public class PlayerController : BaseCharacterController
             case EAttackStatusEffect.Parallysis:
                 ChangeState(EPlayerState.HitByStatusParallysis);
                 break;
+            default:
+                Debug.DebugBreak();
+                break;
         }
     }
     private void OnPlayerFallToDeadZone()
@@ -501,6 +500,8 @@ public class PlayerController : BaseCharacterController
     private IEnumerator BurnPlayerCo()
     {
         IsBurned = true;
+        yield return new WaitForSeconds(1f);
+        ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
         yield return new WaitForSeconds(1f);
         ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
         yield return new WaitForSeconds(1f);

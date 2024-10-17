@@ -129,7 +129,7 @@ public sealed class PlayerStat : BaseStat
         Attack = dict[1].attack;
         Defence = dict[1].defence;
         MoveSpeed = dict[1].moveSpeed;
-        Mana = 0;
+        Mana = dict[1].maxMana;
         Exp = 0;
         Gold = 0;
         SwordPlusDamage = 0;
@@ -141,8 +141,8 @@ public sealed class PlayerStat : BaseStat
     {
         if (HP >= MaxHP)
             return;
-        HP = Mathf.Clamp(HP + amount, 1, MaxHP);
-        OnPlayerHpIncreaseEventHandler.Invoke(HP, MaxHP);
+        OnPlayerHpIncreaseEventHandler.Invoke(HP, Mathf.Min(HP + amount, MaxHP));
+        HP = Mathf.Min(HP + amount, MaxHP);
     }
 
     public void InitHP()

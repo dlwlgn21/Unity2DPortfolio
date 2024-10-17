@@ -37,7 +37,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     public bool IsPlayerInAttackZone { get; private set; } = false;
     public bool IsPlayerInTraceZone { get; private set; } = false;
 
-    UINormalMonsterStatusTextController _statusTextController;
+    UI_WSNormalMonsterPopupStatusController _statusTextController;
     protected LightController _attackLightController;
     protected LightController _dieController;
 
@@ -63,7 +63,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
         base.Init();
         if (_statusTextController == null)
         {
-            _statusTextController = Utill.GetFirstComponentInChildrenOrNull<UINormalMonsterStatusTextController>(gameObject);
+            _statusTextController = Utill.GetFirstComponentInChildrenOrNull<UI_WSNormalMonsterPopupStatusController>(gameObject);
             _attackLightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "AttackLight");
             _dieController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "DieLight");
             _bloodAnimationController = Utill.GetFirstComponentInChildrenOrNull<MonsterBloodAnimController>(gameObject);
@@ -225,11 +225,9 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     protected void InstantiateDeadBody(string prefabPath)
     {
         GameObject go = Managers.Resources.Instantiate<GameObject>(prefabPath);
-        go.transform.SetParent(transform);
         if (ELookDir == ECharacterLookDir.Left)
             go.GetComponent<SpriteRenderer>().flipX = true;
-        go.transform.localPosition = Vector3.zero;
-        go.transform.SetParent(null);
+        go.transform.position = transform.position;
     }
 
     #endregion
@@ -284,7 +282,6 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
     void SetEnableTrueAllLightsWithoutDieLight()
     {
-        Debug.Log($"{gameObject.name}'s SetEnableTrueAllLightsWithoutDieLight Called!");
         _headLight.gameObject.SetActive(true);
         _headLight.enabled = true;
         if (_weaponLightOrNull != null)

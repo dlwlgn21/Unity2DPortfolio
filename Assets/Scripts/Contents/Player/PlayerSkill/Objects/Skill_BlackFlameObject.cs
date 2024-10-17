@@ -10,4 +10,9 @@ public sealed class Skill_BlackFlameObject : Skill_BaseObject
         _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
         _attackLightController.TurnOffGraduallyLightTimeInSec = 0.3f;
     }
+
+    protected override void OnSoundPlayTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_SKILL_BLACK_FLAME_PATH);
+    }
 }

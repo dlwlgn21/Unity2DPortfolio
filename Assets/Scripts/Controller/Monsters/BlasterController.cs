@@ -38,4 +38,8 @@ public class BlasterController : NormalMonsterController, IMelleAttackable, IDea
     {
         InstantiateDeadBody("Prefabs/Monsters/DeadBody/BlasterDeadBody");
     }
+    void OnAttackSoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_BLASTER_WARDEN_ATTACK_PATH);
+    }
 }

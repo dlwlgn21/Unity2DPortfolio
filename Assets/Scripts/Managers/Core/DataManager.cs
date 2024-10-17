@@ -29,10 +29,31 @@ public class DataManager
     public const string SFX_PLAYER_ROLLING_PATH = "Sound/SFX_PlayerRolling";
     public const string SFX_PLAYER_HIT_1_PATH = "Sound/SFX_PlayerHit1";
     public const string SFX_PLAYER_HIT_2_PATH = "Sound/SFX_PlayerHit2";
-    public const string SFX_PLAYER_FOOT_STEP_PATH = "Sound/SFX_PlayerFootStep";
+    public const string SFX_PLAYER_FOOT_STEP_1_PATH = "Sound/SFX_PlayerFootStep1";
+    public const string SFX_PLAYER_FOOT_STEP_2_PATH = "Sound/SFX_PlayerFootStep2";
+    public const string SFX_PLAYER_JUMP_PATH = "Sound/SFX_PlayerJump";
+    public const string SFX_PLAYER_LAND_PATH = "Sound/SFX_PlayerLand";
+    public const string SFX_PLAYER_BACKATTACK_PATH = "Sound/SFX_PlayerBackAttack";
+    public const string SFX_PLAYER_BLOCK_SUCESS_PATH = "Sound/SFX_PlayerBlockSucess";
 
     public const string SFX_MENU_MOVE_PATH = "Sound/SFX_UIMenuMove";
     public const string SFX_MENU_CHOICE_PATH = "Sound/SFX_UIMenuChoice";
+
+
+    public const string SFX_SKILL_BLACK_FLAME_PATH = "Sound/SFX_SkillBlackFlame";
+    public const string SFX_SKILL_SWORD_STRIKE_PATH = "Sound/SFX_SkillSwordStrike";
+    public const string SFX_SKILL_SPAWN_REAPER_PATH = "Sound/SFX_SpawnReaper";
+
+
+    public const string SFX_MONSTER_SWING_1_PATH = "Sound/SFX_MonsterSwing1";
+    public const string SFX_MONSTER_SWING_2_PATH = "Sound/SFX_MonsterSwing2";
+    public const string SFX_MONSTER_ARCHER_LUANCH_PATH = "Sound/SFX_ArcherLaunch";
+    public const string SFX_MONSTER_GUNNER_LUANCH_PATH = "Sound/SFX_GunnerLaunch";
+    public const string SFX_MONSTER_FLAMER_ATTACK_PATH = "Sound/SFX_FlamerAttack";
+    public const string SFX_MONSTER_BLASTER_WARDEN_ATTACK_PATH = "Sound/SFX_BlasterWadenAttack";
+    public const string SFX_MONSTER_RED_GHOUL_ATTACK_PATH = "Sound/SFX_RedGhoulAttack";
+
+
 
     public void Init()
     {

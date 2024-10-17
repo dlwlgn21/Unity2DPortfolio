@@ -38,5 +38,15 @@ public sealed class CagedShockerController : NormalMonsterController, IMelleAtta
     {
         InstantiateDeadBody("Prefabs/Monsters/DeadBody/CagedShockerDeadBody");
     }
+
+
+    void OnAttackSwing1SoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
+    }
+    void OnAttackSwing2SoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
+    }
 }
 

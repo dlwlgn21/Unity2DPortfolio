@@ -60,6 +60,13 @@ public class TweenManager
         transform.DOPunchPosition(Vector3.up * coefficient, 1f);
     }
 
+    public void StartDoPunchPos(Transform transform, Vector3 force, float duration, TweenCallback callback)
+    {
+        if (IsTweening(transform))
+            return;
+        transform.DOPunchPosition(force, duration).SetEase(Ease.InOutElastic).OnComplete(callback);
+    }
+
     public void EndToOneUIScaleTW(Transform transform, float timeInSec = BASIC_UI_TW_TIME_IN_SEC)
     {
         if (IsTweening(transform))

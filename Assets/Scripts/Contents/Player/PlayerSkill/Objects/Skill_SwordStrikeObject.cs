@@ -11,4 +11,8 @@ public sealed class Skill_SwordStrikeObject : Skill_BaseObject
         _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
         _attackLightController.TurnOffGraduallyLightTimeInSec = 0.8f;
     }
+    protected override void OnSoundPlayTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_SKILL_SWORD_STRIKE_PATH);
+    }
 }

@@ -38,8 +38,13 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     public bool IsPlayerInSpinAttackZone { get; set; }
     public bool IsPlayerInFistAttackZone { get; set; }
     public bool IsPlayerInBurstAttackZone { get; set; }
-
     public bool IsWake { get; private set; }
+
+    const string SFX_FIST_SOUND_PATH = "SFX_BossColossalFisting";
+    const string SFX_BURST_SOUND_PATH = "SFX_BossColossalBurst";
+    const string SFX_BURFED_BURST_SOUND_PATH = "SFX_BossColossalBurfedBurst";
+    const string SFX_BURF_SOUND_PATH = "SFX_BossColossalBuff";
+    const string SFX_DIE_PATH = "SFX_BossMonsterDie";
 
     Coroutine _hitFlashCoOrNull;
 
@@ -137,51 +142,29 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     {
         //_states[(uint)EColossalBossState.SPIN_MELLE_ATTACK] = new monster_states.BossColossalSpinAttack(this);
     }
-
-    private void OnAnimFullyPlayed()
+    public override void DamagedFromPlayer(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
     {
-        ((monster_states.BaseBossMonsterState)_states[(uint)ECurrentState]).OnAnimFullyPlayed();
-    }
-
-    #region ATTACK_ANIM_LIGHT_EVENT
-    private void OnAttackAnimTurnOnLightTiming()
-    {
-        switch (ECurrentState)
+        if (ECurrentState != EColossalBossState.Die &&
+            ECurrentState != EColossalBossState.Wake &&
+            ECurrentState != EColossalBossState.Burf)
         {
-            case EColossalBossState.FistMelleAttack:
-                _fistAttackLightController.TurnOnLight();
-                break;
-            case EColossalBossState.SpinMelleAttack:
-                _spinAttackLightController.TurnOnLight();
-                break;
-            case EColossalBossState.BurstMelleAttack:
-                _burstAttackLightController.TurnOnLight();
-                break;
-            case EColossalBossState.BurfedBurstMelleAttack:
-                _burfedBurstLightController.TurnOnLight();
-                break;
+            DecreasHpAndInvokeHitEvents(damage, eAttackType);
+            if (Stat.HP <= 0)
+            {
+                ChangeState(EColossalBossState.Die);
+            }
+            else
+            {
+                // Change To Second Phase.
+                if (Stat.HP < (int)(Stat.MaxHP * 0.5f) &&
+                    EColossalPhase != EColossalBossPhase.SecondUnder50PercentHpPhase)
+                {
+                    ChangeState(EColossalBossState.Burf);
+                    EColossalPhase = EColossalBossPhase.SecondUnder50PercentHpPhase;
+                }
+            }
         }
     }
-    private void OnAttackAnimTurnOffLightTiming()
-    {
-        switch (ECurrentState)
-        {
-            case EColossalBossState.FistMelleAttack:
-                _fistAttackLightController.TurnOffLightGradually();
-                break;
-            case EColossalBossState.SpinMelleAttack:
-                _spinAttackLightController.TurnOffLightGradually();
-                break;
-            case EColossalBossState.BurstMelleAttack:
-                _burstAttackLightController.TurnOffLightGradually();
-                break;
-            case EColossalBossState.BurfedBurstMelleAttack:
-                _burfedBurstLightController.TurnOffLightGradually();
-                break;
-        }
-    }
-    #endregion
-
     public void SetLookDir()
     {
         if (ECurrentState == EColossalBossState.Wake ||
@@ -200,99 +183,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
             }
         }
     }
-    protected override void InitStates()
-    {
-        _stateMachine = new StateMachine<ColossalBossMonsterController>();
-        _states = new State<ColossalBossMonsterController>[(uint)EColossalBossState.Count];
 
-        _states[(uint)EColossalBossState.Wake]                  = new monster_states.BossColossalWake(this);
-        _states[(uint)EColossalBossState.Run]                   = new monster_states.BossColossalRun(this);
-        _states[(uint)EColossalBossState.SpinMelleAttack]     = new monster_states.BossColossalSpinAttack(this);
-        _states[(uint)EColossalBossState.FistMelleAttack]     = new monster_states.BossColossalFistAttack(this);
-        _states[(uint)EColossalBossState.BurstMelleAttack]    = new monster_states.BossColossalBurstAttack(this);
-        _states[(uint)EColossalBossState.BurfedBurstMelleAttack]   = new monster_states.BossColossalBurfedBurstAttack(this);
-        _states[(uint)EColossalBossState.Burf]                  = new monster_states.BossColossalBurf(this);
-        _states[(uint)EColossalBossState.Hit]                  = new monster_states.BossColossalHit(this);
-        _states[(uint)EColossalBossState.Die]                   = new monster_states.BossColossalDie(this);
-        
-        //_stateMachine.Init(this, _states[(uint)EColossalBossState.WAKE]);
-    }
-
-
-    public override void DamagedFromPlayer(ECharacterLookDir eLookDir, int damage, EPlayerNoramlAttackType eAttackType)
-    {
-        if (ECurrentState != EColossalBossState.Die && 
-            ECurrentState != EColossalBossState.Wake &&
-            ECurrentState != EColossalBossState.Burf)
-        {
-            DecreasHpAndInvokeHitEvents(damage, eAttackType);
-            if (Stat.HP <= 0)
-            {
-                ChangeState(EColossalBossState.Die);
-            }
-            else
-            {
-                // Change To Second Phase.
-                if (Stat.HP < (int)(Stat.MaxHP * 0.5f) && 
-                    EColossalPhase != EColossalBossPhase.SecondUnder50PercentHpPhase)
-                {
-                    ChangeState(EColossalBossState.Burf);
-                    EColossalPhase = EColossalBossPhase.SecondUnder50PercentHpPhase;
-                }
-            }
-        }
-    }
-
-    private void OnBurfAnimTurnOnLightTiming()
-    {
-        _burfLightController.TurnOnLight();
-    }
-
-    private void OnBurfAnimTurnOffLightTiming()
-    {
-        _burfLightController.TurnOffLightGradually();
-    }
-
-    #region ATTACK_DETECTION_ZONE_EVENT
-    private void OnPlayerEnterAttackZone(EColossalAttackType eType)
-    {
-        switch (eType)
-        {
-            case EColossalAttackType.FIST:
-                IsPlayerInFistAttackZone = true;
-                break;
-            case EColossalAttackType.SPIN:
-                IsPlayerInSpinAttackZone = true;
-                break;
-            case EColossalAttackType.BURST:
-                IsPlayerInBurstAttackZone = true;
-                break;
-        }
-    }
-
-    private void OnPlayerExitAttackZone(EColossalAttackType eType)
-    {
-        switch (eType)
-        {
-            case EColossalAttackType.FIST:
-                IsPlayerInFistAttackZone = false;
-                break;
-            case EColossalAttackType.SPIN:
-                IsPlayerInSpinAttackZone = false;
-                break;
-            case EColossalAttackType.BURST:
-                IsPlayerInBurstAttackZone = false;
-                break;
-        }
-    }
-    #endregion
-    public override void InitStat()
-    {
-        Stat.InitBasicStat(define.EMonsterNames.BossColossal);
-    }
-
-
-    #region OVERRIDE_ABSTRACT_HITTED_PLAYER_SPECIAL_ATTACK
     public override void OnPlayerBlockSuccess()
     {
         HittedByNormalAttackNoArgsEventHandler?.Invoke();
@@ -334,6 +225,154 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     }
 
 
+    protected override void InitStates()
+    {
+        _stateMachine = new StateMachine<ColossalBossMonsterController>();
+        _states = new State<ColossalBossMonsterController>[(uint)EColossalBossState.Count];
+
+        _states[(uint)EColossalBossState.Wake]                  = new monster_states.BossColossalWake(this);
+        _states[(uint)EColossalBossState.Run]                   = new monster_states.BossColossalRun(this);
+        _states[(uint)EColossalBossState.SpinMelleAttack]     = new monster_states.BossColossalSpinAttack(this);
+        _states[(uint)EColossalBossState.FistMelleAttack]     = new monster_states.BossColossalFistAttack(this);
+        _states[(uint)EColossalBossState.BurstMelleAttack]    = new monster_states.BossColossalBurstAttack(this);
+        _states[(uint)EColossalBossState.BurfedBurstMelleAttack]   = new monster_states.BossColossalBurfedBurstAttack(this);
+        _states[(uint)EColossalBossState.Burf]                  = new monster_states.BossColossalBurf(this);
+        _states[(uint)EColossalBossState.Hit]                  = new monster_states.BossColossalHit(this);
+        _states[(uint)EColossalBossState.Die]                   = new monster_states.BossColossalDie(this);
+        
+        //_stateMachine.Init(this, _states[(uint)EColossalBossState.WAKE]);
+    }
+
+
+
+
+    #region AninEvents
+    private void OnAnimFullyPlayed()
+    {
+        ((monster_states.BaseBossMonsterState)_states[(uint)ECurrentState]).OnAnimFullyPlayed();
+    }
+
+    void OnAttackAnimTurnOnLightTiming()
+    {
+        switch (ECurrentState)
+        {
+            case EColossalBossState.FistMelleAttack:
+                _fistAttackLightController.TurnOnLight();
+                break;
+            case EColossalBossState.SpinMelleAttack:
+                _spinAttackLightController.TurnOnLight();
+                break;
+            case EColossalBossState.BurstMelleAttack:
+                _burstAttackLightController.TurnOnLight();
+                break;
+            case EColossalBossState.BurfedBurstMelleAttack:
+                _burfedBurstLightController.TurnOnLight();
+                break;
+        }
+    }
+    void OnAttackAnimTurnOffLightTiming()
+    {
+        switch (ECurrentState)
+        {
+            case EColossalBossState.FistMelleAttack:
+                _fistAttackLightController.TurnOffLightGradually();
+                break;
+            case EColossalBossState.SpinMelleAttack:
+                _spinAttackLightController.TurnOffLightGradually();
+                break;
+            case EColossalBossState.BurstMelleAttack:
+                _burstAttackLightController.TurnOffLightGradually();
+                break;
+            case EColossalBossState.BurfedBurstMelleAttack:
+                _burfedBurstLightController.TurnOffLightGradually();
+                break;
+        }
+    }
+    void OnBurfAnimTurnOnLightTiming()
+    {
+        _burfLightController.TurnOnLight();
+    }
+
+    void OnBurfAnimTurnOffLightTiming()
+    {
+        _burfLightController.TurnOffLightGradually();
+    }
+
+    void OnFistAttackSoundTiming()
+    {
+        Managers.Sound.Play(SFX_FIST_SOUND_PATH);
+    }
+
+    void OnSpinAttack1SoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
+    }
+
+    void OnSpinAttack2SoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
+    }
+
+    void OnBurstAttackSoundTiming()
+    {
+        Managers.Sound.Play(SFX_BURST_SOUND_PATH);
+    }
+
+    void OnBurfedBurstAttackSoundTiming()
+    {
+        Managers.Sound.Play(SFX_BURFED_BURST_SOUND_PATH);
+    }
+
+    void OnBurfSoundTiming()
+    {
+        Managers.Sound.Play(SFX_BURF_SOUND_PATH);
+    }
+
+    void OnDieSoundTiming()
+    {
+        Managers.Sound.Play(SFX_DIE_PATH);
+    }
+    #endregion
+
+
+
+    #region ATTACK_DETECTION_ZONE_EVENT
+    private void OnPlayerEnterAttackZone(EColossalAttackType eType)
+    {
+        switch (eType)
+        {
+            case EColossalAttackType.FIST:
+                IsPlayerInFistAttackZone = true;
+                break;
+            case EColossalAttackType.SPIN:
+                IsPlayerInSpinAttackZone = true;
+                break;
+            case EColossalAttackType.BURST:
+                IsPlayerInBurstAttackZone = true;
+                break;
+        }
+    }
+
+    private void OnPlayerExitAttackZone(EColossalAttackType eType)
+    {
+        switch (eType)
+        {
+            case EColossalAttackType.FIST:
+                IsPlayerInFistAttackZone = false;
+                break;
+            case EColossalAttackType.SPIN:
+                IsPlayerInSpinAttackZone = false;
+                break;
+            case EColossalAttackType.BURST:
+                IsPlayerInBurstAttackZone = false;
+                break;
+        }
+    }
+    #endregion
+    public override void InitStat()
+    {
+        Stat.InitBasicStat(define.EMonsterNames.BossColossal);
+    }
 
     public void OnPlayerEnter(Collider2D collision)
     {
@@ -351,7 +390,6 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         GameObject.Find("ColossalBossWakeZone")?.GetComponent<InteractBox>().Unactive();
     }
 
-    #endregion
     
     void TurnOffAllLights()
     {

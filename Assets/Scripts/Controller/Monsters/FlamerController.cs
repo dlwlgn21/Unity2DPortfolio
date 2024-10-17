@@ -32,4 +32,9 @@ public class FlamerController : NormalMonsterController, IMelleAttackable
     {
         _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);
     }
+
+    void OnAttckSoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_FLAMER_ATTACK_PATH);
+    }
 }

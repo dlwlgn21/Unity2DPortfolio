@@ -55,5 +55,5 @@ public abstract class Skill_BaseObject : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
+    protected abstract void OnSoundPlayTiming();
 }

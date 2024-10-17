@@ -33,6 +33,10 @@ public class RedGhoulController : NormalMonsterController, IMelleAttackable
     {
         _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);
     }
+    void OnAttackSoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_RED_GHOUL_ATTACK_PATH);
+    }
 }
 
 

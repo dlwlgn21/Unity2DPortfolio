@@ -41,16 +41,20 @@ public class SoundManager
                 Managers.Sound.Play(DataManager.SFX_PLAYER_ROLLING_PATH);
                 break;
             case EPlayerState.Jump:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_JUMP_PATH);
                 break;
             case EPlayerState.Climb:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_LAND_PATH);
                 break;
             case EPlayerState.Fall:
                 break;
             case EPlayerState.FallToTwiceJump:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_JUMP_PATH);
                 break;
             case EPlayerState.TwiceJumpToFall:
                 break;
             case EPlayerState.Land:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_LAND_PATH);
                 break;
             case EPlayerState.NormalAttack_1:
                 Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
@@ -79,6 +83,7 @@ public class SoundManager
             case EPlayerState.Block:
                 break;
             case EPlayerState.BlockSucces:
+                Managers.Sound.Play(DataManager.SFX_PLAYER_BLOCK_SUCESS_PATH);
                 break;
             case EPlayerState.Die:
                 break;
@@ -99,6 +104,7 @@ public class SoundManager
             case ESoundType.Sfx:
                 if (clip == null)
                 {
+                    Debug.DebugBreak();
                     return;
                 }
                 _audioSources[(int)eType].PlayOneShot(clip);

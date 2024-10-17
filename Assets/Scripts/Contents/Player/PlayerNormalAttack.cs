@@ -35,7 +35,10 @@ public class PlayerNormalAttack : MonoBehaviour
             {
                 case EPlayerNoramlAttackType.Attack_1:
                     if (mc.ELookDir == _pc.ELookDir)
+                    {
                         mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BackAttack);
+                        //Managers.Sound.Play(DataManager.SFX_PLAYER_BACKATTACK_PATH);
+                    }
                     else
                         mc.DamagedFromPlayer(_pc.ELookDir, totalDamage, EPlayerNoramlAttackType.Attack_1);
                     break;

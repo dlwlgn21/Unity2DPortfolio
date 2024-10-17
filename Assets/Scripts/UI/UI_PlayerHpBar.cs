@@ -14,9 +14,7 @@ public class UI_PlayerHpBar : UI_HealthBar
         Debug.Assert(_stat != null);
         //SetFullHpBarRatio();
         PlayerController.HitUIEventHandler -= OnPlayerHittedByMonsterNormalAttack;
-        PlayerController.PlayerIncreaseHpEventHandler -= OnPlayerHpItemUsed;
         PlayerController.HitUIEventHandler += OnPlayerHittedByMonsterNormalAttack;
-        PlayerController.PlayerIncreaseHpEventHandler += OnPlayerHpItemUsed;
         PlayerStat.OnPlayerHpIncreaseEventHandler -= OnPlayerHpIncreased;
         PlayerStat.OnPlayerHpIncreaseEventHandler += OnPlayerHpIncreased;
     }
@@ -24,7 +22,6 @@ public class UI_PlayerHpBar : UI_HealthBar
     private void OnDestroy()
     {
         PlayerController.HitUIEventHandler -= OnPlayerHittedByMonsterNormalAttack;
-        PlayerController.PlayerIncreaseHpEventHandler -= OnPlayerHpItemUsed;
         PlayerStat.OnPlayerHpIncreaseEventHandler -= OnPlayerHpIncreased;
     }
     void OnPlayerHittedByMonsterNormalAttack(int damage, int beforeDamgeHp, int afterDamageHp)
@@ -32,15 +29,10 @@ public class UI_PlayerHpBar : UI_HealthBar
         DecraseHP(beforeDamgeHp, afterDamageHp);
     }
 
-    void OnPlayerHpItemUsed(int beforeHp, int afterHealdHp)
-    {
-        IncraseHP((float)afterHealdHp / _stat.MaxHP);
-        DoCounterHp(beforeHp, afterHealdHp);
-    }
 
-    void OnPlayerHpIncreased(int currHp, int maxHp)
+    void OnPlayerHpIncreased(int currHp, int increasedHp)
     {
-        IncraseHP((float)currHp / maxHp);
-        DoCounterHp(currHp, maxHp);
+        IncraseHP((float)currHp / _stat.MaxHP);
+        _currHpText.DOCounter(currHp, increasedHp, _fillSpeed);
     }
 }

@@ -36,4 +36,9 @@ public sealed class WardenController : NormalMonsterController, IMelleAttackable
     {
         _states[(uint)ENormalMonsterState.MelleAttack] = new monster_states.MelleAttack(this);
     }
+
+    void OnAttackSoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_BLASTER_WARDEN_ATTACK_PATH);
+    }
 }

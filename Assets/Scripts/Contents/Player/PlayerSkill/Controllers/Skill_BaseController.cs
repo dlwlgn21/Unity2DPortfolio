@@ -4,9 +4,11 @@ using UnityEngine;
 using define;
 using System.Runtime.InteropServices;
 using data;
+using UnityEngine.Events;
 
 public abstract class Skill_BaseController : MonoBehaviour
 {
+    static public UnityAction ManaNotEnoughEventHandler;
     protected PlayerController _pc;
     protected ESkillType _eSkillType;
     public ESkillSlot ECurrentSkillSlot { get; set; }
@@ -54,6 +56,11 @@ public abstract class Skill_BaseController : MonoBehaviour
         {
             _pc.Stat.Mana -= _skillInfo.manaCost;
             return true;
+        }
+        if (_pc.Stat.Mana < _skillInfo.manaCost)
+        {
+            if (ManaNotEnoughEventHandler != null)
+                ManaNotEnoughEventHandler.Invoke();
         }
         return false;
     }

@@ -43,5 +43,6 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
         Managers.ProjectilePool
             .GetMonsterProjectile()
             .OnValidShootAnimTiming(ELookDir, _launchPoint.position, this);
+        Managers.Sound.Play(DataManager.SFX_MONSTER_GUNNER_LUANCH_PATH);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class RollTutorialSequence : TutorialSequence
 {
     private int _playerRollCount = 0;
-    private const int ROLL_TRANING_PASS_COUNT = 3;
+    private const int ROLL_TRANING_PASS_COUNT = 5;
     private bool _isPlayerChangeStateToRoll = false;
     public override void OnDialogEnd()
     {
