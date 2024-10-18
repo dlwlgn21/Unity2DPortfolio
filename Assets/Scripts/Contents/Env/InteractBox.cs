@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InteractBox : MonoBehaviour
 {
+    static public UnityAction<GameObject> PlayerEnterEventHandler;
     [SerializeField] protected GameObject _iZonePlayerDetectable;
     protected IZonePlayerDetetable _detectable;
     protected BoxCollider2D _boxCollider;
@@ -17,7 +19,10 @@ public class InteractBox : MonoBehaviour
     {
         if (collision.gameObject.layer == (int)define.EColliderLayer.PlayerBody)
         {
+            Debug.Assert(_iZonePlayerDetectable != null);
             _detectable.OnPlayerEnter(collision);
+            if (PlayerEnterEventHandler != null)
+                PlayerEnterEventHandler.Invoke(_iZonePlayerDetectable);
         }
     }
 

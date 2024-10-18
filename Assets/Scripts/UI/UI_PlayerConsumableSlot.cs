@@ -11,11 +11,14 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
 {
     public static float CONSUMABLE_COOL_TIME_IN_SEC = 5f;
     public static UnityAction<ItemInfo, int> SameConsumableDropEventHandelr;
-    public static UnityAction UseConsumableHandler;
+    public static UnityAction UseConsumableEventHandler;
+    public static UnityAction DeniedConsumableEventHandler;
     PlayerController _pc;
     UI_PlayerConsumableIcon _icon;
     UI_SkillCoolTimer _coolTimer;
     Coroutine _countdownCoOrNull;
+
+
     public ItemInfo Info { get; private set; }
     public int SlotIdx { get; private set; }
     public bool IsCanUseConsumable { get; private set; } = true;
@@ -49,10 +52,15 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                 StartScaleTW();
                 if (SameConsumableDropEventHandelr != null)
                 {
+                    Managers.Sound.Play(DataManager.SFX_UI_EQUP_SUCESS);
                     SameConsumableDropEventHandelr.Invoke(dragedIcon.ItemInfo, SlotIdx);
                     Info = dragedIcon.ItemInfo;
                     _icon.OnDropConsumableIcon(dragedIcon.Image.sprite, dragedIcon.ConsumableItemCountText.text);
                 }
+            }
+            else
+            {
+                Managers.Sound.Play(DataManager.SFX_UI_DENIED);
             }
         }
     }
@@ -71,7 +79,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                 if (TryUseConsumableItem())
                     StartScaleTW();
                 else
-                    StartPunchPosTW();
+                    ProcessDenied();
             }
         }
         else
@@ -81,7 +89,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                 if (TryUseConsumableItem())
                     StartScaleTW();
                 else
-                    StartPunchPosTW();
+                    ProcessDenied();
             }
         }
     }
@@ -104,13 +112,12 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                     data.HealingPotionInfo info = Managers.Data.HealingPotionDict[itemIcon.ItemInfo.ItemId];
                     Debug.Assert(info != null);
                     _icon.CountText.text = itemIcon.ConsumableItemCount.ToString();
-
                     _pc.OnCousumableItemUsed(EItemConsumableType.Hp, info.healAmount);
                     _coolTimer.StartCoolTime(CONSUMABLE_COOL_TIME_IN_SEC);
                     _countdownCoOrNull = StartCoroutine(StartCountdownCoolTimeCo(CONSUMABLE_COOL_TIME_IN_SEC));
 
-                    if (UseConsumableHandler != null)
-                        UseConsumableHandler.Invoke();
+                    if (UseConsumableEventHandler != null)
+                        UseConsumableEventHandler.Invoke();
                     if (int.Parse(_icon.CountText.text) <= 0)
                     {
                         Discard();
@@ -155,6 +162,14 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
     void OnScaleTWEnd()
     {
         Managers.Tween.EndToOneUIScaleTW(transform);
+    }
+
+    void ProcessDenied()
+    {
+        Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+        StartPunchPosTW();
+        if (DeniedConsumableEventHandler != null)
+            DeniedConsumableEventHandler.Invoke();
     }
     //private void OnDestroy()
     //{

@@ -70,9 +70,6 @@ public class PlayerController : BaseCharacterController
     public const KeyCode KeyJump = KeyCode.Space;
     public const KeyCode KeySkillA = KeyCode.A;
     public const KeyCode KeySkillS = KeyCode.S;
-
-    private const float BURN_TIME_IN_SEC = 3.0f;
-
     public CapsuleCollider2D CapsuleCollider { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
@@ -84,13 +81,15 @@ public class PlayerController : BaseCharacterController
     public Transform CastSwordStrikePoint { get; private set; }
     public GameObject HeadLight { get; private set; }
 
-    private StateMachine<PlayerController> _stateMachine;
-    private State<PlayerController>[] _states;
     public bool IsInvincible { get; set; } = false;
     public bool IsSlowState { get; set; } = false;
     public bool IsBurned { get; set; } = false;
 
-    private int _lastBurnedDamage;
+    StateMachine<PlayerController> _stateMachine;
+    State<PlayerController>[] _states;
+    private const float BURN_TIME_IN_SEC = 3.0f;
+    int _lastBurnedDamage;
+
     public override void Init()
     {
         base.Init();
@@ -115,10 +114,6 @@ public class PlayerController : BaseCharacterController
         }
     }
 
-
-    #region ItemEquipOrConsume
-
-    #endregion
     private void OnDestroy()
     {
         MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr -= OnHittedByMonsterAttack;
@@ -244,6 +239,7 @@ public class PlayerController : BaseCharacterController
         {
             case EItemConsumableType.Hp:
                 {
+                    Managers.Sound.Play(DataManager.SFX_PLAYER_HEALD);
                     Stat.IncreaseHp(amount);
                     break;
                 }
@@ -502,10 +498,13 @@ public class PlayerController : BaseCharacterController
         IsBurned = true;
         yield return new WaitForSeconds(1f);
         ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
         yield return new WaitForSeconds(1f);
         ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
         yield return new WaitForSeconds(1f);
         ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
         IsBurned = false;
     }
     #endregion

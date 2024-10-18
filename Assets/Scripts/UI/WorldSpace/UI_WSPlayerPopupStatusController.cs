@@ -11,11 +11,19 @@ public sealed class UI_WSPlayerPopupStatusController : UI_WSPlayerPopupTextContr
         Skill_BaseController.ManaNotEnoughEventHandler += OnPlayerManaNotEnoughUseSkill;
         PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusChanged;
         PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusChanged;
+        UI_PlayerConsumableSlot.DeniedConsumableEventHandler -= OnPlayerConsumeItem;
+        UI_PlayerConsumableSlot.DeniedConsumableEventHandler += OnPlayerConsumeItem;
     }
 
     void OnPlayerManaNotEnoughUseSkill()
     {
         _text.text = "마나가 부족해!";
+        StartTW();
+    }
+
+    void OnPlayerConsumeItem()
+    {
+        _text.text = "포션을 사용할 수 없어!";
         StartTW();
     }
 

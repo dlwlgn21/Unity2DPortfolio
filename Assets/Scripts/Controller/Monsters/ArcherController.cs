@@ -39,7 +39,7 @@ public sealed class ArcherController : NormalMonsterController, ILaunchAttackabl
         Managers.ProjectilePool
             .GetMonsterProjectile()
             .OnValidShootAnimTiming(ELookDir, _launchPoint.position, this);
-        Managers.Sound.Play(DataManager.SFX_MONSTER_ARCHER_LUANCH_PATH);
+        Managers.Sound.Play(DataManager.SFX_MONSTER_ARCHER_GUNNER_LUANCH_PATH);
     }
 
     public void SpawnDeadBody()

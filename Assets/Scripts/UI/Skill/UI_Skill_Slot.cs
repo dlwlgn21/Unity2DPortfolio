@@ -1,6 +1,7 @@
 using define;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -30,11 +31,13 @@ public class UI_Skill_Slot : MonoBehaviour, IDropHandler
         {
             if (dragedIcon.SkillLevel == 0)
             {
+                PlayDeniedSound();
                 Managers.Tween.StartUIDoPunchPos(transform);
                 return;
             }
             if (Managers.PlayerSkill.IsAandSSlotUsingAnySkill())
             {
+                PlayDeniedSound();
                 // TODO : 메시지 띄워야 한다..??
                 Debug.Log("Can't Drop!! Using Skill!!");
                 Managers.Tween.StartUIDoPunchPos(transform);
@@ -44,10 +47,16 @@ public class UI_Skill_Slot : MonoBehaviour, IDropHandler
             if (Managers.PlayerSkill.SwapIfSameNextToSlot(_eSlot, dragedIcon.ESkillType))
             {
                 TryDropIcon(dragedIcon.ESkillType, dragedIcon.Image.sprite);
+                PlayEquipSucessSound();
                 return;
             }
             TryDropIcon(dragedIcon.ESkillType, dragedIcon.Image.sprite);
+            PlayEquipSucessSound();
             return;
+        }
+        else
+        {
+            Managers.Sound.Play(DataManager.SFX_UI_DENIED);
         }
     }
 
@@ -67,5 +76,14 @@ public class UI_Skill_Slot : MonoBehaviour, IDropHandler
     private void OnDestroy()
     {
         OnSkillIocnDropEventHandler = null;
+    }
+
+    void PlayDeniedSound()
+    {
+        Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+    }
+    void PlayEquipSucessSound()
+    {
+        Managers.Sound.Play(DataManager.SFX_UI_EQUP_SUCESS);
     }
 }

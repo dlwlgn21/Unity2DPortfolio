@@ -612,7 +612,7 @@ namespace player_states
     {
         private readonly Vector2 ROLL_FORCE = new(7.5f, 2f);
         public Roll(PlayerController controller) : base(controller) { }
-        public override void OnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.Run); }
+        public override void OnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.Idle); }
         public override void Enter()
         {
             PlayAnimation(EPlayerState.Roll);

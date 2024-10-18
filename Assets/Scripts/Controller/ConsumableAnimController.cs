@@ -13,8 +13,8 @@ public class ConsumableAnimController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         SetComponentEnable(false);
-        UI_PlayerConsumableSlot.UseConsumableHandler -= OnUseConsumable;
-        UI_PlayerConsumableSlot.UseConsumableHandler += OnUseConsumable;
+        UI_PlayerConsumableSlot.UseConsumableEventHandler -= OnUseConsumable;
+        UI_PlayerConsumableSlot.UseConsumableEventHandler += OnUseConsumable;
     }
  
     void OnUseConsumable()
@@ -35,7 +35,7 @@ public class ConsumableAnimController : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (UI_PlayerConsumableSlot.UseConsumableHandler != null)
-            UI_PlayerConsumableSlot.UseConsumableHandler -= OnUseConsumable;
+        if (UI_PlayerConsumableSlot.UseConsumableEventHandler != null)
+            UI_PlayerConsumableSlot.UseConsumableEventHandler -= OnUseConsumable;
     }
 }

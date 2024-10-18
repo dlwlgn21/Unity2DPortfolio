@@ -32,6 +32,7 @@ public class GameStartPlayerDialogEvent : DialogEventBoxCollider, ITalkable
     {
         if (!_isDialogStart)
             RegisterOnDialogEnd();
+        Managers.Sound.Play(DataManager.SFX_UI_DIALOG_BOX_POPUP);
         Talk(_dialogText);
     }
 

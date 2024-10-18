@@ -32,6 +32,7 @@ public abstract class QuestNPC : NPC, IInteractable
         {
             _isConversationStart = true;
             Interact();
+            Managers.Sound.Play(DataManager.SFX_UI_DIALOG_BOX_POPUP);
         }
     }
 }

@@ -6,7 +6,6 @@ using UnityEngine;
 
 public sealed class WardenController : NormalMonsterController, IMelleAttackable
 {
-
     public override void Init()
     {
         base.Init();
@@ -40,5 +39,10 @@ public sealed class WardenController : NormalMonsterController, IMelleAttackable
     void OnAttackSoundTiming()
     {
         Managers.Sound.Play(DataManager.SFX_MONSTER_BLASTER_WARDEN_ATTACK_PATH);
+    }
+
+    void OnDieSoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_2);
     }
 }

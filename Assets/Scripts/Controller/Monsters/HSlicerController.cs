@@ -42,20 +42,22 @@ public sealed class HSlicerController : NormalMonsterController, IMelleAttackabl
 
     void OnAttackSwing1Timing()
     {
-        AddForceByLookDir();
+        AddForceToFront();
         Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
     }
     void OnAttackSwing2Timing()
     {
-        AddForceByLookDir();
+        AddForceToFront();
         Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
     }
 
-    void AddForceByLookDir()
+    void AddForceToFront()
     {
         if (ELookDir == ECharacterLookDir.Left)
-            AddKnockbackForce(new Vector2(-5f, 1f));
+            RigidBody.AddForce(new Vector2(-5f, 1f), ForceMode2D.Impulse);
         else
-            AddKnockbackForce(new Vector2(5f, 1f));
+            RigidBody.AddForce(new Vector2(5f, 1f), ForceMode2D.Impulse);
     }
+
+
 }

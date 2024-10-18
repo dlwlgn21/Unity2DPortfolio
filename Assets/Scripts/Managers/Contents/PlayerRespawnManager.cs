@@ -27,7 +27,8 @@ public class PlayerRespawnManager
 
     public void SpawnPlayer(bool isRespawn)
     {
-        _pc.Stat.InitHP();
+        if (isRespawn)
+            _pc.Stat.InitHP();
         _pc.ChangeState(EPlayerState.Idle);
         _pc.transform.position = _spawnPos;
     }

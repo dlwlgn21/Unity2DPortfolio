@@ -10,7 +10,6 @@ public class AbandonRoadScene : PlayScene
 
     private void Awake()
     {
-        Debug.Log($"AbandonRoadScene Awake Called");
         Init();
     }
 
@@ -18,6 +17,7 @@ public class AbandonRoadScene : PlayScene
     {
         base.Init();
         Managers.PlayerRespawn.SpawnPlayer(false);
+        Managers.Sound.Play(DataManager.SFX_BGM_ABANDON_ROAD, define.ESoundType.Bgm);
     }
 
     public override void Clear()

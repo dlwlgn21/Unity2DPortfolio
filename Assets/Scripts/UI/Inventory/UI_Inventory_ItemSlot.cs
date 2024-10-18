@@ -23,6 +23,7 @@ public sealed class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
                 UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
                 if (dragedIcon != null && SlotIdx != dragedIcon.SlotIdx)
                 {
+                    PlayDropSuccessSound();
                     Managers.UI.SwapItemIcon(SlotIdx, dragedIcon.SlotIdx);
                     return;
                 }
@@ -35,6 +36,7 @@ public sealed class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
                 {
                     if (Managers.UI.TryPushEquipableItemToInventoryAt(equipedItemIcon.ItemInfo, SlotIdx))
                     {
+                        PlayDropSuccessSound();
                         equipedItemIcon.Clear();
                         return;
                     }
@@ -47,11 +49,17 @@ public sealed class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
                 {
                     if (Managers.UI.TryPushDiscardItemToInventoryAt(discardItemIcon.ItemInfo, SlotIdx, discardItemIcon.ConsumableItemCount))
                     {
+                        PlayDropSuccessSound();
                         discardItemIcon.Clear();
                         return;
                     }
                 }
             }
         }
+    }
+
+    void PlayDropSuccessSound()
+    {
+        Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
     }
 }

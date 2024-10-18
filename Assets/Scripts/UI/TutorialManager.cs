@@ -91,6 +91,7 @@ public class TutorialManager : MonoBehaviour
     { 
         _moveKeys.SetActive(true);
         _moveKeys.transform.DOScale(TW_SCALE_END_VALUE, TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
+        PlayActiveSound();
     }
     public void UnactiveMoveKeys()     { _moveKeys.SetActive(false); }
 
@@ -99,6 +100,7 @@ public class TutorialManager : MonoBehaviour
     {
         ActiveAttackKeyTexts();
         _rollOpenInteractBox.SetActive(false);
+        PlayActiveSound();
     }
     public void UnactiveAttackTutorialUIObjects()
     {
@@ -109,6 +111,7 @@ public class TutorialManager : MonoBehaviour
     {
         ActiveRollTexts();
         _backAttackOpenInteractBox.SetActive(false);
+        PlayActiveSound();
     }
     public void UnactiveRollTutorialUIObjects()
     {
@@ -120,6 +123,7 @@ public class TutorialManager : MonoBehaviour
     {
         _backAttackTitleTexts.transform.DOScale(TW_SCALE_END_VALUE, TW_SCALE_DURATION_VALUE).SetEase(Ease.OutElastic);
         _blockOpenInteractBox.SetActive(false);
+        PlayActiveSound();
     }
 
     public void UnctiveBackAttackTutorialUIObjects()
@@ -132,6 +136,7 @@ public class TutorialManager : MonoBehaviour
     {
         ActiveBlockTexts();
         _skillOpenInteractBox.SetActive(false);
+        PlayActiveSound();
     }
 
     public void UnactiveBlockTutorialUIObjects()
@@ -143,6 +148,7 @@ public class TutorialManager : MonoBehaviour
     public void ActiveSkillTutorialUIObjects()
     {
         ActiveSkillText();
+        PlayActiveSound();
     }
 
     public void UnactiveSkillTutorialUIObjects()
@@ -170,6 +176,8 @@ public class TutorialManager : MonoBehaviour
                 _successText.text = "스킬 트레이닝 성공!\n3초 후에 현실로 점프합니다!";
                 break;
         }
+        Debug.Log($"ActiveSuccessText Called! {_successText.text}");
+        Managers.Sound.Play(DataManager.SFX_QUEST_SUCESS);
         _successText.transform.DOScale(TW_SCALE_END_VALUE, 1.5f).SetEase(Ease.OutElastic).OnComplete(OnSuccessTextScaleTWEnd);
     }
 
@@ -255,12 +263,17 @@ public class TutorialManager : MonoBehaviour
     }
     void OnSuccessTextScaleTWEnd()
     {
-        _successText.transform.DOScale(0f, 0.2f);
+        _successText.transform.DOScale(0f, 1f);
     }
 
     void StartScaleTW(Transform transform)
     {
         Managers.Tween.StartUIScaleTW(transform, TW_SCALE_END_VALUE, TW_SCALE_DURATION_VALUE);
+    }
+
+    void PlayActiveSound()
+    {
+        Managers.Sound.Play(DataManager.SFX_UI_DIALOG_BOX_POPUP);
     }
     #endregion
 }

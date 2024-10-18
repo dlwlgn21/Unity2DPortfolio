@@ -112,6 +112,7 @@ public class PlayerSkillManager
         if (eSkillType != ESkillType.Count &&  GetSkillOrNull(eSkillType).TryUseSkill())
         {
             skillCoolTimer[(int)eSlot].StartCoolTime(GetSkillOrNull(eSkillType).SkillCoolTimeInSec);
+            Managers.Sound.Play(DataManager.SFX_PLAYER_FLY_USING_SKILL);
             if (eSlot == ESkillSlot.AKey)
                 Managers.Tween.StartUIScaleTW(_skillSlots[(int)eSlot].transform, OnAKeyScaleTWEnd);
             else
@@ -119,6 +120,7 @@ public class PlayerSkillManager
         }
         else
         {
+            Managers.Sound.Play(DataManager.SFX_UI_DENIED);
             Managers.Tween.StartUIDoPunchPos(_skillSlots[(int)eSlot].transform);
         }
     }

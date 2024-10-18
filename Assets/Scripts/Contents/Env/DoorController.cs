@@ -1,5 +1,4 @@
 using UnityEngine;
-
 enum EDoorState
 { 
     Idle,
@@ -30,6 +29,7 @@ public sealed class DoorController : BaseInteractableController
                 _animator.Play("DoorIdle");
                 break;
             case EDoorState.Opnening:
+                Managers.Sound.Play(DataManager.SFX_ENV_DOOR_OPEN);
                 _animator.Play("DoorOpening");
                 break;
             case EDoorState.Open:

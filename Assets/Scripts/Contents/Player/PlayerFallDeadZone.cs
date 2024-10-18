@@ -10,6 +10,12 @@ public class PlayerFallDeadZone : MonoBehaviour
         {
             PlayerFallDeadZoneEventHandler?.Invoke();
         }
+        else if (collision.gameObject.layer == (int)define.EColliderLayer.MonsterBody)
+        {
+            NormalMonsterController mc = collision.gameObject.GetComponent<NormalMonsterController>();
+            if (mc != null)
+                mc.ChangeState(ENormalMonsterState.Die);
+        }
     }
 
     private void OnDestroy()

@@ -52,6 +52,7 @@ public sealed class Skill_SpawnShooterObject : MonoBehaviour
         GameObject go = Managers.ProjectilePool.GetPlayerKnockbackBoom(_shootPoint.position);
         Debug.Assert(go != null);
         go.GetComponent<PlayerSkillProjectileController>().Launch(_ePlayerLookDir);
+        Managers.Sound.Play(DataManager.SFX_SKILL_SPAWN_SHOOTER_SHOOT);
     }
 
 

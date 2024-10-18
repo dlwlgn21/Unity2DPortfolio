@@ -32,6 +32,7 @@ public class SisterController : QuestNPC, ITalkable
         {
             _isConversationEnd = true;
             _animator.Play("Teleport");
+            Managers.Sound.Play(DataManager.SFX_TELEPORT);
         }
     }
     void OnTeleportAnimFullyPlayed()

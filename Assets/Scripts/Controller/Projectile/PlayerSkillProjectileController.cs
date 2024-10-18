@@ -48,6 +48,10 @@ public class PlayerSkillProjectileController : BaseProjectileController
         }
     }
 
+    void OnDropedGroundSoundTiming()
+    {
+        Managers.Sound.Play(DataManager.SFX_SKILL_KNOCKBACK_PROJECTILE_DROPED);
+    }
     private void OnValidAnimBombTiming()
     {
         Collider2D[] monsters = Physics2D.OverlapCircleAll(transform.position, _bombRange, MONSTER_LAYER_MASK);
@@ -61,6 +65,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
             mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType.Spawn_Shooter_LV1]);
         }
         _lightController.TurnOffLightGradually();
+        Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_2);
     }
 
     private void OnBombAnimFullyPlayed()

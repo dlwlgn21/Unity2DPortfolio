@@ -40,11 +40,12 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     public bool IsPlayerInBurstAttackZone { get; set; }
     public bool IsWake { get; private set; }
 
-    const string SFX_FIST_SOUND_PATH = "SFX_BossColossalFisting";
-    const string SFX_BURST_SOUND_PATH = "SFX_BossColossalBurst";
-    const string SFX_BURFED_BURST_SOUND_PATH = "SFX_BossColossalBurfedBurst";
-    const string SFX_BURF_SOUND_PATH = "SFX_BossColossalBuff";
-    const string SFX_DIE_PATH = "SFX_BossMonsterDie";
+    const string SFX_FIST_SOUND_PATH = "Sound/SFX_BossColossalFisting";
+    const string SFX_BURST_SOUND_PATH = "Sound/SFX_BossColossalBurst";
+    const string SFX_BURFED_BURST_SOUND_PATH = "Sound/SFX_BossColossalBurfedBurst";
+    const string SFX_BURF_SOUND_PATH = "Sound/SFX_BossColossalBuff";
+    const string SFX_DIE_PATH = "Sound/SFX_BossMonsterDie";
+    const string SFX_WAKE_PATH = "Sound/SFX_BossMonsterWake";
 
     Coroutine _hitFlashCoOrNull;
 
@@ -287,6 +288,11 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
                 _burfedBurstLightController.TurnOffLightGradually();
                 break;
         }
+    }
+
+    void OnWakeSoundTiming()
+    {
+        Managers.Sound.Play(SFX_WAKE_PATH);
     }
     void OnBurfAnimTurnOnLightTiming()
     {

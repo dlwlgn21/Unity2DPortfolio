@@ -32,6 +32,7 @@ public abstract class UI_Inventory_BaseItemIcon : MonoBehaviour, IPointerEnterHa
         {
             Managers.UI.ItemDesc.ShowItemDesc(ItemInfo);
             Managers.Tween.StartUIScaleTW(transform);
+            Managers.Sound.Play(DataManager.SFX_UI_POINTER_ENTER);
         }
     }
     public void OnPointerExit(PointerEventData eventData)

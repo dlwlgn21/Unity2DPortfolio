@@ -63,6 +63,7 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
     {
         Managers.UI.SkillDesc.ShowSkillDesc(SkillInfo);
         Managers.Tween.StartUIScaleTW(transform);
+        Managers.Sound.Play(DataManager.SFX_UI_POINTER_ENTER);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -81,6 +82,7 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
                 _eSkillType += 1;
                 SkillInfo = Managers.Data.SkillInfoDict[(int)_eSkillType];
             }
+            Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
             Managers.UI.SkillDesc.ShowSkillDesc(SkillInfo);
             if (OnSkillLevelUpEventHandler != null)
                 OnSkillLevelUpEventHandler.Invoke(_eSkillType);
@@ -88,6 +90,7 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
         }
         else
         {
+            Managers.Sound.Play(DataManager.SFX_UI_DENIED);
             UIPunchTWStart();
         }
     }

@@ -58,6 +58,9 @@ namespace define
         MonsterBetweenPlayerBlockingBox = 17,
         BossColossalBody = 18,
         BossColossalAttackBox = 19,
+        Item = 20,
+        CamFollowObject = 21,
+        CamLookUpOrDownSection = 22,
     }
 
     public enum EMonsterNames

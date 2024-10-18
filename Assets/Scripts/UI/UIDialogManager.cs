@@ -53,7 +53,6 @@ public class UIDialogManager
                 return;
             }
         }
-
         _dialogText.text = "";
         _paragraph = _paragraphQueue.Dequeue();
         _dialogText.DOText(_paragraph, 1f).OnStart(OnTypingStarted).OnComplete(OnTypingEnded);
@@ -94,6 +93,7 @@ public class UIDialogManager
     public void OnTypingStarted()
     {
         _isTyping = true;
+        Managers.Sound.Play(DataManager.SFX_UI_DIALOG_START);
     }
     public void OnTypingEnded()
     {

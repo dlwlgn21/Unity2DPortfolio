@@ -115,6 +115,7 @@ public class SoundManager
                 {
                     bgmSource.Stop();
                 }
+                bgmSource.clip = clip;
                 bgmSource.Play();
                 break;
         }
