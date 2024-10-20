@@ -6,7 +6,7 @@ public class UI_PlayerHpBar : UI_HealthBar
 {
     private void Start()
     {
-        SetFullHpBarRatio();
+        SetFullHpBarAndText();
     }
     public override void Init()
     {
@@ -15,14 +15,14 @@ public class UI_PlayerHpBar : UI_HealthBar
         //SetFullHpBarRatio();
         PlayerController.HitUIEventHandler -= OnPlayerHittedByMonsterNormalAttack;
         PlayerController.HitUIEventHandler += OnPlayerHittedByMonsterNormalAttack;
-        PlayerStat.OnPlayerHpIncreaseEventHandler -= OnPlayerHpIncreased;
-        PlayerStat.OnPlayerHpIncreaseEventHandler += OnPlayerHpIncreased;
+        PlayerStat.PlayerHpIncreaseEventHandler -= OnPlayerHpIncreased;
+        PlayerStat.PlayerHpIncreaseEventHandler += OnPlayerHpIncreased;
     }
 
     private void OnDestroy()
     {
         PlayerController.HitUIEventHandler -= OnPlayerHittedByMonsterNormalAttack;
-        PlayerStat.OnPlayerHpIncreaseEventHandler -= OnPlayerHpIncreased;
+        PlayerStat.PlayerHpIncreaseEventHandler -= OnPlayerHpIncreased;
     }
     void OnPlayerHittedByMonsterNormalAttack(int damage, int beforeDamgeHp, int afterDamageHp)
     {
@@ -32,7 +32,7 @@ public class UI_PlayerHpBar : UI_HealthBar
 
     void OnPlayerHpIncreased(int currHp, int increasedHp)
     {
-        IncraseHP((float)currHp / _stat.MaxHP);
+        IncraseHPRatio((float)increasedHp / _stat.MaxHP);
         _currHpText.DOCounter(currHp, increasedHp, _fillSpeed);
     }
 }

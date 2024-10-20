@@ -108,7 +108,7 @@ public class PlayerController : BaseCharacterController
             #region SUBSCRIBE_EVENT
             MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
             MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;
-            PlayerFallDeadZone.PlayerFallDeadZoneEventHandler += OnPlayerFallToDeadZone;
+            FallDeadZone.PlayerFallDeadZoneEventHandler += OnPlayerFallToDeadZone;
             #endregion
             DontDestroyOnLoad(this);
         }
@@ -118,7 +118,7 @@ public class PlayerController : BaseCharacterController
     {
         MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr -= OnHittedByMonsterAttack;
         MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr -= OnHittedByMonsterAttack;
-        PlayerFallDeadZone.PlayerFallDeadZoneEventHandler -= OnPlayerFallToDeadZone;
+        FallDeadZone.PlayerFallDeadZoneEventHandler -= OnPlayerFallToDeadZone;
         PlayerChangeStateEventHandler = null;
         HitEffectEventHandler = null;
         MovementEffectEventHandler = null;

@@ -1,3 +1,4 @@
+using define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,5 +47,9 @@ public class PlayerHitAnimController : WorldSpaceAnimController
             default:
                 break;
         }
+    }
+
+    protected override void SetSpriteFlip(ECharacterLookDir eLookDir)
+    {
     }
 }

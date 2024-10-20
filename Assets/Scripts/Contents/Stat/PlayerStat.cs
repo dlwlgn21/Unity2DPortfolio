@@ -5,11 +5,11 @@ using UnityEngine.Events;
 
 public sealed class PlayerStat : BaseStat
 {
-    static public UnityAction<int> OnLevelUpEventHandler;
-    static public UnityAction<int, int> OnAddExpEventHandler;
-    static public UnityAction<int, int> OnManaChangedEventHandler;
-    static public UnityAction OnPlayerDieHandler;
-    static public UnityAction<int, int> OnPlayerHpIncreaseEventHandler;
+    static public UnityAction<int> LevelUpEventHandler;
+    static public UnityAction<int, int> AddExpEventHandler;
+    static public UnityAction<int, int> ManaChangedEventHandler;
+    static public UnityAction PlayerDieHandler;
+    static public UnityAction<int, int> PlayerHpIncreaseEventHandler;
     [SerializeField] int _level;
     [SerializeField] int _exp;
     [SerializeField] int _gold;
@@ -26,11 +26,15 @@ public sealed class PlayerStat : BaseStat
         get { return _mana; }
         set 
         {
-            _mana = Mathf.Clamp(value, 0, Managers.Data.PlayerStatDict[Level].maxMana);
-            if (OnManaChangedEventHandler != null)
-                OnManaChangedEventHandler.Invoke(_mana, Managers.Data.PlayerStatDict[Level].maxMana);
+            int beforeMana = _mana;
+            _mana = Mathf.Clamp(value, 0, MaxMana);
+            if (ManaChangedEventHandler != null)
+                ManaChangedEventHandler.Invoke(beforeMana, _mana);
         }
     }
+
+    public int MaxMana { get; private set; }
+
     public int Exp 
     { 
         get { return _exp; } 
@@ -60,23 +64,25 @@ public sealed class PlayerStat : BaseStat
                 currNeedLevelUpExp = Managers.Data.PlayerStatDict[Level].totalExp;
             }
 
-            if (OnAddExpEventHandler != null)
+            if (AddExpEventHandler != null)
             {
                 if (isLevelUp)
-                    OnAddExpEventHandler.Invoke(currNeedLevelUpExp, currNeedLevelUpExp);
+                    AddExpEventHandler.Invoke(currNeedLevelUpExp, currNeedLevelUpExp);
                 else
-                    OnAddExpEventHandler.Invoke(Exp, currNeedLevelUpExp);
+                    AddExpEventHandler.Invoke(Exp, currNeedLevelUpExp);
             }
 
             if (isLevelUp)
             {
-                if (OnLevelUpEventHandler != null)
-                    OnLevelUpEventHandler.Invoke(levelUpCount);
+                if (LevelUpEventHandler != null)
+                    LevelUpEventHandler.Invoke(levelUpCount);
             }
         } 
     }
 
     public int Gold { get { return _gold; } set { _gold = value; } }
+
+
 
     // 24.10.3 Item 착용위해 추가.
     public int SwordPlusDamage { get { return _swordPlusDamage; } set { _swordPlusDamage = value; } }
@@ -109,8 +115,8 @@ public sealed class PlayerStat : BaseStat
         if (HP <= 0)
         {
             HP = 0;
-            if (OnPlayerDieHandler != null)
-                OnPlayerDieHandler.Invoke();
+            if (PlayerDieHandler != null)
+                PlayerDieHandler.Invoke();
         }
         return actualDamage;
     }
@@ -129,7 +135,8 @@ public sealed class PlayerStat : BaseStat
         Attack = dict[1].attack;
         Defence = dict[1].defence;
         MoveSpeed = dict[1].moveSpeed;
-        Mana = dict[1].maxMana;
+        MaxMana = dict[1].maxMana;
+        Mana = MaxMana;
         Exp = 0;
         Gold = 0;
         SwordPlusDamage = 0;
@@ -141,21 +148,21 @@ public sealed class PlayerStat : BaseStat
     {
         if (HP >= MaxHP)
             return;
-        OnPlayerHpIncreaseEventHandler.Invoke(HP, Mathf.Min(HP + amount, MaxHP));
+        PlayerHpIncreaseEventHandler.Invoke(HP, Mathf.Min(HP + amount, MaxHP));
         HP = Mathf.Min(HP + amount, MaxHP);
     }
 
     public void InitHP()
     {
         HP = MaxHP;
-        OnPlayerHpIncreaseEventHandler.Invoke(HP, MaxHP);
+        PlayerHpIncreaseEventHandler.Invoke(HP, MaxHP);
     }
 
     private void OnDestroy()
     {
-        OnLevelUpEventHandler = null;
-        OnAddExpEventHandler = null;
-        OnManaChangedEventHandler = null;
-        OnPlayerDieHandler = null;
+        LevelUpEventHandler = null;
+        AddExpEventHandler = null;
+        ManaChangedEventHandler = null;
+        PlayerDieHandler = null;
     }
 }

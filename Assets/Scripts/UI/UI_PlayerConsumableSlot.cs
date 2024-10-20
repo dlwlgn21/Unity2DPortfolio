@@ -7,17 +7,23 @@ using UnityEngine.Events;
 using System;
 using DG.Tweening;
 
+public enum EDeniedUseConsumableItemCause
+{
+    NoSlot,
+    CoolTime,
+    Count
+}
 public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
 {
     public static float CONSUMABLE_COOL_TIME_IN_SEC = 5f;
     public static UnityAction<ItemInfo, int> SameConsumableDropEventHandelr;
     public static UnityAction UseConsumableEventHandler;
-    public static UnityAction DeniedConsumableEventHandler;
+    public static UnityAction<EDeniedUseConsumableItemCause> DeniedConsumableEventHandler;
     PlayerController _pc;
     UI_PlayerConsumableIcon _icon;
     UI_SkillCoolTimer _coolTimer;
     Coroutine _countdownCoOrNull;
-
+    PlayerConsumableSlotManager _slotManager;
 
     public ItemInfo Info { get; private set; }
     public int SlotIdx { get; private set; }
@@ -25,6 +31,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
     private void Awake()
     {
         Init();
+        _slotManager = transform.parent.GetComponent<PlayerConsumableSlotManager>();
     }
 
     private void Start()
@@ -49,6 +56,12 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
             UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
             if (dragedIcon != null && dragedIcon.ItemInfo.EItemType == EItemType.Consumable)
             {
+                if (_slotManager.IsUsingConsumable())
+                {
+                    PlayDeniedSoundAndPunchPosTW();
+                    return;
+                }
+
                 StartScaleTW();
                 if (SameConsumableDropEventHandelr != null)
                 {
@@ -60,7 +73,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
             }
             else
             {
-                Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+                PlayDeniedSoundAndPunchPosTW();
             }
         }
     }
@@ -79,7 +92,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                 if (TryUseConsumableItem())
                     StartScaleTW();
                 else
-                    ProcessDenied();
+                    PlayDeniedSoundAndPunchPosTW();
             }
         }
         else
@@ -89,19 +102,34 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                 if (TryUseConsumableItem())
                     StartScaleTW();
                 else
-                    ProcessDenied();
+                    PlayDeniedSoundAndPunchPosTW();
             }
         }
     }
 
     bool TryUseConsumableItem()
     {
-        // TODO : 여기 ItemId 매직넘버 고쳐야 함.
-        if (!Managers.Dialog.IsTalking &&
-            !Managers.Pause.IsPaused &&
-            IsCanUseConsumable && 
-            _icon.IsPossibleConsum() && 
-            _pc.Stat.HP < _pc.Stat.MaxHP)
+        if (Managers.Dialog.IsTalking || Managers.Pause.IsPaused)
+        {
+            return false;
+        }
+
+        if (_countdownCoOrNull != null)
+        {
+            if (DeniedConsumableEventHandler != null)
+                DeniedConsumableEventHandler.Invoke(EDeniedUseConsumableItemCause.CoolTime);
+            return false;
+        }
+        if (!_icon.IsPossibleConsum())
+        {
+            //if (DeniedConsumableEventHandler != null)
+            //    DeniedConsumableEventHandler.Invoke(EDeniedUseConsumableItemCause.NoSlot);
+            return false;
+        }
+
+
+        // TODO : 나중에 Consumable 종류가 더 늘어나면 여기 ItemId 매직넘버 고쳐야 함.
+        if (IsCanUseConsumable && _pc.Stat.HP < _pc.Stat.MaxHP)
         {
             UI_Inventory_ItemIcon itemIcon = Managers.UI.GetSpecifiedConsumableOrNull(EItemConsumableType.Hp, 1);
             if (itemIcon != null)
@@ -118,10 +146,6 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
 
                     if (UseConsumableEventHandler != null)
                         UseConsumableEventHandler.Invoke();
-                    if (int.Parse(_icon.CountText.text) <= 0)
-                    {
-                        Discard();
-                    }
                     return true;
                 }
             }
@@ -147,6 +171,8 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
     {
         IsCanUseConsumable = false;
         yield return new WaitForSeconds(coolTimeInSec);
+        if (int.Parse(_icon.CountText.text) <= 0)
+            Discard();
         IsCanUseConsumable = true;
         _countdownCoOrNull = null;
     }
@@ -164,12 +190,10 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
         Managers.Tween.EndToOneUIScaleTW(transform);
     }
 
-    void ProcessDenied()
+    void PlayDeniedSoundAndPunchPosTW()
     {
         Managers.Sound.Play(DataManager.SFX_UI_DENIED);
         StartPunchPosTW();
-        if (DeniedConsumableEventHandler != null)
-            DeniedConsumableEventHandler.Invoke();
     }
     //private void OnDestroy()
     //{

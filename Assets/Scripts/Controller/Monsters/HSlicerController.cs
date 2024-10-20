@@ -6,6 +6,8 @@ using UnityEngine;
 
 public sealed class HSlicerController : NormalMonsterController, IMelleAttackable, IDeadBodyReamainable
 {
+
+    static readonly Vector2 sRushForce = new Vector2(5f, 1f);
     public override void Init()
     {
         base.Init();
@@ -39,25 +41,22 @@ public sealed class HSlicerController : NormalMonsterController, IMelleAttackabl
         InstantiateDeadBody("Prefabs/Monsters/DeadBody/HSlicerDeadBody");
     }
 
-
     void OnAttackSwing1Timing()
     {
-        AddForceToFront();
+        AddForceToFront(sRushForce);
         Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
     }
     void OnAttackSwing2Timing()
     {
-        AddForceToFront();
+        AddForceToFront(sRushForce * 0.5f);
         Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
     }
 
-    void AddForceToFront()
+    void AddForceToFront(Vector2 force)
     {
         if (ELookDir == ECharacterLookDir.Left)
-            RigidBody.AddForce(new Vector2(-5f, 1f), ForceMode2D.Impulse);
+            RigidBody.AddForce(new Vector2(-force.x, force.y), ForceMode2D.Impulse);
         else
-            RigidBody.AddForce(new Vector2(5f, 1f), ForceMode2D.Impulse);
+            RigidBody.AddForce(force, ForceMode2D.Impulse);
     }
-
-
 }

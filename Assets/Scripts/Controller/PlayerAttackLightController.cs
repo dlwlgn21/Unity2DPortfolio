@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerAttackLightController : LightController
 {
     static readonly float DELAYED_TURN_ON_LIGHT_TIME_IN_SEC = 0.1f;
-    protected override void Init()
+    protected override void SetLightIntencityToZero()
     {
-        base.Init();
+        base.SetLightIntencityToZero();
         PlayerController.PlayerChangeStateEventHandler += OnPlayerNormalAttackStart;
         player_states.NormalAttackState.NormalAttackExitEventHandler += OnPlayerAttackEnd;
         TurnOffGraduallyLightTimeInSec = 0.3f;

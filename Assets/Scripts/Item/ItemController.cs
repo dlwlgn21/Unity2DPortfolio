@@ -9,7 +9,8 @@ public abstract class ItemController : MonoBehaviour
     [SerializeField] public define.EItemType _eItemType;
     [SerializeField] protected int _id;
     protected ItemInfo _itemInfo;
-    private void Start()
+    protected LightController _lightController;
+    private void Awake()
     {
         Debug.Assert(_btnSprite != null);
         _btnSprite.SetActive(false);
@@ -29,6 +30,13 @@ public abstract class ItemController : MonoBehaviour
         }
         Debug.Assert(sprite != null);
         GetComponent<SpriteRenderer>().sprite = sprite;
+        _lightController = Utill.GetFirstComponentInChildrenOrNull<LightController>(gameObject);
+        _lightController.TurnOffGraduallyLightTimeInSec = 0.7f;
+    }
+
+    private void Start()
+    {
+        _lightController.TurnOnLight();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -50,6 +58,7 @@ public abstract class ItemController : MonoBehaviour
                 PushItemToInventory();
                 Managers.Tween.EndToZeroScaleTWNoCareCurrTweening(transform, OnScaleZeroTweenEnded, 1f);
                 Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
+                _lightController.TurnOffLightGradually();
             }
         }
     }

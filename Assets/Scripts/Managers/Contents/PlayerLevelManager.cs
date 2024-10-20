@@ -22,15 +22,20 @@ public class PlayerLevelManager
             _playerStat = player.GetComponent<PlayerStat>();
             _playerStat.Init();
             #region EventSubscribe
-            PlayerStat.OnLevelUpEventHandler -= OnPlayerLevelUp;
-            PlayerStat.OnLevelUpEventHandler += OnPlayerLevelUp;
+            PlayerStat.LevelUpEventHandler -= OnPlayerLevelUp;
+            PlayerStat.LevelUpEventHandler += OnPlayerLevelUp;
             UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnPlayerSkillLevelUp;
             UI_Skill_Icon.OnSkillLevelUpEventHandler += OnPlayerSkillLevelUp;
+            monster_states.Die.DieEventEnterStateHandler -= OnMonsterDied;
+            monster_states.Die.DieEventEnterStateHandler += OnMonsterDied;
             #endregion
         }
     }
 
-
+    void OnMonsterDied(NormalMonsterController mc)
+    {
+        _playerStat.Exp += mc.Stat.Exp;
+    }
     public void AddExp(int exp)
     {
         _playerStat.Exp += exp;

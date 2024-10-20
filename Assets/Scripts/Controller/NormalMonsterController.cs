@@ -68,7 +68,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             _dieController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "DieLight");
             _bloodAnimationController = Utill.GetFirstComponentInChildrenOrNull<MonsterBloodAnimController>(gameObject);
 
-            _headLight = transform.Find("HeadLight").gameObject?.GetComponent<Light2D>();
+            _headLight = transform.Find("HeadLight").gameObject.GetComponent<Light2D>();
             Transform trnasformOrNull = transform.Find("WeaponLight");
             if (trnasformOrNull != null)
                 _weaponLightOrNull = trnasformOrNull.gameObject.GetComponent<Light2D>();
@@ -167,13 +167,14 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             }
             if (Stat.HP <= 0)
             {
-                AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * new Vector2(2f, 1f));
+                AddKnockbackForce(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * new Vector2(2.5f, 1f));
                 ChangeState(ENormalMonsterState.Die);
             }
         }
     }
     public override void OnPlayerBlockSuccess()
     {
+        _attackLightController.ForceToStopCoroutineAndTurnOffLight();
         ChangeState(ENormalMonsterState.HitByPlayerBlockSucces);
         AddKnockbackForce(new Vector2(3f, 3f));
     }

@@ -24,5 +24,6 @@ public class AbandonRoadScene : PlayScene
     {
         Managers.CamSwitch.Clear();
         Managers.Tween.Clear();
+        Managers.Sound.Clear(define.ESceneType.AbandonLoadScene);
     }
 }

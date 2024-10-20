@@ -7,23 +7,55 @@ public sealed class UI_WSPlayerPopupStatusController : UI_WSPlayerPopupTextContr
 {
     protected override void Init()
     {
-        Skill_BaseController.ManaNotEnoughEventHandler -= OnPlayerManaNotEnoughUseSkill;
-        Skill_BaseController.ManaNotEnoughEventHandler += OnPlayerManaNotEnoughUseSkill;
+        Skill_BaseController.DeniedUseSkillEventHandler -= OnPlayerDeniedUseSkill;
+        Skill_BaseController.DeniedUseSkillEventHandler += OnPlayerDeniedUseSkill;
         PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusChanged;
         PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusChanged;
-        UI_PlayerConsumableSlot.DeniedConsumableEventHandler -= OnPlayerConsumeItem;
-        UI_PlayerConsumableSlot.DeniedConsumableEventHandler += OnPlayerConsumeItem;
+        UI_PlayerConsumableSlot.DeniedConsumableEventHandler -= OnPlayerDeniedConsumeItem;
+        UI_PlayerConsumableSlot.DeniedConsumableEventHandler += OnPlayerDeniedConsumeItem;
+        CaveEnteranceController.DeniedEnterCaveEventHandler -= OnPlayerDeniedEnterCave;
+        CaveEnteranceController.DeniedEnterCaveEventHandler += OnPlayerDeniedEnterCave;
+        DoorController.DeniedDoorOpenEventHandler -= OnPlayerDeniedEnterCave;
+        DoorController.DeniedDoorOpenEventHandler += OnPlayerDeniedEnterCave;
+        Debug.Log("UI_WSPlayerPopupStatusController Init!");
     }
 
-    void OnPlayerManaNotEnoughUseSkill()
+    void OnPlayerDeniedEnterCave()
     {
-        _text.text = "마나가 부족해!";
+        _text.text = "들어갈 수 없어!\n몬스터를 전부 퇴치해야해!";
         StartTW();
     }
 
-    void OnPlayerConsumeItem()
+    void OnPlayerDeniedUseSkill(EDeniedUseSkillCause eDeniedCause)
     {
-        _text.text = "포션을 사용할 수 없어!";
+        switch (eDeniedCause)
+        {
+            case EDeniedUseSkillCause.NotEnoughMana:
+                _text.text = "마나가 부족해!";
+                break;
+            case EDeniedUseSkillCause.CoolTime:
+                _text.text = "스킬이 쿨타임이야!";
+                break;
+            default:
+                Debug.DebugBreak();
+                break;
+        }
+        StartTW();
+    }
+    void OnPlayerDeniedConsumeItem(EDeniedUseConsumableItemCause eDeniedCause)
+    {
+        switch (eDeniedCause)
+        {
+            case EDeniedUseConsumableItemCause.NoSlot:
+                _text.text = "포션이 슬롯에 없어!";
+                break;
+            case EDeniedUseConsumableItemCause.CoolTime:
+                _text.text = "포션이 쿨타임이야!";
+                break;
+            default:
+                Debug.DebugBreak();
+                break;
+        }
         StartTW();
     }
 
@@ -51,5 +83,10 @@ public sealed class UI_WSPlayerPopupStatusController : UI_WSPlayerPopupTextContr
                 Debug.Assert(false);
                 break;
         }
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("Destroyed UI_WSPopupStatus");
     }
 }

@@ -59,8 +59,7 @@ namespace define
         BossColossalBody = 18,
         BossColossalAttackBox = 19,
         Item = 20,
-        CamFollowObject = 21,
-        CamLookUpOrDownSection = 22,
+        CamLookUpOrDownZone = 21,
     }
 
     public enum EMonsterNames

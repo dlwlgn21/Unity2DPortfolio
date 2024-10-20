@@ -11,8 +11,8 @@ public class UI_PlayerExpBar : UI_PlayerStatBar
     Coroutine _currCoOrNull;
     protected override void Init()
     {
-        PlayerStat.OnAddExpEventHandler -= OnAddExp;
-        PlayerStat.OnAddExpEventHandler += OnAddExp;
+        PlayerStat.AddExpEventHandler -= OnAddExp;
+        PlayerStat.AddExpEventHandler += OnAddExp;
         _barImg.fillAmount = 0;
     }
     void OnAddExp(int exp, int needLevelUpExp)

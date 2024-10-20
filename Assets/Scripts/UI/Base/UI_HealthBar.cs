@@ -27,7 +27,7 @@ public abstract class UI_HealthBar : MonoBehaviour
         _currHpText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_healthBarImg.gameObject, "CurrHpText");
         _maxHpText = Utill.GetComponentInChildrenOrNull<TextMeshProUGUI>(_healthBarImg.gameObject, "MaxHpText");
         _currHpText.text = _stat.HP.ToString();
-        ChangeMaxHpText();
+        _maxHpText.text = _stat.MaxHP.ToString();
 
         _damagedBarImg = Utill.GetComponentInChildrenOrNull<Image>(gameObject, "DamagedBar");
         _damagedColor = _damagedBarImg.color;
@@ -35,7 +35,6 @@ public abstract class UI_HealthBar : MonoBehaviour
         _damagedBarImg.color = _damagedColor;
         Debug.Assert(_damagedBarImg != null);
     }
-
 
     public void DecraseHP(int beforeDamageHp, int afterDamgeHp)
     {
@@ -54,13 +53,14 @@ public abstract class UI_HealthBar : MonoBehaviour
         DoCounterHp(beforeDamageHp, Math.Max(afterDamgeHp, 0));
         SetHealthBarRatio(ratio);
     }
-    public void SetFullHpBarRatio()
+    public void SetFullHpBarAndText()
     {
-        IncraseHP(1f);
+        IncraseHPRatio(1f);
         _maxHpText.text = _stat.MaxHP.ToString();
         _currHpText.text = _stat.MaxHP.ToString();
     }
-    public void IncraseHP(float ratio)
+
+    protected void IncraseHPRatio(float ratio)
     {
         SetHealthBarRatio(ratio);
     }
@@ -70,17 +70,8 @@ public abstract class UI_HealthBar : MonoBehaviour
         _currHpText.DOCounter(fromValue, endValue, _fillSpeed);
     }
 
-    public void ChangeMaxHpText()
-    {
-        _maxHpText.text = _stat.MaxHP.ToString();
-    }
     protected void SetHealthBarRatio(float ratio)
     {
-        //if (ratio <= 0f)
-        //{
-        //    _currHpText.color = Color.black;
-        //    _maxHpText.color = Color.black;
-        //}
         _healthBarImg.DOFillAmount(ratio, _fillSpeed);
         _healthBarImg.DOColor(_gradient.Evaluate(ratio), _fillSpeed);
     }

@@ -23,7 +23,6 @@ public class MonsterBloodAnimController : WorldSpaceAnimController
 
     private void Update()
     {
-        FixSpriteDirection();
         FixPosition();
     }
 
@@ -36,16 +35,7 @@ public class MonsterBloodAnimController : WorldSpaceAnimController
         SetComponentsEnabled(true);
         int randTwoIdx = UnityEngine.Random.Range(0, 2);
         _fixedWorldPos = pos;
-
-        if (eLookDir == ECharacterLookDir.Right)
-        {
-            _spriteRenderer.flipX = true;
-        }
-        else
-        {
-            _spriteRenderer.flipX = false;
-        }
-
+        SetSpriteFlip(eLookDir);
         switch (eType)
         {
             case EPlayerNoramlAttackType.Attack_1:
@@ -102,6 +92,16 @@ public class MonsterBloodAnimController : WorldSpaceAnimController
                 }
         }
     }
-  
 
+    protected override void SetSpriteFlip(ECharacterLookDir eLookDir)
+    {
+        if (eLookDir == ECharacterLookDir.Right)
+        {
+            _spriteRenderer.flipX = true;
+        }
+        else
+        {
+            _spriteRenderer.flipX = false;
+        }
+    }
 }

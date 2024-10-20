@@ -8,10 +8,9 @@ public class ColossalBossCaveScene : PlayScene
 
     private void Awake()
     {
-        Debug.Log($"ColossalBossCaveScene Awake Called!");
         Init();
-        InteractBox.PlayerEnterEventHandler -= OnPlayerEnterColossalBossZone;
-        InteractBox.PlayerEnterEventHandler += OnPlayerEnterColossalBossZone;
+        //InteractBox.PlayerEnterEventHandler -= OnPlayerEnterColossalBossZone;
+        //InteractBox.PlayerEnterEventHandler += OnPlayerEnterColossalBossZone;
     }
 
     protected override void Init()
@@ -19,20 +18,32 @@ public class ColossalBossCaveScene : PlayScene
         base.Init();
         Managers.PlayerRespawn.SpawnPlayer(false);
         Managers.Sound.Play(DataManager.SFX_BGM_CAVE_COLOSSAL, define.ESoundType.Bgm);
+        DoorController bossRoomDoor = GameObject.FindGameObjectWithTag("Door").GetComponent<DoorController>();
+        Debug.Assert(bossRoomDoor != null);
+        bossRoomDoor.SetConditionFunc(IsCanEnterBossRoom);
     }
 
-    void OnPlayerEnterColossalBossZone(GameObject go)
-    {
-        if (go.name == "ColossalBossWakeZone")
-        {
-            Managers.Sound.Play(DataManager.SFX_BGM_COLOSSAL_BATTLE, define.ESoundType.Bgm);
-        }
-    }
+    //void OnPlayerEnterColossalBossZone(GameObject go)
+    //{
+        //if (go.name == "ColossalBossWakeZone")
+        //{
+        //    Managers.Sound.Play(DataManager.SFX_BGM_COLOSSAL_BATTLE, define.ESoundType.Bgm);
+        //}
+    //}
 
 
     public override void Clear()
     {
         Managers.CamSwitch.Clear();
         Managers.Tween.Clear();
+        Managers.Sound.Clear(define.ESceneType.ColossalBossCaveScene);
+    }
+
+    bool IsCanEnterBossRoom()
+    {
+        Debug.Log("Called IsCanEnterBossRoom");
+        if (Managers.MonsterPool.MonsterCountInCurrScene == 0)
+            return true;
+        return false;
     }
 }

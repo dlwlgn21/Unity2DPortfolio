@@ -9,7 +9,6 @@ public class MainMenuScene : BaseScene
     public MainMenuScene() : base(define.ESceneType.MainMenu) { }
     private void Awake()
     {
-        Debug.Log($"MainMenuScene Awake Called");
         Init();
     }
 

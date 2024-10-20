@@ -1,5 +1,4 @@
 using define;
-using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,9 +6,9 @@ using UnityEngine;
 
 public class SoundManager
 {
-    private AudioSource[] _audioSources = new AudioSource[(int)ESoundType.Count];
-
-    private Dictionary<string, AudioClip> _clips = new();
+    AudioSource[] _audioSources = new AudioSource[(int)ESoundType.Count];
+    BGMController _bgmController;
+    Dictionary<string, AudioClip> _clipDict = new();
     public void Init()
     {
         if (GameObject.Find("@SoundManager") == null)
@@ -21,11 +20,16 @@ public class SoundManager
             bgmGo.transform.parent = root.transform;
             _audioSources[(int)ESoundType.Sfx] = sfxGo.AddComponent<AudioSource>();
             _audioSources[(int)ESoundType.Bgm] = bgmGo.AddComponent<AudioSource>();
+            _bgmController = bgmGo.AddComponent<BGMController>();
             UnityEngine.Object.DontDestroyOnLoad(root);
             _audioSources[(int)ESoundType.Sfx].loop = false;
             _audioSources[(int)ESoundType.Bgm].loop = true;
             PlayerController.PlayerChangeStateEventHandler -= Managers.Sound.OnPlayerChangeState;
             PlayerController.PlayerChangeStateEventHandler += Managers.Sound.OnPlayerChangeState;
+            GetOrAddAudioClip(DataManager.SFX_BGM_TUTORIAL);
+            GetOrAddAudioClip(DataManager.SFX_BGM_ABANDON_ROAD);
+            GetOrAddAudioClip(DataManager.SFX_BGM_CAVE_COLOSSAL);
+            GetOrAddAudioClip(DataManager.SFX_BGM_COLOSSAL_BATTLE);
         }
     }
 
@@ -110,28 +114,39 @@ public class SoundManager
                 _audioSources[(int)eType].PlayOneShot(clip);
                 break;
             case ESoundType.Bgm:
-                AudioSource bgmSource = _audioSources[(int)eType];
-                if (bgmSource.isPlaying)
-                {
-                    bgmSource.Stop();
-                }
-                bgmSource.clip = clip;
-                bgmSource.Play();
+                _bgmController.PlayBGM(clip);
                 break;
         }
     }
 
-    public void Clear()
+    public void Clear(ESceneType eSceneType)
     {
-        _clips.Clear();
-        // TODO : 이거 문제 일어날 수 있으니까 나중에 Clear 잘 짜자.
-        PlayerController.PlayerChangeStateEventHandler -= Managers.Sound.OnPlayerChangeState;
+        //_clipDict.Clear();
+        //// TODO : 이거 문제 일어날 수 있으니까 나중에 Clear 잘 짜자.
+        //PlayerController.PlayerChangeStateEventHandler -= Managers.Sound.OnPlayerChangeState;
+        switch (eSceneType)
+        {
+            case ESceneType.Tutorial:
+                _clipDict.Remove(DataManager.SFX_BGM_TUTORIAL);
+                break;
+            case ESceneType.AbandonLoadScene:
+                _clipDict.Remove(DataManager.SFX_BGM_ABANDON_ROAD);
+                break;
+            case ESceneType.ColossalBossCaveScene:
+                _clipDict.Remove(DataManager.SFX_BGM_CAVE_COLOSSAL);
+                _clipDict.Remove(DataManager.SFX_BGM_COLOSSAL_BATTLE);
+                break;
+            case ESceneType.Count:
+                break;
+            default:
+                break;
+        }
     }
 
     private AudioClip GetOrAddAudioClip(string path)
     {
         AudioClip clip;
-        if (_clips.TryGetValue(path, out clip) == false)
+        if (_clipDict.TryGetValue(path, out clip) == false)
         {
             clip = Managers.Resources.Load<AudioClip>(path);
             if (clip == null)
@@ -142,5 +157,4 @@ public class SoundManager
         }
         return clip;
     }
-
 }

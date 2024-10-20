@@ -29,7 +29,7 @@ public enum EColossalBossState
 public class ColossalBossMonsterController : BaseMonsterController, IMelleAttackable, IZonePlayerDetetable
 {
     static public UnityAction<EColossalBossState> ColossalChangeStateEventHandler;
-    private readonly Vector2 COLOSSAL_KNOCKBACK_FORCE = new Vector2(7f, 7f);
+    private readonly Vector2 COLOSSAL_KNOCKBACK_FORCE = new Vector2(12f, 7f);
     public EColossalBossPhase EColossalPhase { get; private set; } = EColossalBossPhase.FirstPhase;
     public EColossalBossState ECurrentState { get; private set; }
     protected StateMachine<ColossalBossMonsterController> _stateMachine;
@@ -293,6 +293,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     void OnWakeSoundTiming()
     {
         Managers.Sound.Play(SFX_WAKE_PATH);
+        Managers.Sound.Play(DataManager.SFX_BGM_COLOSSAL_BATTLE, define.ESoundType.Bgm);
     }
     void OnBurfAnimTurnOnLightTiming()
     {

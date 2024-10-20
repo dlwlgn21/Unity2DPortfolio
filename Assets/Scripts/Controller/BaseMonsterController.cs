@@ -58,7 +58,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         HealthBar.DecraseHP(beforeDamageHP, AfterDamageHP);
         _damageTextController.ShowPopup(actualDamage);
         _hitFlasher.StartDamageFlash();
-        _hitAnimController.PlayHitEffect(transform.position, eAttackType);
+        _hitAnimController.PlayHitEffect(ELookDir, transform.position, eAttackType);
         if (eAttackType == EPlayerNoramlAttackType.Attack_3 || eAttackType == EPlayerNoramlAttackType.BackAttack)
         {
             if (BigAttackEventHandler != null)

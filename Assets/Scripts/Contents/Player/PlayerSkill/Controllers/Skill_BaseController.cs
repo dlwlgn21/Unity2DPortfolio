@@ -6,9 +6,17 @@ using System.Runtime.InteropServices;
 using data;
 using UnityEngine.Events;
 
+
+public enum EDeniedUseSkillCause
+{ 
+    NotEnoughMana,
+    CoolTime,
+    Count
+}
+
 public abstract class Skill_BaseController : MonoBehaviour
 {
-    static public UnityAction ManaNotEnoughEventHandler;
+    static public UnityAction<EDeniedUseSkillCause> DeniedUseSkillEventHandler;
     protected PlayerController _pc;
     protected ESkillType _eSkillType;
     public ESkillSlot ECurrentSkillSlot { get; set; }
@@ -57,10 +65,19 @@ public abstract class Skill_BaseController : MonoBehaviour
             _pc.Stat.Mana -= _skillInfo.manaCost;
             return true;
         }
-        if (_pc.Stat.Mana < _skillInfo.manaCost)
+
+        if (_eSkillType != ESkillType.Roll)
         {
-            if (ManaNotEnoughEventHandler != null)
-                ManaNotEnoughEventHandler.Invoke();
+            if (_pc.Stat.Mana < _skillInfo.manaCost)
+            {
+                if (DeniedUseSkillEventHandler != null)
+                    DeniedUseSkillEventHandler.Invoke(EDeniedUseSkillCause.NotEnoughMana);
+            }
+            if (_countDownCo != null)
+            {
+                if (DeniedUseSkillEventHandler != null)
+                    DeniedUseSkillEventHandler.Invoke(EDeniedUseSkillCause.CoolTime);
+            }
         }
         return false;
     }

@@ -17,6 +17,7 @@ public class Managers : MonoBehaviour
     readonly MainMenuManager _mainMenuManager = new();
     readonly MonsterPoolManager _monsterPoolManager = new();
     readonly MonsterSpawnManager _monsterSpawnManager = new();
+    readonly DropItemManager _dropItemManager = new();
     readonly ProjectilePoolManager _projectilePoolManager = new();
     readonly CamManager _camManager = new();
     readonly CamSwitchManager _camSwitchManager = new();
@@ -37,6 +38,7 @@ public class Managers : MonoBehaviour
     public static MainMenuManager MainMenu { get { return Instance._mainMenuManager; } }
     public static MonsterPoolManager MonsterPool { get { return Instance._monsterPoolManager; } }
     public static MonsterSpawnManager MonsterSpawn { get { return Instance._monsterSpawnManager; } }
+    public static DropItemManager DropItem { get { return Instance._dropItemManager; } }
     public static ProjectilePoolManager ProjectilePool { get { return Instance._projectilePoolManager; } }
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
     public static CamManager Cam { get { return Instance._camManager; } }

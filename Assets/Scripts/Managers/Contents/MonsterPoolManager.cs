@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+using Unity.VisualScripting;
 using UnityEditor.Searcher;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,16 +11,16 @@ using UnityEngine.Rendering;
 
 public class MonsterPoolManager
 {
-    public const int MAX_MONSTER_COUNT = 5;
-    private Queue<GameObject> _archers      = new(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _wardens      = new(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _gunners      = new(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _cagedShokers = new(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _redGhouls    = new(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _blasters     = new(MAX_MONSTER_COUNT); 
-    private Queue<GameObject> _hSlicers     = new(MAX_MONSTER_COUNT);
+    public const int MAX_POOL_MONSTER_COUNT = 5;
+    private Queue<GameObject> _archers      = new(MAX_POOL_MONSTER_COUNT); 
+    private Queue<GameObject> _wardens      = new(MAX_POOL_MONSTER_COUNT); 
+    private Queue<GameObject> _gunners      = new(MAX_POOL_MONSTER_COUNT); 
+    private Queue<GameObject> _cagedShokers = new(MAX_POOL_MONSTER_COUNT); 
+    private Queue<GameObject> _redGhouls    = new(MAX_POOL_MONSTER_COUNT); 
+    private Queue<GameObject> _blasters     = new(MAX_POOL_MONSTER_COUNT); 
+    private Queue<GameObject> _hSlicers     = new(MAX_POOL_MONSTER_COUNT);
     //private Queue<GameObject> _shielders    = new Queue<GameObject>(MAX_MONSTER_COUNT);
-    private Queue<GameObject> _flamers      = new(MAX_MONSTER_COUNT);
+    private Queue<GameObject> _flamers      = new(MAX_POOL_MONSTER_COUNT);
 
     private GameObject _oriArcher;
     private GameObject _oriWarden;
@@ -30,7 +31,8 @@ public class MonsterPoolManager
     private GameObject _oriHSlicer;
     //private GameObject _oriShielder;
     private GameObject _oriFlamer;
-    private int monCount = 0;
+    int monId = 0;
+    public int MonsterCountInCurrScene { get; private set; }
     public void Init()
     {
         if (_oriWarden == null)
@@ -44,13 +46,19 @@ public class MonsterPoolManager
             _oriArcher = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonArcher");
             //_oriShielder = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonShielder");
             _oriFlamer = Managers.Resources.Load<GameObject>("Prefabs/Monsters/MonFlamer");
-
+            monster_states.Die.DieEventAnimFullyPlayedHandler -= OnMonsterDied;
+            monster_states.Die.DieEventAnimFullyPlayedHandler += OnMonsterDied;
         }
     }
 
     public void Clear()
     {
-        monCount = 0;
+    }
+
+    void OnMonsterDied(NormalMonsterController mc)
+    {
+        Debug.Log("Monster Returned!");
+        Return(mc);
     }
 
     public GameObject Get(EMonsterNames eMonName, Vector2 spawnPos)
@@ -88,12 +96,16 @@ public class MonsterPoolManager
         }
         Debug.Assert(retGo != null);
         InitForRespawn(retGo, spawnPos);
+        MonsterCountInCurrScene += 1;
         return retGo;
     }
 
     public void Return(BaseMonsterController mc)
     {
         mc.gameObject.SetActive(false);
+        MonsterCountInCurrScene -= 1;
+        if (MonsterCountInCurrScene < 0)
+            Debug.DebugBreak();
         switch (mc.EMonsterType)
         {
             case EMonsterNames.Archer:
@@ -145,7 +157,7 @@ public class MonsterPoolManager
 
     private void DestroyOrEnque(Queue<GameObject> q, GameObject go)
     {
-        if (q.Count > MAX_MONSTER_COUNT)
+        if (q.Count > MAX_POOL_MONSTER_COUNT)
         {
             Debug.Assert(false);
             Object.Destroy(go);
@@ -166,7 +178,7 @@ public class MonsterPoolManager
         else
         {
             retGo = MakeMonsters(oriGo, spawnPos);
-            retGo.name = $"{retGo.name.Substring(0, retGo.name.Length - 7)}{monCount++}";
+            retGo.name = $"{retGo.name.Substring(0, retGo.name.Length - 7)}{monId++}";
         }
         Debug.Assert(retGo != null);
         return retGo;

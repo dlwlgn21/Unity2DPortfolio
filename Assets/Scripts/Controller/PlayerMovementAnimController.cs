@@ -91,4 +91,8 @@ public class PlayerMovementAnimController : WorldSpaceAnimController
         transform.position = pos;
         _spriteRenderer.flipX = false;
     }
+
+    protected override void SetSpriteFlip(ECharacterLookDir eLookDir)
+    {
+    }
 }

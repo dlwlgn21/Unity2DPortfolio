@@ -1,3 +1,4 @@
+using define;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
@@ -22,17 +23,7 @@ public abstract class WorldSpaceAnimController : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    protected void FixSpriteDirection()
-    {
-        if (transform.parent.localRotation.eulerAngles.y > 0f)
-        {
-            transform.localScale = new Vector3(-1f, _originalLocalScale.y, _originalLocalScale.z);
-        }
-        else
-        {
-            transform.localScale = new Vector3(1f, _originalLocalScale.y, _originalLocalScale.z);
-        }
-    }
+    protected abstract void SetSpriteFlip(ECharacterLookDir eLookDir);
 
     protected void FixPosition()
     {

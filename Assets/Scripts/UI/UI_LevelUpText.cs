@@ -12,8 +12,8 @@ public class UI_LevelUpText : MonoBehaviour
     {
         _text = GetComponent<TextMeshProUGUI>();
         _text.enabled = false;
-        PlayerStat.OnLevelUpEventHandler -= OnLevelUp;
-        PlayerStat.OnLevelUpEventHandler += OnLevelUp;
+        PlayerStat.LevelUpEventHandler -= OnLevelUp;
+        PlayerStat.LevelUpEventHandler += OnLevelUp;
     }
 
     void OnLevelUp(int levelUpCount)

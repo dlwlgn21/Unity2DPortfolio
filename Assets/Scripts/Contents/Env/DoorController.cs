@@ -1,4 +1,7 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
+
 enum EDoorState
 { 
     Idle,
@@ -9,10 +12,14 @@ enum EDoorState
 
 public sealed class DoorController : BaseInteractableController
 {
-    private Animator _animator;
-    private EDoorState _eDoorState;
-    private bool _isDoorOpenOnce = false;
-    private bool _isDoorClosed = false;
+    static public UnityAction DeniedDoorOpenEventHandler;
+    Animator _animator;
+    EDoorState _eDoorState;
+    bool _isDoorOpenOnce = false;
+    bool _isDoorClosed = false;
+
+    Func<bool> _condition; 
+
     private void Start()
     {
         base.Init();
@@ -39,6 +46,12 @@ public sealed class DoorController : BaseInteractableController
                 _animator.Play("DoorClosing");
                 break;
         }
+    }
+
+    public void SetConditionFunc(Func<bool> condition)
+    {
+        if (_condition == null)
+            _condition = condition;
     }
 
     public override void OnPlayerEnter(Collider2D collision)
@@ -73,11 +86,24 @@ public sealed class DoorController : BaseInteractableController
             {
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                _interactKey.UnactiveInteractKey();
-                ChangeState(EDoorState.Opnening);
-                _isDoorOpenOnce = true;
+                if (_condition != null)
+                {
+                    if (_condition.Invoke())
+                    {
+                        OpenDoor();
+                    }
+                    else
+                    {
+                        if (DeniedDoorOpenEventHandler != null)
+                            DeniedDoorOpenEventHandler.Invoke();
+                    }
+                }
+                else
+                {
+                     OpenDoor();
+                }
             }
         }
     }
@@ -109,5 +135,16 @@ public sealed class DoorController : BaseInteractableController
     {
         ChangeState(EDoorState.Idle);
         _isDoorOpenOnce = true;
+    }
+    void OpenDoor()
+    {
+        _interactKey.UnactiveInteractKey();
+        ChangeState(EDoorState.Opnening);
+        _isDoorOpenOnce = true;
+    }
+    private void OnDestroy()
+    {
+        if (_condition != null)
+            _condition = null;
     }
 }

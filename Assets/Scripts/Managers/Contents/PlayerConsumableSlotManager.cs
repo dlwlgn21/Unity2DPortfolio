@@ -12,6 +12,13 @@ public class PlayerConsumableSlotManager : MonoBehaviour
         Init();
     }
 
+    public bool IsUsingConsumable()
+    {
+        if (!_slots[0].IsCanUseConsumable || !_slots[1].IsCanUseConsumable)
+            return true;
+        return false;
+    }
+
     void DisacrdIfSameItemDroped(ItemInfo itemInfo, int slotIdx)
     {
         Init();

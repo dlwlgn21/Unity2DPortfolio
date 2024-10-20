@@ -13,12 +13,12 @@ public abstract class UI_WSPlayerPopupTextController : MonoBehaviour
     protected PlayerController _pc;
     protected abstract void Init();
 
-    private void Awake()
+    private void Start()
     {
         _text = GetComponent<TextMeshProUGUI>();
         _rectTransform = GetComponent<RectTransform>();
-        _originalScale = _rectTransform.localScale;
         _pc = transform.parent.gameObject.GetComponent<PlayerController>();
+        _originalScale = _rectTransform.localScale;
         Init();
     }
 
@@ -32,12 +32,24 @@ public abstract class UI_WSPlayerPopupTextController : MonoBehaviour
 
     protected void StartTW()
     {
+        AssignComponentsIfComponentsIsNull();
         _text.enabled = true;
         _rectTransform.localScale = _originalScale;
         Managers.Tween.StartDoPunchPos(_rectTransform, Vector3.up * PUNCH_COEFF, PUNCH_TIME_IN_SEC, OnPunchTweenEnd);
     }
     protected void OnPunchTweenEnd()
     {
+        AssignComponentsIfComponentsIsNull();
         _text.enabled = false;
+    }
+
+    void AssignComponentsIfComponentsIsNull()
+    {
+        if (_text == null)
+        {
+            _text = GetComponent<TextMeshProUGUI>();
+            _rectTransform = GetComponent<RectTransform>();
+            _pc = transform.parent.gameObject.GetComponent<PlayerController>();
+        }
     }
 }

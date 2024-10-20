@@ -302,6 +302,8 @@ namespace monster_states
     }
     public class Die : BaseMonsterState
     {
+        static public UnityAction<NormalMonsterController> DieEventAnimFullyPlayedHandler;
+        static public UnityAction<NormalMonsterController> DieEventEnterStateHandler;
         public Die(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() 
         {
@@ -314,13 +316,16 @@ namespace monster_states
                 Debug.Assert(deadBody != null);
                 deadBody.SpawnDeadBody();
             }
-            Managers.MonsterPool.Return(_entity);
+            if (DieEventAnimFullyPlayedHandler != null)
+                DieEventAnimFullyPlayedHandler.Invoke(_entity);
         }
         public override void Enter() 
         {
             PlayAnimation(ENormalMonsterState.Die);
-            _entity.HealthBar.StartZeroScaleTW();
-            Managers.PlayerLevel.AddExp(_entity.Stat.Exp);
+            if (DieEventEnterStateHandler != null)
+                DieEventEnterStateHandler.Invoke(_entity);
+            //_entity.HealthBar.StartZeroScaleTW();
+            //Managers.PlayerLevel.AddExp(_entity.Stat.Exp);
         }
         public override void Excute()  { }
     }

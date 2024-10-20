@@ -10,22 +10,25 @@ public class LightController : MonoBehaviour
     public float TurnOffGraduallyLightTimeInSec { get; set; }
     float _initialIntencity;
     Coroutine _turnOffLightCoOrNull = null;
+
     private void Awake()
     {
-        AssignComponents();
+        AssignComponent();
         _initialIntencity = _light.intensity;
-        Init();
+        SetLightIntencityToZero();
     }
 
-    protected virtual void Init()
+    protected virtual void SetLightIntencityToZero()
     {
-        AssignComponents();
+        AssignComponent();
         _light.intensity = 0f;
     }
 
     public void TurnOnLight()
     {
         Debug.Assert(TurnOffGraduallyLightTimeInSec > Mathf.Epsilon);
+        ForceToStopCoroutineAndTurnOffLight();
+        AssignComponent();
         SetActiveTrue();
         if (!_light.enabled)
             _light.enabled = true;
@@ -70,7 +73,7 @@ public class LightController : MonoBehaviour
         if (gameObject.activeSelf == false)
             gameObject.SetActive(true);
     }
-    void AssignComponents()
+    void AssignComponent()
     {
         if (_light == null)
         {

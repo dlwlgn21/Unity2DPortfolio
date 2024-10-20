@@ -1,4 +1,5 @@
 using DG.Tweening;
+using monster_states;
 using UnityEngine;
 
 public class UI_WSMonsterHpBar : UI_HealthBar
@@ -11,7 +12,7 @@ public class UI_WSMonsterHpBar : UI_HealthBar
     bool _isDieState = false;
     private void Start()
     {
-        SetFullHpBarRatio();
+        SetFullHpBarAndText();
         if (_rectTransform == null)
             AssginComponentsAndInitVariables();
     }
@@ -20,14 +21,26 @@ public class UI_WSMonsterHpBar : UI_HealthBar
     {
         Init();
         InitScale();
-        SetFullHpBarRatio();
+        SetFullHpBarAndText();
     }
 
     public override void Init()
     {
         if (_rectTransform == null)
+        {
             AssginComponentsAndInitVariables();
+            monster_states.Die.DieEventEnterStateHandler -= OnMonsterDied;
+            monster_states.Die.DieEventEnterStateHandler += OnMonsterDied;
+        }
         _isDieState = false;
+    }
+
+    void OnMonsterDied(NormalMonsterController mc)
+    {
+        if (mc.Stat == _stat)
+        {
+            StartZeroScaleTW();
+        }
     }
 
     private void Update()

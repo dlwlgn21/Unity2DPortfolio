@@ -26,6 +26,7 @@ public abstract class PlayScene : BaseScene
         Managers.PlayerSkill.Init();
         Managers.MonsterSpawn.Init();
         Managers.MonsterPool.Init();
+        Managers.DropItem.Init();
         Managers.ProjectilePool.Init();
 
         if (GameObject.Find("PlayerMovementAnimator") == null)

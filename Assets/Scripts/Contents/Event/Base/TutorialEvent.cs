@@ -23,7 +23,7 @@ public abstract class TutorialSequence : MonoBehaviour
         Vector2 playerPos = _pc.gameObject.transform.position;
         _spawnendMonsterController = Managers.MonsterPool.Get(define.EMonsterNames.Warden, new Vector2(playerPos.x + 5f, playerPos.y + 1f)).GetComponent<NormalMonsterController>();
         _spawnendMonsterController.Stat.InitStatForTutorial();
-        _spawnendMonsterController.HealthBar.SetFullHpBarRatio();
+        _spawnendMonsterController.HealthBar.SetFullHpBarAndText();
         _spawnendMonsterController.ChangeState(ENormalMonsterState.Idle);
     }
     protected void SetPlayerAttackToZero()
