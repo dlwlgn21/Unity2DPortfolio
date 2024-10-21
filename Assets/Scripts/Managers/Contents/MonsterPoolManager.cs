@@ -57,7 +57,6 @@ public class MonsterPoolManager
 
     void OnMonsterDied(NormalMonsterController mc)
     {
-        Debug.Log("Monster Returned!");
         Return(mc);
     }
 

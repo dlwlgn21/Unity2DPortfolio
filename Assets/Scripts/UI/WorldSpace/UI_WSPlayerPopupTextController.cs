@@ -13,11 +13,14 @@ public abstract class UI_WSPlayerPopupTextController : MonoBehaviour
     protected PlayerController _pc;
     protected abstract void Init();
 
+    private void Awake()
+    {
+        AssignComponentsIfComponentsIsNull();
+        _originalScale = _rectTransform.localScale;
+    }
     private void Start()
     {
-        _text = GetComponent<TextMeshProUGUI>();
-        _rectTransform = GetComponent<RectTransform>();
-        _pc = transform.parent.gameObject.GetComponent<PlayerController>();
+        AssignComponentsIfComponentsIsNull();
         _originalScale = _rectTransform.localScale;
         Init();
     }

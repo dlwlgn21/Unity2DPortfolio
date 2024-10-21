@@ -17,7 +17,6 @@ public sealed class UI_WSPlayerPopupStatusController : UI_WSPlayerPopupTextContr
         CaveEnteranceController.DeniedEnterCaveEventHandler += OnPlayerDeniedEnterCave;
         DoorController.DeniedDoorOpenEventHandler -= OnPlayerDeniedEnterCave;
         DoorController.DeniedDoorOpenEventHandler += OnPlayerDeniedEnterCave;
-        Debug.Log("UI_WSPlayerPopupStatusController Init!");
     }
 
     void OnPlayerDeniedEnterCave()
@@ -83,10 +82,5 @@ public sealed class UI_WSPlayerPopupStatusController : UI_WSPlayerPopupTextContr
                 Debug.Assert(false);
                 break;
         }
-    }
-
-    private void OnDestroy()
-    {
-        Debug.Log("Destroyed UI_WSPopupStatus");
     }
 }

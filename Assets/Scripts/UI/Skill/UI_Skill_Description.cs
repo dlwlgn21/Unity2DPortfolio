@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using define;
+using UnityEngine.Assertions.Must;
+
 public sealed class UI_Skill_Description : UI_BaseDescription
 {
     Animator _animator;
@@ -16,37 +18,35 @@ public sealed class UI_Skill_Description : UI_BaseDescription
         _animator.gameObject.SetActive(false);
     }
 
-    public void ShowSkillDesc(data.SkillInfo skillInfo)
+    public void ShowSkillDesc(EActiveSkillType eType, int skillLevel)
     {
         SetImagesEnabled(true);
-        _nameText.text = skillInfo.name;
-        _descText.text = skillInfo.description;
+        data.SkillInfo info;
+        if (skillLevel == 0)
+            info = Managers.Data.ActiveSkillInfoDict[eType][0];
+        else
+            info = Managers.Data.ActiveSkillInfoDict[eType][Mathf.Min(skillLevel - 1, PlayerLevelManager.MAX_SKILL_LEVEL)];
+
+        _nameText.text = info.name;
+        _descText.text = info.description;
         _animator.gameObject.SetActive(true);
-        ESkillType eType = (ESkillType)skillInfo.id;
+
         switch (eType)
         {
-            case ESkillType.Spawn_Reaper_LV1:
-            case ESkillType.Spawn_Reaper_LV2:
-            case ESkillType.Spawn_Reaper_LV3:
+            case EActiveSkillType.Spawn_Reaper:
                 _animator.Play(SPAWN_REAPER_ANIM_KEY, -1, 0f);
                 break;
-            case ESkillType.Spawn_Shooter_LV1:
-            case ESkillType.Spawn_Shooter_LV2:
-            case ESkillType.Spawn_Shooter_LV3:
+            case EActiveSkillType.Spawn_Shooter:
                 _animator.Play(SPAWN_PANDA_ANIM_KEY, -1, 0f);
                 break;
-            case ESkillType.Cast_BlackFlame_LV1:
-            case ESkillType.Cast_BlackFlame_LV2:
-            case ESkillType.Cast_BlackFlame_LV3:
+            case EActiveSkillType.Cast_BlackFlame:
                 _animator.Play(CAST_BLACK_FLAME_ANIM_KEY, -1, 0f);
                 break;
-            case ESkillType.Cast_SwordStrike_LV1:
-            case ESkillType.Cast_SwordStrike_LV2:
-            case ESkillType.Cast_SwordStrike_LV3:
+            case EActiveSkillType.Cast_SwordStrike:
                 _animator.Play(CAST_SWORD_STRIKE_ANIM_KEY, -1, 0f);
                 break;
             default:
-                Debug.Assert(false);
+                Debug.DebugBreak();
                 break;
         }
     }

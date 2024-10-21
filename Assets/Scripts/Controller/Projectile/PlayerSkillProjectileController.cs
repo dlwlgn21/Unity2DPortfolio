@@ -20,7 +20,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
         AssginCommonComponents();
         _lightController = Utill.GetComponentInChildrenOrNull<LightController>(gameObject, "Light");
         _lightController.TurnOffGraduallyLightTimeInSec = 0.3f;
-        _lightController.gameObject.SetActive(false);
+        //_lightController.gameObject.SetActive(false);
     }
 
     public void Launch(define.ECharacterLookDir eLookDir)
@@ -62,7 +62,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
 
         foreach (Collider2D mon in monsters)
         {
-            mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType.Spawn_Shooter_LV1]);
+            mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(EActiveSkillType.Spawn_Shooter);
         }
         _lightController.TurnOffLightGradually();
         Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_2);

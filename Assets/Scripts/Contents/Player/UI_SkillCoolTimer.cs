@@ -26,9 +26,9 @@ public class UI_SkillCoolTimer : MonoBehaviour
 
     public void StartCoolTime(float coolTime)
     {
-        _coolTimeText.DOCounter((int)coolTime, 1, (int)coolTime);
+        _coolTimeText.DOCounter((int)coolTime, 1, (int)coolTime).SetEase(Ease.Linear).SetLink(gameObject);
         _coolTimeImg.color = _showColor;
-        _coolTimeImg.DOFillAmount(0f, coolTime).OnComplete(OnFillAmountTWEnd);
+        _coolTimeImg.DOFillAmount(0f, coolTime).SetEase(Ease.Linear).OnComplete(OnFillAmountTWEnd).SetLink(gameObject);
     }
 
     private void OnFillAmountTWEnd()

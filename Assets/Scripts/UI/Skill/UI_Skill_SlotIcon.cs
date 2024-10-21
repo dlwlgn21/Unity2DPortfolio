@@ -7,15 +7,15 @@ using UnityEngine.UI;
 
 public class UI_Skill_SlotIcon : MonoBehaviour
 {
-    ESkillType _eCurrSkillType;
+    EActiveSkillType _eCurrSkillType;
     Image _image;
     private void Awake()
     {
         _image = GetComponent<Image>();
         _image.enabled = false;
-        _eCurrSkillType = ESkillType.Count;
+        _eCurrSkillType = EActiveSkillType.Count;
     }
-    public bool TryDrop(ESkillType eType, Sprite sprite)
+    public bool TryDrop(EActiveSkillType eType, Sprite sprite)
     {
         if (_eCurrSkillType == eType) 
             return false;
@@ -29,7 +29,7 @@ public class UI_Skill_SlotIcon : MonoBehaviour
     {
         Sprite tmpSprite = icon._image.sprite;
         bool tmpIsEnabled = icon._image.enabled;
-        ESkillType tmpESkillType = icon._eCurrSkillType;
+        EActiveSkillType tmpESkillType = icon._eCurrSkillType;
         icon._image.sprite = this._image.sprite;
         icon._image.enabled = this._image.enabled;
         icon._eCurrSkillType = this._eCurrSkillType;

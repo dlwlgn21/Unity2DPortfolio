@@ -13,43 +13,42 @@ public enum ESkillSlot
 }
 public class PlayerSkillManager
 {
-    Dictionary<ESkillType, Skill_BaseController> _skillDict = new();
+    Dictionary<EActiveSkillType, Skill_BaseController> _skillControllerDict = new();
     UI_SkillCoolTimer[] skillCoolTimer = new UI_SkillCoolTimer[(int)ESkillSlot.Count];
     UI_Skill_Slot[] _skillSlots = new UI_Skill_Slot[2];
     PlayerStat _stat;
-    public ESkillType[] _eCurrSkillSlotType = new ESkillType[2];
+    public EActiveSkillType[] _eCurrSkillSlotType = new EActiveSkillType[2];
     public void Init()
     {
-        if (_skillDict.Count == 0)
+        if (_skillControllerDict.Count == 0)
         {
+            // TODO : 나중에는 필요할 때 메모리에 로드 하는 방식으로 바꿔야함.
             #region SkillInit
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             _stat = player.GetComponent<PlayerStat>();
 
-            Dictionary<int, data.SkillInfo> skillDict = Managers.Data.SkillInfoDict;
 
-            Skill_BaseController roll = Utill.GetComponentInChildrenOrNull<Skill_RollController>(player, GetSkillControllerObjectName(ESkillType.Roll));
-            Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(skillDict[(int)ESkillType.Spawn_Reaper_LV1].controllerPrefabPath);
-            Skill_BaseController panda = Inst<Skill_SpawnShooterController>(skillDict[(int)ESkillType.Spawn_Shooter_LV1].controllerPrefabPath);
-            Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(skillDict[(int)ESkillType.Cast_BlackFlame_LV1].controllerPrefabPath);
-            Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(skillDict[(int)ESkillType.Cast_SwordStrike_LV1].controllerPrefabPath);
+            Skill_BaseController roll = Utill.GetComponentInChildrenOrNull<Skill_RollController>(player, GetSkillControllerObjectName(EActiveSkillType.Roll));
+            Skill_BaseController reaper = Inst<Skill_SpawnRepaerController>(Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Spawn_Reaper][0].controllerPrefabPath);
+            Skill_BaseController panda = Inst<Skill_SpawnShooterController>(Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Spawn_Shooter][0].controllerPrefabPath);
+            Skill_BaseController blackFlame = Inst<Skill_BlackFlameController>(Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Cast_BlackFlame][0].controllerPrefabPath);
+            Skill_BaseController swordStrike = Inst<Skill_SwordStrikeController>(Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Cast_SwordStrike][0].controllerPrefabPath);
 
-            reaper.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Reaper_LV1);
-            panda.gameObject.name = GetSkillControllerObjectName(ESkillType.Spawn_Shooter_LV1);
-            blackFlame.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_BlackFlame_LV1);
-            swordStrike.gameObject.name = GetSkillControllerObjectName(ESkillType.Cast_SwordStrike_LV1);
+            reaper.gameObject.name = GetSkillControllerObjectName(EActiveSkillType.Spawn_Reaper);
+            panda.gameObject.name = GetSkillControllerObjectName(EActiveSkillType.Spawn_Shooter);
+            blackFlame.gameObject.name = GetSkillControllerObjectName(EActiveSkillType.Cast_BlackFlame);
+            swordStrike.gameObject.name = GetSkillControllerObjectName(EActiveSkillType.Cast_SwordStrike);
 
             Object.DontDestroyOnLoad(reaper.gameObject);
             Object.DontDestroyOnLoad(panda.gameObject);
             Object.DontDestroyOnLoad(blackFlame.gameObject);
             Object.DontDestroyOnLoad(swordStrike.gameObject);
 
-            _skillDict.Add(ESkillType.Roll, roll);
-            _skillDict.Add(ESkillType.Spawn_Reaper_LV1, reaper);
-            _skillDict.Add(ESkillType.Spawn_Shooter_LV1, panda);
-            _skillDict.Add(ESkillType.Cast_BlackFlame_LV1, blackFlame);
-            _skillDict.Add(ESkillType.Cast_SwordStrike_LV1, swordStrike);
-
+            _skillControllerDict.Add(EActiveSkillType.Roll, roll);
+            _skillControllerDict.Add(EActiveSkillType.Spawn_Reaper, reaper);
+            _skillControllerDict.Add(EActiveSkillType.Spawn_Shooter, panda);
+            _skillControllerDict.Add(EActiveSkillType.Cast_BlackFlame, blackFlame);
+            _skillControllerDict.Add(EActiveSkillType.Cast_SwordStrike, swordStrike);
             #endregion
 
             GameObject uiPlayerHud = GameObject.Find("UI_PlayerHUD");
@@ -59,8 +58,8 @@ public class PlayerSkillManager
 
             _skillSlots[(int)ESkillSlot.AKey] = uiPlayerHud.transform.Find("AKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
             _skillSlots[(int)ESkillSlot.SKey] = uiPlayerHud.transform.Find("SKeySkillSlot").gameObject.GetComponent<UI_Skill_Slot>();
-            _eCurrSkillSlotType[(int)ESkillSlot.AKey] = ESkillType.Count;
-            _eCurrSkillSlotType[(int)ESkillSlot.SKey] = ESkillType.Count;
+            _eCurrSkillSlotType[(int)ESkillSlot.AKey] = EActiveSkillType.Count;
+            _eCurrSkillSlotType[(int)ESkillSlot.SKey] = EActiveSkillType.Count;
 
             Debug.Assert(skillCoolTimer[(int)ESkillSlot.AKey] != null && skillCoolTimer[(int)ESkillSlot.SKey] != null);
             Debug.Assert(_skillSlots[0] != null && _skillSlots[1] != null);
@@ -69,19 +68,25 @@ public class PlayerSkillManager
             #region EventSubscribe
             Managers.Input.KeyboardHandler -= OnSkillKeyDowned;
             Managers.Input.KeyboardHandler += OnSkillKeyDowned;
-            UI_Skill_Slot.OnSkillIocnDropEventHandler -= OnSkillIconDroped;
-            UI_Skill_Slot.OnSkillIocnDropEventHandler += OnSkillIconDroped;
-            UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnSkillLevelUp;
-            UI_Skill_Icon.OnSkillLevelUpEventHandler += OnSkillLevelUp;
+            UI_Skill_Slot.SkillIconDropEventHandler -= OnSkillIconDroped;
+            UI_Skill_Slot.SkillIconDropEventHandler += OnSkillIconDroped;
+            UI_Skill_Icon.SkillLevelUpEventHandler -= OnSkillLevelUp;
+            UI_Skill_Icon.SkillLevelUpEventHandler += OnSkillLevelUp;
             #endregion
         }
-        // TODO : 나중에는 필요할 때 메모리에 로드 하는 방식으로 바꿔야함.
-        for (int i = 0; i < 2; ++i)
+        for (int i = 0; i < (int)ESkillSlot.CKey; ++i)
         {
-            if (_eCurrSkillSlotType[i] != ESkillType.Count)
-                _skillDict[_eCurrSkillSlotType[i]].InitForNextSceneLoad();
+            if (_eCurrSkillSlotType[i] != EActiveSkillType.Count)
+                _skillControllerDict[_eCurrSkillSlotType[i]].InitForNextSceneLoad();
             skillCoolTimer[i].InitForNextSceneLoad();
         }
+        _skillControllerDict[EActiveSkillType.Roll].InitForNextSceneLoad();
+        skillCoolTimer[(int)ESkillSlot.CKey].InitForNextSceneLoad();
+    }
+
+    public data.SkillInfo GetCurrSkillLevelSkillInfo(EActiveSkillType eType)
+    {
+        return _skillControllerDict[eType].GetCurrLevelSkillInfo();
     }
 
     #region Event
@@ -89,130 +94,82 @@ public class PlayerSkillManager
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            UseSkill(ESkillSlot.AKey, _eCurrSkillSlotType[(int)ESkillSlot.AKey]);
+            TryUseSkill(ESkillSlot.AKey, _eCurrSkillSlotType[(int)ESkillSlot.AKey]);
             return;
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            UseSkill(ESkillSlot.SKey, _eCurrSkillSlotType[(int)ESkillSlot.SKey]);
+            TryUseSkill(ESkillSlot.SKey, _eCurrSkillSlotType[(int)ESkillSlot.SKey]);
             return;
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            if (_skillDict[ESkillType.Roll].TryUseSkill())
+            if (_skillControllerDict[EActiveSkillType.Roll].TryUseSkill())
             {
-                skillCoolTimer[(int)ESkillSlot.CKey].StartCoolTime(_skillDict[ESkillType.Roll].SkillCoolTimeInSec);
+                skillCoolTimer[(int)ESkillSlot.CKey].StartCoolTime(_skillControllerDict[EActiveSkillType.Roll].SkillCoolTimeInSec);
             }
             return;
         }
     }
 
-    void UseSkill(ESkillSlot eSlot, ESkillType eSkillType)
+    bool TryUseSkill(ESkillSlot eSlot, EActiveSkillType eSkillType)
     {
-        if (eSkillType != ESkillType.Count &&  GetSkillOrNull(eSkillType).TryUseSkill())
+        if (eSkillType != EActiveSkillType.Count && _skillControllerDict[eSkillType].TryUseSkill())
         {
-            skillCoolTimer[(int)eSlot].StartCoolTime(GetSkillOrNull(eSkillType).SkillCoolTimeInSec);
+            skillCoolTimer[(int)eSlot].StartCoolTime(_skillControllerDict[eSkillType].SkillCoolTimeInSec);
             Managers.Sound.Play(DataManager.SFX_PLAYER_FLY_USING_SKILL);
             if (eSlot == ESkillSlot.AKey)
                 Managers.Tween.StartUIScaleTW(_skillSlots[(int)eSlot].transform, OnAKeyScaleTWEnd);
             else
                 Managers.Tween.StartUIScaleTW(_skillSlots[(int)eSlot].transform, OnSKeyScaleTWEnd);
+            return true;
         }
         else
         {
             Managers.Sound.Play(DataManager.SFX_UI_DENIED);
             Managers.Tween.StartUIDoPunchPos(_skillSlots[(int)eSlot].transform);
+            return false;
         }
     }
 
-    void OnSkillIconDroped(ESkillSlot eSlot, ESkillType eType)
+    void OnSkillIconDroped(ESkillSlot eSlot, EActiveSkillType eType)
     {
-        Debug.Assert(eSlot <= ESkillSlot.SKey && eType != ESkillType.Count && eType != ESkillType.Roll);
+        Debug.Assert(eSlot <= ESkillSlot.SKey && eType != EActiveSkillType.Count && eType != EActiveSkillType.Roll);
         _eCurrSkillSlotType[(int)eSlot] = eType;
     }
 
 
-    void OnSkillLevelUp(ESkillType eType)
+    void OnSkillLevelUp(EActiveSkillType eType, int skillLevel)
     {
-        switch (eType)
-        {
-            case ESkillType.Spawn_Reaper_LV1:
-            case ESkillType.Spawn_Reaper_LV2:
-            case ESkillType.Spawn_Reaper_LV3:
-                _skillDict[ESkillType.Spawn_Reaper_LV1].LevelUpSkill(eType);
-                break;
-            case ESkillType.Spawn_Shooter_LV1:
-            case ESkillType.Spawn_Shooter_LV2:
-            case ESkillType.Spawn_Shooter_LV3:
-                _skillDict[ESkillType.Spawn_Shooter_LV1].LevelUpSkill(eType);
-                break;
-            case ESkillType.Cast_BlackFlame_LV1:
-            case ESkillType.Cast_BlackFlame_LV2:
-            case ESkillType.Cast_BlackFlame_LV3:
-                _skillDict[ESkillType.Cast_BlackFlame_LV1].LevelUpSkill(eType);
-                break;
-            case ESkillType.Cast_SwordStrike_LV1:
-            case ESkillType.Cast_SwordStrike_LV2:
-            case ESkillType.Cast_SwordStrike_LV3:
-                _skillDict[ESkillType.Cast_SwordStrike_LV1].LevelUpSkill(eType);
-                break;
-            default:
-                Debug.Assert(false);
-                break;
-        }
+        _skillControllerDict[eType].LevelUpSkill();
     }
     #endregion
 
 
     #region Helpers
 
-    Skill_BaseController GetSkillOrNull(ESkillType eType)
-    {
-        switch (eType)
-        {
-            case ESkillType.Spawn_Reaper_LV1:
-            case ESkillType.Spawn_Reaper_LV2:
-            case ESkillType.Spawn_Reaper_LV3:
-                return _skillDict[ESkillType.Spawn_Reaper_LV1];
-            case ESkillType.Spawn_Shooter_LV1:
-            case ESkillType.Spawn_Shooter_LV2:
-            case ESkillType.Spawn_Shooter_LV3:
-                return _skillDict[ESkillType.Spawn_Shooter_LV1];
-            case ESkillType.Cast_BlackFlame_LV1:
-            case ESkillType.Cast_BlackFlame_LV2:
-            case ESkillType.Cast_BlackFlame_LV3:
-                return _skillDict[ESkillType.Cast_BlackFlame_LV1];
-            case ESkillType.Cast_SwordStrike_LV1:
-            case ESkillType.Cast_SwordStrike_LV2:
-            case ESkillType.Cast_SwordStrike_LV3:
-                return _skillDict[ESkillType.Cast_SwordStrike_LV1];
-            default:
-                Debug.Assert(false);
-                return null;
-        }
-    }
 
-    public string GetSkillObjectName(ESkillType eType)
+    public string GetSkillObjectName(EActiveSkillType eType)
     {
-        return Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].objectPrefabPath.LastIndexOf('/') + 1);
+        string path = Managers.Data.ActiveSkillInfoDict[eType][0].objectPrefabPath;
+        return path.Substring(Managers.Data.ActiveSkillInfoDict[eType][0].objectPrefabPath.LastIndexOf('/') + 1);
     }
 
     public bool IsAandSSlotUsingAnySkill()
     {
         bool isASlotUsingSkill = false;
         bool isSSlotUsingSkill = false;
-        if (_eCurrSkillSlotType[0] != ESkillType.Count)
-            isASlotUsingSkill = !_skillDict[_eCurrSkillSlotType[(int)ESkillSlot.AKey]].IsCanUseSkillByCoolTime;
-        if (_eCurrSkillSlotType[1] != ESkillType.Count)
-            isSSlotUsingSkill = !_skillDict[_eCurrSkillSlotType[(int)ESkillSlot.SKey]].IsCanUseSkillByCoolTime;
-        Debug.Log($"A Slot using skill? {isASlotUsingSkill},\nS Slot using skill? {isSSlotUsingSkill}");
+        if (_eCurrSkillSlotType[0] != EActiveSkillType.Count)
+            isASlotUsingSkill = !_skillControllerDict[_eCurrSkillSlotType[(int)ESkillSlot.AKey]].IsCanUseSkillByCoolTime;
+        if (_eCurrSkillSlotType[1] != EActiveSkillType.Count)
+            isSSlotUsingSkill = !_skillControllerDict[_eCurrSkillSlotType[(int)ESkillSlot.SKey]].IsCanUseSkillByCoolTime;
         if (isASlotUsingSkill == false && isSSlotUsingSkill == false)
             return false;
         else
             return true;
     }
 
-    public bool SwapIfSameNextToSlot(ESkillSlot eSlot, ESkillType eSkillType)
+    public bool SwapIfSameNextToSlot(ESkillSlot eSlot, EActiveSkillType eSkillType)
     {
         if (eSlot == ESkillSlot.AKey)
         {
@@ -251,14 +208,14 @@ public class PlayerSkillManager
         return Managers.Resources.Instantiate<T>(path);
     }
 
-    string GetSkillControllerObjectName(ESkillType eType)
+    string GetSkillControllerObjectName(EActiveSkillType eType)
     {
-        return Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.Substring(Managers.Data.SkillInfoDict[(int)eType].controllerPrefabPath.LastIndexOf('/') + 1);
+        return Managers.Data.ActiveSkillInfoDict[eType][0].controllerPrefabPath.Substring(Managers.Data.ActiveSkillInfoDict[eType][0].controllerPrefabPath.LastIndexOf('/') + 1);
     }
 
     void SwapSlotSkillType()
     {
-        ESkillType tmpSkillType = _eCurrSkillSlotType[(int)ESkillSlot.AKey];
+        EActiveSkillType tmpSkillType = _eCurrSkillSlotType[(int)ESkillSlot.AKey];
         _eCurrSkillSlotType[(int)ESkillSlot.AKey] = _eCurrSkillSlotType[(int)ESkillSlot.SKey];
         _eCurrSkillSlotType[(int)ESkillSlot.SKey] = tmpSkillType;
 

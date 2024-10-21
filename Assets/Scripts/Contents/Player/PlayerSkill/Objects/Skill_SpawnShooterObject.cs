@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 
 public sealed class Skill_SpawnShooterObject : MonoBehaviour
 {
-    public ESkillType ESkillType { get; set; }
+    public EActiveSkillType ESkillType { get; set; }
     const string SPAWN_SHOOTER_ANIM_KEY = "SpawnShooter";
 
     ECharacterLookDir _ePlayerLookDir;
@@ -31,6 +31,7 @@ public sealed class Skill_SpawnShooterObject : MonoBehaviour
             _attackLightController.TurnOffGraduallyLightTimeInSec = 0.7f;
             _dieLightController.TurnOffGraduallyLightTimeInSec = 0.7f;
             gameObject.SetActive(false);
+            ESkillType = EActiveSkillType.Spawn_Shooter;
         }
     }
 

@@ -41,7 +41,6 @@ public class ColossalBossCaveScene : PlayScene
 
     bool IsCanEnterBossRoom()
     {
-        Debug.Log("Called IsCanEnterBossRoom");
         if (Managers.MonsterPool.MonsterCountInCurrScene == 0)
             return true;
         return false;

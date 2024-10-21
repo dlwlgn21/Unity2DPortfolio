@@ -9,7 +9,7 @@ public abstract class Skill_BaseObject : MonoBehaviour
     protected Animator _animator;
     protected LightController _attackLightController;
     protected string _animKey;
-    public ESkillType ESkillType { get; set; }
+    public EActiveSkillType ESkillType { get; set; }
     protected abstract void Init();
 
     private void Start()
@@ -40,7 +40,7 @@ public abstract class Skill_BaseObject : MonoBehaviour
             BaseMonsterController mc = collision.gameObject.GetComponent<BaseMonsterController>();
             if (mc != null)
             {
-                mc.OnHittedByPlayerSkill(Managers.Data.SkillInfoDict[(int)ESkillType]);
+                mc.OnHittedByPlayerSkill(ESkillType);
             }
         }
     }

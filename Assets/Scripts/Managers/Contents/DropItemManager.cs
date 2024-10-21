@@ -21,7 +21,6 @@ public class DropItemManager
             GameObject go = Managers.Resources.Instantiate<GameObject>("Prefabs/Item/Comsumable/ConsumablePotion");
             Vector3 pos = mc.transform.position;
             go.transform.position = new Vector3(pos.x, pos.y + 0.6f, pos.z);
-            Managers.Sound.Play(DataManager.SFX_UI_POINTER_ENTER);
             Managers.Tween.StartDoPunchPos(go.transform);
         }
     }

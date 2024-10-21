@@ -7,8 +7,8 @@ public sealed class Skill_SwordStrikeObject : Skill_BaseObject
 {
     protected override void Init()
     {
-        ESkillType = ESkillType.Cast_SwordStrike_LV1;
-        _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
+        ESkillType = EActiveSkillType.Cast_SwordStrike;
+        _animKey = Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Cast_SwordStrike][0].animKey;
         _attackLightController.TurnOffGraduallyLightTimeInSec = 0.8f;
     }
     protected override void OnSoundPlayTiming()

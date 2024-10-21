@@ -48,7 +48,7 @@ public sealed class HSlicerController : NormalMonsterController, IMelleAttackabl
     }
     void OnAttackSwing2Timing()
     {
-        AddForceToFront(sRushForce * 0.5f);
+        AddForceToFront(sRushForce * 0.35f);
         Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
     }
 
@@ -58,5 +58,12 @@ public sealed class HSlicerController : NormalMonsterController, IMelleAttackabl
             RigidBody.AddForce(new Vector2(-force.x, force.y), ForceMode2D.Impulse);
         else
             RigidBody.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    public override void OnPlayerBlockSuccess()
+    {
+        _attackLightController.ForceToStopCoroutineAndTurnOffLight();
+        ChangeState(ENormalMonsterState.HitByPlayerBlockSucces);
+        AddKnockbackForceOppossiteByPlayer(new Vector3(6f, 3f));
     }
 }

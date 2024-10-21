@@ -8,14 +8,14 @@ using UnityEngine.UI;
 
 public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
-    static public UnityAction<ESkillType> OnSkillLevelUpEventHandler;
-    [SerializeField] ESkillType _eSkillType;
+    static public UnityAction<EActiveSkillType, int> SkillLevelUpEventHandler;
+    [SerializeField] EActiveSkillType _eSkillType;
     public int SkillLevel { get; set; } = 0;
-    public ESkillType ESkillType 
+    public EActiveSkillType ESkillType 
     { 
         get 
         {
-            Debug.Assert(_eSkillType != ESkillType.Roll &&_eSkillType != ESkillType.Count);
+            Debug.Assert(_eSkillType != EActiveSkillType.Roll &&_eSkillType != EActiveSkillType.Count);
             return _eSkillType; 
         }
     }
@@ -25,7 +25,7 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
     public data.SkillInfo SkillInfo { get; private set; } 
     private void Awake()
     {
-        SkillInfo = Managers.Data.SkillInfoDict[(int)_eSkillType];
+        SkillInfo = Managers.Data.ActiveSkillInfoDict[ESkillType][0];
         Image = GetComponent<Image>();
         _cacheParent = transform.parent;
         _cachePos = transform.localPosition;
@@ -61,7 +61,10 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Managers.UI.SkillDesc.ShowSkillDesc(SkillInfo);
+        if (SkillLevel == 0)
+            Managers.UI.SkillDesc.ShowSkillDesc(ESkillType, 0);
+        else
+            Managers.UI.SkillDesc.ShowSkillDesc(ESkillType, SkillLevel);
         Managers.Tween.StartUIScaleTW(transform);
         Managers.Sound.Play(DataManager.SFX_UI_POINTER_ENTER);
     }
@@ -79,13 +82,12 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
             ++SkillLevel;
             if (SkillLevel > 1)
             {
-                _eSkillType += 1;
-                SkillInfo = Managers.Data.SkillInfoDict[(int)_eSkillType];
+                SkillInfo = Managers.Data.ActiveSkillInfoDict[_eSkillType][SkillLevel - 1];
             }
             Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
-            Managers.UI.SkillDesc.ShowSkillDesc(SkillInfo);
-            if (OnSkillLevelUpEventHandler != null)
-                OnSkillLevelUpEventHandler.Invoke(_eSkillType);
+            Managers.UI.SkillDesc.ShowSkillDesc(ESkillType, SkillLevel);
+            if (SkillLevelUpEventHandler != null)
+                SkillLevelUpEventHandler.Invoke(_eSkillType, SkillLevel);
             Managers.Tween.StartUIScaleTW(transform.parent.gameObject.transform, () => { Managers.Tween.EndToOneUIScaleTW(transform.parent.gameObject.transform); });
         }
         else
@@ -102,7 +104,7 @@ public sealed class UI_Skill_Icon : MonoBehaviour, IPointerEnterHandler, IPointe
 
     private void OnDestroy()
     {
-        OnSkillLevelUpEventHandler = null;
+        SkillLevelUpEventHandler = null;
     }
 
 }

@@ -52,12 +52,10 @@ public class CamFollowObject : MonoBehaviour
 
     void OnEnterEnableLookUpDownZone()
     {
-        Debug.Log("OnEnterEnableLookUpDownZone");
         _isEnterEnableLookUpDownZone = true;
     }
     void OnExitEnableLookUpDownZone()
     {
-        Debug.Log("OnExitEnableLookUpDownZone");
         _isEnterEnableLookUpDownZone = false;
     }
     Vector3 DetermineEndRotation()

@@ -6,8 +6,8 @@ public sealed class Skill_BlackFlameObject : Skill_BaseObject
 {
     protected override void Init()
     {
-        ESkillType = ESkillType.Cast_BlackFlame_LV1;
-        _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
+        ESkillType = EActiveSkillType.Cast_BlackFlame;
+        _animKey = Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Cast_BlackFlame][0].animKey;
         _attackLightController.TurnOffGraduallyLightTimeInSec = 0.3f;
     }
 

@@ -45,7 +45,7 @@ public abstract class BaseMonsterController : BaseCharacterController
     public abstract void InitStat();
     public abstract void DamagedFromPlayer(ECharacterLookDir attackerDir, int damage, EPlayerNoramlAttackType eAttackType);
     public abstract void OnPlayerBlockSuccess();
-    public abstract void OnHittedByPlayerSkill(data.SkillInfo skillInfo);
+    public abstract void OnHittedByPlayerSkill(EActiveSkillType eSkillType);
 
     protected abstract void SetLightControllersTurnOffTimeInSec();
     protected void DecreasHpAndInvokeHitEvents(int damage, EPlayerNoramlAttackType eAttackType)
@@ -69,7 +69,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         HittedByNormalAttackEffectEventHandler?.Invoke(eAttackType);
         #endregion
     }
-    protected void AddKnockbackForce(Vector2 force)
+    protected void AddKnockbackForceOppossiteByPlayer(Vector2 force)
     {
         if (_pc == null)
         {

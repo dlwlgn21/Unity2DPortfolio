@@ -60,15 +60,14 @@ public sealed class UI_SkillTree : MonoBehaviour
         _castSwordStrikeIcon = Utill.GetComponentInChildrenOrNull<UI_Skill_Icon>(gameObject, "SwordStrikeSkillIcon");
         #endregion
         #region SkillNameTextToZero
-        var dict = Managers.Data.SkillInfoDict;
-        _spawnReaperSkillNameText.text = dict[(int)_spawnReaperIcon.ESkillType].name.Replace('1', '0');
-        _spawnShooterSkillNameText.text = dict[(int)_spawnShooterIcon.ESkillType].name.Replace('1', '0');
-        _castBlackFlameSkillNameText.text = dict[(int)_castBlackFlameIcon.ESkillType].name.Replace('1', '0');
-        _castSwordStrikeSkillNameText.text = dict[(int)_castSwordStrikeIcon.ESkillType].name.Replace('1', '0');
+        _spawnReaperSkillNameText.text = Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Spawn_Reaper][0].name.Replace('1', '0');
+        _spawnShooterSkillNameText.text = Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Spawn_Shooter][0].name.Replace('1', '0');
+        _castBlackFlameSkillNameText.text = Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Cast_BlackFlame][0].name.Replace('1', '0');
+        _castSwordStrikeSkillNameText.text = Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Cast_SwordStrike][0].name.Replace('1', '0');
         #endregion
         #endregion
-        UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnSkillLevelUp;
-        UI_Skill_Icon.OnSkillLevelUpEventHandler += OnSkillLevelUp;
+        UI_Skill_Icon.SkillLevelUpEventHandler -= OnSkillLevelUp;
+        UI_Skill_Icon.SkillLevelUpEventHandler += OnSkillLevelUp;
     }
 
     private void OnEnable()
@@ -89,90 +88,57 @@ public sealed class UI_SkillTree : MonoBehaviour
     }
 
     #region Private
-    void OnSkillLevelUp(ESkillType eType)
+    void OnSkillLevelUp(EActiveSkillType eType, int skillLevel)
     {
-        SetSkillNameText(eType);
-        SetSkillLevelImg(eType);
+        SetSkillNameText(eType, skillLevel);
+        SetSkillLevelImg(eType, skillLevel);
     }
 
-    void SetSkillNameText(ESkillType eType)
+    void SetSkillNameText(EActiveSkillType eType, int skillLevel)
     {
         switch (eType)
         {
-            case ESkillType.Spawn_Reaper_LV1:
-            case ESkillType.Spawn_Reaper_LV2:
-            case ESkillType.Spawn_Reaper_LV3:
-                SetSkillName(_spawnReaperSkillNameText, eType);
+            case EActiveSkillType.Spawn_Reaper:
+                SetSkillName(_spawnReaperSkillNameText, eType, skillLevel);
                 break;
-            case ESkillType.Spawn_Shooter_LV1:
-            case ESkillType.Spawn_Shooter_LV2:
-            case ESkillType.Spawn_Shooter_LV3:
-                SetSkillName(_spawnShooterSkillNameText, eType);
+            case EActiveSkillType.Spawn_Shooter:
+                SetSkillName(_spawnShooterSkillNameText, eType, skillLevel);
                 break;
-            case ESkillType.Cast_BlackFlame_LV1:
-            case ESkillType.Cast_BlackFlame_LV2:
-            case ESkillType.Cast_BlackFlame_LV3:
-                SetSkillName(_castBlackFlameSkillNameText, eType);
+            case EActiveSkillType.Cast_BlackFlame:
+                SetSkillName(_castBlackFlameSkillNameText, eType, skillLevel);
                 break;
-            case ESkillType.Cast_SwordStrike_LV1:
-            case ESkillType.Cast_SwordStrike_LV2:
-            case ESkillType.Cast_SwordStrike_LV3:
-                SetSkillName(_castSwordStrikeSkillNameText, eType);
+            case EActiveSkillType.Cast_SwordStrike:
+                SetSkillName(_castSwordStrikeSkillNameText, eType, skillLevel);
                 break;
             default:
-                Debug.Assert(false);
+                Debug.DebugBreak();
                 break;
         }
     }
-    void SetSkillLevelImg(ESkillType eType)
+    void SetSkillLevelImg(EActiveSkillType eType, int skillLevel)
     {
         switch (eType)
         {
-            case ESkillType.Spawn_Reaper_LV1:
-                _spawnReaperSkillLevelImg.sprite = _skillLevelSprties[0];
+            case EActiveSkillType.Spawn_Reaper:
+                _spawnReaperSkillLevelImg.sprite = _skillLevelSprties[skillLevel - 1];
                 break;
-            case ESkillType.Spawn_Reaper_LV2:
-                _spawnReaperSkillLevelImg.sprite = _skillLevelSprties[1];
+            case EActiveSkillType.Spawn_Shooter:
+                _spawnShooterSkillLevelImg.sprite = _skillLevelSprties[skillLevel - 1];
                 break;
-            case ESkillType.Spawn_Reaper_LV3:
-                _spawnReaperSkillLevelImg.sprite = _skillLevelSprties[2];
+            case EActiveSkillType.Cast_BlackFlame:
+                _castBlackFlameSkillLevelImg.sprite = _skillLevelSprties[skillLevel - 1];
                 break;
-            case ESkillType.Spawn_Shooter_LV1:
-                _spawnShooterSkillLevelImg.sprite = _skillLevelSprties[0];
-                break;
-            case ESkillType.Spawn_Shooter_LV2:
-                _spawnShooterSkillLevelImg.sprite = _skillLevelSprties[1];
-                break;
-            case ESkillType.Spawn_Shooter_LV3:
-                _spawnShooterSkillLevelImg.sprite = _skillLevelSprties[2];
-                break;
-            case ESkillType.Cast_BlackFlame_LV1:
-                _castBlackFlameSkillLevelImg.sprite = _skillLevelSprties[0];
-                break;
-            case ESkillType.Cast_BlackFlame_LV2:
-                _castBlackFlameSkillLevelImg.sprite = _skillLevelSprties[1];
-                break;
-            case ESkillType.Cast_BlackFlame_LV3:
-                _castBlackFlameSkillLevelImg.sprite = _skillLevelSprties[2];
-                break;
-            case ESkillType.Cast_SwordStrike_LV1:
-                _castSwordStrikeSkillLevelImg.sprite = _skillLevelSprties[0];
-                break;
-            case ESkillType.Cast_SwordStrike_LV2:
-                _castSwordStrikeSkillLevelImg.sprite = _skillLevelSprties[1];
-                break;
-            case ESkillType.Cast_SwordStrike_LV3:
-                _castSwordStrikeSkillLevelImg.sprite = _skillLevelSprties[2];
+            case EActiveSkillType.Cast_SwordStrike:
+                _castSwordStrikeSkillLevelImg.sprite = _skillLevelSprties[skillLevel - 1];
                 break;
             default:
-                Debug.Assert(false);
+                Debug.DebugBreak();
                 break;
         }
     }
-    void SetSkillName(TextMeshProUGUI name, ESkillType eType)
+    void SetSkillName(TextMeshProUGUI name, EActiveSkillType eType, int skillLevel)
     {
-        var dict = Managers.Data.SkillInfoDict;
-        name.text = dict[(int)eType].name;
+        name.text = Managers.Data.ActiveSkillInfoDict[eType][skillLevel - 1].name;
     }
     #endregion
 }

@@ -7,8 +7,8 @@ public sealed class Skill_SpawnReaperObject : Skill_BaseObject
 {
     protected override void Init()
     {
-        ESkillType = ESkillType.Spawn_Reaper_LV1;
-        _animKey = Managers.Data.SkillInfoDict[(int)ESkillType].animKey;
+        ESkillType = EActiveSkillType.Spawn_Reaper;
+        _animKey = Managers.Data.ActiveSkillInfoDict[EActiveSkillType.Spawn_Reaper][0].animKey;
         _attackLightController.TurnOffGraduallyLightTimeInSec = 0.7f;
     }
 

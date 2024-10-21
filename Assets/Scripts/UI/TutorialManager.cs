@@ -176,7 +176,6 @@ public class TutorialManager : MonoBehaviour
                 _successText.text = "스킬 트레이닝 성공!\n3초 후에 현실로 점프합니다!";
                 break;
         }
-        Debug.Log($"ActiveSuccessText Called! {_successText.text}");
         Managers.Sound.Play(DataManager.SFX_QUEST_SUCESS);
         _successText.transform.DOScale(TW_SCALE_END_VALUE, 1.5f).SetEase(Ease.OutElastic).OnComplete(OnSuccessTextScaleTWEnd);
     }

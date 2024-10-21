@@ -71,6 +71,7 @@ namespace data
         public string name;
         public string description;
         public int id;
+        public int level;
         public int attackType;
         public float coolTime;
         public float parallysisTime;

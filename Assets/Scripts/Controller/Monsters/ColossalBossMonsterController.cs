@@ -190,34 +190,26 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         HittedByNormalAttackNoArgsEventHandler?.Invoke();
     }
 
-    public override void OnHittedByPlayerSkill(data.SkillInfo skillInfo)
+    public override void OnHittedByPlayerSkill(EActiveSkillType eType)
     {
         // TODO : ColossalBoss 플레이어 스킬에 어떻게 반응할지 결정해주어야 한다. 완료!!
-        ESkillType eType = (ESkillType)skillInfo.id;
+        data.SkillInfo info = Managers.PlayerSkill.GetCurrSkillLevelSkillInfo(eType);
         switch (eType)
         {
-            case ESkillType.Spawn_Reaper_LV1:
-            case ESkillType.Spawn_Reaper_LV2:
-            case ESkillType.Spawn_Reaper_LV3:
+            case EActiveSkillType.Spawn_Reaper:
                 ChangeState(EColossalBossState.Hit);
                 Debug.Log("Hit By SpawnReaper");
-                _parallysisCoroutineOrNull = StartCoroutine(PlayHitAnimForSeconds(skillInfo.parallysisTime));
-                _hitFlashCoOrNull = StartCoroutine(PlayHitFlashForSeconds(skillInfo.parallysisTime));
+                _parallysisCoroutineOrNull = StartCoroutine(PlayHitAnimForSeconds(info.parallysisTime));
+                _hitFlashCoOrNull = StartCoroutine(PlayHitFlashForSeconds(info.parallysisTime));
                 break;
-            case ESkillType.Spawn_Shooter_LV1:
-            case ESkillType.Spawn_Shooter_LV2:
-            case ESkillType.Spawn_Shooter_LV3:
-                AddKnockbackForce(new Vector2(skillInfo.knockbackForceX * 0.5f, skillInfo.knockbackForceY * 0.5f));
+            case EActiveSkillType.Spawn_Shooter:
+                AddKnockbackForceOppossiteByPlayer(new Vector2(info.knockbackForceX * 0.5f, info.knockbackForceY * 0.5f));
                 break;
-            case ESkillType.Cast_BlackFlame_LV1:
-            case ESkillType.Cast_BlackFlame_LV2:
-            case ESkillType.Cast_BlackFlame_LV3:
-                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.Attack_3);
+            case EActiveSkillType.Cast_BlackFlame:
+                DamagedFromPlayer(ELookDir, info.damage, EPlayerNoramlAttackType.Attack_3);
                 break;
-            case ESkillType.Cast_SwordStrike_LV1:
-            case ESkillType.Cast_SwordStrike_LV2:
-            case ESkillType.Cast_SwordStrike_LV3:
-                DamagedFromPlayer(ELookDir, Managers.Data.SkillInfoDict[skillInfo.id].damage, EPlayerNoramlAttackType.Attack_3);
+            case EActiveSkillType.Cast_SwordStrike:
+                DamagedFromPlayer(ELookDir, info.damage, EPlayerNoramlAttackType.Attack_3);
                 break;
             default:
                 Debug.Assert(false);

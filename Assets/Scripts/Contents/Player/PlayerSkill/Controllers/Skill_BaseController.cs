@@ -18,14 +18,14 @@ public abstract class Skill_BaseController : MonoBehaviour
 {
     static public UnityAction<EDeniedUseSkillCause> DeniedUseSkillEventHandler;
     protected PlayerController _pc;
-    protected ESkillType _eSkillType;
+    protected EActiveSkillType _eSkillType;
     public ESkillSlot ECurrentSkillSlot { get; set; }
     protected float _initCoolTimeInSec;
-    public float SkillCoolTimeInSec { get; private set; }
+    public float SkillCoolTimeInSec { get; protected set; }
     public bool IsCanUseSkillByCoolTime { get; protected set; }
     protected bool _isUsingSkill;
-
-    data.SkillInfo _skillInfo;
+    public int CurrSkillLevel { get; protected set; }
+    protected data.SkillInfo _skillInfo;
     Coroutine _countDownCo;
     public abstract void Init();
 
@@ -37,6 +37,12 @@ public abstract class Skill_BaseController : MonoBehaviour
         IsCanUseSkillByCoolTime = true;
     }
 
+    public data.SkillInfo GetCurrLevelSkillInfo()
+    {
+        Debug.Assert(CurrSkillLevel != 0);
+        return _skillInfo;
+    }
+
     private void Awake()
     {
         Init();
@@ -45,9 +51,9 @@ public abstract class Skill_BaseController : MonoBehaviour
     }
 
     public abstract bool TryUseSkill();
-    public virtual void LevelUpSkill(ESkillType eType)
+    public void LevelUpSkill()
     {
-        InitSkillInfoByTypeAndCoolTime(eType);
+        LevelUpSkillInfoAndCoolTime();
     }
     protected void StartCountdownCoolTime()
     {
@@ -66,7 +72,7 @@ public abstract class Skill_BaseController : MonoBehaviour
             return true;
         }
 
-        if (_eSkillType != ESkillType.Roll)
+        if (_eSkillType != EActiveSkillType.Roll)
         {
             if (_pc.Stat.Mana < _skillInfo.manaCost)
             {
@@ -89,19 +95,22 @@ public abstract class Skill_BaseController : MonoBehaviour
         _countDownCo = null;
     }
 
-    protected void InitByESkillType(ESkillType eType)
+    protected virtual void InitByEActiveSkillType()
     {
-        InitSkillInfoByTypeAndCoolTime(eType);
         ECurrentSkillSlot = ESkillSlot.Count;
         _isUsingSkill = false;
         IsCanUseSkillByCoolTime = true;
     }
 
-    void InitSkillInfoByTypeAndCoolTime(ESkillType eType)
+    void LevelUpSkillInfoAndCoolTime()
     {
-        _eSkillType = eType;
-        _skillInfo = Managers.Data.SkillInfoDict[(int)eType];
-        _initCoolTimeInSec = Managers.Data.SkillInfoDict[(int)eType].coolTime;
+        CurrSkillLevel += 1;
+        if (CurrSkillLevel > PlayerLevelManager.MAX_SKILL_LEVEL)
+        {
+            Debug.DebugBreak();
+        }
+        _skillInfo = Managers.Data.ActiveSkillInfoDict[_eSkillType][CurrSkillLevel - 1];
+        _initCoolTimeInSec = Managers.Data.ActiveSkillInfoDict[_eSkillType][CurrSkillLevel - 1].coolTime;
         SkillCoolTimeInSec = _initCoolTimeInSec;
     }
 }

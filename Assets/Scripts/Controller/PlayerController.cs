@@ -44,7 +44,7 @@ public class PlayerController : BaseCharacterController
     public static UnityAction<EPlayerState> HitEffectEventHandler;
     public static UnityAction<EPlayerMovementEffect, ECharacterLookDir, Vector2> MovementEffectEventHandler;
     public static UnityAction<int, int, int> HitUIEventHandler;
-    public static UnityAction<ESkillType> PlayerSkillKeyDownEventHandler;
+    public static UnityAction<EActiveSkillType> PlayerSkillKeyDownEventHandler;
     public static UnityAction PlayerSkillValidAnimTimingEventHandler;
     public static UnityAction<EAttackStatusEffect, float> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
@@ -54,7 +54,7 @@ public class PlayerController : BaseCharacterController
     public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new(3f, 2f);
 
     public const float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
-    public const float NORMAL_ATTACK_3_FORCE_COEFF = 1.2f;
+    public const float NORMAL_ATTACK_3_FORCE_COEFF = 1.3f;
     public const float NORMAL_ATTACK_2_DAMAGE_COEFF = 1.5f;
     public const int  NORMAL_ATTACK_3_DAMAGE_COEFF = 2;
     public const int  BACK_ATTACK_DAMAGE_COEFF = 3;

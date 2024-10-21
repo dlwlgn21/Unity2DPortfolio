@@ -8,10 +8,9 @@ using UnityEngine.EventSystems;
 
 public class UI_Skill_Slot : MonoBehaviour, IDropHandler
 {
-    public static UnityAction<ESkillSlot, ESkillType> OnSkillIocnDropEventHandler;
+    public static UnityAction<ESkillSlot, EActiveSkillType> SkillIconDropEventHandler;
     [SerializeField] ESkillSlot _eSlot;
     UI_Skill_SlotIcon _icon;
-
     private void Awake()
     {
         _icon = Utill.GetFirstComponentInChildrenOrNull<UI_Skill_SlotIcon>(gameObject);
@@ -31,58 +30,61 @@ public class UI_Skill_Slot : MonoBehaviour, IDropHandler
         {
             if (dragedIcon.SkillLevel == 0)
             {
-                PlayDeniedSound();
+                PlayDeniedSoundAndPunchTW();
                 Managers.Tween.StartUIDoPunchPos(transform);
                 return;
             }
             if (Managers.PlayerSkill.IsAandSSlotUsingAnySkill())
             {
-                PlayDeniedSound();
-                // TODO : 메시지 띄워야 한다..??
-                Debug.Log("Can't Drop!! Using Skill!!");
-                Managers.Tween.StartUIDoPunchPos(transform);
+                PlayDeniedSoundAndPunchTW();
                 return;
             }
 
             if (Managers.PlayerSkill.SwapIfSameNextToSlot(_eSlot, dragedIcon.ESkillType))
             {
                 TryDropIcon(dragedIcon.ESkillType, dragedIcon.Image.sprite);
-                PlayEquipSucessSound();
+                PlayDropSucessSound();
                 return;
             }
             TryDropIcon(dragedIcon.ESkillType, dragedIcon.Image.sprite);
-            PlayEquipSucessSound();
+            PlayDropSucessSound();
             return;
         }
         else
         {
-            Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+            PlayDeniedSoundAndPunchTW();
         }
     }
 
 
-    bool TryDropIcon(ESkillType eSkillType, Sprite sprite)
+    bool TryDropIcon(EActiveSkillType eSkillType, Sprite sprite)
     {
         if (_icon.TryDrop(eSkillType, sprite))
         {
-            if (OnSkillIocnDropEventHandler != null)
-                OnSkillIocnDropEventHandler.Invoke(_eSlot, eSkillType);
+            if (SkillIconDropEventHandler != null)
+                SkillIconDropEventHandler.Invoke(_eSlot, eSkillType);
+            Managers.Tween.StartUIScaleTW(_icon.transform, OnScaleTWEnd);
             return true;
         }
         else
             return false;
     }
 
+    void OnScaleTWEnd()
+    {
+        Managers.Tween.EndToOneUIScaleTW(_icon.transform);
+    }
     private void OnDestroy()
     {
-        OnSkillIocnDropEventHandler = null;
+        SkillIconDropEventHandler = null;
     }
 
-    void PlayDeniedSound()
+    void PlayDeniedSoundAndPunchTW()
     {
+        Managers.Tween.StartUIDoPunchPos(transform);
         Managers.Sound.Play(DataManager.SFX_UI_DENIED);
     }
-    void PlayEquipSucessSound()
+    void PlayDropSucessSound()
     {
         Managers.Sound.Play(DataManager.SFX_UI_EQUP_SUCESS);
     }

@@ -24,8 +24,8 @@ public class PlayerLevelManager
             #region EventSubscribe
             PlayerStat.LevelUpEventHandler -= OnPlayerLevelUp;
             PlayerStat.LevelUpEventHandler += OnPlayerLevelUp;
-            UI_Skill_Icon.OnSkillLevelUpEventHandler -= OnPlayerSkillLevelUp;
-            UI_Skill_Icon.OnSkillLevelUpEventHandler += OnPlayerSkillLevelUp;
+            UI_Skill_Icon.SkillLevelUpEventHandler -= OnPlayerSkillLevelUp;
+            UI_Skill_Icon.SkillLevelUpEventHandler += OnPlayerSkillLevelUp;
             monster_states.Die.DieEventEnterStateHandler -= OnMonsterDied;
             monster_states.Die.DieEventEnterStateHandler += OnMonsterDied;
             #endregion
@@ -48,7 +48,7 @@ public class PlayerLevelManager
         Managers.Sound.Play(DataManager.SFX_PLAYER_LEVEL_UP);
     }
 
-    void OnPlayerSkillLevelUp(ESkillType eType)
+    void OnPlayerSkillLevelUp(EActiveSkillType eType, int skillLevel)
     {
         --CurrSkillPoint;
         CurrSkillPoint = Mathf.Max(0, CurrSkillPoint);

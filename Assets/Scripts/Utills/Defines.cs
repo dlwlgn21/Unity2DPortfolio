@@ -16,23 +16,17 @@ namespace define
         Left,
         Right
     }
-    public enum ESkillType
+
+    public enum EActiveSkillType
     {
         Roll,
-        Spawn_Reaper_LV1,
-        Spawn_Reaper_LV2,
-        Spawn_Reaper_LV3,
-        Spawn_Shooter_LV1,
-        Spawn_Shooter_LV2,
-        Spawn_Shooter_LV3,
-        Cast_BlackFlame_LV1,
-        Cast_BlackFlame_LV2,
-        Cast_BlackFlame_LV3,
-        Cast_SwordStrike_LV1,
-        Cast_SwordStrike_LV2,
-        Cast_SwordStrike_LV3,
+        Spawn_Reaper,
+        Spawn_Shooter,
+        Cast_BlackFlame,
+        Cast_SwordStrike,
         Count
     }
+
     public enum EAttackStatusEffect
     {
         None,

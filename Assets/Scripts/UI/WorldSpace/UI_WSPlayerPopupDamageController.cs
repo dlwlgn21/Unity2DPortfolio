@@ -16,5 +16,4 @@ public sealed class UI_WSPlayerPopupDamageController : UI_WSPlayerPopupTextContr
         _text.text = actualDamage.ToString();
         StartTW();
     }
-
 }

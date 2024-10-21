@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface ILoader<Key, Value>
@@ -11,14 +12,18 @@ public interface ILoader<Key, Value>
 public class DataManager
 {
     public Dictionary<int, data.PlayerStat> PlayerStatDict { get; private set; } = new();
-    public Dictionary<int, data.SkillInfo> SkillInfoDict { get; private set; } = new();
+    public Dictionary<define.EActiveSkillType, List<data.SkillInfo>> ActiveSkillInfoDict { get; private set; } = new();
     public Dictionary<int, data.MonsterStat> MonsterStatDict { get; private set; } = new();
     public Dictionary<int, data.HealingPotionInfo> HealingPotionDict { get; private set; } = new();
-
     public Dictionary<int, data.HelmetInfo> HelmetItemDict { get; private set; } = new();
     public Dictionary<int, data.SwordInfo> SwordItemDict { get; private set; } = new();
     public Dictionary<int, data.ArmorInfo> ArmorItemDict { get; private set; } = new();
+    Dictionary<int, data.SkillInfo> _skillInfoDict = new();
 
+    public const string SKILL_SPAWN_REAPER_KEY = "SpawnReaper";
+    public const string SKILL_SPAWN_SHOOTER_KEY = "SpawnShooter";
+    public const string SKILL_BLACK_FLAME_KEY = "BlackFlame";
+    public const string SKILL_SWROD_STRIKE_KEY = "SwordStrike";
 
     public const string SFX_BGM_TUTORIAL = "Sound/SFX_BGM_Tutorial";
     public const string SFX_BGM_ABANDON_ROAD = "Sound/SFX_BGM_AbondonRoad";
@@ -76,7 +81,6 @@ public class DataManager
     public const string SFX_MONSTER_DIE_EXPOLOSION_2 = "Sound/SFX_MonsterDieExpolosion2";
     public const string SFX_MONSTER_DIE_EXPOLOSION_3 = "Sound/SFX_MonsterDieExpolosion3";
     public const string SFX_MONSTER_DIE_EXPOLOSION_4 = "Sound/SFX_MonsterDieExpolosion4";
-
     public const string SFX_MONSTER_HIT_BY_NORMAL_ATTACK_1 = "Sound/SFX_MonsterHit1";
     public const string SFX_MONSTER_HIT_BY_NORMAL_ATTACK_2 = "Sound/SFX_MonsterHit2";
     public const string SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3 = "Sound/SFX_MonsterHit3";
@@ -84,23 +88,63 @@ public class DataManager
     public const string SFX_MONSTER_HIT_BY_PLAYER_SKILL_REAPER = "Sound/SFX_MonsterHitByPlayerSkillReaper";
     public const string SFX_MONSTER_PROJECTILE_HIT = "Sound/SFX_MonsterProjectileHit";
 
-
     public const string SFX_ENV_DOOR_OPEN = "SFX_DoorOpen";
     public void Init()
     {
         PlayerStatDict = LoadJson<data.PlayerStatLoader, int, data.PlayerStat>("Player/Data_PlayerStat").MakeDict();
         MonsterStatDict = LoadJson<data.MonsterStatLoader, int, data.MonsterStat>("Monsters/Data_MonstersStat").MakeDict();
-        SkillInfoDict = LoadJson<data.SkillInfoLoader, int, data.SkillInfo>("Skill/Data_SkillInfo").MakeDict();
+        _skillInfoDict = LoadJson<data.SkillInfoLoader, int, data.SkillInfo>("Skill/Data_SkillInfo").MakeDict();
         HealingPotionDict = LoadJson<data.HealingPotionLoader, int, data.HealingPotionInfo>("Item/Data_HealingPotionStat").MakeDict();
 
         HelmetItemDict = LoadJson<data.HelmetLoader, int, data.HelmetInfo>("Item/Data_HelmetStat").MakeDict();
         SwordItemDict = LoadJson<data.SwordLoader, int, data.SwordInfo>("Item/Data_SwordStat").MakeDict();
         ArmorItemDict = LoadJson<data.ArmorLoader, int, data.ArmorInfo>("Item/Data_ArmorStat").MakeDict();
+
+        #region InitActiveSkillDict
+
+        foreach (var info in _skillInfoDict)
+        {
+            switch (info.Value.animKey)
+            {
+                case "Roll":
+                    AddSkills(define.EActiveSkillType.Roll, info.Value);
+                    break;
+                case SKILL_SPAWN_REAPER_KEY:
+                    AddSkills(define.EActiveSkillType.Spawn_Reaper, info.Value);
+                    break;
+                case SKILL_SPAWN_SHOOTER_KEY:
+                    AddSkills(define.EActiveSkillType.Spawn_Shooter, info.Value);
+                    break;
+                case SKILL_BLACK_FLAME_KEY:
+                    AddSkills(define.EActiveSkillType.Cast_BlackFlame, info.Value);
+                    break;
+                case SKILL_SWROD_STRIKE_KEY:
+                    AddSkills(define.EActiveSkillType.Cast_SwordStrike, info.Value);
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
     }
 
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
     {
         TextAsset textAsset = Managers.Resources.Load<TextAsset>($"Data/{path}");
         return JsonUtility.FromJson<Loader>(textAsset.text);
+    }
+
+    void AddSkills(define.EActiveSkillType eSkillType, data.SkillInfo skillInfo)
+    {
+        List<data.SkillInfo> skills;
+        if (ActiveSkillInfoDict.TryGetValue(eSkillType, out skills) == false)
+        {
+            ActiveSkillInfoDict.Add(eSkillType, new List<data.SkillInfo>());
+            ActiveSkillInfoDict[eSkillType].Add(skillInfo);
+        }
+        else
+        {
+            skills.Add(skillInfo);
+        }
     }
 }
