@@ -1,0 +1,94 @@
+{
+    "monsterStats": [
+      {
+        "monsterType": "1",
+        "monsterStatusEffect": "1",
+        "maxHp": "30",
+        "attack": "5",
+        "defence": "1",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "2",
+        "monsterStatusEffect": "2",
+        "maxHp": "40",
+        "attack": "5",
+        "defence": "1",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "3",
+        "monsterStatusEffect": "1",
+        "maxHp": "80",
+        "attack": "7",
+        "defence": "2",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "4",
+        "monsterStatusEffect": "4",
+        "maxHp": "100",
+        "attack": "5",
+        "defence": "1",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "5",
+        "monsterStatusEffect": "1",
+        "maxHp": "100",
+        "attack": "5",
+        "defence": "4",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "6",
+        "monsterStatusEffect": "4",
+        "maxHp": "50",
+        "attack": "4",
+        "defence": "1",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "7",
+        "monsterStatusEffect": "0",
+        "maxHp": "50",
+        "attack": "1",
+        "defence": "2",
+        "moveSpeed": "50",
+        "exp": "75"
+      },
+      {
+        "monsterType": "8",
+        "monsterStatusEffect": "2",
+        "maxHp": "50",
+        "attack": "5",
+        "defence": "1",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "9",
+        "monsterStatusEffect": "3",
+        "maxHp": "15",
+        "attack": "4",
+        "defence": "1",
+        "moveSpeed": "100",
+        "exp": "75"
+      },
+      {
+        "monsterType": "10",
+        "monsterStatusEffect": "1",
+        "maxHp": "150",
+        "attack": "7",
+        "defence": "1",
+        "moveSpeed": "100",
+        "exp": "75"
+      }
+    ]
+}

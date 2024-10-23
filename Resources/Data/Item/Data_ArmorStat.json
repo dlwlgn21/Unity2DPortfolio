@@ -1,0 +1,18 @@
+{
+  "armorStats": [
+    {
+      "name": "여행자코트",
+      "description": "추위와 더위를 막아줄 뿐입니다..\n방어력 : 1",
+      "iconSpritePath": "Item/Equipable/armor",
+      "id": "1",
+      "defence": "1"
+    },
+    {
+      "name": "전사코트",
+      "description": "꽤나 튼튼한 코트입니다..\n방어력 : 2",
+      "iconSpritePath": "Item/Equipable/shield1",
+      "id": "2",
+      "defence": "2"
+    }
+  ]
+}

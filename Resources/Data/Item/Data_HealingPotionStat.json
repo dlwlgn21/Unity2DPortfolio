@@ -1,0 +1,20 @@
+{
+  "healingPotionStats": [
+    {
+      "name": "HP포션Lv1",
+      "description": "체력을 10 회복합니다.",
+      "iconSpritePath": "Item/Consumable/HealingPotion_01",
+      "id": "1",
+      "level": "1",
+      "healAmount": "10"
+    },
+    {
+      "name": "HP포션Lv2",
+      "description": "체력을 20 회복합니다.",
+      "iconSpritePath": "Item/Consumable/HealingPotion_01",
+      "id": "2",
+      "level": "2",
+      "healAmount": "20"
+    }
+  ]
+}

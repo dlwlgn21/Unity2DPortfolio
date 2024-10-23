@@ -1,0 +1,18 @@
+{
+  "swordStats": [
+    {
+      "name": "라이트브링어",
+      "description": "영롱한 빛깔을 보십시오...\n공격력 : 5",
+      "iconSpritePath": "Item/Equipable/sword1",
+      "id": "1",
+      "damage": "5"
+    },
+    {
+      "name": "라이트세이버",
+      "description": "루크슈캬이왁커가 사용했던 전설적인 검입니다.\n공격력 : 8",
+      "iconSpritePath": "Item/Equipable/katana",
+      "id": "2",
+      "damage": "8"
+    }
+  ]
+}

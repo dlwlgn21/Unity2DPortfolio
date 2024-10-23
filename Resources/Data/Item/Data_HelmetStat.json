@@ -1,0 +1,18 @@
+{
+  "helmetStats": [
+    {
+      "name": "뚜겅1",
+      "description": "기본적인 데미지만 막아줄 뿐입니다...\n방어력 : 1",
+      "iconSpritePath": "Item/Equipable/helmet1",
+      "id": "1",
+      "defence": "1"
+    },
+    {
+      "name": "뚜겅2",
+      "description": "뚜껑1 보단 낫지만... 여전히 부족합니다.\n방어력 : 2",
+      "iconSpritePath": "Item/Equipable/helmet8",
+      "id": "2",
+      "defence": "2"
+    }
+  ]
+}
