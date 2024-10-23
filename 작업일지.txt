@@ -1,0 +1,924 @@
+고쳐야 할 것
+	(5.10 해결) 플레이어 공격 성공 했는데 몬스터 넉백 한번씩 씹히는거, ->  PlayerBlock이 성공할 때에만 넉백 하도록 수정 전투시스템 자체를 수정함.
+	(5.10 해결) 플레이어 공격 성공 했는데 몬스터 힛 이펙트 한번씩 씹히는거 -> 이제 잘 됨. 그리고 SpriteRenderer Draw Order 수정함.
+	(5.10 해결) 몬스터 DieState에서 한프레임 더 재생되서 다음 스프라이트 재생 되어 버리는 것. -> DieState일 때 HitState로 넘어가버리는 문제였음. HittedState로 ChangeState할 때에 잡아내서 해결.
+	(5.13 해결) 플레이어 벽 뭐든 잡는거 -> LedgeClimbLayer 추가해서 RayCast할 때 LedgeClimbLayer만 걸리도록 수정.
+	패럴렉스 배경 살리면 Player,Monster UIPopupText들 안보이는 문제 해결해야 함.
+	(5.13 해결) Player 왼쪽으로 갈때 카메라 미세하게 흔들리는거 해결 -> PlayerBaseState.Rotate() 수정해서 해결.
+	(5.13 해결) PlayerLedgeClimb 한 프레임 튀는거 해결 -> 트위닝 + 아트 손봐서 해결.
+	(5.23 해결) MonsterHittedState에서 애니메이션 다 재생되지 않았는데 다른 State로 넘어가던 문제 해결. (애니메이션 콜백함수 등록해서 그거 호출하게 변경했음. 그랬더니 안 씹힘)
+	WardenController.HittedAnimCallback하던거 BaseMonsterController에서 호출되게 변경.
+	PlayerKnockbackBoom 관련 스크립트들 네이밍 다 수정해야함.
+	Player모든 Animation 가끔 1Frame 씩 튀는 문제 해결해야함.
+
+	(5.27 해결) PlayerAttack이 0인데도 Monster가 1씩 데미지 받는거 수정해야함. 이유를 찾아내야 함. 
+			(MonsterStat.OnHitted에서 Mathf.Max(0, Mathf.Abs(damage - Defence))) 이 부분이 문제였음. 
+			절댓값 취해버리니 0-1은 -1이 되고 그게 절댓값하면 1이 되버리니까 데미지가 1로 갔던 것.
+	(5.27 해결) PlayerHpBar 처음에 0/0으로 표시되던 문제 해결. (Awake가 아닌 Start함수에서 SetFullHpBarRatio 호출로 해결)
+	(5.28 해결) PlayerSkill, Attack 상태일 때에 그 전 상태의 속도 적용되는 문제 고치기. 
+	(5.28 해결) Player 점프 상태에서 대화들어갈 시 문제 해결. (QuestNPC에 그냥 BoxCollider2D 추가해서 고침.)
+	(5.28 해결) MonsterDieState 일 때에 HpBar ScaleTWAnimation 적용.
+구현해야 할 것
+	본격적인 플레이 맵
+	(5.13 해결)플레이어 점프 반응성 더 좋게 고치기 -> 이제 점프 중에 방향전환 가능함, 가끔 다른 방향으로 점프뛰는 것도 같이 해결
+	(시도 중)튜토리얼 Sister 홀로그램으로 만들기
+	(5.11 해결)패럴랙싱 더 심미적으로 보일 수 있게 그리고 자체적으로 옮기게 수정해야 함. 즉, 무한 스크롤링 가능하게 수정해야 함.
+	튜토리얼 완전히 완성시키기.
+	(5.12 해결)카메라 컨피너 구현해야 함.
+	(5.12 해결)튜토리얼 멀티 카메라 구현해야 함.
+	(해결) 플레이어 스킬 시스템 구현해야 함. (구현중)
+	(해결) 플레이어 UI 완전구현
+	(해결) 쿨타임 시스템 구현
+	(5.14 해결) CharacterAttackLight 올바르게 나타낼 수 있게 수정. 회전방법을 다시 SpriteFlip방식으로 롤백해서 생긴 문제 해결 한 것.
+	(5.14 해결) 몬스터 HpUI 디자인 수정함.
+	(5.16 헤결) 몬스터, 플레이어 Hpbar 더 이쁘게 구현하기
+	(5.23 해결) PlayerSkill KnockbackBoom구현.
+	(5.24 해결) PlayerSkill ReaperAttack 구현.
+	(5.26 해결) CamShaker 제대로 작동하게 구현.
+	(5.29 해결) SceneManager 구현.
+
+
+5.26 해야할 것
+	PlayerSkillCoolTimer 시간까지 제대로 나오게 구현. (18:04 해결)
+	PlayerSkillCoolTimer 이미지 제대로 나오게 수정.   (18:57 해결)
+	SisterController OnDialogEnd 두 번 호출되는 문제 해결해함! (5.26 23:47 해결) 
+
+
+
+5.27 해야할 것
+	(11:00 해결) PlayerAttack이 0인데도 Monster가 1씩 데미지 받는거 수정해야함. 이유를 찾아내야 함. 
+		(MonsterStat.OnHitted에서 Mathf.Max(0, Mathf.Abs(damage - Defence))) 
+		이 부분이 문제였음. 
+		절댓값 취해버리니 0-1은 -1이 되고 그게 절댓값하면 1이 되버리니까 데미지가 1로 갔던 것.
+	(11:09 해결) PlayerHpBar 처음에 0/0으로 표시되던 문제 해결. (Awake가 아닌 Start함수에서 SetFullHpBarRatio 호출로 해결)
+	SoundEffect 구현.
+
+5.28 해야할 것
+	Tutorial 마무리.
+	
+5.30 해야할 것
+	PlayerThrowSkill Impact 구현 해야함.
+	PlayerSpawnReaper 비주얼 업데이트.
+	PlayerSpawnReaper RepaerAnimation 다 끝난다음 움직일 수 있게 수정.
+
+	Monster Turn 시간차를 두고 행할 수 있게. 너무 반응이 빠르게 turn 하니 전투가 긴장감이 없음.
+	MonsterHittedParalysis 다 구현해줘야 함. (20:05 완료)
+		
+
+	Player, Monster Animation 가끔 1Frame 씩 튀는 문제 해결해야함. (올바른 타이밍의 Animation Event로 해결)
+	몬스터들 인지, 공격범위 다 커스터마이즈 해주어야 함. (Wardeen, Blaster, CagedShocker 공격범위 다 수정, HSlicer만 남음)
+	MainPlayScene으로 에러 없이 넘어갈 수 있도록 조정 (완료).
+
+5.31 해야할 것
+	MainPlayScene 완전 구현. (BossMonster 빼고)
+
+6.1 해야할 것
+	FadeOutTransitionEffect SceneManager에서 관리하게 하기 (해결)
+	Monster 3종 더 구현 (이건 오늘 집에서 하면 됨.)
+	MonsterSpawnBox 완전구현 (해결)
+	PlayerSpawnPlace 구현 (껍데기만 구현, 이제 스크립트만 작성하면 됨. 플레이어 죽으면 가장 최근 PlayerSpawnPoint에서 부활 할 수 있게.)
+	Monster 경직 시간 줄이기. (6.2 구현)
+	PlayerJumpEffect 바꾸기 (6.3 바꿈, 파티클 빼버리고 애니메이터로 재생함.)
+	PlayerRollEffect 추가 (6.3 바꿈, 애니메이터로 재생함)
+	MonsterHitParticle 바꾸기 (6.2 구현, 아예 파티클 빼버리고 애니메이터로 갈아끼움.)
+
+	(해결) 전투 시스템 바꿈
+	(해결) MonsterHitState 없애고, 어느때든 PlayerNormalAttack에  Hitted 할 수 있도록 변경.
+	(해결) PlayerNormalAttack에 Hitted시에 Knockback, AnimationSlowTime 적용.
+
+	
+6.4 해야할 것
+	Monster 3종 더 구현 (이건 오늘 집에서 하면 됨.)
+	(해결) PlayerAttack 상태일 때에 방향키 누르고 있으면 전진하면서 때림. (구현)
+	(해결) PlayerInvincible 구현 (구현)
+	SisterDisolveEffect 구현.
+
+6.5 해야할 것
+	(해결) PlayerBomb Visual Update아예 뜯어고침. 슈터소환해서 그 슈터가 발사하도록 바꿈.
+	Player가 Monster와 몸체가 충돌시에 Player에 넉백주기.
+	(해결) Player가 공격성공, 피격시에 시간 천천히 가도록 수정함.
+	(해결) PlayerSkillManager가 사신소환과 넉백폭탄 관리하도록 바꿈.
+	(해결) PlayerSpawnReaper Visual Update.
+
+구현하고 싶은 것.
+	
+
+6.8 해야할 것
+	(해결) MonsterDamageFalshEffect 추가. 이제 몬스터 피격시에 빨간색으로 빛남.
+	(해결) PlayerBackAttack, Player3Attack 성공시 카메라 줌 효과 구현
+	(6.9 해결) PlayerAttackLight 더 부드럽게 꺼지게
+
+6.9 해야할 것
+	(해결) 버그 PlayerNormalAttack1 가끔씩 두 번 나감. (다음 Attack으로 넘어가는 유효시간 0.3 ~ 1.0 으로 수정)
+	(해결) PlayerBackAttack 연속으로 맞는거 막아야 함. (MonsterController에서 맞자마자 SetLookDir() 호출해줌.) 이거 다시 수정해야함.
+
+6.9 한 것
+	(해결) PlayerNormalAttack1 애니메이션 더 자연스러워 보이게 스프라이트 3개 추가.
+	(해결) Character, Skill들 AttackLight 부드럽게 꺼지도록 Light에 AttackLightController 추가해서 수정.
+	
+6.10 한 것
+	(해결) PlayerMovementEffect 수정.
+	(해결) MonsterSpawnEffect, PlayerMovementEffect WorldSpaceEffectController로 상속구조 만듦.
+	(해결) PlayerMovementEffectManager 삭제.
+	(해결) PlayerJumpState 관련 코드 전체적으로 수정. 그래서 이제 JumpState에서 이단점프 안 했을 시에, FallState에서 이단점프 가능해짐.
+	(해결) BigHittedParticle추가. BigAattack(BackAttack, NormalAttack3) 성공 시 하얀 스파크가 팍 튀게 수정함.
+
+
+6.11 해야할 것
+	(6.12 해결)PlayerBackAttack 연속으로 맞는거 막아야 함. 
+		-> MonsterController에서 맞자마자 SetLookDir() 호출해줌. 
+			이거 다시 수정해야함. 위의 방법대로 했더니 몬스터 공격하고 있을때 백어택 맞으면 방향을 플레이어쪽으로 틀어버림.
+			백어택 무적 타이머 있어야 할 듯?? 
+		-> 결국엔 해결! BaseMonsterState에서 Hittted 관리하믄서 BackAttack자체가 NormalAttack1에서만 발동되도록 수정!
+	코드구조 SOLID 원칙에 맞게 수정하기. 그러기 위해서는 유투브 7시간 짜리 쭉쭉 봐바야 할 듯. (봤음. 근데 별로 도움 되진 않은듯..?? )
+		전투시스템 같은거 만들때에 Interface어떻게 활용하는지 체크하게.
+		1. 그래도 AnimState를 이용해서 StateMachine이용하는거 흥미로웠음.
+		2. 이제 PlayMode 빨리 전환 됨
+		3. CharacterAttack을 Collider로 관리하는 아이디어 얻음
+		4. NewInputSystem에 대해 조금 더 알음
+		5. UnityEvent, UnityAction에 대해서, 그리고 이벤트 등록에 대해서 더 알게 됨.
+		6월 12일 현재 계속 진행중... 계속 커플링 줄이는 중??	
+	BigAttack시에 CameraZoom하는데 그때에 위, 아래에서 이미지가 내려오게. 그래서 줌 효과중이라는걸 느낄수 있도록.
+
+6.12 해야할 것
+	(해결) MonsterUIManager만들어서 MonsterHitted하면 이벤트 호출해가지고, MonsterUIManager가 그 instance의 health를 보여줄 수 있게. 
+		-> 그냥 부모 rotation 읽어보면서 회전하면 LocalScale.x 뒤집어서 해결함!!
+	PlayerNormalAttack1 쿨타임 만들어야 함. 아니면 자꾸 1대 치기만 할 듯.
+	(해결) CharacterTurn방식을 Flip방식이 아닌, Rotation방식으로 다시 바꾸어야 함. 06.12 09:22 지금 시작함!
+	(해결) CharacterTurn방식을 Rotation방식으로 바꾼데에 생긴 PlayerMovementEffect 같이 rotation되버리는 문제 따로 WSEffectManager파서 관리하게 해주어야 함. 
+	(해결) PlayerForceField Call방식 수정해야 함. 지금은 PlayerController에서 그냥 호출해버림. 자기 자신은 자기 자신이 책임질 수 있게 하자.
+	(해결) KnockBackCode 분리해야 함. ?? 이거 지켜보자. 아직 어케할지 감 안잡힘. -> 걍 각자가 자기코드내에서 알아서 잘~ 처리함. 
+	(해결) OnHittedByPlayerNormalAttack 이제 MonsterState에서 관리함. 
+	(해결) MonsterBloodEffect WorldSpace에서 재생되게.
+	(6.13 해결) Player, Monster 공격방식 OverlapCircle이 아닌 Collider로 관리하기. 그래야 커스터마이즈 하기가 훨씬 쉬워짐.
+
+6.13 해야할 것
+	(해결) CollisionLayer에 PlayerBody, PlayerAttackBox, MonsterBody, MosnterAttackBox 추가했으니 그에 맞게 Collision조정 다시 해야함.
+	MonsterHitBox와 PlayerHitBox 충돌시에 서로 넉백먹이던지 플레이어만 넉백먹이던지 해야함. KinematicRigidBody2D 추가로 해결.
+	(해결) MonsterAttack방식도 AttackBox로 충돌검출해서 데미지 먹이고 해야함.
+	BigAttack시에 CameraZoom하는데 그때에 위, 아래에서 이미지가 내려오게. 그래서 줌 효과중이라는걸 느낄수 있도록. -> 보류. 원하는 만큼의 효과를 가져오진 않음.
+	Player, MonsterStatusImg 구하기. 
+	Player의 Damage,StatusText는 -localScale.x로 부모 트랜스폼 취소하는게 안 먹힘! 이거 다른 방법 찾아야함 
+	(해결)이제 StatusPopup, DamagePopup 원하는 대로 작동. 즉, 앞에 그려짐. TMP가 아닌, TMPUI 사용하는 것으로 해결. 좀 허무...
+	
+	
+6.14 고쳐야할 것, 해야할 것
+	(6.17 해결)PlayerKnockbackBoom 넉백이 안먹음. 왜그럴까? 상속받은 BlockSuccess 는 먹히는데.. 뭔가 이상함. 그리고 이 부분도 UnityAction으로 바꿔도 될 듯?
+		 KnockBack안먹는 이유 있었음. 이동 중일때는 넉백 먹지만 공격중일때에는 넉백 먹지를 않음. 이거 MonsterAttackStateEnter에서만 정지시켜주면 될 듯. 이게 아녓다.
+		 ㅋㅋ 위의 이유도 아녔음. 
+		이유는 슈벌 RigidBody2D CollisionDetectionMode를 Discrete로 고쳐서 해결했음. Blaster와 CagedShocker만 Discrete로 되어있었음. 그래서 두개만 정상작동 됐던것.
+	
+	맵 다 찍고, 몬스터 3마리 추가하자.
+	(해결) 타일맵 추가해버리자.
+	밤이 모티브니까... 뭔가... 뭔가 필요하다. 밤 조명 Asset 구하자.
+	HeadLight Rotate할 떄에 천천히 Rotate 시키자. 즉 Tween 해주면 됨. 근데 생각해보니 이게 말이 안됨 ㅅㅂ. 
+	풀숲 애니메이션 할 수 있게??
+	그림자 추가하자. 그림자아아아!
+		이거 안하기로 함. 그림자가 있으려면 그림자를 비출 벽이 필요함. 근데 벽이 있으면 내 에셋이 겁나 구려보임.
+	CameraZoom할때에 그냥 Shader로 처리해주자.
+
+	(6.16해결)왜 RedGhoul이 Aattack일때도 찐빠를 낼까? -> BlockingCollider가 BodyCollider랑 겹쳐가지고 난리 부르스를 췄던 거였음.
+
+	
+	Event 방식으로 고쳐야 할 목록
+	
+	지금 방식은 NormalAttack에서 OnTriggerEnter2D()에서 MonsterBody가 검출되는 경우 이벤트 호출!
+	그럼 그것을 BaseMonsterController에서 전달되어진 특정 instance에서 
+	BaseMonsterState의 OnHittedByPlayerNormalAttack()을 호출하는 형태.
+
+	근데 그냥 이거 BaseMonsterState에서 바로 구독한 다음,
+	그곳에서 알아서 처리할 수 있도록 하는게 맞지 않을까?
+	그런데 내가 하고 싶은건.
+
+	1. BaseMonsterState에서 '직접' PlayerNormalAttack의 Event를 직접 구독한다.	
+	2. BaseMonsterState에
+	근데 근본적으로 지금 PlayerNormalAttack을 Event로 했을 때, 
+	어차피 지금은 
+
+	근데 이거 Event 형식으로 할 필요가 없다.
+	결론적으로 말이지 지금 나 이거 이상하게 쓰고 있음.
+
+6.17 해야할 것
+	(6.13 해결) Player, Monster 공격방식 OverlapCircle이 아닌 Collider로 관리하기. 그래야 커스터마이즈 하기가 훨씬 쉬워짐.
+	(6.13 해결) MonsterHitBox와 PlayerHitBox 충돌시에 서로 넉백먹이던지 플레이어만 넉백먹이던지 해야함. 자식오브젝트로 양쪽에 KinematicRigidBody2D 추가로 해결.
+	(6.13 해결) CollisionLayer에 PlayerBody, PlayerAttackBox, MonsterBody, MosnterAttackBox 추가
+	(6.13 해결) 이제 StatusPopup, DamagePopup 원하는 대로 작동. 즉, 앞에 그려짐. TMP가 아닌, TMPUI 사용하는 것으로 해결. 좀 허무...
+	(6.17 해결) PlayerSKillSpawnReaper ColliderTrigger 방식으로 수정.
+	(6.17 해결) MonWarden과 MonRedGhoul은 PlayerSkillKnockbackBoom의 Knockback을 씹는 문제 해결. Monster들의 RigidBody2D CollisionDetectionMode를 다 Discrete로 변경.
+	(6.17 해결) PlayerNormalAttack 방식을 UnityAction을 이용한 이벤트 호출에서 다시 원래 방식으로 바꿈. Event 형식으로 전달하는게 생각해보니까 말이 안되는 동작이었어.
+
+6.18 해야할 것
+	PlayerNormalAttack 방식 다시 Event뿌리는 걸로 수정하자. 이제 좀 확실히 알겠다.
+	나는 BaseMonsterController 몰라. 걍 이벤트 뿌릴테니까 맞은놈이 알아서 처리하삼~ 하면 되는거잖아.
+	그니까 GameObject도 넘겨줘 그냥.
+
+6.20 해야할 것
+	Monster, Player 각각 맡고있는 자식오브젝트들과의 결합도를 줄이기 위해서 최선을 다했다아... 특히 Hitted방식, UI Change 방식 EventDriven 형식으로 나름 바꿨음. 
+	(해결) MonsterSpawnEffect 수정.
+	(해결) PlayerHitEffefct 수정.
+	(해결) PlayerMovementEffect 수정.
+	(해결) PlayerForceFieldEfect 수정.
+	(해결) PlayerUIHpBapr 수정.
+	PlayerSkill들 자기 자신이 책임질 수 있게.. -> 이제 요거 도전!!
+	(해결) PlayerHittedState에서 Sound, CamShake, Time Manager들 호출하고 있던거 다 PlayerControllerHitted에서 처리할 수 있도록 수정해야 함. 
+	
+	(해결) PlayerBlockSuccess1Frame 튐. AnimationClip Loop 체크 해제해서 해결.
+	MonsterState-> 분리할거 찾아보장.
+
+6.21 해야할 것
+	(6.21 해결) PlayerTextPopup, MonsterTextPopup 분리해야 함. 그래야 더 편할 듯
+	(6.21 해결) AttackLight 분리하장. -> 그냥 냅두기로 함. 배보다 배꼽이 더 커질거 같음. ->  Player, Monster 분리해서 결국 했음요.
+	이제 직접 접근하는건 FootDustParticle 밖에 없음.
+	(6.21 해결) PlayerSkill들 커플링 분리해보자아아아 완료
+
+
+PlayerSkill 확장가능하게 만들기이..??
+지금
+PlayerIdle, Run State 에서 입력처리 해가지고,
+PlayerController에 접근해서 타이머 돌게 하고,
+PlayerController에서는 쿨타임 이미지 관리하고..
+뭔가 이상함.
+
+이거 그냥 PlayerSkill 파가지고 알아서 작동하게 만들자.
+
+Event 형식으로 만들어서 말이지.
+
+PlayerController에서 Event 듣고 있다가,
+C, A, S 눌리면 Event 쏴줌.
+
+그러면 PlayerSkill에서 내꺼다!
+싶으면 State변경해주고, 
+SkillTimer돌리고,..
+
+PlayerSkillManager가 있음.
+
+그리고 그녀석이 PlayerSkill을 관리함.
+
+PlayerSkill들이 있고 그 나머지가 관리함여.
+
+PlayerSkillRoll
+PlayerSkillSpawnReaper
+PlayerSkillSpawnShooter
+PlayerSkillSpawnBringer.
+
+6.24 할일
+	PlayerSkill Naming 수정하기. 됐음요.
+		PlayerSkill 불필요한 동작이었던 LuanchBoom 클래스 삭제.
+	Tutorial Sequence 로 변경. 
+		-> Sequence 할 필요 없이 걍 TutorialEvent 생성하는걸로 퉁침여.. 이제 SisterController 상속구조 만들장. TutorialSister, ConversationSister로 구분하장.
+	Skill Tutorial 추가.
+	UI 고고고싱
+
+
+6.25 할일
+	SisterDisolveEffect로 반딱반딱하게
+	TutorialScene 완전 구현
+	MonsterAnimSlow 되는거 왜 그러는지 확인해야 함. -> ISlowable로 구현해볼까?? 다중상속.
+	
+
+
+
+TutorialSequence
+
+RollTutorialSequence
+
+지금 해야하는 것...??
+
+튜토리얼은 완성했다고 치자.
+
+그치?
+
+그러면
+
+
+몬스터 추가
+	1. 아쳐 추가
+	2. 스위퍼 추가(쉴더 추가함)
+	3. 거너 추가
+	4. 보스 추가
+
+
+스킬 방식 바꾸기.
+사신소환, 슈터소환이 아니라,
+판다가 발사하고,
+판다가 때리는 방식으로 바꾸자.
+
+레벨업 시스템을 넣을거냐 말거냐...
+이거 할려면 다시 두달 걸린다.
+이거 포기하자.??
+
+본체를 강화할지,
+스킬을 강화할지 선택하게 하는거 정도는 할 수 있을지도..?
+
+그러면 끝.
+
+지금 그럼 필요한 건
+
+1. 튜토리얼 깔끔 완성 (화욜)
+2. 스킬 변경 (수욜)
+2. 일반몬스터들 추가 (목욜)
+3. 보스몬스터 추가 (금욜)
+4. 메인플레이씬 완성 (토욜)
+6. Pollish (일욜)
+
+
+그 다음에 레벨업 시스템 구현할지 말지 고민하기.
+
+6.27 해야할 것
+	(6.28 해결) 1. ILaunchable 구현해서 Archer, Gunner, Shielder 원거리 공격 가능하게 하기. 
+	2. Shielder 원거리 공격 가능하게 하기 위해서 상태 추가하기.
+	3. Monster들 StatData, AwarenessRange 조정하기.
+	4. Monster들 세부조정.
+	5. Monster들 비주얼 체크.
+	(6.28 해결) 6. Projectile 제대로 구현.
+
+
+6.28 오전 내에 해야할 것
+	(6.28 해결) Projectile Animation Event 연동하기
+	(6.28 해결) Projectile Monster와 연동하기.
+	(6.28 해결) 인터페이스(ILaunchable)로 나눌지, 상속(BaseLaunchMonsterController)을 하나 더 팔지 정하기.
+	공격 패턴 2개인 Shielder 완전 구현.
+	나머지 6.27일에 해야할 것들 다 하기.
+	BossMonster만들기
+	
+	BaseMonsterController에서 구조를 바꿔버리자.
+	IMelleAttackable,
+	ILaunchAttackable, 로 구현할 수 있게.
+	그리고 상태도 하나 더 추가하는거지.
+	LaunchAttackState를 하나 더 추가함.
+	그리고 AttackState들을 관리할 수 있게 해줘.
+
+	stringKey 관리는 enum으로 하기??
+	알아서 돌아갈 수 있게
+	
+	
+	ProjectileType을 기능별로 나누자.
+	
+	Damage를 줄 수 있는 type,
+	Knockback을 줄 수 있는 type,
+	Parallysis를 줄 수 있는 type,
+	
+	Projectile ProjectilePool에서 Get하고 죽을 때 return 할 수 있도록 변경
+	Get할 때 Init 해서 다 초기화 할 수 있도록 변경
+	각 Type별로 Damage, Knockback, Stun 걸 수 있도록 변경.
+	즉, 플레이어와 상호작용할 수 있또록 변경.
+	
+	이제 PlayerInteraction 할 차례!!!
+
+	KnockBack은 더 멀리 가게 하면서 InvincibleTime 적용하자.
+	그리고 넉백포스 적용전 일괄적으로 적용위해서 속도 0으로 깨긋이 밀어.\
+	Player가 Block하면 터쥐기.
+	
+	Block까지 구현 완료.
+
+6.28 한 일
+	MonsterPorjectile 2가지 구현. (Damage, Knockback type)
+	그에 따른 ProjectilePool 구현
+	그에 따른 Monster의 IMelleAttackable과 ILaunchable로 클래스 쪼갬.
+	MonsterProjectile과 상호작용하는 PlayerController 코드 구현
+
+6.29일 해야할 일
+	이제 Shielder 구현하고 -> 이거 버리자. 다르넉 구현하자. 
+	BossMonster구현하면 된다.
+Monster-> AttackLaunchState에 들어가.
+ValidAnimTiming에 Launch를 호출해.
+Launch에서 Event 뿌려.
+그럼 내가 속해있는 MonsterContrller를 아는 녀석이 Ilanchalbe을 탑재한 녀석인지 확인해.
+그리고 발사했는지 Bool 체크해.
+그럼 그곳에서 발사아!!
+하고 Proejjctile이 알아서 작동해
+
+FlamerMonsterSpawnBox 구현하면 됨.
+
+
+
+7.1일 해야할 일
+	고쳐야 할 것
+		(7.1 해결) PlayerAnimFullyPlayed 한곳에서 관리하고 PlayeState에서 추상함수로 AnimFullyPlayed 한 번에 관리할 수 있게.
+	해야 할 것
+		(7.1 해결) MonsterController 상속구조 수정.
+		(7.2 해결) BossMonster완전 구현 
+
+7.2 해야할 일
+	MainPlayScene 완전 구현
+		1. BossRoom도 구현해야 함.
+	Polish
+	BigAttackParticle 여러 몬스터한테도 적용 가능하게 바꾸자.
+	Player가 Monster 통과할 수 있게 바꾸자.
+	CamManger, CamShake Event가 아닌 그냥 직접호출로 바꾸자.
+	(7.4 해결) StreetPlayScene,
+	(7.4 해결) ColossalCavePlayScene 구현
+	(7.4 해결) CaveEnterance 구현하기 그래서 CaveScene으로 이동하게. 
+	(7.5 해결) PlayerRespawn 구현하기. 그래서 SpawnPlace에서 리로드 하게. 근데 PlayerUI는 제대로 업데이트 안됨. 이거 수정해줘야함.
+	(7.5 해결) PlayerMovementEffect 제대로 나오게. 
+	(7.5 해결) PlayerLedge 제대로. 즉 중간에 타는 일 없이 끝자락에 딱 걸리게 요거요거.. Ledge해야함. GraundCheck부분도 수정. 근데 Ledge 방향 바꾸기 없애야함. 버그 있음
+
+	(7.11 해결) Monster들 Light 수정
+	Player Light 수정 -> rot으로 바꾸면 해결되기 함.
+	(7.5 부분해결) PlayerBody 검출하는 것들 다 layerCheck로 바꿔야 함. collision.gameObject.layer == (int)define.EColliderLayer.PLAYER_BOD
+	Tutorial 여동생 대화 다끝난 다음에 Player가 계속 E 누르고 있으면 대화 한번 더 켜지는 버그 해결해야 함.
+	PlayerStaticEvent들 정리하기.
+	MonsterGimic 추가하기. 와든의 공격효과는 Blind, 플레이머의 공격효과는 화상, CagedShocker의 공격효과는 넉백. 등등.. 
+	즉, 몬스터 특성을 더 추가해야함.
+	그림자 추가 여부
+	Monster들 DieState Enter할 때에  RigidBody.Enable = false 해야 함. 지금은 플레이어가 무형의 벽에 가로막혀버리는 것 처럼 되버림.
+	(7.5 해결) PlayerState 코드 정리.(OnAnimFullyPlayed로 다 바꾸기.)
+	
+	
+7.6 해야할 일
+	몬스터 공격 특성 추가하기.
+	넉백, 실명, 화상, 슬로우, 다 걸게 해보자.
+	MonsterAttackCharacterstic
+	
+	StatusEffect
+	EType
+	Knockback,
+ 	Blind,
+	Burn,
+	Slow,
+	Parallysis,
+7.7 오전 내에 해야할 일
+	(7.11 해결) MonsterStatusEffect 구현.
+	(7.11 해결) Player와 어떻게 interaction 할 것인가. 그냥 MonsterStatusEffect에 따라서 Player가 알아서 반응하게 만듦.	
+		
+
+7.10 해야할 일
+	(해결) FullScreenEffectManager 구현. 
+	(해결) Slow 구현 반절 완료. 이펙트 있께 해야하므로 SlowPlayerDamageFlasher 구현.
+	(해결) 화상.
+	(해결) 화상 Effect 구현하기. -> 꼭 나중에라도 구현해야 한다.
+
+7.11 해야할 일
+	(해결) CamZoom 없애버리자. 
+	(해결) 몬스터들 세부수치 조정
+
+7.12 해야할 일
+	(해결) Monster들 DieState Enter할 때에  RigidBody.Enable = false 해야 함. 지금은 플레이어가 무형의 벽에 가로막혀버리는 것 처럼 되버림.
+			-> 이럴 경우에 Monster가 그냥 Platform아래로 하염없이 떨어진다... 그냥 MonsterBody와 PlayerBody의 CollisionLayer를 아예 체크 해제해버림.
+			-> 따라서 이제 필요없어진 RollState의 CollisionLayerCheck도 삭제함.
+			-> 대신 이제 PlayerNormalAttack1의 Dash기능을 손봐야함. 
+	(해결) PlayerNomalAttack1이 Input에 따라서 Dash, NoDash로 나뉘어지게 함.
+	(해결) MonsterProjectile이 PlayerRollState일 때는 무시하게 바꿈. 
+	(해결) MonsterProjectile 코드중복 피하고, PlayerController에서 MonsterProjectile에 반응하는 함수들 통합시켜야 함. 지금은 너무 구체적임.
+			-> Damage, Knockback, Stun Projectile 하나로 통합.
+	(해결) Player가 Monster 통과할 수 있게 바꾸자.
+	(해결) PlayerBlock 되는 방식 바꿔야 함. 자기 자신은 안밀리게.
+	(해결) 몬스터들 HitKnockbackState 1.2초로 시간 늘림. 이제 플레이어가 그 시간내에 다양한 행동 가능.
+	(해결) PlayerSKillContrller 코드 정리. 이제 PlayerSkillController에서 Input 관리도 함.
+ 
+	(해결) PlayerSkill Projectile도 바꾸기..? 하지만 생각해보니 안됨. 왜냐면!! 고유의 넉백효과로 발동되기 때문. 그러면 겉모습만 바꾸자.
+	(부분해결) PlayerSkill Projectile도 StatusEffect로 바꾸기??? 이거 고민해보자.
+	(부분해결) SkilNaming 다시 한 번 정리해야한다.
+	(해결) MonsterAttackState일 때에, WeaponLight꺼야함.
+	(해결) PlayerStaticEvent들 정리하기. -> 삭제해버림요!!
+	(해결) Player Light 수정 
+	Tutorial 여동생 대화 다끝난 다음에 Player가 계속 E 누르고 있으면 대화 한번 더 켜지는 버그 해결해야 함.
+	BigAttackParticle 여러 몬스터한테도 적용 가능하게 바꾸자. 이거 고민 해보자아.
+	PlayerMovmentEffect JumpPosition 조정해야 함.
+	PlayerSkillLaunchBoom Light 수정해야 함.
+	Slow효과 구르기에도 적용되게?? 이동속도만 느려지게 하는게 나을 거 같기도 함.
+	눈에 보이는 버그들 몇개 고치기.
+	
+7.18 해야할 일
+	눈에 보이는 버그들 몇 개 고치기
+		(보류) 1. TutorialScene에서 여동생 대화 다 끝난 다음에 Player가 계속 E 누르고 있으면 대화 한번 더 켜지는 버그 해결해야 함.
+						-> 이건 나타났을때 다시 해결하도록 하자.
+		(7.19 해결) 2. LedgeClimbLayer와 PlayformLayer경계에서 Player가 끼어서 이동하지 못하는 버그 해결하기.
+					-> BoxCollider를 CapsuleCollider로 변경해서 해결
+		(7.19 해결) 3. PlayerAttackLight 한 번씩 안켜지는거 해결해야 함.
+					-> 왜 안되는가
+						AttackLightController에서 PlayerConroller의 ChangeEvent를 구독하고 있음.
+						OnPlayerStateChanged에서 AttackState일 때에만 TurnOn을 호출함.
+						AttackLightController에서 PlayerAttackState의 AttackEndEvent를 구독하고 있음.
+						이 AttackEndEvent를 호출하는 시점은 Player가 다음 공격으로 넘어가지 않을때에 호출 함.
+						그러면 AttackLightController에서 OnAttackEnd일때 TurnOffLight을 함.
+
+						근데 노말공격 1을 연속으로 계속하면, TurnOn이 씹히는 현상이 발생함.	
+						왜냐?
+						AttackState.Exit()에서 결국 TurnOff을 호출하는 셈인데,
+						코루틴이 실행되는 와중에,
+						다시 공격버튼을 누르면
+						ChangeState에서 Event를 받아서 TurnOn을 호출해버림.
+						그러면 Light2D.Intencity를 동시에 접근하니 하나가 씹혀버리는 문제가 발생하는 것 같음.
+						내 생각에 해결책은, TurnOffLight를 
+
+					-> 해결 방법
+						TurnOn을 코루틴을 이용해 0.1초 후에 호출하는 것으로 해결.
+						
+		(7.19 해결) 4. PlayerUI 바로 반영 안되는거 해결해야 함. 
+ 					-> 왜 안되는가
+						PlayerUICanvasObject가 있음
+						Child로 UIPlayerHpBar Script가 있음.
+						UIPlayerHpBar는 UIHealthBar를 상속함.
+						UIHealthBar는 Awake함수에서 추상함수 Init을 호출함.
+					-> 해결 방법
+						Unity 호출 순서 문제였음. Start함수에서 Full로 채우기로 수정. 이제 제대로 반영
+		 
+						
+	(7.19 해결) BigAttackParticle 여러 몬스터한테도 적용 가능하게 바꾸자. 이거 고민 해보자아.
+			- Monster들이 각자 Patricle 가지고 있도록 함.
+	(7.19 해결) Monster들 StatusText 일제히 뜨는거 해결하기. 
+			-> Nomal, Boss 각각 다르게 UITextController 만들어서, 들고 있는 mc 에서 상태 변화가 맞는지 체크하고 적절하게 팝업
+	(7.19 해결) PlayerMovmentEffect TwiceJumpEffect 재생 안되는거 재생시켜야함.
+			-> InAir에서 DoJump 할 때 이벤트 뿌려주는 형식으로 해결.
+	(7.19 해결) PlayerSkillLaunchBoom Light 수정해야 함.
+	(7.19 해결) UIDamagePopup에서 실제 받은 Damage 팝업되게 수정하기.
+			-> Stat에서 Hp깎는거 함수 호출명 바꾸고, 실제 Damage return 하도록 수정.
+
+7.22 해야할 일
+	(7.25 해결) CaveScene 완성하기. 
+	(7.25 해결) BossRoom만들기
+	(이거 그냥 안하기로 함) Camera 아래 누르면 아래 볼 수 있게 하기.
+	(7.25 해결) CamSwitchManager를 모든 Scene에서 사용할 수 있도록 구현하기.
+	(7.26 해결) MonsterSpawner 구현하기.
+	(7.25 해결) CaveScene SwitchCam 구현하기.
+	(7.24 해결) TutorialScene CamConfiner 더 제대로 구현. 문 너머를 볼 수 없게.
+			-> Confiner의 다음 박스 콜라이더 안에 카메라가 들어가면, 카메라가 빈 공간에서 그 다음 공간으로 갈 수 있다.
+			-> TutorialScene의 Confiner조정을 위해 맵을 한 번 조정해야 함. 
+	(7.25 해결) DoorLight Closing 일 때는 뺴기.
+	(7.30 해결) CaveScene BossFight 구현하기.
+	(7.30 해결) BossMonsterFight Sequence 구성하기. ex) 플레이어가 들어와서 카메라가 바뀌면 -> 그때 idle상태에서 깨어나기. 이런식..
+	(7.30 해결) PlayerFallDeadZone 구현. 이제 특정한 위치에서 떨어져서 TriggerEnter하면 DieState로 변경됨.
+	(7.30 해결) BossMonsterAttackType 지금 화상임. 다른걸로 변경해야 함. 
+					-> 넉백타입으로 변경
+7.31 해야할 일
+	Sound 입히기.
+	MonsterPatrollZone 구현하기. 그곳을 벗어날 수 없게.
+	ObjectPool에서 이미 썼던 몬스터를 다시 MonsterGet할 때에 파티클 뿌리는거 없게하기. 몬스터 스폰 이펙트 잘 나오게 하기.
+	각 Scene의 목적 뜨게 하기. 예를들면 몬스터들을 다 죽이는 조건을 달성해야만 CaveScene으로 넘어갈 수 있게, 그리고 보스룸 열리게.
+	
+	
+9.26 해야할 일
+	1. Player, Monster 능력치들, Info들 DataSheet Json으로 만들기.
+	2. 여기저기 이벤트 떡칠한거 수정하기. 즉, 잘못 사용하고 있었음
+	3. NamingConvention 다시 정하기, 지금 Controller가 너무 많은데 이거 관리하기??
+		일단 깝치지 말고.. UI먼저 작업하자.
+	4. UI 작업 시작하기 
+	5. PlayerStat, PlayerUI 띄우기이이이.
+
+9.26 하는 일
+	PlayerStat 창 만들기.
+
+9.27 한 일
+	UIManager추가해서 I 키 눌릴때마다 UI_Stat 뜨게 만듦.
+
+9.29 한 일
+	 인벤토리 껍데기 구현, 아이템 습득 로직 구현, ItemDataSheet추가, Data.Contents ItemData들 추가..
+9.30 할 일
+	아이템 탈착 구현, 소비슬롯 구현, 아이템 삭제 구현	
+	(9.30 해결)인벤토리 내 아이템 이동 구현완료.
+	(9.30 해결)ItemDescription 구현 완료.
+	소비슬롯 구현중...
+	 
+	
+	ItemDescription 구현 완료, 인벤토리 내에서 아이템 이동 구현 완료.
+10.1 할 일
+	Consumable 소비 슬롯 구현.
+	Stackable 구현
+	Consumable소비슬롯 껍데기 구현, ConsumableItem 아이템 겹치기 구현중...
+
+	Stackable 구현 방향 ->
+		Icon에 TextProUI Component추가.
+		Icon이 그거 들고있음.
+		Icon에 int StackCount 추가.
+	 	현재 들고있는 녀석의 ItemInfo가 Consumable이면, StackCount도 반영할 수 있게 만들기.
+		Player가 습득한 ItemType이 Consumable이면, 비어있는 슬롯 찾을때 우선순위 정함.
+			1. 똑같은 Consumable이 있다면 그곳에다가 ItemCount만 ++1 시킴.
+			2.  똑같은 Consumable이 없다면 원래 로직대로 실행.
+		(10.2해결)ConsumalbeItemCountText Drag처리 어떻게 해야할지, Swap할때 text처리 제대로 안되는거 내일 수정해야 함.
+10.2 할 일
+	Consumable 소비 기능구현.
+
+	3가지 경우가 있는데,
+	아무것도 없는 경우 -> 그냥 넣으면 됨.
+	이미 있던 경우 -> 똑같은 녀석인지 확인해서 똑같으면 아무것도 안함. 똑같지 않으면 교체.
+	다른 슬롯에 같은 녀석이 있던경우 -> 자리만 교체.
+
+	(10.2 해결) ConsumableSlot 기능 구현 완료.
+	(10.2 해결) Player가 ConsumableSlot에 있는 ConsumableItem 사용할 수 있도록 기능 구현완료.
+
+	Equipable 구현해야함.
+	(10.2 해결) ItemEquipable 장착 구현 완료. 이제 탈착 구현해야함.
+
+10.3 할 일
+	(10.3 해결) 아이템 탈착 구현완료.
+	(10.3 해결) 아이템 착용시 추가 능력치 PlayerStat에 반영. UI에도 반영. 전투에서도 추가된 능력치로 계산되게 반영 완료.
+	아이템 착용시 PlayerStat에 적용되게 해야함
+	그리고 UIStat에도 적용되게 해야함.
+	아이템 삭제 구현. 그냥 인벤에서 곧바로 가는 삭제는 구현이 됐지만,
+	ConsumableSlot에 올려놓은 상태에서의 삭제 구현,
+	EquableSlot에 올려놓은 상태에서의 삭제구현 해주어야 함.
+	그리고 DiscardSlot에 올려놓은 상태에서 그냥 Inventory창 닫았을때 처리도 해주어야 함.
+
+10.4 할 일
+	(10.4) 아이템 삭제 완전구현 완료.
+	EquipableSlot에서 InventorySlot이 아닌 다른 곳에 Drop 했을 때 다시 제자리로 가게 수정.
+	그냥 단박에 Discard 하도록 구현하자. Rollback 이런거 신경 안쓰고...하려다가 그러지 않겠오.
+	그냥 DiscardSlot에 올려놓으면 InvenItem에서 사라지게. 즉, 하나밖에 없게 구현하자.
+	ConsumableSlot에 올려놓은 상태에서의 ConsumableItem 삭제 구현,
+	EquableSlot에 올려놓은 상태에서의 삭제구현 해주어야 함.
+	그리고 DiscardSlot에 올려놓은 상태에서 그냥 Inventory창 닫았을때 처리도 해주어야 함.
+	ConsumableText 정보 어디로 날아가는지 확인하자여
+	Drag중에 인벤토리창 닫으면 어떻게 해야할지 처리해주어야 함.
+	UI_PlayerConsumableSlot Event 두번 구독하는거 수정해주어야 한다.
+	와 이거 struct 때문이었어 ㅅㅂ!!!!!! 드뎌ㅓ 어쨋든 됏다.
+	
+	인벤토리 비주얼 업데이트 해야함.
+
+10.6 할 일
+	(10.6 해결) 소비슬롯에 아이템 넣은 다음, 다음 포션 획득시에 카운트 업데이트 해주어야 함.
+	(10.6 해결) ConsumableCoolTime 구현중
+
+	(10.6 해결) ConsumableSlot에서 아이템 사용할 때에 ConsumableEffect 추가.
+	(10.6 해결) 인벤토리, 아이템 Tween애니메이션 추가.
+
+	몬스터 플레이어한테 피격시에 넉백 방향 가끔 에러나는거 고쳐야함.
+	몬스터 죽으면 ItemGenerator가 Item 떨궈주게 해야함. -> 이거 그냥 아이템 배치해주는 것으로 일 미룸.
+
+	스킬시스템 구현
+	ESC누르면 다 닫히게.
+
+
+
+10.7 할 일
+	스킬시스템 구현중
+	스킬 트리 껍데기 완료.
+	스킬트리 data작성.
+	MonsterStat.cs의 EMonsterStatusEffect를 Skill에도 공통적용 시키기 위해서 Naming수정.
+	data.SkillInfo 추가. 이제 data 읽어와서 관리하게 만들 거임.
+	Skil_Icon, SKillDescription 추가.
+	이제 스킬 갈아끼우는거 구현하고,
+	스킬들 Data에서 긁어온걸로 동작하도록 수정해야 함.	
+ConsumableSlot에서 아이템 사용할 때에 ConsumableEffect 추가. 인벤토리, 아이템 Tween애니메이션 추가. 스킬 시스템 구현 중
+
+10.8 할 일
+	1. 스킬들이 DataManager에서 긁어온 정보 바탕으로 동작하게.
+	2. Skill들 이제 PlayerSKillManager에서 관리하고, 동작하게 함. 오오오 뿌듯해애...
+	3. UISkillCoolTimer도 이제 PlayerSkillManager에서 관리함. 
+	4. UI들 Tween은 TweenManager통해 할 수 있도록 수정. TW중인 애는 동작 안되게 해서 더 안전하고 관리도 용이해짐
+	5. SkillSlot Tween 구현.
+ 	6. 안전한 TW을 위한 Clear호출 각 Scene에서 해줌.
+	
+	1. BlackFlame, SwordStrike 스킬 추가.
+	2. 이제 PlayerSkill에 맞는 몬스터들 OnHittedByPlayerSkill함수 하나에서 관리할 수 있게 수정.
+	3. 짜잘한 SkillObject, SkillController 코드들 수정.
+	4. 내일 SkillScript들 상속관계 만들고 깔삼하게 정리해주어야 한다.
+
+	SkillObject들 상속관계 만들어주어야 한다.
+	레벨 시스템, 스킬트리 시스템 구현!	
+	몬스터 죽을때 Collider 꺼주어야 할 덧.
+	
+		
+10.9 할 일
+	1. SkillObject 상속관계 만들어줌. 근데 이게 맞나 싶기도 하고..
+	2. SkillNamingConvention 수정해줌. 속이 편-안
+	3. data.SkillInfo에 프리팹 경로들 넣어줘서, 경로들 하드코딩한거 없앰.
+	4. SkillManager 짜잘한 수정..
+	5. Skill_Controller와 SKill_Object로 나눴던거 합치려다가 그대로 내비둠. 이게 더 나은거 같긴해.. 
+	SkillScript들 어느정도 정리 끝났으니 이제 레벨시스템을 만들자아
+	
+
+	레벨업 시스템 구현주우웅
+	1. 스킬들 스킬슬롯에 넣고 사용하게 만듦.	
+	2. UI에 ExpBar 추가하고 기능 구현 완료.
+	3. PlayerLevelManager추가.
+	 
+
+	레벨업 이펙트 쌈봉한거 찾자..	
+	3. 스킬트리 찍는거 만들자.
+	4. 스킬 비주얼 업데이트 해주어야 한다. 특히 라이팅!!
+10.10 할 일
+	레벨업 이펙트 쌈봉한거 찾자..	
+	3. 스킬트리 찍는거 만들자.
+	4. 스킬 비주얼 업데이트 해주어야 한다. 특히 라이팅!!
+	
+	스킬 레벨업 구현하기전 정리.
+
+	data또 해야하네.,.,??
+	스킬 레벨에 따른 스킬스탯 변동도 해주어야지..
+
+	스킬레벨업 시스템 구현완료
+	1. 각 스킬들이 최대 3레벨 까지 순차적으로 data가지고 있을수 있도록 data추가.
+	2. Skill들 레벨업 시킬 수 있게 됨.
+	3. 레벨에 따라서 알아서 잘 동작함. 까얏호우.
+	4. 이제 SkillUI 비주얼 업데이트 해주어야 한다.
+	5. Icon, Animation 등.... 가즈아!
+
+	UISkillTree 비주얼 업데이트 완료
+	1. SkillIcon 이쁜 녀석으로 갈아낌.
+	2. SkillDescription에서 Skill 애니메이션 됨.
+
+10.11 할 일
+
+	마나시스템 만드는 중.
+	마나시스템을 만들기 위해서는 Data에 마나 능력치도 추가해야한다??즉, MaxMana도 추가해야 함.
+	비주얼 업데이트.
+	UI, 스킬, 등등.. 아 근데 하나 더. 마나바 추가해야 한다...
+	마나시스템도 만들자...??너무 너무 마나가 없으니 너무너무 허전해.
+	마지막으로 만들 시스템.-> 
+	마나시스템. 
+
+
+	일단 기능들 부터 다 만들자.
+	SpawnPanda, SpawnReaper 스탯에 맞게 넉백, 그리고 마비효과 주는거 수정해주어야 한다.
+	HitBySkill 하면, 
+	State를 Hit으로 바꾼다.
+	그리고 StartCo해서 n초 후에 Idle로 바꾸게 한다.
+	근데 그 사이에 다른거 당할 수도 있잖아. 그러면 그 코루틴 취소하고 그 상태로 들어가게.
+	일단 그러려면, Hit의 AnimFullyPlayed를 없앤다.
+	그리고 그냥 몇초후에 다른걸로 선회하도록 수정한다.
+
+	그럼일단 이걸 해야지.
+
+
+	넉백들도 이제 외부에서 접근해서 적용하게 바꾸어 주어야 한드아아아.
+
+	플레이어에게 공격당하는 방식 수정해야 한드아아아아아아아아!!
+
+	MonsterUI들 이벤트 방식에서 그냥 MonsterController에서 들고 있도록 바꿈.
+	이게 말이 되는 듯 ㅅㅂ....
+
+
+	대공사 1차 완료. 커밋메시지 확인행.
+	1. MonsterController에서 이벤트 방식으로 작동하던 녀석들 상식적으로 수정.
+		MonsterController이벤트를 잘못된 방식으로 구독하고, 동작하고 있던 스크립트들 다 수정.
+		이제 정말 필요한 스크립트에서만(제발...ㅠㅠ) 이벤트 구독하고 그에 맞게 동작함.
+		물론 문제 발견되는대로 계속 수정할거임. 
+		결합도 줄이겠다고 이상한 짓을 저지른 예전의 내가 싸놓은 똥을 이제 치우네..
+	2. PlayerSkill 마비공격(사신소환), 판다의 넉백폭탄(판다소환)도 이제 스킬 스펙대로 몬스터와 상호작용하게 구현.
+		그거를 위해서 이상하게 짜놓은 코드들 수정하고 공사를 했지요...
+	3. 이상한 함수 이름들 수정. 이제 최대한 콜백함수에서만 On접두어 붙임.
+
+	내일 스킬 튜토리얼도 만들고 스킬 라이트들 조정해주어야 함.
+	
+10.12 할 일
+	
+	비주얼 비주얼!! 업데이트!
+	1. 스킬 UI, 스킬 비주얼(특히 라이팅 관련) 업데이트 완료.
+		이제 스킬 라이트 제때제때 시간 맞춰 잘 페이드아웃 되면서 꺼진다.
+		스킬UI도 유저가 더 확실히 자신의 현재 스킬레벨과 스킬포인트를 알 수 있다.
+	2. 몬스터 비주얼 업데이트 완료.
+		각 몬스터에 맞는 자연스러운 라이트 추가해줌.
+		그리고 이제 라이트가 제때제때 시간 맞춰 잘 페이드 아웃 되면서 꺼진다.
+	
+	고쳐야 할 것.
+	(해결!) 몬스터들 InitRespawn할 때 꺼놓은 Light들 다 켜줘야함.
+	(해결!) 몬스터들 죽을때 HealthBar가 왜 안없어지느냐. 업데이트에서 쥐롤하고 있으니까 안없어졌었지....지후야..
+	스킬레벨스프라이트 두개가 들고 있을수 없는지 확인해야함. <- 문제없음. 대체 무슨문제였을까?
+	몬스터들 시체 한 픽셀씩 위에 있는거 고쳐야함. -> SpriteSheet 자체를 뜯어 고쳐야함... 이건 ㅅㅂ 안될듯..
+	
+	
+	(해결)모든 Enum의 NamingConvention 수정 완료해야함.
+
+10.13 해야할 것.
+
+	튜토리얼 문구 수정하기.
+	튜토리얼씬 라이트들 깔기. (진행중)
+	PlayerController하드코딩된 수치들 다 data파일로 빼야함.
+	카메라 룩업다운 릿지디텍션 구역에서만 가능하게 해야 함.
+	SpawnAnimController 없애벌임. 필요 없었다..
+	(해결) 이동키 동시입력시에 스프라이트 Rotate 왔다갔다 계속 하던거 수정.
+	(해결) PlayerState접근제한자 수정함.	
+	(해결) 튜토리얼 매니저 코드정리.
+
+	구르기 UIHUD 수정해야함.
+	
+
+	UI StackSystem 구현해야함.
+	가장 최신 UI가 가장 위에 오게!!	
+
+	일단 튜토리얼 씬 끝내자.
+	스킬까지 찍어야 들어가는 걸로.
+	
+
+	튜토리얼 매니저 코드정리.
+
+10.14 해야 할 것
+
+	거의 막바지. 짜잘한 작업들 완료.
+	1. LevelUpAnim 추가.
+	2. PlayerHUD 구르기 UI 수정.
+	3. 가장 최신 UI가 가장 위에 오게 구현 완료. 
+	4. 스킬슬롯이 이제 안전하게, 상식적으로 작동함.
+		1. 슬롯에 스킬이 2개 다 차있을 경우, 이미 슬롯에 있는 스킬을 넣을 경우 반대 슬롯의 스킬과 스왑함.
+		2. 슬롯이 스킬이 1개만 있는 경우에 같은 스킬을 또 넣으려고 하면 스왑함.
+		3. 스킬을 하나라도 사용중일 때에는 스킬 교체 못함. 이전엔 이게 가능해서 이상하게 동작했었음.
+	내일 최대한 마무리 짓자! 특히 사운드작업!
+
+10.15 해야 할 것
+	1. 일시정지 구현완료.
+	2. 메인메뉴 정리완료.
+		1. 일시정지, 메인메뉴 버튼들 이제 ScaleTween으로 작동 안함. 컬러로 작동.
+		2. 일시정지 시에 동작 하지 말아야 할 것들 여러가지 처리 해줌.
+	3. Scene 전환시에 NullRefException 나던거 거의 다 잡은 듯..?
+		1. 씬전환시 처리해주어야 할 여러가지 것들 수정해준 보람이 있구운.
+	4. 물약, 스킬슬롯 씬전환 후에 정상적으로 작동하게 만듦.
+		1. 씬전환 될 때 데이타 날아가지 않도록 처리해주고 쿨타임 초기화 함.
+	5. 스킬, 물약 사용시에 스킬, 물약 교체 안되게 막아놓음. 
+	5. PlayerExpBar 레벨업 할 때 3초 꽉차있게 수정.
+	6. 보스몬스터 HitByPlayerSkill override함. 스킬들 의미있게 사용 됨.
+
+ 
+	세이브-로드도 구현해보자아? 그래야 파일 입출력 한다는거 보여줄 수 있을 듯.
+	아이템 배치해주기.
+	몬스터 시체 남기기.
+	몬스터 물약 드랍하게 하기.
+		TW들 SetLink다 걸어주기
+	SceneInit,Clear 정상적으로 동작하게 구현해야 한다.
+	MonsterWarden HeadLight 안꺼짐,.
+	BossMonster Light들 정리.
+	(해결) Pool에서 꺼낸  몬스터 HpBar 초기화 안된거 수정.
+	BossMonsterHpBar Die일때 HpBar 없애야함.
+	(해결) LightController 코드 수정. 코루틴 실행중에 enable=false 될 때에도 안전하게 동작하게 만듦.
+	
+
+	아쳐 DieState 제대로 호출 안되는듯? 확인해야 함.
+
+
+	MonsterData더 가다듬자.
+	PlayerDataSheet 빼놓기.
+
+10.16 할 일
+	모든 몬스터 라이팅 정리 완료!
+	1. LightController 코드 수정
+		1. 이제 TurnOffGraduallyTime 무조건 코드에서 설정하게 바꿈.
+		2. 실수 한 번에 기존에 잡아놨던 수치들이 다 날아갔따.. 또르르.. 
+		3. 얼른 데이타 파일로 다 빼놔야징..
+	1. 몬스터 라이팅 정리 완료.
+		1. 이제 Pool에서 꺼내서 재사용 되는 몬스터들도 라이팅 정상적으로 잘 동작한당.
+	3. 보스몬스터 라이팅 정리하기.
+		1. 보스 몬스터 라이팅 정리 완료.
+	4. 몬스터 시체 남기기 구현.
+		1. 인터페이스로 구현 완료.
+	5. 모든 Character들 두번째 공격 때 AttackLight가 코루틴 정상적으로 작동 안하던거 고침.
+		1. 진행완료한 코루틴내부에서 null 대입 해주니까 생각했던 대로 정상동작 됨.
+	
+10.17 할 일
+	(해결)시체가 왜 남아있지? 시체 남은거 왜 그러는지 짐작은감. 한번 Parent 설정 해줘서 그런거 같은데 이거 내일 체크해보자. SetParent안 하는 걸로..
+	
+	짜잘한 것들 수정
+	1. 몬스터 시체 씬 전환되도 남아있던거 수정.
+	2. UI_WSPlayerPopupStatusController 추가. 
+		1. 이제 마나 부족하거나 상태이상 상태 팝업 텍스트가 뜨니까 유저가 잘 알 수 있다.  
+	3. 포션 먹었을때 이상하게 PlayerHpBar HpText가 이상하게 동작하던거 수정.
+	이제 마지막 지루한 사운드 작업 주웅...!! 사운드는 리소스 찾기가 넘 빡쉐..
+
+	MonsterData더 가다듬자.
+	PlayerDataSheet 빼놓기.
+	몬스터 물약 드랍하게 하기.
+	일시정지 더 깔끔하게 정리. 마우스 레이캐스트 막기..?
+
+10. 18 할 일
+사운드 작업 완료! 지루하고 긴 작업이었따..
+1. 구린 사운드는 어쩔 수 없지만..ㅜㅜ 사운드 작업 완료!
+2. HeabySlicer 전진공격 구현 완료.
+3. CamLookUpDown 구현 절반 완료.
+4. 그 외 짜잘한 버그들 고침.
+	플레이어 관련 사운드 재생 완료.
+	플레이어 스킬 사운드 대입 완료
+	몬스터 어택 사운드 대입해야함.
+	Archer, Caged, HSlicer, Gunner, Flamer, Blaster, Warden, RedGhoul, Colossal
+	몬스터 다이 사운드 대입해야함.
+		아쳐 사운드 바꾸자
+
+10.19,20 할 일
+	CamLookUpDown 특정한 구역(주로 LedgeClim)에서만 가능하도록 구현완료.
+커밋메시지 확인하세요옹 거의 다 완료 했뜨아.
+1. Cam LookUp,Down 구현.
+2. 씬 바꿀때, 보스몹 들어갈때 몬스터 다 죽였는지 체크하고 들여보내기 구현.
+3. 몬스터 죽일때마다 확률적으로 회복 물약 주기 구현. 
+4. ManaBar 텍스트 추가 완료.
+5. 아이템에 LightController 붙임.
+6. BGM FadeOut기능 구현. 
+7. PlayerPopupStatus 포션, 스킬 사용 불가시 이유 세분화해서 표시
+8. MonsterEffectAnim들 부모 회전 안먹게 수정. 
+9. 그외 짜잘한 리소스들 수정.
+이제 진짜 99% 끄으으읕!! 하쥐만 스킬타입 꼼수로 해결했던거 뜯어 고치긴 해야한다.
+
+
+10.20 할 일
+소드스트라이크 음량 늘리기
+도어 컨트롤러 음량 늘리기
+EffectAnim들 고정시키기.
+
+ESkillType 꼼수 해결해야함
+HPBar Ratio 수치에 안맞느거 고쳐야함. 해결!
+포션 쿨타임, 없으면 엠티슬롯으로 출력하기.
+포션 사용중 드랍 막기.
+
+10.21 할 일
+내가 하고 싶은 일
+	스킬 타입을 4개로 한정짓고 싶다.
+		즉 SpawnReaper, SpawnShooter, BlackFlame, SwordStrike 4개로 한정짓고 싶음.
+		근데 나는 지금 각 레벨 마다 스킬타입을 따로 만들어놨음.
+		그렇게 만든 이유는 무엇일까?
+		
+나름대로 완서엉. 내일 영상 찍자아.
+1. 스킬레벨에 맞는 정보 불러오는거 enum 꼼수로 처리하던 것, 그 꼼수로 돌아가던 로직들 다 수정완료!
+	1. 이제 합리적으로 돈다!
+2. 여러가지 짜잘한 버그들, 맵 수정.
+이제 영상 찍고 코드들은 계속 정리하즈아! 코드 정리 다하면 그 다음 기능들 추가해야징.
+
+
+
+
