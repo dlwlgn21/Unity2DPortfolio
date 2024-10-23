@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-public class PauseManager 
+public sealed class PauseManager 
 {
     // TODO : MainMenu로 간 다음 다시 GameScene 로드했을 때에, PauseManager가 작동안하는 것 수정해야 함!
     public bool IsPaused { get; private set; } = false;

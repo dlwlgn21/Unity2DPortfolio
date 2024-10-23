@@ -5,7 +5,7 @@ using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 
-public class ProjectilePoolManager
+public sealed class ProjectilePoolManager
 {
     public const int MAX_BOMB_COUNT = 10;
 

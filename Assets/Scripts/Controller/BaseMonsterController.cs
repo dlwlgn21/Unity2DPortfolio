@@ -16,14 +16,14 @@ public abstract class BaseMonsterController : BaseCharacterController
     public Transform PlayerTransform { get; protected set; }
     public EMonsterNames EMonsterType { get; protected set; }
     public MonsterStat Stat { get; protected set; }
+    public MonsterHitAnimController HitAnimController { get; protected set; }
 
     protected PlayerController _pc;
     protected Coroutine _parallysisCoroutineOrNull = null;
-    protected MonsterHitFlasher _hitFlasher;
+    protected MonsterFlashController _hitFlasher;
 
     UI_WSMonsterPopupDamageController _damageTextController;
     HitParticleController _hitParticleController;
-    MonsterHitAnimController _hitAnimController;
 
     public override void Init()
     {
@@ -34,10 +34,10 @@ public abstract class BaseMonsterController : BaseCharacterController
             _pc = PlayerTransform.gameObject.GetComponent<PlayerController>();
             Stat = gameObject.GetOrAddComponent<MonsterStat>();
             HealthBar = Utill.GetComponentInChildrenOrNull<UI_WSMonsterHpBar>(gameObject, "UIWSMonsterHpBar");
-            _hitFlasher = Utill.GetFirstComponentInChildrenOrNull<MonsterHitFlasher>(gameObject);
+            _hitFlasher = Utill.GetFirstComponentInChildrenOrNull<MonsterFlashController>(gameObject);
             _damageTextController = Utill.GetFirstComponentInChildrenOrNull<UI_WSMonsterPopupDamageController>(gameObject);
             _hitParticleController = Utill.GetFirstComponentInChildrenOrNull<HitParticleController>(gameObject);
-            _hitAnimController = Utill.GetFirstComponentInChildrenOrNull<MonsterHitAnimController>(gameObject);
+            HitAnimController = Utill.GetFirstComponentInChildrenOrNull<MonsterHitAnimController>(gameObject);
         }
         InitStat();
     }
@@ -58,7 +58,7 @@ public abstract class BaseMonsterController : BaseCharacterController
         HealthBar.DecraseHP(beforeDamageHP, AfterDamageHP);
         _damageTextController.ShowPopup(actualDamage);
         _hitFlasher.StartDamageFlash();
-        _hitAnimController.PlayHitEffect(ELookDir, transform.position, eAttackType);
+        HitAnimController.PlayHitEffect(ELookDir, transform.position, eAttackType);
         if (eAttackType == EPlayerNoramlAttackType.Attack_3 || eAttackType == EPlayerNoramlAttackType.BackAttack)
         {
             if (BigAttackEventHandler != null)

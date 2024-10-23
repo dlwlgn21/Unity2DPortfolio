@@ -60,7 +60,7 @@ public struct ItemInfo
     }
 }
 
-public class UIManager
+public sealed class UIManager
 {
     UI_Statinfo _stat;
     UI_Inventory _inven;

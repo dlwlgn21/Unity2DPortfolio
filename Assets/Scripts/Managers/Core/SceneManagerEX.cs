@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-public class SceneManagerEX 
+public sealed class SceneManagerEX 
 {
     public define.ESceneType ECurrentScene { get; private set; }
     public void Init()

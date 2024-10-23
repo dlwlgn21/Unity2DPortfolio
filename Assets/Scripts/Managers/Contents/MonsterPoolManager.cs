@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
-public class MonsterPoolManager
+public sealed class MonsterPoolManager
 {
     public const int MAX_POOL_MONSTER_COUNT = 5;
     private Queue<GameObject> _archers      = new(MAX_POOL_MONSTER_COUNT); 

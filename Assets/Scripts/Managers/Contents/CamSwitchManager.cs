@@ -3,7 +3,7 @@ using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CamSwitchManager 
+public sealed class CamSwitchManager 
 {
     private CinemachineVirtualCamera _mainCam;
     private CinemachineVirtualCamera _roomCam;

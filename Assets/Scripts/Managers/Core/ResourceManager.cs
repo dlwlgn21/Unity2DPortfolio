@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceManager
+public sealed class ResourceManager
 {
 
     public T Instantiate<T>(string path) where T :Object

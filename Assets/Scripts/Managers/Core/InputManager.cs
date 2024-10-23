@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using define;
 
-public class InputManager 
+public sealed class InputManager 
 {
     public Action KeyboardHandler = null;
 

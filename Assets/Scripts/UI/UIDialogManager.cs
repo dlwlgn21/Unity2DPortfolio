@@ -8,7 +8,7 @@ using UnityEditor.Rendering;
 using System;
 using UnityEngine.Events;
 
-public class UIDialogManager
+public sealed class UIDialogManager
 {
 
     public bool IsTalking { get; private set; }

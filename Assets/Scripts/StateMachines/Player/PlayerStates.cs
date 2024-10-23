@@ -1,7 +1,6 @@
 using define;
 using DG.Tweening;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -178,7 +177,7 @@ namespace player_states
         //}
     }
 
-    public class Idle : BasePlayerState
+    public sealed class Idle : BasePlayerState
     {
         public Idle(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() { }
@@ -227,7 +226,7 @@ namespace player_states
 
 
     }
-    public class Run : BasePlayerState
+    public sealed class Run : BasePlayerState
     {
         public Run(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() { }
@@ -314,7 +313,7 @@ namespace player_states
     }
 
 
-    public class Jump : InAir
+    public sealed class Jump : InAir
     {
         // TODO : Static UnityAction으로 바꿔야 함.
         public Action TwiceJumpEventHandler;
@@ -443,7 +442,7 @@ namespace player_states
             return false;
         }
 
-        private void RaycastToLedgeLayer(ref RaycastHit2D headHit, ref RaycastHit2D bodyHit, Vector2 dir)
+        void RaycastToLedgeLayer(ref RaycastHit2D headHit, ref RaycastHit2D bodyHit, Vector2 dir)
         {
             headHit = Physics2D.Raycast(_ledgeHeadRayPoint.position, dir, RAY_DISTANCE, _ledgeLayerMask);
             bodyHit = Physics2D.Raycast(_ledgeBodyRayPoint.position, dir, RAY_DISTANCE, _ledgeLayerMask);
@@ -461,7 +460,7 @@ namespace player_states
 
     }
 
-    public class FallCanTwiceJump : BaseFall
+    public sealed class FallCanTwiceJump : BaseFall
     {
         private bool _isAlreadyTwiceJump = false;
         private bool _isHaveToTwiceJump = false;
@@ -524,7 +523,7 @@ namespace player_states
         }
     }
 
-    public class FallToTwiceJump : BasePlayerState
+    public sealed class FallToTwiceJump : BasePlayerState
     {
 
         public FallToTwiceJump(PlayerController controller) : base(controller) {}
@@ -544,19 +543,19 @@ namespace player_states
         }
     }
 
-    public class TwiceJumpToFall : BaseFall
+    public sealed class TwiceJumpToFall : BaseFall
     {
         public TwiceJumpToFall(PlayerController controller) : base(controller) {}
     }
 
-    public class Climb : BasePlayerState
+    public sealed class Climb : BasePlayerState
     {
         public Climb(PlayerController controller) : base(controller) { }
 
         ECharacterLookDir _eCharacterLookDir;
         private const float X_OFFSET = 0.7f;
         private const float Y_OFFSET = 1.4f;
-        private const float ANIM_DURATION_HALF_TIME = 0.3f;
+        private const float ANIM_DURATION_HALF_TIME_IN_SEC = 0.3f;
 
         public override void OnAnimFullyPlayed() { _entity.ChangeState(EPlayerState.Idle); }
 
@@ -565,7 +564,7 @@ namespace player_states
             _eCharacterLookDir = _entity.ELookDir;
             PlayAnimation(EPlayerState.Climb);
             Vector3 pos = _entity.transform.position;
-            _entity.transform.DOLocalMove(new Vector3(pos.x, pos.y + Y_OFFSET, pos.z), ANIM_DURATION_HALF_TIME).OnComplete(OnYMoveTWEnd);
+            _entity.transform.DOLocalMove(new Vector3(pos.x, pos.y + Y_OFFSET, pos.z), ANIM_DURATION_HALF_TIME_IN_SEC).OnComplete(OnYMoveTWEnd);
         }
         public override void FixedExcute()
         {
@@ -581,13 +580,13 @@ namespace player_states
         {
             Vector3 pos = _entity.transform.position;
             if (_eCharacterLookDir == ECharacterLookDir.Right)
-                _entity.transform.DOLocalMove(new Vector3(pos.x + X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME);
+                _entity.transform.DOLocalMove(new Vector3(pos.x + X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME_IN_SEC);
             else
-                _entity.transform.DOLocalMove(new Vector3(pos.x - X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME);
+                _entity.transform.DOLocalMove(new Vector3(pos.x - X_OFFSET, pos.y, pos.z), ANIM_DURATION_HALF_TIME_IN_SEC);
         }
     }
 
-    public class Land : BasePlayerState
+    public sealed class Land : BasePlayerState
     {
         public Land(PlayerController controller) : base(controller) { }
 
@@ -608,7 +607,7 @@ namespace player_states
             PlayAnimation(EPlayerState.Land);
         }
     }
-    public class Roll : BasePlayerState
+    public sealed class Roll : BasePlayerState
     {
         private readonly Vector2 ROLL_FORCE = new(7.5f, 2f);
         public Roll(PlayerController controller) : base(controller) { }
@@ -674,7 +673,7 @@ namespace player_states
         }
     }
 
-    public class NormalAttack1 : NormalAttackState
+    public sealed class NormalAttack1 : NormalAttackState
     {
         public NormalAttack1(PlayerController controller) : base(controller) 
         {
@@ -712,7 +711,7 @@ namespace player_states
 
     }
 
-    public class NormalAttack2 : NormalAttackState
+    public sealed class NormalAttack2 : NormalAttackState
     {
         public NormalAttack2(PlayerController controller) : base(controller) 
         {
@@ -740,7 +739,7 @@ namespace player_states
 
     }
 
-    public class NormalAttack3 : NormalAttackState
+    public sealed class NormalAttack3 : NormalAttackState
     {
         public NormalAttack3(PlayerController controller) : base(controller) 
         { _eAttackType = EPlayerNoramlAttackType.Attack_3; }
@@ -759,7 +758,7 @@ namespace player_states
         }
     }
 
-    public class CastLaunch : BasePlayerState
+    public sealed class CastLaunch : BasePlayerState
     { 
         public CastLaunch(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
@@ -781,7 +780,7 @@ namespace player_states
         }
     }
 
-    public class CastSpawn : BasePlayerState
+    public sealed class CastSpawn : BasePlayerState
     {
         public CastSpawn(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
@@ -800,7 +799,7 @@ namespace player_states
         }
     }
 
-    public class Blocking : BasePlayerState
+    public sealed class Blocking : BasePlayerState
     {
         public Blocking(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
@@ -820,7 +819,7 @@ namespace player_states
         }
     }
 
-    public class BlockSuccess : BasePlayerState
+    public sealed class BlockSuccess : BasePlayerState
     {
         public BlockSuccess(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
@@ -844,14 +843,14 @@ namespace player_states
     }
 
 
-    public class HittedMelleAttack : BaseHitted
+    public sealed class HittedMelleAttack : BaseHitted
     {
         public HittedMelleAttack(PlayerController controller) : base(controller) { }
 
         public override void Enter()
         { PlayAnimation(EPlayerState.HitByMelleAttack); }
     }
-    public class HittedParallysis : BaseHitted
+    public sealed class HittedParallysis : BaseHitted
     {
         public HittedParallysis(PlayerController controller) : base(controller) { }
 
@@ -861,7 +860,7 @@ namespace player_states
             PlayAnimation(EPlayerState.HitByStatusParallysis); 
         }
     }
-    public class HittedProjectileKnockback : BaseHitted
+    public sealed class HittedProjectileKnockback : BaseHitted
     {
         public HittedProjectileKnockback(PlayerController controller) : base(controller) { }
 
@@ -870,7 +869,7 @@ namespace player_states
 
     }
 
-    public class Die : BasePlayerState
+    public sealed class Die : BasePlayerState
     {
         public Die(PlayerController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()

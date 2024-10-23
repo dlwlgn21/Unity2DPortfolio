@@ -2,7 +2,7 @@ using define;
 using System.Collections;
 using UnityEngine;
 
-public class MonsterSpawnManager
+public sealed class MonsterSpawnManager
 {
     public void Init()
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerRespawnManager
+public sealed class PlayerRespawnManager
 {
     PlayerController _pc;
     Vector2 _spawnPos;

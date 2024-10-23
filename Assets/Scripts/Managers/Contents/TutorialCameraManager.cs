@@ -6,7 +6,7 @@ public enum ECameraType
     MAIN_PLAY_CAM,
     ROOM_CAM
 }
-public class TutorialCameraManager : MonoBehaviour
+public sealed class TutorialCameraManager : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera _mainCam;
     [SerializeField] private CinemachineVirtualCamera _roomCam;

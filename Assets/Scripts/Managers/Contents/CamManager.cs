@@ -9,7 +9,7 @@ public enum ECamShakeType
     MONSTER_HITTED_BY_KNOCKBACK_BOMB,
     MONSTER_HITTED_BY_REAPER_ATTACK,
 }
-public class CamManager
+public sealed class CamManager
 {
     private GameObject _camShakeManager;
     private CinemachineImpulseSource _playerImpulseSource;
@@ -21,7 +21,7 @@ public class CamManager
     private const float MONSTER_HITTED_BY_KNOCKBACK_BOMB_FORCE = 0.9f;
     private const float MONSTER_HITTED_BY_REAPER_ATTACK_FORCE = 1.5f;
 
-    public CamFollowObject CamFollow { get; private set; }
+    public CamFollowObjectController CamFollow { get; private set; }
     public void Init()
     {
         if (GameObject.Find("@CamManager") == null)
@@ -37,7 +37,7 @@ public class CamManager
             PlayerController.HitEffectEventHandler += Managers.Cam.OnPlayerHittedByMonsterNormalAttack;
             BaseMonsterController.HittedByNormalAttackNoArgsEventHandler += Managers.Cam.OnMonsterHittedByPlayerNormalAttack;
             NormalMonsterController.MonsterChangeStateEventHandler += Managers.Cam.OnMonsterHittedByPlayerSkill;
-            CamFollow = Managers.Resources.Instantiate<CamFollowObject>("Prefabs/Cam/CamFollowObject");
+            CamFollow = Managers.Resources.Instantiate<CamFollowObjectController>("Prefabs/Cam/CamFollowObject");
             CamFollow.gameObject.name = "CamFollowObject";
             Object.DontDestroyOnLoad(CamFollow.gameObject);
         }

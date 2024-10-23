@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class TweenManager
+public sealed class TweenManager
 {
     const float T_VAL = 1.1f;
     const float BASIC_UI_TW_TIME_IN_SEC = 0.1f;
@@ -77,12 +77,12 @@ public class TweenManager
     {
         if (IsTweening(transform))
             return;
-        transform.DOScale(new Vector3(0f, 0f, 1f), timeInSec).SetEase(Ease.InOutElastic);
+        transform.DOScale(new Vector3(0f, 0f, 1f), timeInSec).SetEase(Ease.OutCirc);
     }
 
     public void EndToZeroScaleTWNoCareCurrTweening(Transform transform, TweenCallback callback, float timeInSec = BASIC_UI_TW_TIME_IN_SEC)
     {
-        transform.DOScale(new Vector3(0f, 0f, 1f), timeInSec).SetEase(Ease.InOutElastic).OnComplete(callback);
+        transform.DOScale(new Vector3(0f, 0f, 1f), timeInSec).SetEase(Ease.OutCirc).OnComplete(callback);
     }
 
 

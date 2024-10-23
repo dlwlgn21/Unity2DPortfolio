@@ -239,6 +239,8 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     }
 
     #endregion
+
+
     #region Private
     #region ANIM_CALLBACK
 

@@ -9,7 +9,7 @@ public interface ILoader<Key, Value>
 }
 
 
-public class DataManager
+public sealed class DataManager
 {
     public Dictionary<int, data.PlayerStat> PlayerStatDict { get; private set; } = new();
     public Dictionary<define.EActiveSkillType, List<data.SkillInfo>> ActiveSkillInfoDict { get; private set; } = new();
@@ -20,6 +20,8 @@ public class DataManager
     public Dictionary<int, data.ArmorInfo> ArmorItemDict { get; private set; } = new();
     Dictionary<int, data.SkillInfo> _skillInfoDict = new();
 
+
+    // TODO : 이거 이렇게 하드코딩 할게 아니라 나중에 파일에서 읽어오게 바꿔야 함.
     public const string SKILL_SPAWN_REAPER_KEY = "SpawnReaper";
     public const string SKILL_SPAWN_SHOOTER_KEY = "SpawnShooter";
     public const string SKILL_BLACK_FLAME_KEY = "BlackFlame";

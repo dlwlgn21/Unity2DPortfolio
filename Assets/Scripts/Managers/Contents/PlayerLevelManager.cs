@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerLevelManager
+public sealed class PlayerLevelManager
 {
     PlayerStat _playerStat;
     PlayerController _pc;

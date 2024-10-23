@@ -198,7 +198,6 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         {
             case EActiveSkillType.Spawn_Reaper:
                 ChangeState(EColossalBossState.Hit);
-                Debug.Log("Hit By SpawnReaper");
                 _parallysisCoroutineOrNull = StartCoroutine(PlayHitAnimForSeconds(info.parallysisTime));
                 _hitFlashCoOrNull = StartCoroutine(PlayHitFlashForSeconds(info.parallysisTime));
                 break;
@@ -259,6 +258,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
                 _burstAttackLightController.TurnOnLight();
                 break;
             case EColossalBossState.BurfedBurstMelleAttack:
+                _burfLightController.ForceToStopCoroutineAndTurnOffLight();
                 _burfedBurstLightController.TurnOnLight();
                 break;
         }

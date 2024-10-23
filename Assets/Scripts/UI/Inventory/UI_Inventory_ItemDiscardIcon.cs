@@ -17,6 +17,10 @@ public sealed class UI_Inventory_ItemDiscardIcon : UI_Inventory_BaseItemIcon
         ConsumableItemCount = cousumableCount;
         if (DiscardIconOnDropEventHandler != null)
             DiscardIconOnDropEventHandler.Invoke();
+        Managers.Tween.StartUIScaleTW(transform, () => 
+        { 
+            Managers.Tween.EndToOneUIScaleTW(transform); 
+        });
     }
     public override void Clear()
     {

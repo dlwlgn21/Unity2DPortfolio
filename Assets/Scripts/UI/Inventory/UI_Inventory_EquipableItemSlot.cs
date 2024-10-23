@@ -28,10 +28,6 @@ public sealed class UI_Inventory_EquipableItemSlot : MonoBehaviour, IDropHandler
                     PlayEquipSound();
                     _icon.EqiupItem(dragedIcon.ItemInfo);
                     Managers.UI.ClearInventorySlotAt(dragedIcon.SlotIdx);
-                }
-                else
-                {
-                    PlayDeniedSound();
                     return;
                 }
             }
@@ -45,13 +41,10 @@ public sealed class UI_Inventory_EquipableItemSlot : MonoBehaviour, IDropHandler
                     PlayEquipSound();
                     _icon.EqiupItem(discardIcon.ItemInfo);
                     discardIcon.Clear();
-                }
-                else
-                {
-                    PlayDeniedSound();
                     return;
                 }
             }
+            PlayDeniedSoundAndTW();
         }
     }
 
@@ -60,8 +53,9 @@ public sealed class UI_Inventory_EquipableItemSlot : MonoBehaviour, IDropHandler
         Managers.Sound.Play(DataManager.SFX_UI_EQUP_SUCESS);
     }
 
-    void PlayDeniedSound()
+    void PlayDeniedSoundAndTW()
     {
+        Managers.Tween.StartUIDoPunchPos(transform);
         Managers.Sound.Play(DataManager.SFX_UI_DENIED);
     }
 }

@@ -19,7 +19,6 @@ public sealed class UI_Inventory_EquipableItemIcon : UI_Inventory_BaseItemIcon
             _pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
             Debug.Assert(_pc != null);
         }
-        Debug.Log("Called EqiupItem()");
         Sprite sprite = Managers.UI.GetEquipableItemSprite(itemInfo);
         ItemInfo = itemInfo;
         Image.enabled = true;

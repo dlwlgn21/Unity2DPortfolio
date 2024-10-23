@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterHitAnimController : WorldSpaceAnimController
+public sealed class MonsterHitAnimController : WorldSpaceAnimController
 {
     const string HIT_EFFECT_1_KEY = "Hit1";
     const string HIT_EFFECT_2_KEY = "Hit2";

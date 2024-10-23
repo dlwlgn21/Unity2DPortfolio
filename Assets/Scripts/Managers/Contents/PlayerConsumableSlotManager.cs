@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class PlayerConsumableSlotManager : MonoBehaviour
+public sealed class PlayerConsumableSlotManager : MonoBehaviour
 {
     List<UI_PlayerConsumableSlot> _slots = new(2);
 
@@ -73,10 +73,4 @@ public class PlayerConsumableSlotManager : MonoBehaviour
             _slots[i].InitForNextSceneLoad();
         }
     }
-
-    //private void OnDestroy()
-    //{
-    //    UI_PlayerConsumableSlot.SameConsumableDropEventHandelr -= SwapIfSameItemMoving;
-    //}
-
 }

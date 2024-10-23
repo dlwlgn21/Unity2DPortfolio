@@ -49,18 +49,15 @@ public class MonsterStat : BaseStat
 
     public void InitBasicStat(define.EMonsterNames eMonster)
     {
-        if (HP == 0)
-        {
-            var dict = Managers.Data.MonsterStatDict;
-            MonsterType = dict[(int)eMonster].monsterType;
-            EStatusEffectType = (EAttackStatusEffect)dict[(int)eMonster].monsterStatusEffect;
-            HP = dict[(int)eMonster].maxHp;
-            MaxHP = dict[(int)eMonster].maxHp;
-            Attack = dict[(int)eMonster].attack;
-            Defence = dict[(int)eMonster].defence;
-            MoveSpeed = dict[(int)eMonster].moveSpeed;
-            Exp = dict[(int)eMonster].exp;
-        }
+        var dict = Managers.Data.MonsterStatDict;
+        MonsterType = dict[(int)eMonster].monsterType;
+        EStatusEffectType = (EAttackStatusEffect)dict[(int)eMonster].monsterStatusEffect;
+        HP = dict[(int)eMonster].maxHp;
+        MaxHP = dict[(int)eMonster].maxHp;
+        Attack = dict[(int)eMonster].attack;
+        Defence = dict[(int)eMonster].defence;
+        MoveSpeed = dict[(int)eMonster].moveSpeed;
+        Exp = dict[(int)eMonster].exp;
     }
     public void InitStatForTutorial()
     {

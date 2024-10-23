@@ -11,7 +11,7 @@ public enum ESkillSlot
     CKey,
     Count
 }
-public class PlayerSkillManager
+public sealed class PlayerSkillManager
 {
     Dictionary<EActiveSkillType, Skill_BaseController> _skillControllerDict = new();
     UI_SkillCoolTimer[] skillCoolTimer = new UI_SkillCoolTimer[(int)ESkillSlot.Count];
@@ -218,8 +218,6 @@ public class PlayerSkillManager
         EActiveSkillType tmpSkillType = _eCurrSkillSlotType[(int)ESkillSlot.AKey];
         _eCurrSkillSlotType[(int)ESkillSlot.AKey] = _eCurrSkillSlotType[(int)ESkillSlot.SKey];
         _eCurrSkillSlotType[(int)ESkillSlot.SKey] = tmpSkillType;
-
-        //Debug.Log($"A:{_eCurrSkillSlotType[(int)ESkillSlot.AKey]}, S:{_eCurrSkillSlotType[(int)ESkillSlot.SKey]}");
     }
 
     #endregion

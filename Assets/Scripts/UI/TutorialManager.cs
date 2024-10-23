@@ -21,7 +21,7 @@ public enum ETutorialTraning
     SkillTraning,
 }
 
-public class TutorialManager : MonoBehaviour
+public sealed class TutorialManager : MonoBehaviour
 {
     [SerializeField] GameObject _rollOpenInteractBox;
     [SerializeField] GameObject _backAttackOpenInteractBox;

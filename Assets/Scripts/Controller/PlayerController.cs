@@ -38,7 +38,7 @@ public enum EPlayerNoramlAttackType
     Attack_3,
     BackAttack,
 }
-public class PlayerController : BaseCharacterController
+public sealed class PlayerController : BaseCharacterController
 {
     public static UnityAction<EPlayerState> PlayerChangeStateEventHandler;
     public static UnityAction<EPlayerState> HitEffectEventHandler;
@@ -49,6 +49,7 @@ public class PlayerController : BaseCharacterController
     public static UnityAction<EAttackStatusEffect, float> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
 
+    // TODO : 나중에 이거 파일로 빼서 읽어와야 함.
     public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new(2f, 1f);
     public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
     public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new(3f, 2f);
@@ -87,7 +88,7 @@ public class PlayerController : BaseCharacterController
 
     StateMachine<PlayerController> _stateMachine;
     State<PlayerController>[] _states;
-    private const float BURN_TIME_IN_SEC = 3.0f;
+    const float BURN_TIME_IN_SEC = 3.0f;
     int _lastBurnedDamage;
 
     public override void Init()
@@ -339,7 +340,7 @@ public class PlayerController : BaseCharacterController
     #endregion
 
     #region Private
-    private void OnAnimFullyPlayed()
+    void OnAnimFullyPlayed()
     {
         ((player_states.BasePlayerState)_states[(uint)ECurrentState]).OnAnimFullyPlayed();
     }
@@ -363,17 +364,17 @@ public class PlayerController : BaseCharacterController
         }
     }
     #endregion
-    private void OnValidRollEffectTiming()
+    void OnValidRollEffectTiming()
     {
         PlayMovementEffectAnimation(EPlayerMovementEffect.Roll, ELookDir, transform.position);
     }
 
-    private void OnPlayerNormalAttack1ValidStopEffectTiming()
+    void OnPlayerNormalAttack1ValidStopEffectTiming()
     {
         Managers.Sound.Play(DataManager.SFX_PLAYER_LAND_PATH);
         PlayMovementEffectAnimation(EPlayerMovementEffect.NormalAttackLand, ELookDir, transform.position);
     }
-    private void OnPlayerFootStep()
+    void OnPlayerFootStep()
     {
         FootDustParticle.Play();
         int rand = Random.Range(0, 2);
@@ -383,14 +384,14 @@ public class PlayerController : BaseCharacterController
             Managers.Sound.Play(DataManager.SFX_PLAYER_FOOT_STEP_2_PATH);
     }
 
-    private void OnAttackLightTurnOnTiming()
+    void OnAttackLightTurnOnTiming()
     {
 
     }
 
     #endregion
 
-    private void OnHittedByMonsterAttack(BaseMonsterController mc)
+    void OnHittedByMonsterAttack(BaseMonsterController mc)
     {
         if (IsInvincible)
         {
@@ -411,12 +412,12 @@ public class PlayerController : BaseCharacterController
         ChangeHitOrDieState();
         ProcessStatusEffect(mc);
     }
-    private void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType, ECharacterLookDir eLookDir, Vector2 pos)
+    void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType, ECharacterLookDir eLookDir, Vector2 pos)
     {
         MovementEffectEventHandler?.Invoke(eEffectType, eLookDir, pos);
     }
 
-    private void ActualDamgedFromMonsterAttack(int damge)
+    void ActualDamgedFromMonsterAttack(int damge)
     {
         #region ACTUAL_DAMAGE
         int beforeDamageHP;
@@ -426,12 +427,12 @@ public class PlayerController : BaseCharacterController
         InvokePlayerHitEvent(actualDamage, beforeDamageHP, afterDamageHP);
         #endregion
     }
-    private void InvokePlayerHitEvent(int damge, int beforeDamageHP, int afterDamageHP)
+    void InvokePlayerHitEvent(int damge, int beforeDamageHP, int afterDamageHP)
     {
         HitUIEventHandler?.Invoke(damge, beforeDamageHP, afterDamageHP);
         HitEffectEventHandler?.Invoke(EPlayerState.HitByMelleAttack);
     }
-    private void ChangeHitOrDieState()
+    void ChangeHitOrDieState()
     {
         if (Stat.HP <= 0)
         {
@@ -443,7 +444,7 @@ public class PlayerController : BaseCharacterController
         }
     }
 
-    private void ProcessStatusEffect(BaseMonsterController mc)
+    void ProcessStatusEffect(BaseMonsterController mc)
     {
         switch (mc.Stat.EStatusEffectType)
         {
@@ -483,17 +484,17 @@ public class PlayerController : BaseCharacterController
                 break;
         }
     }
-    private void OnPlayerFallToDeadZone()
+    void OnPlayerFallToDeadZone()
     {
         ChangeState(EPlayerState.Die);
     }
-    private IEnumerator StartSlowStateCountdownCo(float slowTimeInSec)
+    IEnumerator StartSlowStateCountdownCo(float slowTimeInSec)
     {
         IsSlowState = true;
         yield return new WaitForSeconds(slowTimeInSec);
         IsSlowState = false;
     }
-    private IEnumerator BurnPlayerCo()
+    IEnumerator BurnPlayerCo()
     {
         IsBurned = true;
         yield return new WaitForSeconds(1f);

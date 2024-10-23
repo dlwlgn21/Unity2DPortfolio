@@ -11,7 +11,7 @@ public enum EPlayerMovementEffect
     Land,
 }
 
-public class PlayerMovementAnimController : WorldSpaceAnimController
+public sealed class PlayerMovementAnimController : WorldSpaceAnimController
 {
     private const string JUMP_AND_LAND_KEY = "JumpEffect";
     private const string ROLL_KEY = "RollEffect";
@@ -41,12 +41,12 @@ public class PlayerMovementAnimController : WorldSpaceAnimController
 
     private void OnPlayerJump(Vector2 pos)
     {
-        SetForPlayAnimation(pos);
+        SetPosAndComponenetsEnableToTrue(pos);
         _animator.Play(JUMP_AND_LAND_KEY, -1, 0f);
     }
     private void OnPlayerMovemnt(EPlayerMovementEffect eType, ECharacterLookDir eLookDir, Vector2 pos)
     {
-        SetForPlayAnimation(pos);
+        SetPosAndComponenetsEnableToTrue(pos);
         switch (eType)
         {
             case EPlayerMovementEffect.Roll:
@@ -76,7 +76,7 @@ public class PlayerMovementAnimController : WorldSpaceAnimController
         }
     }
 
-    private void FlipSpriteIfLeft(ECharacterLookDir eLookDir)
+    void FlipSpriteIfLeft(ECharacterLookDir eLookDir)
     {
         if (eLookDir == ECharacterLookDir.Left)
         {
@@ -85,7 +85,7 @@ public class PlayerMovementAnimController : WorldSpaceAnimController
     }
 
 
-    private void SetForPlayAnimation(Vector2 pos)
+    void SetPosAndComponenetsEnableToTrue(Vector2 pos)
     {
         SetComponentsEnabled(true);
         transform.position = pos;

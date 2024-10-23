@@ -16,7 +16,7 @@ public enum EMainMenuButtonType
 }
 
 
-public class MainMenuManager
+public sealed class MainMenuManager
 {
     GameObject _mainMenu;
     Button _newGameBtn;

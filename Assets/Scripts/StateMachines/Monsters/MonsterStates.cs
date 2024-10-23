@@ -55,11 +55,6 @@ namespace monster_states
             }
             Debug.Assert(false);
         }
-        protected void CalculateDistanceFromPlayer()
-        {
-            _dirToPlayer = _entity.PlayerTransform.position - _entity.transform.position;
-            _distanceFromPlayer = _dirToPlayer.magnitude;
-        }
 
         public virtual void MakeSlow() { }
 
@@ -79,7 +74,7 @@ namespace monster_states
         }
     }
 
-    public class Idle : BaseMonsterState
+    public sealed class Idle : BaseMonsterState
     {
         public Idle(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed()
@@ -162,7 +157,7 @@ namespace monster_states
         }
     }
 
-    public class Trace : CanSlowState
+    public sealed class Trace : CanSlowState
     {
         public Trace(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() {}
@@ -221,7 +216,7 @@ namespace monster_states
 
     }
 
-    public class MelleAttack : CanSlowState
+    public sealed class MelleAttack : CanSlowState
     {
         public MelleAttack(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() 
@@ -239,7 +234,7 @@ namespace monster_states
         }
     }
 
-    public class LaunchAttack : CanSlowState
+    public sealed class LaunchAttack : CanSlowState
     {
         public LaunchAttack(NormalMonsterController controller) : base(controller) { }
 
@@ -276,7 +271,7 @@ namespace monster_states
 
     }
 
-    public class HittedKnockbackByBlockSuccess : BaseHittedState
+    public sealed class HittedKnockbackByBlockSuccess : BaseHittedState
     {
         public HittedKnockbackByBlockSuccess(NormalMonsterController controller) : base(controller)  { }
         public override void OnAnimFullyPlayed()
@@ -290,7 +285,7 @@ namespace monster_states
         }
     }
 
-    public class HittedParalysis : BaseHittedState
+    public sealed class HittedParalysis : BaseHittedState
     {
         public HittedParalysis(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() { }
@@ -300,22 +295,17 @@ namespace monster_states
             SetVelocityZero();
         }
     }
-    public class Die : BaseMonsterState
+    public sealed class Die : BaseMonsterState
     {
         static public UnityAction<NormalMonsterController> DieEventAnimFullyPlayedHandler;
         static public UnityAction<NormalMonsterController> DieEventEnterStateHandler;
         public Die(NormalMonsterController controller) : base(controller) { }
         public override void OnAnimFullyPlayed() 
         {
-            if (_entity.EMonsterType == EMonsterNames.CagedShoker || 
-                _entity.EMonsterType == EMonsterNames.HeabySlicer ||
-                _entity.EMonsterType == EMonsterNames.Archer ||
-                _entity.EMonsterType == EMonsterNames.Blaster)
-            {
-                IDeadBodyReamainable deadBody = (IDeadBodyReamainable)_entity;
-                Debug.Assert(deadBody != null);
-                deadBody.SpawnDeadBody();
-            }
+            IDeadBodyReamainable deadBodyOrNull = _entity as IDeadBodyReamainable;
+            if (deadBodyOrNull != null)
+                deadBodyOrNull.SpawnDeadBody();
+            
             if (DieEventAnimFullyPlayedHandler != null)
                 DieEventAnimFullyPlayedHandler.Invoke(_entity);
         }
@@ -324,8 +314,6 @@ namespace monster_states
             PlayAnimation(ENormalMonsterState.Die);
             if (DieEventEnterStateHandler != null)
                 DieEventEnterStateHandler.Invoke(_entity);
-            //_entity.HealthBar.StartZeroScaleTW();
-            //Managers.PlayerLevel.AddExp(_entity.Stat.Exp);
         }
         public override void Excute()  { }
     }
@@ -393,7 +381,7 @@ namespace monster_states
     }
 
 
-    public class BossColossalWake : BaseBossMonsterState
+    public sealed class BossColossalWake : BaseBossMonsterState
     {
         public BossColossalWake(ColossalBossMonsterController entity) : base(entity) { }
 
@@ -406,7 +394,7 @@ namespace monster_states
     }
 
 
-    public class BossColossalRun : BaseBossMonsterState
+    public sealed class BossColossalRun : BaseBossMonsterState
     {
         public BossColossalRun(ColossalBossMonsterController entity) : base(entity)   { }
 
@@ -486,7 +474,7 @@ namespace monster_states
         }
     }
 
-    public class BossColossalSpinAttack : BossAttackState
+    public sealed class BossColossalSpinAttack : BossAttackState
     {
         public BossColossalSpinAttack(ColossalBossMonsterController entity) : base(entity) {}
 
@@ -496,7 +484,7 @@ namespace monster_states
         }
     }
 
-    public class BossColossalFistAttack : BossAttackState
+    public sealed class BossColossalFistAttack : BossAttackState
     {
         public BossColossalFistAttack(ColossalBossMonsterController entity) : base(entity) { }
         public override void Enter()
@@ -505,7 +493,7 @@ namespace monster_states
         }
     }
 
-    public class BossColossalBurstAttack : BossAttackState
+    public sealed class BossColossalBurstAttack : BossAttackState
     {
         public BossColossalBurstAttack(ColossalBossMonsterController entity) : base(entity) { }
 
@@ -515,7 +503,7 @@ namespace monster_states
         }
     }
 
-    public class BossColossalBurfedBurstAttack : BossAttackState
+    public sealed class BossColossalBurfedBurstAttack : BossAttackState
     {
         public BossColossalBurfedBurstAttack(ColossalBossMonsterController entity) : base(entity) { }
 
@@ -525,7 +513,7 @@ namespace monster_states
         }
     }
 
-    public class BossColossalBurf : BaseBossMonsterState
+    public sealed class BossColossalBurf : BaseBossMonsterState
     {
         public BossColossalBurf(ColossalBossMonsterController entity) : base(entity)  {}
 
@@ -539,7 +527,7 @@ namespace monster_states
         }
     }
 
-    public class BossColossalHit : BaseBossMonsterState
+    public sealed class BossColossalHit : BaseBossMonsterState
     {
         public BossColossalHit(ColossalBossMonsterController entity) : base(entity) { }
         public override void Enter()
@@ -550,7 +538,7 @@ namespace monster_states
         { }
     }
 
-    public class BossColossalDie : BaseBossMonsterState
+    public sealed class BossColossalDie : BaseBossMonsterState
     {
         public BossColossalDie(ColossalBossMonsterController entity) : base(entity) { }
 
