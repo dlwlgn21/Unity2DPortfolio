@@ -1,12 +1,5 @@
 # 포플 영상보고 들어오신 분을 위한  github 파일 검색 팁.
 
-### Player의 Movement Animation 재생 관련 코드
-	PlayerMovementAnimController.cs
-	PlayerController.cs
-
-### 몬스터 HitEffetAnimation 코드
-	MonsterHitAnimController.cs
-
 ### Player의 GroundCheck 코드
 	PlayerState.cs 파일의 BasePlayerState class의 IsStandGround() 함수
 
@@ -16,6 +9,26 @@
 ### 특정한 구역에서 CamLookUpOrDown 구현 코드
 	CamFollowObjectController.cs
 	CamLookUpDownZoneDetectionController.cs
+
+### Player의 Movement Animation 재생 관련 코드
+	PlayerMovementAnimController.cs
+	PlayerController.cs
+
+### 몬스터 HitEffetAnimation 코드
+	MonsterHitAnimController.cs
+
+### 몬스터의 Controller들 관련 코드
+	ArcherController.cs
+	BlasterController.cs
+	CagedShockerController.cs
+	FlamerController.cs
+	GunnerController.cs
+	HSlicerController.cs
+	WardenController.cs
+	ColossalBossMonsterController.cs
+
+### 몬스터 Hit시에 특정 색깔로 번뜩하는 부분 코드
+	MonsterFlashController.cs 파일 확인.
 
 ### 플레이어, 스킬, 몬스터 정보 Json파일 로드하는 부분
 	DataManager.cs
@@ -29,9 +42,6 @@
 	PlayerController.cs
 	PlayerState.cs
 	MonsterState.cs
-
-### 몬스터 Hit시에 특정 색깔로 번뜩하는 부분
-	MonsterFlashController.cs
 
 ### 라이트 점진적으로 꺼지는 코드
 	LightController.cs
