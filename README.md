@@ -7,8 +7,11 @@
 ### 몬스터 HitEffetAnimation 코드
 	MonsterHitAnimController.cs
 
+### Player의 GroundCheck 코드
+	PlayerState.cs 파일의 BasePlayerState class의 IsStandGround() 함수
+
 ### LedgeClimbe 관련 코드
-	PlayerState.cs 파일의 BaseFall class
+	PlayerState.cs 파일의 BaseFall class의 IsGrabLedge() 함수
 
 ### 특정한 구역에서 CamLookUpOrDown 구현 코드
 	CamFollowObjectController.cs
@@ -28,7 +31,7 @@
 	MonsterState.cs
 
 ### 몬스터 Hit시에 특정 색깔로 번뜩하는 부분
-	MonsterFlashController.cs 파일 확인.
+	MonsterFlashController.cs
 
 ### 라이트 점진적으로 꺼지는 코드
 	LightController.cs
