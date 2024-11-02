@@ -15,11 +15,14 @@ public sealed class PlayerStatusFlashController : MaterialFlashController
 
     private void OnEnable()
     {
-        PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusEffect;
+        //PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusEffect;
+        StatusEffectController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
+        StatusEffectController.PlayerStatusEffectEventHandler += OnPlayerStatusEffect;
     }
     private void OnDestroy()
     {
-        PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
+        //PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
+        StatusEffectController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
     }
     public void OnPlayerStatusEffect(EAttackStatusEffect eType, float flashTime)
     {

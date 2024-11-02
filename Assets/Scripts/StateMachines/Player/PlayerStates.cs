@@ -11,7 +11,7 @@ namespace player_states
     {
         protected float _horizontalMove;
         protected float _groundCheckDistance = 0.2f;
-        public const int GROUND_LAYER_MASK = (1 << (int)define.EColliderLayer.Platform) | (1 << (int)define.EColliderLayer.LedgeClimb);
+        const int GROUND_LAYER_MASK = (1 << (int)define.EColliderLayer.Platform) | (1 << (int)define.EColliderLayer.LedgeClimb);
         public BasePlayerState(PlayerController controller) : base(controller) { }
         #region Public
         public abstract void OnAnimFullyPlayed();
@@ -423,7 +423,7 @@ namespace player_states
             RotateTransformAccodingHorizontalMove();
         }
 
-        public bool IsGrabLedge()
+        protected bool IsGrabLedge()
         {
             RaycastHit2D headRayHit = new();
             RaycastHit2D bodyRayHit = new();

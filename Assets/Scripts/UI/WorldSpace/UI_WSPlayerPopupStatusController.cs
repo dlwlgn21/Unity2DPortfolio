@@ -9,8 +9,10 @@ public sealed class UI_WSPlayerPopupStatusController : UI_WSPlayerPopupTextContr
     {
         Skill_BaseController.DeniedUseSkillEventHandler -= OnPlayerDeniedUseSkill;
         Skill_BaseController.DeniedUseSkillEventHandler += OnPlayerDeniedUseSkill;
-        PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusChanged;
-        PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusChanged;
+        //PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusChanged;
+        //PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusChanged;
+        StatusEffectController.PlayerStatusEffectEventHandler -= OnPlayerStatusChanged;
+        StatusEffectController.PlayerStatusEffectEventHandler += OnPlayerStatusChanged;
         UI_PlayerConsumableSlot.DeniedConsumableEventHandler -= OnPlayerDeniedConsumeItem;
         UI_PlayerConsumableSlot.DeniedConsumableEventHandler += OnPlayerDeniedConsumeItem;
         CaveEnteranceController.DeniedEnterCaveEventHandler -= OnPlayerDeniedEnterCave;

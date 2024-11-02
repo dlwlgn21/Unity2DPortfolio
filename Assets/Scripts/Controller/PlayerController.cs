@@ -88,8 +88,8 @@ public sealed class PlayerController : BaseCharacterController
 
     StateMachine<PlayerController> _stateMachine;
     State<PlayerController>[] _states;
-    const float BURN_TIME_IN_SEC = 3.0f;
-    int _lastBurnedDamage;
+    //const float BURN_TIME_IN_SEC = 3.0f;
+    //int _lastBurnedDamage;
 
     public override void Init()
     {
@@ -107,6 +107,8 @@ public sealed class PlayerController : BaseCharacterController
             CastSwordStrikePoint = Utill.GetComponentInChildrenOrNull<Transform>(gameObject, "SkillSwordStrikePoint");
             HeadLight = transform.Find("HeadLight").gameObject;
             #region SUBSCRIBE_EVENT
+            MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr -= OnHittedByMonsterAttack;
+            MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr -= OnHittedByMonsterAttack;
             MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
             MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;
             FallDeadZone.PlayerFallDeadZoneEventHandler += OnPlayerFallToDeadZone;
@@ -230,6 +232,17 @@ public sealed class PlayerController : BaseCharacterController
         // TODO : 나중에 Player에게 달자.
         force = ELookDir == ECharacterLookDir.Right ? new Vector2(-force.x, force.y) : new Vector2(force.x, force.y);
         RigidBody.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    public void ActualDamgedFromMonsterAttack(int damge)
+    {
+        #region ACTUAL_DAMAGE
+        int beforeDamageHP;
+        int afterDamageHP;
+        int actualDamage = Stat.DecreaseHpAndGetActualDamageAmount(damge, out beforeDamageHP, out afterDamageHP);
+        // TODO : 이부분 나중에 따로 뺄거임.
+        InvokePlayerHitEvent(actualDamage, beforeDamageHP, afterDamageHP);
+        #endregion
     }
 
     #region ItemEquipOrConsume
@@ -410,23 +423,14 @@ public sealed class PlayerController : BaseCharacterController
         }
         ActualDamgedFromMonsterAttack(mc.Stat.Attack);
         ChangeHitOrDieState();
-        ProcessStatusEffect(mc);
+        //ProcessStatusEffect(mc);
     }
     void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType, ECharacterLookDir eLookDir, Vector2 pos)
     {
         MovementEffectEventHandler?.Invoke(eEffectType, eLookDir, pos);
     }
 
-    void ActualDamgedFromMonsterAttack(int damge)
-    {
-        #region ACTUAL_DAMAGE
-        int beforeDamageHP;
-        int afterDamageHP;
-        int actualDamage = Stat.DecreaseHpAndGetActualDamageAmount(damge, out beforeDamageHP, out afterDamageHP);
-        // TODO : 이부분 나중에 따로 뺄거임.
-        InvokePlayerHitEvent(actualDamage, beforeDamageHP, afterDamageHP);
-        #endregion
-    }
+
     void InvokePlayerHitEvent(int damge, int beforeDamageHP, int afterDamageHP)
     {
         HitUIEventHandler?.Invoke(damge, beforeDamageHP, afterDamageHP);
@@ -444,69 +448,69 @@ public sealed class PlayerController : BaseCharacterController
         }
     }
 
-    void ProcessStatusEffect(BaseMonsterController mc)
-    {
-        switch (mc.Stat.EStatusEffectType)
-        {
-            case EAttackStatusEffect.None:
-                break;
-            case EAttackStatusEffect.Knockback:
-                Vector2 knockbackForce = mc.Stat.KnockbackForce;
-                Vector2 dir = mc.transform.position - transform.position;
-                if (dir.x > 0)
-                    RigidBody.AddForce(new Vector2(-knockbackForce.x, knockbackForce.y), ForceMode2D.Impulse);
-                else
-                    RigidBody.AddForce(knockbackForce, ForceMode2D.Impulse);
-                break;
-            case EAttackStatusEffect.Blind:
-                Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.MONSTER_BLIND_EFFECT);
-                break;
-            case EAttackStatusEffect.Burn:
-                if (!IsBurned)
-                {
-                    _lastBurnedDamage = mc.Stat.Attack;
-                    StartCoroutine(BurnPlayerCo());
-                    PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Burn, BURN_TIME_IN_SEC);
-                }
-                break;
-            case EAttackStatusEffect.Slow:
-                if (!IsSlowState)
-                {
-                    StartCoroutine(StartSlowStateCountdownCo(mc.Stat.SlowTimeInSec));
-                    PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Slow, mc.Stat.SlowTimeInSec);
-                }
-                break;
-            case EAttackStatusEffect.Parallysis:
-                ChangeState(EPlayerState.HitByStatusParallysis);
-                break;
-            default:
-                Debug.DebugBreak();
-                break;
-        }
-    }
+    //void ProcessStatusEffect(BaseMonsterController mc)
+    //{
+    //    switch (mc.Stat.EStatusEffectType)
+    //    {
+    //        case EAttackStatusEffect.None:
+    //            break;
+    //        case EAttackStatusEffect.Knockback:
+    //            Vector2 knockbackForce = mc.Stat.KnockbackForce;
+    //            Vector2 dir = mc.transform.position - transform.position;
+    //            if (dir.x > 0)
+    //                RigidBody.AddForce(new Vector2(-knockbackForce.x, knockbackForce.y), ForceMode2D.Impulse);
+    //            else
+    //                RigidBody.AddForce(knockbackForce, ForceMode2D.Impulse);
+    //            break;
+    //        case EAttackStatusEffect.Blind:
+    //            Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.MONSTER_BLIND_EFFECT);
+    //            break;
+    //        case EAttackStatusEffect.Burn:
+    //            if (!IsBurned)
+    //            {
+    //                _lastBurnedDamage = mc.Stat.Attack;
+    //                StartCoroutine(BurnPlayerCo());
+    //                PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Burn, BURN_TIME_IN_SEC);
+    //            }
+    //            break;
+    //        case EAttackStatusEffect.Slow:
+    //            if (!IsSlowState)
+    //            {
+    //                StartCoroutine(StartSlowStateCountdownCo(mc.Stat.SlowTimeInSec));
+    //                PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Slow, mc.Stat.SlowTimeInSec);
+    //            }
+    //            break;
+    //        case EAttackStatusEffect.Parallysis:
+    //            ChangeState(EPlayerState.HitByStatusParallysis);
+    //            break;
+    //        default:
+    //            Debug.DebugBreak();
+    //            break;
+    //    }
+    //}
     void OnPlayerFallToDeadZone()
     {
         ChangeState(EPlayerState.Die);
     }
-    IEnumerator StartSlowStateCountdownCo(float slowTimeInSec)
-    {
-        IsSlowState = true;
-        yield return new WaitForSeconds(slowTimeInSec);
-        IsSlowState = false;
-    }
-    IEnumerator BurnPlayerCo()
-    {
-        IsBurned = true;
-        yield return new WaitForSeconds(1f);
-        ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
-        yield return new WaitForSeconds(1f);
-        ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
-        yield return new WaitForSeconds(1f);
-        ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
-        IsBurned = false;
-    }
+    //IEnumerator StartSlowStateCountdownCo(float slowTimeInSec)
+    //{
+    //    IsSlowState = true;
+    //    yield return new WaitForSeconds(slowTimeInSec);
+    //    IsSlowState = false;
+    //}
+    //IEnumerator BurnPlayerCo()
+    //{
+    //    IsBurned = true;
+    //    yield return new WaitForSeconds(1f);
+    //    ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+    //    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+    //    yield return new WaitForSeconds(1f);
+    //    ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+    //    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
+    //    yield return new WaitForSeconds(1f);
+    //    ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+    //    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+    //    IsBurned = false;
+    //}
     #endregion
 }
