@@ -18,7 +18,6 @@ public sealed class HSlicerController : NormalMonsterController, IMelleAttackabl
     public override void InitStat()
     {
         Stat.InitBasicStat(EMonsterNames.HeabySlicer);
-        Stat.KnockbackForce = new Vector2(9f, 9f);
     }
 
     protected override void InitStates()

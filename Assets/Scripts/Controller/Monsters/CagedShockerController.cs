@@ -16,7 +16,6 @@ public sealed class CagedShockerController : NormalMonsterController, IMelleAtta
     public override void InitStat()
     {
         Stat.InitBasicStat(EMonsterNames.CagedShoker);
-        Stat.KnockbackForce = new Vector2(9f, 9f);
     }
 
     protected override void InitStates()

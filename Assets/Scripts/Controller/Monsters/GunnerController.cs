@@ -7,7 +7,6 @@ using UnityEngine.Events;
 public class GunnerController : NormalMonsterController, ILaunchAttackable
 {
     private Transform _launchPoint;
-    private const float PROJECTILE_SLOW_TIME_IN_SEC = 2f;
     public override void Init()
     {
         base.Init();
@@ -19,7 +18,6 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
     public override void InitStat()
     {
         Stat.InitBasicStat(EMonsterNames.Gunner);
-        Stat.SlowTimeInSec = PROJECTILE_SLOW_TIME_IN_SEC;
     }
 
     protected override void InitStates()

@@ -29,7 +29,6 @@ public enum EColossalBossState
 public class ColossalBossMonsterController : BaseMonsterController, IMelleAttackable, IZonePlayerDetetable
 {
     static public UnityAction<EColossalBossState> ColossalChangeStateEventHandler;
-    private readonly Vector2 COLOSSAL_KNOCKBACK_FORCE = new Vector2(12f, 7f);
     public EColossalBossPhase EColossalPhase { get; private set; } = EColossalBossPhase.FirstPhase;
     public EColossalBossState ECurrentState { get; private set; }
     protected StateMachine<ColossalBossMonsterController> _stateMachine;
@@ -73,7 +72,6 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
         ColossalAttackZoneDetection.ColossalAttackZoneEnterEvnetHandler += OnPlayerEnterAttackZone;
         ColossalAttackZoneDetection.ColossalAttackZoneExitEvnetHandler += OnPlayerExitAttackZone;
         #endregion
-        Stat.KnockbackForce = COLOSSAL_KNOCKBACK_FORCE;
         SetLightControllersTurnOffTimeInSec();
         HealthBar.gameObject.SetActive(false);
         SetActiveBodyLights(false);
@@ -97,17 +95,13 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     private void FixedUpdate()
     {
         if (!IsWake)
-        {
             return;
-        }
         _stateMachine.FixedExcute();
     }
     void Update()
     {
         if (!IsWake)
-        {
             return;
-        }
         _stateMachine.Excute();
     }
 
@@ -202,7 +196,8 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
                 _hitFlashCoOrNull = StartCoroutine(PlayHitFlashForSeconds(info.parallysisTime));
                 break;
             case EActiveSkillType.Spawn_Shooter:
-                AddKnockbackForceOppossiteByPlayer(new Vector2(info.knockbackForceX * 0.5f, info.knockbackForceY * 0.5f));
+                // TODO : 넉백면역 메시지 출력하게 해야함.
+                //AddKnockbackForceOppossiteByPlayer(new Vector2(info.knockbackForceX * 0.5f, info.knockbackForceY * 0.5f));
                 break;
             case EActiveSkillType.Cast_BlackFlame:
                 DamagedFromPlayer(ELookDir, info.damage, EPlayerNoramlAttackType.Attack_3);
@@ -246,6 +241,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     void OnAttackAnimTurnOnLightTiming()
     {
+        // TODO : 마비 상태일때 라이트 꺼주는거 구현해야함.
         switch (ECurrentState)
         {
             case EColossalBossState.FistMelleAttack:

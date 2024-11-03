@@ -7,23 +7,19 @@ using UnityEngine.Events;
 public sealed class StatusEffectController : MonoBehaviour
 {
     static public UnityAction<EAttackStatusEffect, float> PlayerStatusEffectEventHandler;
-    const float BURN_TIME_IN_SEC = 3f;
     int _lastBurnedDamage;
     PlayerController _pc;
+    Coroutine _burnCoOrNull;
+    Coroutine _slowCoOrNull;
+
     private void Awake()
     {
         _pc = GetComponent<PlayerController>();
-        MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr -= OnHittedByMonsterAttack;
-        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr -= OnHittedByMonsterAttack;
-        MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
-        MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;
+        PlayerController.PlayerStatusEffectEventHandler -= OnHittedByMonsterAttack;
+        PlayerController.PlayerStatusEffectEventHandler += OnHittedByMonsterAttack;
     }
     void OnHittedByMonsterAttack(BaseMonsterController mc)
     {
-        // TODO : BlockSuccess 일 때 무시하게 바꿔야 함.
-        if (!_pc.IsValidStateToChangeHitState())
-            return;
-
         switch (mc.Stat.EStatusEffectType)
         {
             case EAttackStatusEffect.None:
@@ -40,18 +36,20 @@ public sealed class StatusEffectController : MonoBehaviour
                 Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.MONSTER_BLIND_EFFECT);
                 break;
             case EAttackStatusEffect.Burn:
-                if (!_pc.IsBurned)
+                if (!_pc.IsBurned && _burnCoOrNull == null)
                 {
                     _lastBurnedDamage = mc.Stat.Attack;
-                    StartCoroutine(BurnPlayerCo());
-                    PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Burn, BURN_TIME_IN_SEC);
+                    _burnCoOrNull = StartCoroutine(BurnPlayerCo((int)mc.Stat.BurnTimeInSec));
+                    if (PlayerStatusEffectEventHandler != null)
+                        PlayerStatusEffectEventHandler.Invoke(EAttackStatusEffect.Burn, mc.Stat.BurnTimeInSec);
                 }
                 break;
             case EAttackStatusEffect.Slow:
-                if (!_pc.IsSlowState)
+                if (!_pc.IsSlowState && _slowCoOrNull == null)
                 {
-                    StartCoroutine(StartSlowStateCountdownCo(mc.Stat.SlowTimeInSec));
-                    PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Slow, mc.Stat.SlowTimeInSec);
+                    _slowCoOrNull = StartCoroutine(StartSlowStateCountdownCo(mc.Stat.SlowTimeInSec));
+                    if (PlayerStatusEffectEventHandler != null)
+                        PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Slow, mc.Stat.SlowTimeInSec);
                 }
                 break;
             case EAttackStatusEffect.Parallysis:
@@ -68,19 +66,22 @@ public sealed class StatusEffectController : MonoBehaviour
         _pc.IsSlowState = true;
         yield return new WaitForSeconds(slowTimeInSec);
         _pc.IsSlowState = false;
+        _slowCoOrNull = null;
     }
-    IEnumerator BurnPlayerCo()
+    IEnumerator BurnPlayerCo(int burnTimeInSec)
     {
         _pc.IsBurned = true;
-        yield return new WaitForSeconds(1f);
-        _pc.ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
-        yield return new WaitForSeconds(1f);
-        _pc.ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
-        yield return new WaitForSeconds(1f);
-        _pc.ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-        Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+        for (int timeInSec = 0; timeInSec < burnTimeInSec; ++timeInSec)
+        {
+            yield return new WaitForSeconds(1f);
+            _pc.ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
+            int randIdx = UnityEngine.Random.Range(0, 1);
+            if (randIdx % 2 == 0)
+                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+            else
+                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
+        }
         _pc.IsBurned = false;
+        _burnCoOrNull = null;
     }
 }

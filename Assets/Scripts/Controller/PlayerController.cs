@@ -46,7 +46,7 @@ public sealed class PlayerController : BaseCharacterController
     public static UnityAction<int, int, int> HitUIEventHandler;
     public static UnityAction<EActiveSkillType> PlayerSkillKeyDownEventHandler;
     public static UnityAction PlayerSkillValidAnimTimingEventHandler;
-    public static UnityAction<EAttackStatusEffect, float> PlayerStatusEffectEventHandler;
+    public static UnityAction<BaseMonsterController> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
 
     // TODO : 나중에 이거 파일로 빼서 읽어와야 함.
@@ -88,8 +88,6 @@ public sealed class PlayerController : BaseCharacterController
 
     StateMachine<PlayerController> _stateMachine;
     State<PlayerController>[] _states;
-    //const float BURN_TIME_IN_SEC = 3.0f;
-    //int _lastBurnedDamage;
 
     public override void Init()
     {
@@ -241,8 +239,10 @@ public sealed class PlayerController : BaseCharacterController
         int afterDamageHP;
         int actualDamage = Stat.DecreaseHpAndGetActualDamageAmount(damge, out beforeDamageHP, out afterDamageHP);
         // TODO : 이부분 나중에 따로 뺄거임.
-        InvokePlayerHitEvent(actualDamage, beforeDamageHP, afterDamageHP);
         #endregion
+
+        InvokePlayerHitEvent(actualDamage, beforeDamageHP, afterDamageHP);
+
     }
 
     #region ItemEquipOrConsume
@@ -423,7 +423,8 @@ public sealed class PlayerController : BaseCharacterController
         }
         ActualDamgedFromMonsterAttack(mc.Stat.Attack);
         ChangeHitOrDieState();
-        //ProcessStatusEffect(mc);
+        if (PlayerStatusEffectEventHandler != null)
+            PlayerStatusEffectEventHandler.Invoke(mc);
     }
     void PlayMovementEffectAnimation(EPlayerMovementEffect eEffectType, ECharacterLookDir eLookDir, Vector2 pos)
     {
@@ -448,69 +449,9 @@ public sealed class PlayerController : BaseCharacterController
         }
     }
 
-    //void ProcessStatusEffect(BaseMonsterController mc)
-    //{
-    //    switch (mc.Stat.EStatusEffectType)
-    //    {
-    //        case EAttackStatusEffect.None:
-    //            break;
-    //        case EAttackStatusEffect.Knockback:
-    //            Vector2 knockbackForce = mc.Stat.KnockbackForce;
-    //            Vector2 dir = mc.transform.position - transform.position;
-    //            if (dir.x > 0)
-    //                RigidBody.AddForce(new Vector2(-knockbackForce.x, knockbackForce.y), ForceMode2D.Impulse);
-    //            else
-    //                RigidBody.AddForce(knockbackForce, ForceMode2D.Impulse);
-    //            break;
-    //        case EAttackStatusEffect.Blind:
-    //            Managers.FullScreenEffect.StartFullScreenEffect(EFullScreenEffectType.MONSTER_BLIND_EFFECT);
-    //            break;
-    //        case EAttackStatusEffect.Burn:
-    //            if (!IsBurned)
-    //            {
-    //                _lastBurnedDamage = mc.Stat.Attack;
-    //                StartCoroutine(BurnPlayerCo());
-    //                PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Burn, BURN_TIME_IN_SEC);
-    //            }
-    //            break;
-    //        case EAttackStatusEffect.Slow:
-    //            if (!IsSlowState)
-    //            {
-    //                StartCoroutine(StartSlowStateCountdownCo(mc.Stat.SlowTimeInSec));
-    //                PlayerStatusEffectEventHandler?.Invoke(EAttackStatusEffect.Slow, mc.Stat.SlowTimeInSec);
-    //            }
-    //            break;
-    //        case EAttackStatusEffect.Parallysis:
-    //            ChangeState(EPlayerState.HitByStatusParallysis);
-    //            break;
-    //        default:
-    //            Debug.DebugBreak();
-    //            break;
-    //    }
-    //}
     void OnPlayerFallToDeadZone()
     {
         ChangeState(EPlayerState.Die);
     }
-    //IEnumerator StartSlowStateCountdownCo(float slowTimeInSec)
-    //{
-    //    IsSlowState = true;
-    //    yield return new WaitForSeconds(slowTimeInSec);
-    //    IsSlowState = false;
-    //}
-    //IEnumerator BurnPlayerCo()
-    //{
-    //    IsBurned = true;
-    //    yield return new WaitForSeconds(1f);
-    //    ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-    //    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
-    //    yield return new WaitForSeconds(1f);
-    //    ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-    //    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
-    //    yield return new WaitForSeconds(1f);
-    //    ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
-    //    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
-    //    IsBurned = false;
-    //}
     #endregion
 }

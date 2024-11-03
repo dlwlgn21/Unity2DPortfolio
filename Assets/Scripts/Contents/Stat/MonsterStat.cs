@@ -6,29 +6,25 @@ using UnityEngine;
 using define;
 using UnityEngine.Events;
 
-public class MonsterStat : BaseStat
+public sealed class MonsterStat : BaseStat
 {
     public const int TUTIRIAL_HP = 50;
-    [SerializeField]
-    protected int _monsterType;
-
-    [SerializeField]
-    protected int _exp;
-    public int MonsterType { get { return _monsterType; } set { _monsterType = value; } }
-    public int Exp { get { return _exp; } set { _exp = value; } }
+    [SerializeField] int _monsterType;
+    [SerializeField] int _exp;
+    [SerializeField] float _knockbackForceX;
+    [SerializeField] float _knockbackForceY;
+    [SerializeField] float _slowTimeInSec;
+    [SerializeField] float _burnTimeInSec;
+    public int MonsterType { get { return _monsterType; } private set { _monsterType = value; } }
+    public int Exp { get { return _exp; } private set { _exp = value; } }
     
     public EAttackStatusEffect  EStatusEffectType { get; private set; }
-    public Vector2 KnockbackForce { get; set; } = new Vector2(1.5f, 1.5f);
-    public float SlowTimeInSec { get; set; }
+    public Vector2 KnockbackForce { get { return new Vector2(_knockbackForceX, _knockbackForceY); }}
+    public float SlowTimeInSec { get { return _slowTimeInSec; }}
+    public float BurnTimeInSec { get { return _burnTimeInSec; }}
 
     public override int DecreaseHpAndGetActualDamageAmount(int damage, out int beforeDamageHp, out int afterDamageHp)
     {
-        //if (HP <= 0)
-        //{
-        //    beforeDamageHp = 0;
-        //    afterDamageHp = 0;
-        //    return 0;
-        //}
         // TutorialScene에서의 0 데미지 처리를 위해서 추가함.
         if (damage == 0)
         {
@@ -57,6 +53,10 @@ public class MonsterStat : BaseStat
         Attack = dict[(int)eMonster].attack;
         Defence = dict[(int)eMonster].defence;
         MoveSpeed = dict[(int)eMonster].moveSpeed;
+        _knockbackForceX = dict[(int)eMonster].knockbackForceX;
+        _knockbackForceY = dict[(int)eMonster].knockbackForceY;
+        _slowTimeInSec = dict[(int)eMonster].slowTimeInSec;
+        _burnTimeInSec = dict[(int)eMonster].burnTimeInSec;
         Exp = dict[(int)eMonster].exp;
     }
     public void InitStatForTutorial()

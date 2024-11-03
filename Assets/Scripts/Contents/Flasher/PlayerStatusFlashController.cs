@@ -15,13 +15,11 @@ public sealed class PlayerStatusFlashController : MaterialFlashController
 
     private void OnEnable()
     {
-        //PlayerController.PlayerStatusEffectEventHandler += OnPlayerStatusEffect;
         StatusEffectController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
         StatusEffectController.PlayerStatusEffectEventHandler += OnPlayerStatusEffect;
     }
     private void OnDestroy()
     {
-        //PlayerController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
         StatusEffectController.PlayerStatusEffectEventHandler -= OnPlayerStatusEffect;
     }
     public void OnPlayerStatusEffect(EAttackStatusEffect eType, float flashTime)
@@ -75,7 +73,6 @@ public sealed class PlayerStatusFlashController : MaterialFlashController
         while (elapsedTime < flashTime)
         {
             DecreaseFlashAmount(ref currentFlashAmount, ref elapsedTime, flashTime);
-
             yield return null;
         }
         SetMaterial(_normalMat);
@@ -86,7 +83,6 @@ public sealed class PlayerStatusFlashController : MaterialFlashController
         while (elapsedTime < flashTime)
         {
             DecreaseFlashAmount(ref currentFlashAmount, ref elapsedTime, flashTime);
-
             yield return null;
         }
         SetMaterial(_normalMat);
@@ -96,11 +92,9 @@ public sealed class PlayerStatusFlashController : MaterialFlashController
         while (elapsedTime < flashTime)
         {
             DecreaseFlashAmount(ref currentFlashAmount, ref elapsedTime, flashTime);
-
             yield return null;
         }
         SetMaterial(_normalMat);
-
         _isFlashing = false;
     }
 
@@ -123,7 +117,6 @@ public sealed class PlayerStatusFlashController : MaterialFlashController
         while (elapsedTime < flashTime)
         {
             DecreaseFlashAmount(ref currentFlashAmount, ref elapsedTime, flashTime);
-
             yield return null;
         }
         SetMaterial(_normalMat);

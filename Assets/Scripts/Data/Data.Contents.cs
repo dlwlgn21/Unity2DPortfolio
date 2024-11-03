@@ -41,6 +41,10 @@ namespace data
     {
         public int monsterType;
         public int monsterStatusEffect;
+        public float knockbackForceX;
+        public float knockbackForceY;
+        public float slowTimeInSec;
+        public float burnTimeInSec;
         public int maxHp;
         public int attack;
         public int defence;
