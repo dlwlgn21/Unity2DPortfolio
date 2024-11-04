@@ -53,7 +53,7 @@
 	- [NormalMonsterController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/NormalMonsterController.cs)
 	
 10. Light 점진적으로 꺼지는 코드
-	- [LightController.cs] (https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/LightController.cs)
+	- [LightController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/LightController.cs)
 	
 11. Skill 관련 코드들.
     - [SkillManager.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Managers/Contents/PlayerSkillManager.cs)
