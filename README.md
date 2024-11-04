@@ -9,9 +9,9 @@
 
 ## 2. 코드 목차
 1. Player의 GroundCheck 코드
-    - [IsStandGround](https://github.com/dlwlgn21/Unity2DPortfolio/blob/c44db95f8fe735f5e725f0b3f1ba4015bb00b46f/Assets/Scripts/StateMachines/Player/PlayerStates.cs#L54)
+    - [IsStandGround](https://github.com/dlwlgn21/Unity2DPortfolio/blob/d1a1139ef97a6c9141af5f7b15228c5e2b54e6b7/Assets/Scripts/StateMachines/Player/PlayerStates.cs#L52)
 2. Player의 LedgeClimbe 코드
-    - [IsGrabLedge](https://github.com/dlwlgn21/Unity2DPortfolio/blob/c44db95f8fe735f5e725f0b3f1ba4015bb00b46f/Assets/Scripts/StateMachines/Player/PlayerStates.cs#L384)
+    - [IsGrabLedge](https://github.com/dlwlgn21/Unity2DPortfolio/blob/d1a1139ef97a6c9141af5f7b15228c5e2b54e6b7/Assets/Scripts/StateMachines/Player/PlayerStates.cs#L382)
 	
 3. 특정 구역에서 CamLookUpDown 코드
     - [CamLookUpDownZoneDetectionController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/CamLookUpDownZoneDetectionController.cs)
