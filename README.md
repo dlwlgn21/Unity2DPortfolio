@@ -21,7 +21,7 @@
     - [MonsterHitAnimController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/MonsterHitAnimController.cs)
     - [PlayerMovementAnimController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/PlayerMovementAnimController.cs)
 	
-5. Monster, Player의 상속구조
+5. Monster, Player의 상속구조 및 코드
     - [BaseCharacterControlloer.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/BaseCharacterController.cs)
         - [PlayerController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/PlayerController.cs)
         - [BaseMonsterController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/BaseMonsterController.cs)
@@ -39,7 +39,7 @@
 	- [MaterialFlashController](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Contents/Flasher/MaterialFlashController.cs)
 	- [MonsterFlashController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Contents/Flasher/MonsterFlashController.cs)
 	
-7. Data를 어떻게 로드하고 관리하는지 DataManager, Data.Contents 코드.
+7. Data를 어떻게 로드하고 관리하는지 DataManager, Data.Contents 코드
 	- [DataManager.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Managers/Core/DataManager.cs)
 	- [Data.Contents.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Data/Data.Contents.cs)
 	
@@ -55,10 +55,10 @@
 10. Light 점진적으로 꺼지는 코드
 	- [LightController.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Controller/LightController.cs)
 	
-11. Skill 관련 코드들.
+11. Skill(SkillObject들 로드하고, Skill Key Input 등은 이곳에서 처리)
     - [SkillManager.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Managers/Contents/PlayerSkillManager.cs)
 	
-12. Skill 상속구조 (Object와 Controller 컴포지션 관계로 관리, )
+12. Skill 상속구조 (SkillObject(껍데기)와 SkillController 컴포지션 관계로 관리, 스킬관련 로직은 SkillController에서 관리)
 	- [Skill_BaseObject.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Contents/Player/PlayerSkill/Objects/Skill_BaseObject.cs)
 		- [Skill_BlackFlameObject.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Contents/Player/PlayerSkill/Objects/Skill_BlackFlameObject.cs)
 		- [Skill_SwordStrikeObject.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Contents/Player/PlayerSkill/Objects/Skill_SwordStrikeObject.cs)
@@ -88,11 +88,11 @@
 	- [UI_Inventory_EquipableItemSlot.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/UI/UI_Inventory_EquipableItemSlot.cs)
 	- [UI_Inventory_ItemDiscardSlot.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/UI/Inventory/UI_Inventory_ItemDiscardSlot.cs)
 	
-15. Consumable(물약) 관련 코드들
+15. Consumable(물약) 관련 코드
     - [UI_PlayerConsumableIcon.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/UI/UI_PlayerConsumableIcon.cs)
 	- [UI_PlayerConsumableSlot.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/UI/UI_PlayerConsumableSlot.cs)
 	
-16. Scene 상속구조
+16. Scene 상속구조 및 코드
 	- [BaseScene.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Scenes/BaseScene.cs)
 		- [PlayScene.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Scenes/PlayScene.cs)
 			- [TutorialScene.cs](https://github.com/dlwlgn21/Unity2DPortfolio/blob/main/Assets/Scripts/Scenes/TutorialScene.cs)
