@@ -57,7 +57,7 @@ public abstract class ItemController : MonoBehaviour
                 _btnSprite.SetActive(false);
                 PushItemToInventory();
                 Managers.Tween.EndToZeroScaleTWNoCareCurrTweening(transform, OnScaleZeroTweenEnded, 1f);
-                Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
                 _lightController.TurnOffLightGradually();
             }
         }

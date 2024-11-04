@@ -38,11 +38,11 @@ public sealed class WardenController : NormalMonsterController, IMelleAttackable
 
     void OnAttackSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_BLASTER_WARDEN_ATTACK_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_BLASTER_WARDEN_ATTACK_PATH);
     }
 
     void OnDieSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_2);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_DIE_EXPOLOSION_2);
     }
 }

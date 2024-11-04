@@ -45,7 +45,7 @@ public sealed class PlayerLevelManager
     {
         CurrSkillPoint += levelUpCount;
         Managers.UI.SetSkillPointText(CurrSkillPoint);
-        Managers.Sound.Play(DataManager.SFX_PLAYER_LEVEL_UP);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_LEVEL_UP);
     }
 
     void OnPlayerSkillLevelUp(EActiveSkillType eType, int skillLevel)

@@ -68,17 +68,17 @@ public sealed class MainMenuManager
     void OnNewGameBtnClicked()
     {
         _mainMenu.SetActive(false);
-        Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MENU_CHOICE_PATH);
         EventSystem.current.SetSelectedGameObject(null);
         Managers.Scene.LoadScene(define.ESceneType.Tutorial);
     }
     void OnSettingBtnClicked()
     {
-        Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MENU_CHOICE_PATH);
     }
     void OnExitBtnClicked()
     {
-        Managers.Sound.Play(DataManager.SFX_MENU_CHOICE_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MENU_CHOICE_PATH);
         Application.Quit();
     }
 

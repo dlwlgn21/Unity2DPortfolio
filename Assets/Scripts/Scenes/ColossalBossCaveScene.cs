@@ -17,7 +17,7 @@ public class ColossalBossCaveScene : PlayScene
     {
         base.Init();
         Managers.PlayerRespawn.SpawnPlayer(false);
-        Managers.Sound.Play(DataManager.SFX_BGM_CAVE_COLOSSAL, define.ESoundType.Bgm);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_BGM_CAVE_COLOSSAL, define.ESoundType.Bgm);
         DoorController bossRoomDoor = GameObject.FindGameObjectWithTag("Door").GetComponent<DoorController>();
         Debug.Assert(bossRoomDoor != null);
         bossRoomDoor.SetConditionFunc(IsCanEnterBossRoom);

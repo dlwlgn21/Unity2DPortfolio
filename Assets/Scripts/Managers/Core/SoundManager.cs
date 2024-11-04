@@ -26,10 +26,10 @@ public sealed class SoundManager
             _audioSources[(int)ESoundType.Bgm].loop = true;
             PlayerController.PlayerChangeStateEventHandler -= Managers.Sound.OnPlayerChangeState;
             PlayerController.PlayerChangeStateEventHandler += Managers.Sound.OnPlayerChangeState;
-            GetOrAddAudioClip(DataManager.SFX_BGM_TUTORIAL);
-            GetOrAddAudioClip(DataManager.SFX_BGM_ABANDON_ROAD);
-            GetOrAddAudioClip(DataManager.SFX_BGM_CAVE_COLOSSAL);
-            GetOrAddAudioClip(DataManager.SFX_BGM_COLOSSAL_BATTLE);
+            GetOrAddAudioClip(Managers.Data.SFXKeyContainer.SFX_BGM_TUTORIAL);
+            GetOrAddAudioClip(Managers.Data.SFXKeyContainer.SFX_BGM_ABANDON_ROAD);
+            GetOrAddAudioClip(Managers.Data.SFXKeyContainer.SFX_BGM_CAVE_COLOSSAL);
+            GetOrAddAudioClip(Managers.Data.SFXKeyContainer.SFX_BGM_COLOSSAL_BATTLE);
         }
     }
 
@@ -42,32 +42,32 @@ public sealed class SoundManager
             case EPlayerState.Run:
                 break;
             case EPlayerState.Roll:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_ROLLING_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_ROLLING_PATH);
                 break;
             case EPlayerState.Jump:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_JUMP_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_JUMP_PATH);
                 break;
             case EPlayerState.Climb:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_LAND_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_LAND_PATH);
                 break;
             case EPlayerState.Fall:
                 break;
             case EPlayerState.FallToTwiceJump:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_JUMP_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_JUMP_PATH);
                 break;
             case EPlayerState.TwiceJumpToFall:
                 break;
             case EPlayerState.Land:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_LAND_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_LAND_PATH);
                 break;
             case EPlayerState.NormalAttack_1:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_1_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_SWING_1_PATH);
                 break;
             case EPlayerState.NormalAttack_2:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_2_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_SWING_2_PATH);
                 break;
             case EPlayerState.NormalAttack_3:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_SWING_3_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_SWING_3_PATH);
                 break;
             case EPlayerState.SkillCast:
                 break;
@@ -77,17 +77,17 @@ public sealed class SoundManager
                 int randIdx = UnityEngine.Random.Range(0, 1);
                 if (randIdx % 2 == 0)
                 {
-                    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_HIT_1_PATH);
                 }
                 else
                 {
-                    Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_HIT_2_PATH);
                 }
                 break;
             case EPlayerState.Block:
                 break;
             case EPlayerState.BlockSucces:
-                Managers.Sound.Play(DataManager.SFX_PLAYER_BLOCK_SUCESS_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_BLOCK_SUCESS_PATH);
                 break;
             case EPlayerState.Die:
                 break;
@@ -127,14 +127,14 @@ public sealed class SoundManager
         switch (eSceneType)
         {
             case ESceneType.Tutorial:
-                _clipDict.Remove(DataManager.SFX_BGM_TUTORIAL);
+                _clipDict.Remove(Managers.Data.SFXKeyContainer.SFX_BGM_TUTORIAL);
                 break;
             case ESceneType.AbandonLoadScene:
-                _clipDict.Remove(DataManager.SFX_BGM_ABANDON_ROAD);
+                _clipDict.Remove(Managers.Data.SFXKeyContainer.SFX_BGM_ABANDON_ROAD);
                 break;
             case ESceneType.ColossalBossCaveScene:
-                _clipDict.Remove(DataManager.SFX_BGM_CAVE_COLOSSAL);
-                _clipDict.Remove(DataManager.SFX_BGM_COLOSSAL_BATTLE);
+                _clipDict.Remove(Managers.Data.SFXKeyContainer.SFX_BGM_CAVE_COLOSSAL);
+                _clipDict.Remove(Managers.Data.SFXKeyContainer.SFX_BGM_COLOSSAL_BATTLE);
                 break;
             case ESceneType.Count:
                 break;

@@ -34,12 +34,12 @@ public class RedGhoulController : NormalMonsterController, IMelleAttackable
     }
     void OnAttackSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_RED_GHOUL_ATTACK_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_RED_GHOUL_ATTACK_PATH);
     }
 
     void OnDieSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_1);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_DIE_EXPOLOSION_1);
     }
 }
 

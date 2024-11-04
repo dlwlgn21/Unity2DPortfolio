@@ -14,6 +14,6 @@ public sealed class Skill_SpawnReaperObject : Skill_BaseObject
 
     protected override void OnSoundPlayTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_SKILL_SPAWN_REAPER_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_SKILL_SPAWN_REAPER_PATH);
     }
 }

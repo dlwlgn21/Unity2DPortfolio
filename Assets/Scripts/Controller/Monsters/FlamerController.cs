@@ -35,11 +35,11 @@ public class FlamerController : NormalMonsterController, IMelleAttackable
 
     void OnAttckSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_FLAMER_ATTACK_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_FLAMER_ATTACK_PATH);
     }
 
     void OnDieSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_4);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_DIE_EXPOLOSION_4);
     }
 }

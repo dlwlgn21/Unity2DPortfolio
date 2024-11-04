@@ -43,12 +43,12 @@ public sealed class HSlicerController : NormalMonsterController, IMelleAttackabl
     void OnAttackSwing1Timing()
     {
         AddForceToFront(sRushForce);
-        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_SWING_1_PATH);
     }
     void OnAttackSwing2Timing()
     {
         AddForceToFront(sRushForce * 0.35f);
-        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_SWING_2_PATH);
     }
 
     void AddForceToFront(Vector2 force)

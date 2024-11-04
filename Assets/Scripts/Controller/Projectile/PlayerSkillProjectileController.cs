@@ -50,7 +50,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
 
     void OnDropedGroundSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_SKILL_KNOCKBACK_PROJECTILE_DROPED);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_SKILL_KNOCKBACK_PROJECTILE_DROPED);
     }
     private void OnValidAnimBombTiming()
     {
@@ -65,7 +65,7 @@ public class PlayerSkillProjectileController : BaseProjectileController
             mon.gameObject.GetComponent<BaseMonsterController>()?.OnHittedByPlayerSkill(EActiveSkillType.Spawn_Shooter);
         }
         _lightController.TurnOffLightGradually();
-        Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_2);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_DIE_EXPOLOSION_2);
     }
 
     private void OnBombAnimFullyPlayed()

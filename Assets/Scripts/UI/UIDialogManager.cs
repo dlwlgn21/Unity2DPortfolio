@@ -93,7 +93,7 @@ public sealed class UIDialogManager
     public void OnTypingStarted()
     {
         _isTyping = true;
-        Managers.Sound.Play(DataManager.SFX_UI_DIALOG_START);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DIALOG_START);
     }
     public void OnTypingEnded()
     {

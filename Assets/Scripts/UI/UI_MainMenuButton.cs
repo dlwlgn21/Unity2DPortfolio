@@ -11,6 +11,6 @@ public class UI_MainMenuButton : MonoBehaviour, ISelectHandler
     public void OnSelect(BaseEventData eventData)
     {
         Managers.MainMenu.ECurrentSelectedButtonType = _eType;
-        Managers.Sound.Play(DataManager.SFX_MENU_MOVE_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MENU_MOVE_PATH);
     }
 }

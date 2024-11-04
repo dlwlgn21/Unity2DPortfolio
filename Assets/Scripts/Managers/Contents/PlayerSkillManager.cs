@@ -117,7 +117,7 @@ public sealed class PlayerSkillManager
         if (eSkillType != EActiveSkillType.Count && _skillControllerDict[eSkillType].TryUseSkill())
         {
             skillCoolTimer[(int)eSlot].StartCoolTime(_skillControllerDict[eSkillType].SkillCoolTimeInSec);
-            Managers.Sound.Play(DataManager.SFX_PLAYER_FLY_USING_SKILL);
+            Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_FLY_USING_SKILL);
             if (eSlot == ESkillSlot.AKey)
                 Managers.Tween.StartUIScaleTW(_skillSlots[(int)eSlot].transform, OnAKeyScaleTWEnd);
             else
@@ -126,7 +126,7 @@ public sealed class PlayerSkillManager
         }
         else
         {
-            Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+            Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DENIED);
             Managers.Tween.StartUIDoPunchPos(_skillSlots[(int)eSlot].transform);
             return false;
         }

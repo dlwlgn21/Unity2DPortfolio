@@ -176,7 +176,7 @@ public sealed class TutorialManager : MonoBehaviour
                 _successText.text = "스킬 트레이닝 성공!\n3초 후에 현실로 점프합니다!";
                 break;
         }
-        Managers.Sound.Play(DataManager.SFX_QUEST_SUCESS);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_QUEST_SUCESS);
         _successText.transform.DOScale(TW_SCALE_END_VALUE, 1.5f).SetEase(Ease.OutElastic).OnComplete(OnSuccessTextScaleTWEnd);
     }
 
@@ -272,7 +272,7 @@ public sealed class TutorialManager : MonoBehaviour
 
     void PlayActiveSound()
     {
-        Managers.Sound.Play(DataManager.SFX_UI_DIALOG_BOX_POPUP);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DIALOG_BOX_POPUP);
     }
     #endregion
 }

@@ -10,9 +10,7 @@ namespace player_states
     public abstract class BasePlayerState : State<PlayerController>
     {
         protected float _horizontalMove;
-        protected float _groundCheckDistance = 0.2f;
         const int GROUND_LAYER_MASK = (1 << (int)define.EColliderLayer.Platform) | (1 << (int)define.EColliderLayer.LedgeClimb);
-
 
         #region GroundCheck
         Bounds _bound;

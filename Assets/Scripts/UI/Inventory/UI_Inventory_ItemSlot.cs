@@ -60,6 +60,6 @@ public sealed class UI_Inventory_ItemSlot : MonoBehaviour, IDropHandler
 
     void PlayDropSuccessSound()
     {
-        Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
     }
 }

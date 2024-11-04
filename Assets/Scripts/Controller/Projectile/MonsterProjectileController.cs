@@ -53,7 +53,7 @@ public class MonsterProjectileController : BaseProjectileController
                 MonsterProjectileHitPlayerEventHandelr.Invoke(_currOwnerController);
             _rb.velocity = Vector2.zero;
             _isHit = true;
-            Managers.Sound.Play(DataManager.SFX_MONSTER_PROJECTILE_HIT);
+            Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_PROJECTILE_HIT);
         }
     }
 

@@ -41,11 +41,11 @@ public class GunnerController : NormalMonsterController, ILaunchAttackable
         Managers.ProjectilePool
             .GetMonsterProjectile()
             .OnValidShootAnimTiming(ELookDir, _launchPoint.position, this);
-        Managers.Sound.Play(DataManager.SFX_MONSTER_ARCHER_GUNNER_LUANCH_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_ARCHER_GUNNER_LUANCH_PATH);
     }
 
     void OnDieSoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_DIE_EXPOLOSION_3);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_DIE_EXPOLOSION_3);
     }
 }

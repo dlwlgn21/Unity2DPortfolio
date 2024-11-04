@@ -77,9 +77,9 @@ public sealed class StatusEffectController : MonoBehaviour
             _pc.ActualDamgedFromMonsterAttack(Mathf.Max((int)(_lastBurnedDamage * 0.5f), 1));
             int randIdx = UnityEngine.Random.Range(0, 1);
             if (randIdx % 2 == 0)
-                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_1_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_HIT_1_PATH);
             else
-                Managers.Sound.Play(DataManager.SFX_PLAYER_HIT_2_PATH);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_HIT_2_PATH);
         }
         _pc.IsBurned = false;
         _burnCoOrNull = null;

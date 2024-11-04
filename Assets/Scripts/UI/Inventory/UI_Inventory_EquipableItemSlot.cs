@@ -50,12 +50,12 @@ public sealed class UI_Inventory_EquipableItemSlot : MonoBehaviour, IDropHandler
 
     void PlayEquipSound()
     {
-        Managers.Sound.Play(DataManager.SFX_UI_EQUP_SUCESS);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_EQUP_SUCESS);
     }
 
     void PlayDeniedSoundAndTW()
     {
         Managers.Tween.StartUIDoPunchPos(transform);
-        Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DENIED);
     }
 }

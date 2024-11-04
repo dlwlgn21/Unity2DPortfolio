@@ -212,4 +212,64 @@ namespace data
     }
     #endregion
     #endregion
+
+    [Serializable]
+    public class SfxKeyContainer
+    {
+        public string SFX_BGM_TUTORIAL;
+        public string SFX_BGM_ABANDON_ROAD;
+        public string SFX_BGM_CAVE_COLOSSAL;
+        public string SFX_BGM_COLOSSAL_BATTLE;
+        public string SFX_UI_POINTER_ENTER;
+        public string SFX_UI_DENIED;
+        public string SFX_UI_DROP_OR_ITEM_GET_SUCESS;
+        public string SFX_UI_EQUP_SUCESS;
+        public string SFX_UI_SKILL_LEVEL_UP;
+        public string SFX_UI_DIALOG_BOX_POPUP;
+        public string SFX_UI_DIALOG_START;
+        public string SFX_TELEPORT;
+        public string SFX_QUEST_SUCESS;
+        public string SFX_PALY_SCENE_BGM_PATH;
+        public string SFX_PLAYER_SWING_1_PATH;
+        public string SFX_PLAYER_SWING_2_PATH;
+        public string SFX_PLAYER_SWING_3_PATH;
+        public string SFX_PLAYER_ROLLING_PATH;
+        public string SFX_PLAYER_HIT_1_PATH;
+        public string SFX_PLAYER_HIT_2_PATH;
+        public string SFX_PLAYER_FOOT_STEP_1_PATH;
+        public string SFX_PLAYER_FOOT_STEP_2_PATH;
+        public string SFX_PLAYER_JUMP_PATH;
+        public string SFX_PLAYER_LAND_PATH;
+        public string SFX_PLAYER_BACKATTACK_PATH;
+        public string SFX_PLAYER_BLOCK_SUCESS_PATH;
+        public string SFX_PLAYER_FLY_USING_SKILL;
+        public string SFX_PLAYER_LEVEL_UP;
+        public string SFX_PLAYER_HEALD;
+        public string SFX_MENU_MOVE_PATH;
+        public string SFX_MENU_CHOICE_PATH;
+        public string SFX_SKILL_BLACK_FLAME_PATH;
+        public string SFX_SKILL_SWORD_STRIKE_PATH;
+        public string SFX_SKILL_SPAWN_REAPER_PATH;
+        public string SFX_SKILL_SPAWN_SHOOTER_SHOOT;
+        public string SFX_SKILL_KNOCKBACK_PROJECTILE_DROPED;
+        public string SFX_SKILL_KNOCKBACK_PROJECTILE_BOMB;
+        public string SFX_MONSTER_SWING_1_PATH;
+        public string SFX_MONSTER_SWING_2_PATH;
+        public string SFX_MONSTER_ARCHER_GUNNER_LUANCH_PATH;
+        public string SFX_MONSTER_FLAMER_ATTACK_PATH;
+        public string SFX_MONSTER_BLASTER_WARDEN_ATTACK_PATH;
+        public string SFX_MONSTER_RED_GHOUL_ATTACK_PATH;
+        public string SFX_MONSTER_DIE_EXPOLOSION_1;
+        public string SFX_MONSTER_DIE_EXPOLOSION_2;
+        public string SFX_MONSTER_DIE_EXPOLOSION_3;
+        public string SFX_MONSTER_DIE_EXPOLOSION_4;
+        public string SFX_MONSTER_HIT_BY_NORMAL_ATTACK_1;
+        public string SFX_MONSTER_HIT_BY_NORMAL_ATTACK_2;
+        public string SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3;
+        public string SFX_MONSTER_HIT_BY_PLAYER_CAST_SKILL;
+        public string SFX_MONSTER_HIT_BY_PLAYER_SKILL_REAPER;
+        public string SFX_MONSTER_PROJECTILE_HIT;
+        public string SFX_ENV_DOOR_OPEN;
+    }
+
 }

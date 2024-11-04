@@ -253,7 +253,7 @@ public sealed class PlayerController : BaseCharacterController
         {
             case EItemConsumableType.Hp:
                 {
-                    Managers.Sound.Play(DataManager.SFX_PLAYER_HEALD);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_HEALD);
                     Stat.IncreaseHp(amount);
                     break;
                 }
@@ -384,7 +384,7 @@ public sealed class PlayerController : BaseCharacterController
 
     void OnPlayerNormalAttack1ValidStopEffectTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_PLAYER_LAND_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_LAND_PATH);
         PlayMovementEffectAnimation(EPlayerMovementEffect.NormalAttackLand, ELookDir, transform.position);
     }
     void OnPlayerFootStep()
@@ -392,9 +392,9 @@ public sealed class PlayerController : BaseCharacterController
         FootDustParticle.Play();
         int rand = Random.Range(0, 2);
         if (rand == 0)
-            Managers.Sound.Play(DataManager.SFX_PLAYER_FOOT_STEP_1_PATH);
+            Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_FOOT_STEP_1_PATH);
         else
-            Managers.Sound.Play(DataManager.SFX_PLAYER_FOOT_STEP_2_PATH);
+            Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_PLAYER_FOOT_STEP_2_PATH);
     }
 
     void OnAttackLightTurnOnTiming()

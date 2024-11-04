@@ -151,7 +151,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             {
                 AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * new Vector2(4.5f, 1f));
                 ChangeState(ENormalMonsterState.Die);
-                Managers.Sound.Play(DataManager.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3);
                 return;
             }
             ((monster_states.BaseMonsterState)_states[(int)ECurrentState]).MakeSlow();
@@ -159,16 +159,16 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             {
                 case EPlayerNoramlAttackType.Attack_1:
                     AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
-                    Managers.Sound.Play(DataManager.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_1);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_1);
                     break;
                 case EPlayerNoramlAttackType.Attack_2:
                     AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
-                    Managers.Sound.Play(DataManager.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_2);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_2);
                     break;
                 case EPlayerNoramlAttackType.Attack_3:
                 case EPlayerNoramlAttackType.BackAttack:
                     AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_3_FORCE_COEFF);
-                    Managers.Sound.Play(DataManager.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3);
                     break;
                 default:
                     break;
@@ -191,20 +191,20 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             case EActiveSkillType.Spawn_Reaper:
                 ChangeState(ENormalMonsterState.HitByPlayerSkillParallysis);
                 _parallysisCoroutineOrNull = StartCoroutine(PlayHitAnimForSeconds(info.parallysisTime));
-                Managers.Sound.Play(DataManager.SFX_MONSTER_HIT_BY_PLAYER_SKILL_REAPER);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_PLAYER_SKILL_REAPER);
                 break;
             case EActiveSkillType.Spawn_Shooter:
                 RigidBody.velocity = Vector3.zero;
                 AddKnockbackForceOppossiteByPlayer(new Vector2(info.knockbackForceX, info.knockbackForceY));
-                Managers.Sound.Play(DataManager.SFX_MONSTER_PROJECTILE_HIT);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_PROJECTILE_HIT);
                 break;
             case EActiveSkillType.Cast_BlackFlame:
                 DamagedFromPlayer(ELookDir, info.damage, EPlayerNoramlAttackType.Attack_3);
-                Managers.Sound.Play(DataManager.SFX_MONSTER_HIT_BY_PLAYER_CAST_SKILL);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_PLAYER_CAST_SKILL);
                 break;
             case EActiveSkillType.Cast_SwordStrike:
                 DamagedFromPlayer(ELookDir, info.damage, EPlayerNoramlAttackType.Attack_3);
-                Managers.Sound.Play(DataManager.SFX_MONSTER_HIT_BY_PLAYER_CAST_SKILL);
+                Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_PLAYER_CAST_SKILL);
                 break;
             default:
                 Debug.Assert(false);

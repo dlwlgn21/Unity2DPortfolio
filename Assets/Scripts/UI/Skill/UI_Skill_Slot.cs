@@ -82,10 +82,10 @@ public class UI_Skill_Slot : MonoBehaviour, IDropHandler
     void PlayDeniedSoundAndPunchTW()
     {
         Managers.Tween.StartUIDoPunchPos(transform);
-        Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DENIED);
     }
     void PlayDropSucessSound()
     {
-        Managers.Sound.Play(DataManager.SFX_UI_EQUP_SUCESS);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_EQUP_SUCESS);
     }
 }

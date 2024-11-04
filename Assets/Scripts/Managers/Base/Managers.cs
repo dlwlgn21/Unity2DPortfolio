@@ -109,9 +109,9 @@ public class Managers : MonoBehaviour
             }
             DontDestroyOnLoad(go);
             sInstance = go.GetComponent<Managers>();
+            sInstance._dataManager.Init();
             sInstance._soundManager.Init();
             sInstance._tweenManager.Init();
-            sInstance._dataManager.Init();
             sInstance._sceneManager.Init();
             sInstance._fullScreenEffectManager.Init();
         }

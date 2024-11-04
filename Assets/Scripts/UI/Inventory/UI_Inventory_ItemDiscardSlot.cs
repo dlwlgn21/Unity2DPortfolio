@@ -30,7 +30,7 @@ public sealed class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
                 UI_Inventory_ItemIcon dragedIcon = dragedObject.GetComponent<UI_Inventory_ItemIcon>();
                 if (dragedIcon != null)
                 {
-                    Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
                     _icon.OnDropDiscardIcon(dragedIcon.ItemInfo, Managers.UI.GetSpriteByItemInfoOrNull(dragedIcon.ItemInfo), dragedIcon.ConsumableItemCount);
                     Managers.UI.ClearInventorySlotAt(dragedIcon.SlotIdx);
                     return;
@@ -41,7 +41,7 @@ public sealed class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
                 if (dragedIcon != null)
                 {
                     Managers.Tween.StartUIDoPunchPos(transform);
-                    Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DENIED);
                 }
             }
 
@@ -54,7 +54,7 @@ public sealed class UI_Inventory_ItemDiscardSlot : MonoBehaviour, IDropHandler
         if (ItemDiscardEventHandler != null)
             ItemDiscardEventHandler.Invoke(_icon.ItemInfo);
         _icon.Clear();
-        Managers.Sound.Play(DataManager.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DROP_OR_ITEM_GET_SUCESS);
     }
     void OnDropIcon()
     {

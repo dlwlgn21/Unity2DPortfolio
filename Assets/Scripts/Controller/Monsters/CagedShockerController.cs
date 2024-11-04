@@ -41,11 +41,11 @@ public sealed class CagedShockerController : NormalMonsterController, IMelleAtta
 
     void OnAttackSwing1SoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_SWING_1_PATH);
     }
     void OnAttackSwing2SoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_SWING_2_PATH);
     }
 }
 

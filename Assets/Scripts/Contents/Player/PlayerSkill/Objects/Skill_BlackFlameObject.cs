@@ -13,6 +13,6 @@ public sealed class Skill_BlackFlameObject : Skill_BaseObject
 
     protected override void OnSoundPlayTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_SKILL_BLACK_FLAME_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_SKILL_BLACK_FLAME_PATH);
     }
 }

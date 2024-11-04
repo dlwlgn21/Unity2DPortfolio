@@ -65,7 +65,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
                 StartScaleTW();
                 if (SameConsumableDropEventHandelr != null)
                 {
-                    Managers.Sound.Play(DataManager.SFX_UI_EQUP_SUCESS);
+                    Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_EQUP_SUCESS);
                     SameConsumableDropEventHandelr.Invoke(dragedIcon.ItemInfo, SlotIdx);
                     Info = dragedIcon.ItemInfo;
                     _icon.OnDropConsumableIcon(dragedIcon.Image.sprite, dragedIcon.ConsumableItemCountText.text);
@@ -192,7 +192,7 @@ public sealed class UI_PlayerConsumableSlot : MonoBehaviour, IDropHandler
 
     void PlayDeniedSoundAndPunchPosTW()
     {
-        Managers.Sound.Play(DataManager.SFX_UI_DENIED);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_UI_DENIED);
         StartPunchPosTW();
     }
     //private void OnDestroy()

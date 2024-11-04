@@ -14,7 +14,7 @@ public class TutorialScene : PlayScene
     protected override void Init()
     {
         base.Init();
-        Managers.Sound.Play(DataManager.SFX_BGM_TUTORIAL, define.ESoundType.Bgm);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_BGM_TUTORIAL, define.ESoundType.Bgm);
     }
     public override void Clear()
     {

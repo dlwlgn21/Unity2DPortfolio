@@ -17,7 +17,7 @@ public class AbandonRoadScene : PlayScene
     {
         base.Init();
         Managers.PlayerRespawn.SpawnPlayer(false);
-        Managers.Sound.Play(DataManager.SFX_BGM_ABANDON_ROAD, define.ESoundType.Bgm);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_BGM_ABANDON_ROAD, define.ESoundType.Bgm);
     }
 
     public override void Clear()

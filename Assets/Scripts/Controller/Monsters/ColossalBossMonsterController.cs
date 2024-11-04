@@ -281,7 +281,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     void OnWakeSoundTiming()
     {
         Managers.Sound.Play(SFX_WAKE_PATH);
-        Managers.Sound.Play(DataManager.SFX_BGM_COLOSSAL_BATTLE, define.ESoundType.Bgm);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_BGM_COLOSSAL_BATTLE, define.ESoundType.Bgm);
     }
     void OnBurfAnimTurnOnLightTiming()
     {
@@ -300,12 +300,12 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     void OnSpinAttack1SoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_1_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_SWING_1_PATH);
     }
 
     void OnSpinAttack2SoundTiming()
     {
-        Managers.Sound.Play(DataManager.SFX_MONSTER_SWING_2_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_SWING_2_PATH);
     }
 
     void OnBurstAttackSoundTiming()
