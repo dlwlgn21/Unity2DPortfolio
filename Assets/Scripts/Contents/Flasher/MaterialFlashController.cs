@@ -17,10 +17,10 @@ public abstract class MaterialFlashController : MonoBehaviour
     }
 
 
-    protected void InitAmountAndTimeVariable(ref float flashAmount, ref float elapsedTime)
+    protected void InitAmountAndTimeVariable(ref float flashAmount, ref float elapsedTimeInSec)
     {
         flashAmount = 0f;
-        elapsedTime = 0f;
+        elapsedTimeInSec = 0f;
     }
     protected void SetMaterialAndColor(Material mat, Color color)
     {
@@ -31,10 +31,10 @@ public abstract class MaterialFlashController : MonoBehaviour
     {
         _spriteRenderer.material = mat;
     }
-    protected void DecreaseFlashAmount(ref float currFlashAmount, ref float elapsedTime, float flashTime)
+    protected void DecreaseFlashAmount(ref float currFlashAmount, ref float elapsedTimeInSec, float flashTimeInSec)
     {
-        elapsedTime += Time.deltaTime;
-        currFlashAmount = Mathf.Lerp(1f, 0f, (elapsedTime / flashTime));
+        elapsedTimeInSec += Time.deltaTime;
+        currFlashAmount = Mathf.Lerp(1f, 0f, (elapsedTimeInSec / flashTimeInSec));
         _damageFlashMat.SetFloat(FLASH_AMOUNT_KEY, currFlashAmount);
     }
 }

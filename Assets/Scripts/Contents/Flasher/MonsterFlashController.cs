@@ -5,23 +5,25 @@ using UnityEngine;
 
 public sealed class MonsterFlashController : MaterialFlashController
 {
-    [SerializeField] private Color _flashColor = Color.red;
-    [SerializeField] private float _flashTime = 0.2f;
-
+    [SerializeField] Color _flashColor = Color.red;
+    [SerializeField] float _flashTimeInSec = 0.2f;
+    Coroutine _flashCoOrNull;
     public void StartDamageFlash()
     {
-        StartCoroutine(DamageFlashCo());
+        if (_flashCoOrNull == null)
+            _flashCoOrNull = StartCoroutine(DamageFlashCo());
     }
     IEnumerator DamageFlashCo()
     {
         float currentFlashAmount = 0f;
-        float elapsedTime = 0f;
+        float elapsedTimeInSec = 0f;
         SetMaterialAndColor(_damageFlashMat, _flashColor);
-        while (elapsedTime < _flashTime)
+        while (elapsedTimeInSec < _flashTimeInSec)
         {
-            DecreaseFlashAmount(ref currentFlashAmount, ref elapsedTime, _flashTime);
+            DecreaseFlashAmount(ref currentFlashAmount, ref elapsedTimeInSec, _flashTimeInSec);
             yield return null;
         }
         SetMaterial(_normalMat);
+        _flashCoOrNull = null;
     }
 }
