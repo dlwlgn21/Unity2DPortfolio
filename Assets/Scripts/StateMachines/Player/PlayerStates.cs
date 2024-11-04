@@ -12,7 +12,18 @@ namespace player_states
         protected float _horizontalMove;
         protected float _groundCheckDistance = 0.2f;
         const int GROUND_LAYER_MASK = (1 << (int)define.EColliderLayer.Platform) | (1 << (int)define.EColliderLayer.LedgeClimb);
-        public BasePlayerState(PlayerController controller) : base(controller) { }
+
+
+        #region GroundCheck
+        Bounds _bound;
+        readonly float GROUND_CHECK_LAY_DIST;
+        readonly Vector3 RIGHT_GROUND_CHECK_DIFF = new(0.15f, 0f, 0f);
+        readonly Vector3 LEFT_GROUND_CHECK_DIFF = new(-0.15f, 0f, 0f);
+        #endregion
+        public BasePlayerState(PlayerController controller) : base(controller) 
+        {
+            GROUND_CHECK_LAY_DIST = _entity.CapsuleCollider.bounds.extents.y + 0.1f; 
+        }
         #region Public
         public abstract void OnAnimFullyPlayed();
         public override void Excute() { }
@@ -42,22 +53,15 @@ namespace player_states
         protected void SetVelocityToZero() { _entity.RigidBody.velocity = Vector2.zero; }
         protected bool IsStandGround()
         {
-            // TODO : 이곳 나중에 코드 정리해야 함.
-            Bounds bound = _entity.CapsuleCollider.bounds;
-            float dist = bound.extents.y + 0.1f;
-            float xDiff = 0.15f;
-            Vector3 rightDiff = new(xDiff, 0f, 0f);
-            Vector3 leftDiff = new(-xDiff, 0f, 0f);
-            var rightHit = Physics2D.Raycast(bound.center + rightDiff, Vector2.down, dist, GROUND_LAYER_MASK);
-            var leftHit = Physics2D.Raycast(bound.center + leftDiff, Vector2.down, dist, GROUND_LAYER_MASK);
+            _bound = _entity.CapsuleCollider.bounds;
+            var rightHit = Physics2D.Raycast(_bound.center + RIGHT_GROUND_CHECK_DIFF, Vector2.down, GROUND_CHECK_LAY_DIST, GROUND_LAYER_MASK);
+            var leftHit = Physics2D.Raycast(_bound.center + LEFT_GROUND_CHECK_DIFF, Vector2.down, GROUND_CHECK_LAY_DIST, GROUND_LAYER_MASK);
             if (leftHit.collider == null && rightHit.collider == null)
             {
-                Debug.DrawRay(bound.center + rightDiff, Vector2.down * dist, Color.green);
-                Debug.DrawRay(bound.center + leftDiff, Vector2.down * dist, Color.green);
+                DrawGroundCheckDebugRay(Color.green);
                 return false;
             }
-            Debug.DrawRay(bound.center + rightDiff, Vector2.down * dist, Color.red);
-            Debug.DrawRay(bound.center + leftDiff, Vector2.down * dist, Color.red);
+            DrawGroundCheckDebugRay(Color.red);
             return true;
         }
         protected void PlayAnimation(EPlayerState eState)
@@ -123,58 +127,12 @@ namespace player_states
             return;
         }
         #endregion
-        void RotateAcordingELookDir()
+
+        void DrawGroundCheckDebugRay(Color color)
         {
-
+            Debug.DrawRay(_bound.center + RIGHT_GROUND_CHECK_DIFF, Vector2.down * GROUND_CHECK_LAY_DIST, color);
+            Debug.DrawRay(_bound.center + LEFT_GROUND_CHECK_DIFF, Vector2.down * GROUND_CHECK_LAY_DIST, color);
         }
-        //static public void BoxCast2DDebugDraw(Vector2 origin, Vector2 size, float distasnce, RaycastHit2D hit)
-        //{
-        //    Vector2 p1, p2, p3, p4, p5, p6, p7, p8;
-        //    float w = size.x * 0.5f;
-        //    float h = size.y * 0.5f;
-        //    p1 = new Vector2(-w, h);
-        //    p2 = new Vector2(w, h);
-        //    p3 = new Vector2(w, -h);
-        //    p4 = new Vector2(-w, -h);
-
-        //    Quaternion q = Quaternion.AngleAxis(0, new Vector3(0, 0, 1));
-        //    p1 = q * p1;
-        //    p2 = q * p2;
-        //    p3 = q * p3;
-        //    p4 = q * p4;
-
-        //    p1 += origin;
-        //    p2 += origin;
-        //    p3 += origin;
-        //    p4 += origin;
-
-        //    Vector2 realDistance = Vector2.down * distasnce;
-        //    p5 = p1 + realDistance;
-        //    p6 = p2 + realDistance;
-        //    p7 = p3 + realDistance;
-        //    p8 = p4 + realDistance;
-
-        //    //Drawing the cast
-        //    UnityEngine.Color castColor = hit ? UnityEngine.Color.red : UnityEngine.Color.white;
-        //    Debug.DrawLine(p1, p2, castColor);
-        //    Debug.DrawLine(p2, p3, castColor);
-        //    Debug.DrawLine(p3, p4, castColor);
-        //    Debug.DrawLine(p4, p1, castColor);
-
-        //    Debug.DrawLine(p5, p6, castColor);
-        //    Debug.DrawLine(p6, p7, castColor);
-        //    Debug.DrawLine(p7, p8, castColor);
-        //    Debug.DrawLine(p8, p5, castColor);
-
-        //    Debug.DrawLine(p1, p5, castColor);
-        //    Debug.DrawLine(p2, p6, castColor);
-        //    Debug.DrawLine(p3, p7, castColor);
-        //    Debug.DrawLine(p4, p8, castColor);
-        //    if (hit)
-        //    {
-        //        Debug.DrawLine(hit.point, hit.point + hit.normal.normalized * 0.2f, UnityEngine.Color.yellow);
-        //    }
-        //}
     }
 
     public sealed class Idle : BasePlayerState
