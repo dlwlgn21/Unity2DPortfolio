@@ -1,8 +1,5 @@
-using data;
 using define;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -47,7 +44,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
 
     MonsterBloodAnimController _bloodAnimationController;
 
-
+    
     private void FixedUpdate()
     {
         _stateMachine.FixedExcute();
@@ -145,11 +142,12 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     {
         if (ECurrentState != ENormalMonsterState.Die)
         {
+            
             DecreasHpAndInvokeHitEvents(damage, eAttackType);
             _bloodAnimationController.PlayerBloodAnimation(transform.position, ELookDir, eAttackType);
             if (Stat.HP <= 0)
             {
-                AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * new Vector2(4.5f, 1f));
+                AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_KNOCKBACK_FORCE * new Vector2(4.5f, 1f));
                 ChangeState(ENormalMonsterState.Die);
                 Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3);
                 return;
@@ -158,16 +156,16 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
             switch (eAttackType)
             {
                 case EPlayerNoramlAttackType.Attack_1:
-                    AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
+                    AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_KNOCKBACK_FORCE);
                     Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_1);
                     break;
                 case EPlayerNoramlAttackType.Attack_2:
-                    AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE);
+                    AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_KNOCKBACK_FORCE);
                     Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_2);
                     break;
                 case EPlayerNoramlAttackType.Attack_3:
                 case EPlayerNoramlAttackType.BackAttack:
-                    AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE * PlayerController.NORMAL_ATTACK_3_FORCE_COEFF);
+                    AddKnockbackForceOppossiteByPlayer(PlayerController.NORMAL_ATTACK_KNOCKBACK_FORCE * PlayerController.BIG_ATTACK_KNOCKBACK_FORCE_COEFF);
                     Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_MONSTER_HIT_BY_NORMAL_ATTACK_3);
                     break;
                 default:
@@ -180,7 +178,7 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     {
         _attackLightController.ForceToStopCoroutineAndTurnOffLight();
         ChangeState(ENormalMonsterState.HitByPlayerBlockSucces);
-        AddKnockbackForceOppossiteByPlayer(new Vector2(3f, 3f));
+        AddKnockbackForceOppossiteByPlayer(PlayerController.BLOCK_SUCCESS_KNOCKBACK_FORCE);
     }
     public override void OnHittedByPlayerSkill(EActiveSkillType eType)
     {
@@ -216,7 +214,6 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     #endregion
     #endregion
 
-
     #region Protected
     protected override void InitStates()
     {
@@ -239,7 +236,6 @@ public abstract class NormalMonsterController : BaseMonsterController, IAttackZo
     }
 
     #endregion
-
 
     #region Private
     #region ANIM_CALLBACK

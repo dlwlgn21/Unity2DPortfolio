@@ -1,3 +1,4 @@
+using data;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,9 +17,9 @@ public sealed class DataManager
     public Dictionary<int, data.HelmetInfo> HelmetItemDict { get; private set; } = new();
     public Dictionary<int, data.SwordInfo> SwordItemDict { get; private set; } = new();
     public Dictionary<int, data.ArmorInfo> ArmorItemDict { get; private set; } = new();
-    Dictionary<int, data.SkillInfo> _skillInfoDict = new();
     public data.SfxKeyContainer SFXKeyContainer { get; private set; } = new();
-
+    public data.PlayerFigureContainer PlayerFigureContainer { get; private set; } = new();
+    Dictionary<int, data.SkillInfo> _skillInfoDict = new();
     public void Init()
     {
         PlayerStatDict = LoadJson<data.PlayerStatLoader, int, data.PlayerStat>("Player/Data_PlayerStat").MakeDict();
@@ -54,8 +55,9 @@ public sealed class DataManager
             }
         }
         #endregion
-        TextAsset textAsset = Managers.Resources.Load<TextAsset>($"Data/SFX/Data_SFXPaths");
-        SFXKeyContainer = JsonUtility.FromJson<data.SfxKeyContainer>(textAsset.text);
+
+        SFXKeyContainer = LoadJson<data.SfxKeyContainer>("SFX/Data_SFXPaths");
+        PlayerFigureContainer = LoadJson<data.PlayerFigureContainer>("Player/Data_PlayerFigure");
     }
 
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
@@ -63,6 +65,12 @@ public sealed class DataManager
         TextAsset textAsset = Managers.Resources.Load<TextAsset>($"Data/{path}");
         return JsonUtility.FromJson<Loader>(textAsset.text);
     }
+    T LoadJson<T>(string path)
+    {
+        TextAsset textAsset = Managers.Resources.Load<TextAsset>($"Data/{path}");
+        return JsonUtility.FromJson<T>(textAsset.text);
+    }
+
 
     void AddSkills(define.EActiveSkillType eSkillType, data.SkillInfo skillInfo)
     {

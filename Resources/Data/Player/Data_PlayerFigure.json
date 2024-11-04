@@ -1,0 +1,12 @@
+{
+  "NormalAttackKnockbackForceX": "2",
+  "NormalAttackKnockbackForceY": "1",
+  "NormalAttack1DashForceX": "3",
+  "NormalAttack1DashForceY": "2",
+  "BlockSuccessKnockbackForceX": "3",
+  "BlockSuccessKnockbackForceY": "3",
+  "BigAttackForceCoeff": "1.3",
+  "NormalAttack2DamageCoeff": "1.5",
+  "NormalAttack3DamageCoeff": "2",
+  "BackAttackDamageCoeff": "3"
+}

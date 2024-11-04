@@ -1,3 +1,4 @@
+using data;
 using define;
 using DG.DemiLib;
 using DG.Tweening;
@@ -40,6 +41,7 @@ public enum EPlayerNoramlAttackType
 }
 public sealed class PlayerController : BaseCharacterController
 {
+    #region Events
     public static UnityAction<EPlayerState> PlayerChangeStateEventHandler;
     public static UnityAction<EPlayerState> HitEffectEventHandler;
     public static UnityAction<EPlayerMovementEffect, ECharacterLookDir, Vector2> MovementEffectEventHandler;
@@ -48,19 +50,17 @@ public sealed class PlayerController : BaseCharacterController
     public static UnityAction PlayerSkillValidAnimTimingEventHandler;
     public static UnityAction<BaseMonsterController> PlayerStatusEffectEventHandler;
     public static UnityAction PlayerDieEventHandelr;
-
-    // TODO : 나중에 이거 파일로 빼서 읽어와야 함.
-    public readonly static Vector2 NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE = new(2f, 1f);
-    public readonly static Vector2 NORMAL_ATTACK_LEFT_KNOCKBACK_FORCE = new(-NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.x, NORMAL_ATTACK_RIGHT_KNOCKBACK_FORCE.y);
-    public readonly static Vector2 NORMAL_ATTACK_1_DASH_FORCE = new(3f, 2f);
-
-    public const float NORMAL_ATTACK_2_FORCE_COEFF = 1.1f;
-    public const float NORMAL_ATTACK_3_FORCE_COEFF = 1.3f;
-    public const float NORMAL_ATTACK_2_DAMAGE_COEFF = 1.5f;
-    public const int  NORMAL_ATTACK_3_DAMAGE_COEFF = 2;
-    public const int  BACK_ATTACK_DAMAGE_COEFF = 3;
-
-
+    #endregion
+    #region KnockForce And DamageCoeff Figure
+    public static Vector2 NORMAL_ATTACK_KNOCKBACK_FORCE;
+    public static Vector2 NORMAL_ATTACK_1_DASH_FORCE;
+    public static Vector2 BLOCK_SUCCESS_KNOCKBACK_FORCE;
+    public static float BIG_ATTACK_KNOCKBACK_FORCE_COEFF;
+    public static float NORMAL_ATTACK_2_DAMAGE_COEFF;
+    public static int NORMAL_ATTACK_3_DAMAGE_COEFF;
+    public static int BACK_ATTACK_DAMAGE_COEFF;
+    #endregion
+    #region Keys
     public const KeyCode KeyUp = KeyCode.UpArrow;
     public const KeyCode KeyDown = KeyCode.DownArrow;
     public const KeyCode KeyRight = KeyCode.RightArrow;
@@ -71,6 +71,7 @@ public sealed class PlayerController : BaseCharacterController
     public const KeyCode KeyJump = KeyCode.Space;
     public const KeyCode KeySkillA = KeyCode.A;
     public const KeyCode KeySkillS = KeyCode.S;
+    #endregion
     public CapsuleCollider2D CapsuleCollider { get; set; }
     public PlayerStat Stat { get; private set; }
     public EPlayerState ECurrentState { get; private set; }
@@ -110,6 +111,16 @@ public sealed class PlayerController : BaseCharacterController
             MonsterProjectileController.MonsterProjectileHitPlayerEventHandelr += OnHittedByMonsterAttack;
             MonsterMelleAttack.OnPlayerHittedByMonsterMelleAttackEventHandelr += OnHittedByMonsterAttack;
             FallDeadZone.PlayerFallDeadZoneEventHandler += OnPlayerFallToDeadZone;
+            #endregion
+            #region KnockbackForce And DamageCoeff
+            PlayerFigureContainer container = Managers.Data.PlayerFigureContainer;
+            NORMAL_ATTACK_KNOCKBACK_FORCE = new Vector2(container.NormalAttackKnockbackForceX, container.NormalAttackKnockbackForceY);
+            NORMAL_ATTACK_1_DASH_FORCE = new Vector2(container.NormalAttack1DashForceX, container.NormalAttack1DashForceY);
+            BLOCK_SUCCESS_KNOCKBACK_FORCE = new Vector2(container.BlockSuccessKnockbackForceX, container.BlockSuccessKnockbackForceY);
+            BIG_ATTACK_KNOCKBACK_FORCE_COEFF = container.BigAttackForceCoeff;
+            NORMAL_ATTACK_2_DAMAGE_COEFF = container.NormalAttack2DamageCoeff;
+            NORMAL_ATTACK_3_DAMAGE_COEFF = (int)container.NormalAttack3DamageCoeff;
+            BACK_ATTACK_DAMAGE_COEFF = (int)container.BackAttackDamageCoeff;
             #endregion
             DontDestroyOnLoad(this);
         }

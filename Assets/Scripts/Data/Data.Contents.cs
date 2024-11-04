@@ -272,4 +272,18 @@ namespace data
         public string SFX_ENV_DOOR_OPEN;
     }
 
+    [Serializable]
+    public class PlayerFigureContainer
+    {
+        public float NormalAttackKnockbackForceX;
+        public float NormalAttackKnockbackForceY;
+        public float NormalAttack1DashForceX;
+        public float NormalAttack1DashForceY;
+        public float BlockSuccessKnockbackForceX;
+        public float BlockSuccessKnockbackForceY;
+        public float BigAttackForceCoeff;
+        public float NormalAttack2DamageCoeff;
+        public float NormalAttack3DamageCoeff;
+        public float BackAttackDamageCoeff;
+    }
 }
