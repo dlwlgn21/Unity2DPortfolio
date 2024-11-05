@@ -36,17 +36,17 @@ public class PlayerNormalAttack : MonoBehaviour
                 case EPlayerNoramlAttackType.Attack_1:
                     if (mc.ELookDir == _pc.ELookDir)
                     {
-                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.BACK_ATTACK_DAMAGE_COEFF, EPlayerNoramlAttackType.BackAttack);
+                        mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.sBackAttackDamageCoeff, EPlayerNoramlAttackType.BackAttack);
                         //Managers.Sound.Play(DataManager.SFX_PLAYER_BACKATTACK_PATH);
                     }
                     else
                         mc.DamagedFromPlayer(_pc.ELookDir, totalDamage, EPlayerNoramlAttackType.Attack_1);
                     break;
                 case EPlayerNoramlAttackType.Attack_2:
-                    mc.DamagedFromPlayer(_pc.ELookDir, (int)(totalDamage * PlayerController.NORMAL_ATTACK_2_DAMAGE_COEFF), EPlayerNoramlAttackType.Attack_2);
+                    mc.DamagedFromPlayer(_pc.ELookDir, (int)(totalDamage * PlayerController.sNormalAttack2DamageCoeff), EPlayerNoramlAttackType.Attack_2);
                     break;
                 case EPlayerNoramlAttackType.Attack_3:
-                    mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.NORMAL_ATTACK_3_DAMAGE_COEFF, EPlayerNoramlAttackType.Attack_3);
+                    mc.DamagedFromPlayer(_pc.ELookDir, totalDamage * PlayerController.sNormalAttack3DamageCoeff, EPlayerNoramlAttackType.Attack_3);
                     break;
             }
         }

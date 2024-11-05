@@ -39,13 +39,6 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     public bool IsPlayerInBurstAttackZone { get; set; }
     public bool IsWake { get; private set; }
 
-    const string SFX_FIST_SOUND_PATH = "Sound/SFX_BossColossalFisting";
-    const string SFX_BURST_SOUND_PATH = "Sound/SFX_BossColossalBurst";
-    const string SFX_BURFED_BURST_SOUND_PATH = "Sound/SFX_BossColossalBurfedBurst";
-    const string SFX_BURF_SOUND_PATH = "Sound/SFX_BossColossalBuff";
-    const string SFX_DIE_PATH = "Sound/SFX_BossMonsterDie";
-    const string SFX_WAKE_PATH = "Sound/SFX_BossMonsterWake";
-
     Coroutine _hitFlashCoOrNull;
 
     #region Lights
@@ -88,8 +81,6 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
     private void OnDestroy()
     {
         ColossalChangeStateEventHandler = null;
-        ColossalAttackZoneDetection.ColossalAttackZoneEnterEvnetHandler -= OnPlayerEnterAttackZone;
-        ColossalAttackZoneDetection.ColossalAttackZoneExitEvnetHandler -= OnPlayerExitAttackZone;
     }
 
     private void FixedUpdate()
@@ -280,7 +271,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     void OnWakeSoundTiming()
     {
-        Managers.Sound.Play(SFX_WAKE_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_COLOSSAL_WAKE_PATH);
         Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_BGM_COLOSSAL_BATTLE, define.ESoundType.Bgm);
     }
     void OnBurfAnimTurnOnLightTiming()
@@ -295,7 +286,7 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     void OnFistAttackSoundTiming()
     {
-        Managers.Sound.Play(SFX_FIST_SOUND_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_COLOSSAL_FIST_SOUND_PATH);
     }
 
     void OnSpinAttack1SoundTiming()
@@ -310,22 +301,22 @@ public class ColossalBossMonsterController : BaseMonsterController, IMelleAttack
 
     void OnBurstAttackSoundTiming()
     {
-        Managers.Sound.Play(SFX_BURST_SOUND_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_COLOSSAL_BURST_SOUND_PATH);
     }
 
     void OnBurfedBurstAttackSoundTiming()
     {
-        Managers.Sound.Play(SFX_BURFED_BURST_SOUND_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_COLOSSAL_BURFED_BURST_SOUND_PATH);
     }
 
     void OnBurfSoundTiming()
     {
-        Managers.Sound.Play(SFX_BURF_SOUND_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_COLOSSAL_BURF_SOUND_PATH);
     }
 
     void OnDieSoundTiming()
     {
-        Managers.Sound.Play(SFX_DIE_PATH);
+        Managers.Sound.Play(Managers.Data.SFXKeyContainer.SFX_COLOSSAL_DIE_PATH);
     }
     #endregion
 

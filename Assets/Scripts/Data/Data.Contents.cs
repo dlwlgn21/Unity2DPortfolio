@@ -270,6 +270,12 @@ namespace data
         public string SFX_MONSTER_HIT_BY_PLAYER_SKILL_REAPER;
         public string SFX_MONSTER_PROJECTILE_HIT;
         public string SFX_ENV_DOOR_OPEN;
+        public string SFX_COLOSSAL_FIST_SOUND_PATH;
+        public string SFX_COLOSSAL_BURST_SOUND_PATH;
+        public string SFX_COLOSSAL_BURFED_BURST_SOUND_PATH;
+        public string SFX_COLOSSAL_BURF_SOUND_PATH;
+        public string SFX_COLOSSAL_DIE_PATH;
+        public string SFX_COLOSSAL_WAKE_PATH;
     }
 
     [Serializable]

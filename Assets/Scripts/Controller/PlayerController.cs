@@ -52,13 +52,13 @@ public sealed class PlayerController : BaseCharacterController
     public static UnityAction PlayerDieEventHandelr;
     #endregion
     #region KnockForce And DamageCoeff Figure
-    public static Vector2 NORMAL_ATTACK_KNOCKBACK_FORCE;
-    public static Vector2 NORMAL_ATTACK_1_DASH_FORCE;
-    public static Vector2 BLOCK_SUCCESS_KNOCKBACK_FORCE;
-    public static float BIG_ATTACK_KNOCKBACK_FORCE_COEFF;
-    public static float NORMAL_ATTACK_2_DAMAGE_COEFF;
-    public static int NORMAL_ATTACK_3_DAMAGE_COEFF;
-    public static int BACK_ATTACK_DAMAGE_COEFF;
+    public static Vector2 sNormalAttackKnockbackForce { get; private set; }
+    public static Vector2 sNormalAttack1DashForce { get; private set; }
+    public static Vector2 sBlockSuccesKnockbackForce { get; private set; }
+    public static float sBitAttackKnockbackForceCoeff { get; private set; }
+    public static float sNormalAttack2DamageCoeff { get; private set; }
+    public static int sNormalAttack3DamageCoeff { get; private set; }
+    public static int sBackAttackDamageCoeff { get; private set; }
     #endregion
     #region Keys
     public const KeyCode KeyUp = KeyCode.UpArrow;
@@ -114,13 +114,13 @@ public sealed class PlayerController : BaseCharacterController
             #endregion
             #region KnockbackForce And DamageCoeff
             PlayerFigureContainer container = Managers.Data.PlayerFigureContainer;
-            NORMAL_ATTACK_KNOCKBACK_FORCE = new Vector2(container.NormalAttackKnockbackForceX, container.NormalAttackKnockbackForceY);
-            NORMAL_ATTACK_1_DASH_FORCE = new Vector2(container.NormalAttack1DashForceX, container.NormalAttack1DashForceY);
-            BLOCK_SUCCESS_KNOCKBACK_FORCE = new Vector2(container.BlockSuccessKnockbackForceX, container.BlockSuccessKnockbackForceY);
-            BIG_ATTACK_KNOCKBACK_FORCE_COEFF = container.BigAttackForceCoeff;
-            NORMAL_ATTACK_2_DAMAGE_COEFF = container.NormalAttack2DamageCoeff;
-            NORMAL_ATTACK_3_DAMAGE_COEFF = (int)container.NormalAttack3DamageCoeff;
-            BACK_ATTACK_DAMAGE_COEFF = (int)container.BackAttackDamageCoeff;
+            sNormalAttackKnockbackForce = new Vector2(container.NormalAttackKnockbackForceX, container.NormalAttackKnockbackForceY);
+            sNormalAttack1DashForce = new Vector2(container.NormalAttack1DashForceX, container.NormalAttack1DashForceY);
+            sBlockSuccesKnockbackForce = new Vector2(container.BlockSuccessKnockbackForceX, container.BlockSuccessKnockbackForceY);
+            sBitAttackKnockbackForceCoeff = container.BigAttackForceCoeff;
+            sNormalAttack2DamageCoeff = container.NormalAttack2DamageCoeff;
+            sNormalAttack3DamageCoeff = (int)container.NormalAttack3DamageCoeff;
+            sBackAttackDamageCoeff = (int)container.BackAttackDamageCoeff;
             #endregion
             DontDestroyOnLoad(this);
         }

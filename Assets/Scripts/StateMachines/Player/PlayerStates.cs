@@ -653,12 +653,12 @@ namespace player_states
 
             if (_entity.ELookDir == ECharacterLookDir.Left && Input.GetKey(KeyCode.LeftArrow))
             {
-                _entity.RigidBody.AddForce(new(-PlayerController.NORMAL_ATTACK_1_DASH_FORCE.x, PlayerController.NORMAL_ATTACK_1_DASH_FORCE.y), ForceMode2D.Impulse);
+                _entity.RigidBody.AddForce(new(-PlayerController.sNormalAttack1DashForce.x, PlayerController.sNormalAttack1DashForce.y), ForceMode2D.Impulse);
                 return;
             }
             if (_entity.ELookDir == ECharacterLookDir.Right && Input.GetKey(KeyCode.RightArrow))
             {
-                _entity.RigidBody.AddForce(PlayerController.NORMAL_ATTACK_1_DASH_FORCE, ForceMode2D.Impulse);
+                _entity.RigidBody.AddForce(PlayerController.sNormalAttack1DashForce, ForceMode2D.Impulse);
                 return;            
             }
         }

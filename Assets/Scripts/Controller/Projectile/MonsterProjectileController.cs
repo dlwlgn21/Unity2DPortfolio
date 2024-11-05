@@ -15,7 +15,7 @@ enum EProjectileState
     Projectile,
     Hit
 }
-public class MonsterProjectileController : BaseProjectileController
+public sealed class MonsterProjectileController : BaseProjectileController
 {
     static public UnityAction<BaseMonsterController> MonsterProjectileHitPlayerEventHandelr;
     public EMonsterProjectileType EProjectileType { get; private set; } = EMonsterProjectileType.COUNT;

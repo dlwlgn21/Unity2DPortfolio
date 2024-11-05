@@ -3,18 +3,18 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using System.Collections;
 
-public class PlayerSkillProjectileController : BaseProjectileController
+public sealed class PlayerSkillProjectileController : BaseProjectileController
 {
     [SerializeField] float _speed;
     [SerializeField] float _bombRange;
 
-    private LightController _lightController;
-    private const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MonsterBody);
+    LightController _lightController;
+    const int MONSTER_LAYER_MASK = 1 << ((int)define.EColliderLayer.MonsterBody);
 
-    private const string MUZZLE_ANIM_KEY = "Muzzle";
-    private const string PROJECTILE_ANIM_KEY = "Projectile";
-    private const string HIT_ANIM_KEY = "Hit";
-    private const string BOOM_ANIM_KEY = "Bomb";
+    const string MUZZLE_ANIM_KEY = "Muzzle";
+    const string PROJECTILE_ANIM_KEY = "Projectile";
+    const string HIT_ANIM_KEY = "Hit";
+    const string BOOM_ANIM_KEY = "Bomb";
     private void Awake()
     {
         AssginCommonComponents();

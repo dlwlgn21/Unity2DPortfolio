@@ -9,11 +9,11 @@ public sealed class ProjectilePoolManager
 {
     public const int MAX_BOMB_COUNT = 10;
 
-    private Queue<GameObject> _bombs = new Queue<GameObject>(MAX_BOMB_COUNT);
-    private Queue<GameObject> _monsterProjectiles = new Queue<GameObject>(MAX_BOMB_COUNT);
+    Queue<GameObject> _bombs = new Queue<GameObject>(MAX_BOMB_COUNT);
+    Queue<GameObject> _monsterProjectiles = new Queue<GameObject>(MAX_BOMB_COUNT);
 
-    private GameObject _oriPlayerBomb;
-    private GameObject _oriMonsterProjectile;
+    GameObject _oriPlayerBomb;
+    GameObject _oriMonsterProjectile;
     public void Init()
     {
         if (_oriPlayerBomb == null)
