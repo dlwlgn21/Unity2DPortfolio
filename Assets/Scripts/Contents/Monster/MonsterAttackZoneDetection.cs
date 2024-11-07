@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterAttackZoneDetection : MonsterZoneDetection
+public sealed class MonsterAttackZoneDetection : MonsterZoneDetection
 {
     private IAttackZoneDetectable _iDetacteable;
     private void Awake()

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AbandonRoadScene : PlayScene
+public sealed class AbandonRoadScene : PlayScene
 {
     public AbandonRoadScene() : base(define.ESceneType.AbandonLoadScene) { }
 

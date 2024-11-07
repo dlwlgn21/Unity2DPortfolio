@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColossalBossCaveScene : PlayScene
+public sealed class ColossalBossCaveScene : PlayScene
 {
     public ColossalBossCaveScene() : base(define.ESceneType.ColossalBossCaveScene) { }
 

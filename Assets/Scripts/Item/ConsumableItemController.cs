@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ConsumableItemController : ItemController
+public sealed class ConsumableItemController : ItemController
 {
     [SerializeField] EItemConsumableType _eConsumableName;
 

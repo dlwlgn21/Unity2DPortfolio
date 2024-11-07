@@ -9,7 +9,7 @@ public enum EFullScreenEffectType
     SCENE_TRANSITION,
     MONSTER_BLIND_EFFECT,
 }
-public class FullScreenEffectManager
+public sealed class FullScreenEffectManager
 {
     private GameObject _fadeout;
     private Image _blackFadeImg;

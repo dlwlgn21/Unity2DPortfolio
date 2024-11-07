@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainMenuScene : BaseScene
+public sealed class MainMenuScene : BaseScene
 {
 
     public MainMenuScene() : base(define.ESceneType.MainMenu) { }

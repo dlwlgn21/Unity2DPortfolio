@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class GameStartPlayerDialogEvent : DialogEventBoxCollider, ITalkable
 {
-    [SerializeField] private DialogText _dialogText;
-    private TutorialManager _tutorialManager;
-    private bool _isDialogStart = false;
+    [SerializeField] DialogText _dialogText;
+    TutorialManager _tutorialManager;
+    bool _isDialogStart = false;
     void Start()
     {
         Init();

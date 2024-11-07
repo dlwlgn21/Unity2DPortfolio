@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterTraceZoneDetection : MonsterZoneDetection
+public sealed class MonsterTraceZoneDetection : MonsterZoneDetection
 {
     ITraceZoneDetectable _detectable;
 

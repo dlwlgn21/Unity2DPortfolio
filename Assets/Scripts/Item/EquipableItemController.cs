@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class EquipableItemController : ItemController
+public sealed class EquipableItemController : ItemController
 {
     [SerializeField] EItemEquippableType _eEquipableName;
     public override void PushItemToInventory()

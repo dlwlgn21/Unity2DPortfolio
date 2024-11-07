@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Managers : MonoBehaviour
+public sealed class Managers : MonoBehaviour
 {
     static Managers sInstance;
     public static Managers Instance { get { Init(); return sInstance; } }

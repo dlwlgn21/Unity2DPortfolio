@@ -6,10 +6,10 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class UI_SkillCoolTimer : MonoBehaviour
 {
-    private Image _coolTimeImg;
-    private Color _showColor;
-    private Color _hideColor;
-    private TextMeshProUGUI _coolTimeText;
+    Image _coolTimeImg;
+    Color _showColor;
+    Color _hideColor;
+    TextMeshProUGUI _coolTimeText;
     private void Awake()
     {
         _coolTimeImg = GetComponent<Image>();

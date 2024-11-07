@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialScene : PlayScene
+public sealed class TutorialScene : PlayScene
 {
     public TutorialScene() : base(define.ESceneType.Tutorial) { }
 

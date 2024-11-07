@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FallDeadZone : MonoBehaviour
+public sealed class FallDeadZone : MonoBehaviour
 {
     static public UnityAction PlayerFallDeadZoneEventHandler;
     private void OnTriggerEnter2D(Collider2D collision)
