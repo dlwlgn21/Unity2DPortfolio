@@ -13,11 +13,11 @@ public enum ESkillSlot
 }
 public sealed class PlayerSkillManager
 {
+    public EActiveSkillType[] _eCurrSkillSlotType = new EActiveSkillType[2];
     Dictionary<EActiveSkillType, Skill_BaseController> _skillControllerDict = new();
     UI_SkillCoolTimer[] skillCoolTimer = new UI_SkillCoolTimer[(int)ESkillSlot.Count];
     UI_Skill_Slot[] _skillSlots = new UI_Skill_Slot[2];
     PlayerStat _stat;
-    public EActiveSkillType[] _eCurrSkillSlotType = new EActiveSkillType[2];
     public void Init()
     {
         if (_skillControllerDict.Count == 0)

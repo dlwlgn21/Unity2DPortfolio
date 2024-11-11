@@ -5,12 +5,12 @@ using UnityEngine;
 
 public sealed class CamSwitchManager 
 {
-    private CinemachineVirtualCamera _mainCam;
-    private CinemachineVirtualCamera _roomCam;
     public static float ATTACK_TUTORIAL_X_POS = 18f;
     public static float ROLL_TUTORIAL_X_POS = 35f;
     public static float BACK_ATTACK_TUTORIAL_X_POS = 51f;
     public static float BLOCK_TUTORIAL_X_POS = 67f;
+    CinemachineVirtualCamera _mainCam;
+    CinemachineVirtualCamera _roomCam;
     public void Init()
     {
         _mainCam = GameObject.Find("MainVCAM").GetComponent<CinemachineVirtualCamera>();

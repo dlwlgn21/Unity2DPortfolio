@@ -17,6 +17,10 @@ public abstract class NPC : MonoBehaviour
         Managers.Dialog.OnConversationEndHandler += OnNPCDialogEnd;
     }
 
+    private void OnDestroy()
+    {
+        Managers.Dialog.OnConversationEndHandler -= OnNPCDialogEnd;
+    }
     public abstract void Interact();
     public abstract void OnNPCDialogEnd();
 

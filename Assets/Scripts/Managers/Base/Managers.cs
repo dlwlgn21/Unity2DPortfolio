@@ -13,7 +13,6 @@ public sealed class Managers : MonoBehaviour
     readonly SoundManager _soundManager = new();
     readonly UIManager _uiManager = new();
     readonly TweenManager _tweenManager = new();
-    readonly GameEventManager _gameEventManager = new();
     readonly MainMenuManager _mainMenuManager = new();
     readonly MonsterPoolManager _monsterPoolManager = new();
     readonly MonsterSpawnManager _monsterSpawnManager = new();
@@ -43,7 +42,6 @@ public sealed class Managers : MonoBehaviour
     public static UIDialogManager Dialog { get { return Instance._dialogManager; } }
     public static CamManager Cam { get { return Instance._camManager; } }
     public static CamSwitchManager CamSwitch { get { return Instance._camSwitchManager; } }
-    public static GameEventManager GameEvent { get { return Instance._gameEventManager; } }
     public static PlayerRespawnManager PlayerRespawn { get { return Instance._playerRespawnManager; } }
     public static PlayerSkillManager PlayerSkill { get { return Instance._playerSkillManager; } }
     public static PlayerLevelManager PlayerLevel { get { return Instance._playerLevelManager; } }
