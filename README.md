@@ -6,6 +6,7 @@
 - 사용엔진 : Unity
 - 사용 플러그인 : DoTween2Pro
 - 사용 에셋 : [Penusbmic의 Dark시리즈](https://itch.io/c/1748382/all-of-the-dark-series-patreon-tier-2-series-click-here/)
+- 포플 영상 : [포플영상(자막O)](https://youtu.be/fvxx-NCpCcg), [포플영상(자막X)](https://youtu.be/hfpaosnz0NM)
 
 ## 2. 코드 목차
 1. Player의 GroundCheck 코드
