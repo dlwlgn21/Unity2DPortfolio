@@ -1,4 +1,5 @@
 using define;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,13 @@ public sealed class UI_WSPlayerPopupStatusController : UI_WSPlayerPopupTextContr
         CaveEnteranceController.DeniedEnterCaveEventHandler += OnPlayerDeniedEnterCave;
         DoorController.DeniedDoorOpenEventHandler -= OnPlayerDeniedEnterCave;
         DoorController.DeniedDoorOpenEventHandler += OnPlayerDeniedEnterCave;
+        PlayScene.PlaySceneLoadedEventHandelr -= OnSceneLoaded;
+        PlayScene.PlaySceneLoadedEventHandelr += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded()
+    {
+        _text.text = "";
     }
 
     void OnPlayerDeniedEnterCave()

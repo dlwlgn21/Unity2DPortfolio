@@ -51,7 +51,6 @@ public sealed class Managers : MonoBehaviour
     {
         Init();
     }
-
     private void Update()
     {
         switch (sInstance._sceneManager.ECurrentScene)

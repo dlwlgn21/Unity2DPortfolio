@@ -29,10 +29,6 @@ public abstract class UI_WSPlayerPopupTextController : MonoBehaviour
 
     private void Update()
     {
-        //if (_pc.ELookDir == define.ECharacterLookDir.Left)
-        //    transform.localScale = new Vector3(-_originalScale.x, _originalScale.y, _originalScale.z);
-        //else
-        //    transform.localScale = _originalScale;
         transform.localRotation = Quaternion.Inverse(transform.parent.localRotation)
                             * _lastParentQut
                             * transform.localRotation;

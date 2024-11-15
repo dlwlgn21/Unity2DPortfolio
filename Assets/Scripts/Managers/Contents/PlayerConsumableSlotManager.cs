@@ -60,8 +60,8 @@ public sealed class PlayerConsumableSlotManager : MonoBehaviour
             UI_PlayerConsumableSlot.SameConsumableDropEventHandelr += DisacrdIfSameItemDroped;
             UI_Inventory_ItemDiscardSlot.ItemDiscardEventHandler -= OnDiscardBtnClicked;
             UI_Inventory_ItemDiscardSlot.ItemDiscardEventHandler += OnDiscardBtnClicked;
-            PlayScene.OnSceneInitEventHandelr -= InitForNextSceneLoad;
-            PlayScene.OnSceneInitEventHandelr += InitForNextSceneLoad;
+            PlayScene.PlaySceneLoadedEventHandelr -= InitForNextSceneLoad;
+            PlayScene.PlaySceneLoadedEventHandelr += InitForNextSceneLoad;
 
         }
     }

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public abstract class PlayScene : BaseScene
 {
-    public static UnityAction OnSceneInitEventHandelr;
+    public static UnityAction PlaySceneLoadedEventHandelr;
     protected PlayScene(ESceneType eSceneType) : base(eSceneType)
     { }
 
@@ -28,7 +28,8 @@ public abstract class PlayScene : BaseScene
         Managers.MonsterPool.Init();
         Managers.DropItem.Init();
         Managers.ProjectilePool.Init();
-
+        if (PlaySceneLoadedEventHandelr != null)
+            PlaySceneLoadedEventHandelr.Invoke();
         if (GameObject.Find("PlayerMovementAnimator") == null)
         {
             GameObject go = Managers.Resources.Load<GameObject>("Prefabs/Player/PlayerMovementAnimator");
