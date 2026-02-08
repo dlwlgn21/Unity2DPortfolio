@@ -8,7 +8,20 @@
 - 사용 에셋 : [Penusbmic의 Dark시리즈](https://itch.io/c/1748382/all-of-the-dark-series-patreon-tier-2-series-click-here/)
 - 포플 영상 : [포플영상(자막O)](https://youtu.be/fvxx-NCpCcg), [포플영상(자막X)](https://youtu.be/hfpaosnz0NM)
 
-## 2. 코드 목차
+## 2. 핵심 기능 요약
+ 1. 직접 만든 2D 전용 커스텀 NormalMap, EmissionMap을 사용한 그래픽
+ 2. 착용(무기, 방어구), 사용(포션) 가능한 아이템과 인벤토리 시스템 구현
+ 3. Player 스탯, 레벨업 시스템 구현
+ 4. 튜토리얼(기본공격, 구르기, 막기, 백어택, 스킬사용법) 구현
+ 5.스킬 레벨업, 스킬 슬롯 시스템 구현
+  5.1 각기 다른 효과를 가지는 4가지 스킬
+  5.2 스킬 레벨 1 이상일 때에만 스킬 슬롯에 장착하여 사용 가능  
+ 6. 몬스터 기믹 시스템 구현
+  6.1 4가지 기믹(실명, 화상, 슬로우, 넉백) 시스템 구현
+ 7. 6개의 일반 몬스터 구현
+ 8. 보스 몬스터 구현
+
+## 3. 코드 목차
 1. Player의 GroundCheck 코드
     - [IsStandGround](https://github.com/dlwlgn21/Unity2DPortfolio/blob/d1a1139ef97a6c9141af5f7b15228c5e2b54e6b7/Assets/Scripts/StateMachines/Player/PlayerStates.cs#L52)
 2. Player의 LedgeClimbe 코드
